@@ -17,6 +17,7 @@ class User extends Authenticatable
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -25,8 +26,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'profilePicture',
+        'isDeleted',
+        'isBlocked'
     ];
 
     /**
@@ -49,11 +54,35 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    /**
-     * Get the cards for a user.
-     */
-    public function cards(): HasMany
-    {
-        return $this->hasMany(Card::class);
+    public function notifications() {
+        return $this->hasMany(Notification::class, 'user_id');
     }
+
+    public function isAdmin() {
+        return count($this->hasOne(Admin::class, 'admin_id')->get());
+    }
+
+    // TO DO: Adaptar funções quando event for feito
+    public function events() : HasMany
+    {
+        return $this->hasMany(Event::class, 'user_id');
+    }
+
+    public function myEvents()
+    {
+        return $this->belongsToMany(Event::class, 'event_user', 'user_id', 'event_id');
+    }
+
+    public function participatedEvents()
+    {
+        return $this->belongsToMany(Event::class, 'event_user', 'user_id', 'event_id')
+                    ->where('events.date', '<', now());
+    }
+
+    public function notYetParticipatedEvents()
+    {
+        return $this->belongsToMany(Event::class, 'event_user', 'user_id', 'event_id')
+                    ->where('events.date', '>=', now());
+    }
+
 }
