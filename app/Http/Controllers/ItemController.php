@@ -24,7 +24,7 @@ class ItemController extends Controller
 
         // Set item details.
         $item->done = false;
-        $item->description = $request->input('description');
+        $item->description = $request->input('text');
 
         // Save the item and return it as JSON.
         $item->save();

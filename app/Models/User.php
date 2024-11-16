@@ -58,19 +58,15 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'user_id');
     }
 
-    public function isAdmin() {
-        return count($this->hasOne(Admin::class, 'admin_id')->get());
-    }
-
     // TO DO: Adaptar funções quando event for feito
     public function events() : HasMany
     {
-        return $this->hasMany(Event::class, 'user_id');
+        return $this->hasMany(Event::class);
     }
 
-    public function myEvents()
+    public function myEvents(): HasMany
     {
-        return $this->belongsToMany(Event::class, 'event_user', 'user_id', 'event_id');
+        return $this->hasMany(Event::class, 'creator_id');
     }
 
     public function participatedEvents()
@@ -84,6 +80,15 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class, 'event_user', 'user_id', 'event_id')
                     ->where('events.date', '>=', now());
     }
+
+    /**
+     * Get the cards for a user.
+     */
+    public function cards(): HasMany
+    {
+        return $this->hasMany(Card::class);
+    }
+
 
     
 }
