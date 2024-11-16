@@ -59,9 +59,13 @@ class User extends Authenticatable
     }
 
     // TO DO: Adaptar funções quando event for feito
-    public function events() : HasMany
+    public function allEvents()
     {
-        return $this->hasMany(Event::class);
+        $createdEvents = $this->myEvents()->get();
+        $participatedEvents = $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')->get();
+
+        // Combine and remove duplicates
+        return $createdEvents->merge($participatedEvents)->unique('id');
     }
 
     public function myEvents(): HasMany
@@ -71,24 +75,14 @@ class User extends Authenticatable
 
     public function participatedEvents()
     {
-        return $this->belongsToMany(Event::class, 'event_user', 'user_id', 'event_id')
-                    ->where('events.date', '<', now());
+        return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
+                    ->where('events.start_date', '<', now());
     }
 
     public function notYetParticipatedEvents()
     {
-        return $this->belongsToMany(Event::class, 'event_user', 'user_id', 'event_id')
-                    ->where('events.date', '>=', now());
+        return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
+                    ->where('events.start_date', '>=', now());
     }
-
-    /**
-     * Get the cards for a user.
-     */
-    public function cards(): HasMany
-    {
-        return $this->hasMany(Card::class);
-    }
-
-
     
 }
