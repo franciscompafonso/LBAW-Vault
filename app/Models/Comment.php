@@ -19,7 +19,7 @@ class Comment extends Model
     protected $table = 'comment';
 
     /**
-     * Get the event where the item is included.
+     * Get the event where the comment is included.
      */
     public function event(): BelongsTo
     {
