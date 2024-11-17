@@ -17,7 +17,7 @@ class User extends Authenticatable
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
-    protected $table = 'users';
+    protected $table = 'user_account';
 
     /**
      * The attributes that are mass assignable.

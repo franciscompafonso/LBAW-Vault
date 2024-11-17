@@ -18,6 +18,19 @@ class Poll extends Model
     // Specify the table name
     protected $table = 'poll';
 
+    protected $fillable = [
+        'event_id',
+        'name',
+        'start_time',
+        'end_time',
+        'options',
+    ];
+
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+        'options' => 'array', // Must confirm this
+    ];
     /**
      * Get the event where the poll is included.
      */

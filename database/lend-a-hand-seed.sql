@@ -64,7 +64,7 @@ DROP FUNCTION IF EXISTS create_unblock_notification();
 DROP FUNCTION IF EXISTS create_block_notification();
 
 -- create tables
-CREATE TABLE users (
+CREATE TABLE user_account (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     username VARCHAR(255) UNIQUE NOT NULL,

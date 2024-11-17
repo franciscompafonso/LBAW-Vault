@@ -24,6 +24,11 @@ class Notification extends Model
         'viewed',
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+        'viewed' => 'boolean',
+    ];
+
     // Define the one-to-many relationship with the 'User' model for 'emitted_by'
     public function emittedBy() : BelongsTo
     {
