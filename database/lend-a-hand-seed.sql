@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS answer_review CASCADE;
 DROP TABLE IF EXISTS question_review CASCADE;
 DROP TABLE IF EXISTS participator CASCADE;
 DROP TABLE IF EXISTS event CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS user_account CASCADE;
 
 -- drop indexes
 DROP INDEX IF EXISTS idx_user_username;
@@ -48,7 +48,7 @@ DROP TRIGGER IF EXISTS trigger_event_cancellation ON event;
 DROP TRIGGER IF EXISTS trigger_poll_reminder ON poll;
 DROP TRIGGER IF EXISTS trigger_event_reminder_notification ON event;
 DROP TRIGGER IF EXISTS trigger_unblock_notification ON unblock_request;
-DROP TRIGGER IF EXISTS trigger_block_notification ON users;
+DROP TRIGGER IF EXISTS trigger_block_notification ON user_account;
 
 -- drop functions
 DROP FUNCTION IF EXISTS event_search_update();
@@ -93,14 +93,14 @@ CREATE TABLE "event" (
     end_date TIMESTAMP NOT NULL,
     visibility VARCHAR(50),
     capacity INT,
-    creator_id INT REFERENCES users(id),
+    creator_id INT REFERENCES user_account(id),
     location_id INT REFERENCES location(id),
     category_id INT REFERENCES category(id),
     CONSTRAINT ck_start_end CHECK (start_date < end_date)
 );
 
 CREATE TABLE participator (
-    participator_id INT REFERENCES users(id),
+    participator_id INT REFERENCES user_account(id),
     event_id INT REFERENCES event(id),
     PRIMARY KEY (participator_id, event_id)
 );
@@ -111,7 +111,7 @@ CREATE TABLE question_review (
 );
 
 CREATE TABLE answer_review (
-    answered_by_id INT NOT NULL REFERENCES users(id),
+    answered_by_id INT NOT NULL REFERENCES user_account(id),
     question_id INT NOT NULL REFERENCES question_review(id),
     about_event_id INT NOT NULL REFERENCES event(id),
     rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE answer_review (
 
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
-    comment_by_id INT REFERENCES users(id),
+    comment_by_id INT REFERENCES user_account(id),
     event_id INT REFERENCES event(id),
     text TEXT NOT NULL,
     is_pinned BOOLEAN,
@@ -131,7 +131,7 @@ CREATE TABLE comment (
 );
 
 CREATE TABLE vote (
-    voted_by_id INT REFERENCES users(id),
+    voted_by_id INT REFERENCES user_account(id),
     comment_id INT REFERENCES comment(id),
     type INT NOT NULL CHECK (type = -1 OR type = 1),
     PRIMARY KEY (voted_by_id, comment_id)
@@ -148,15 +148,15 @@ CREATE TABLE poll (
 
 CREATE TABLE poll_response (
     poll_id INT REFERENCES poll(id),
-    user_id INT REFERENCES users(id),
+    user_id INT REFERENCES user_account(id),
     option TEXT NOT NULL,
     PRIMARY KEY (poll_id, user_id)
 );
 
 CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
-    emitted_by INT REFERENCES users(id),
-    emitted_to INT REFERENCES users(id),
+    emitted_by INT REFERENCES user_account(id),
+    emitted_to INT REFERENCES user_account(id),
     date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP),
     viewed BOOLEAN DEFAULT FALSE NOT NULL
 );
@@ -170,7 +170,7 @@ CREATE TABLE admin (
 CREATE TABLE unblock_request (
     id SERIAL PRIMARY KEY,
     decision_by_id INT REFERENCES admin(id),
-    requested_by_id INT REFERENCES users(id),
+    requested_by_id INT REFERENCES user_account(id),
     status VARCHAR(50) NOT NULL,
     requested_at TIMESTAMP NOT NULL CHECK (requested_at <= CURRENT_TIMESTAMP),
     processed_at TIMESTAMP NOT NULL CHECK (processed_at >= requested_at),
@@ -179,8 +179,8 @@ CREATE TABLE unblock_request (
 
 CREATE TABLE invite (
     id SERIAL PRIMARY KEY,
-    invite_by_id INT REFERENCES users(id),
-    invite_to_id INT REFERENCES users(id),
+    invite_by_id INT REFERENCES user_account(id),
+    invite_to_id INT REFERENCES user_account(id),
     title VARCHAR(255) NOT NULL,
 	accepted BOOLEAN,
     description TEXT NOT NULL,
@@ -243,7 +243,7 @@ CREATE TABLE unblock_notification (
 
 -- Indexes
 
-CREATE UNIQUE INDEX idx_user_username ON users(username);
+CREATE UNIQUE INDEX idx_user_username ON user_account(username);
 
 CREATE INDEX idx_event_start_date ON event(start_date);
 
@@ -539,7 +539,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_block_notification
-    AFTER UPDATE OF isBlocked ON users
+    AFTER UPDATE OF isBlocked ON user_account
     FOR EACH ROW
     WHEN (OLD.isBlocked IS DISTINCT FROM NEW.isBlocked AND NEW.isBlocked = TRUE)
     EXECUTE FUNCTION create_block_notification();
@@ -547,7 +547,7 @@ CREATE TRIGGER trigger_block_notification
 
 -- INSERT ------------------------------------------------------------------------------------------------------------
 
-INSERT INTO users (id, name, username, email, password, isDeleted, isBlocked, profilePicture) VALUES
+INSERT INTO user_account (id, name, username, email, password, isDeleted, isBlocked, profilePicture) VALUES
 (1, 'Ana Silva', 'anasilva', 'ana.silva@example.com', 'password123', FALSE, FALSE, 'image/ana.png'),
 (2, 'João Pereira', 'joaopereira', 'joao.pereira@example.com', 'password456', FALSE, FALSE, 'image/joao.png'),
 (3, 'Maria Costa', 'mariacosta', 'maria.costa@example.com', 'password789', FALSE, TRUE, 'image/maria.png'),

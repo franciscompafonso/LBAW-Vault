@@ -53,7 +53,7 @@ class Invite extends Model
 
     public function isAccepted(): bool
     {
-        return $this->accepted === true;
+        return $this->accepted;
     }
 
 }
