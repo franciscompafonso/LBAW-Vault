@@ -34,6 +34,10 @@
 
                     <!-- Navigation Icons -->
                     <div class="flex items-center space-x-6">
+
+                        <a href="{{ url('/logout') }}" title="Logout" class="text-red-700 hover:text-red-500">
+                                <i class="fa-solid fa-right-from-bracket text-5xl"></i>
+                        </a>
                         <a href="{{ url('/home') }}" class="text-white hover:text-gray-300" title="Home">
                             <i class="fa-solid fa-house text-5xl"></i>
                         </a>
@@ -44,11 +48,6 @@
                             <i class="fa-solid fa-question text-5xl"></i>
                         </a>
                         @if (Auth::check())
-                            <!-- 
-                            <a href="{{ url('/logout') }}" title="Logout" class="text-red-700 hover:text-red-500">
-                                <i class="fa-solid fa-right-from-bracket text-5xl"></i>
-                            </a> 
-                            -->
                             <span class="text-purple-800 font-medium text-5xl">{{ Auth::user()->picture }}</span>
                         @else
                             <a href="{{ url('/login') }}" title="Login" class="text-red-700 hover:text-red-500">
@@ -58,7 +57,10 @@
                     </div>
                 </header>
 
-                <!-- Main Content Section -->
+                <!-- Banner Section -->
+
+
+                <!-- Events Section -->
                 <section id="content" class="p-6 rounded-md max-w-6xl mx-auto">
                     @yield('content')
                 </section>
