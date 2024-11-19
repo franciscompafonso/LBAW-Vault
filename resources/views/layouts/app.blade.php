@@ -59,7 +59,7 @@
                 </header>
 
                 <!-- Main Content Section -->
-                <section id="content" class="p-6 bg-green-100 rounded-md max-w-6xl mx-auto">
+                <section id="content" class="p-6 rounded-md max-w-6xl mx-auto">
                     @yield('content')
                 </section>
             </main>
