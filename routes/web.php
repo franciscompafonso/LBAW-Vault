@@ -26,7 +26,7 @@ Route::redirect('/', '/login');
 // Cards
 Route::controller(CardController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
+    Route::get('/cards/{id}', 'show')->name('cards.show');
 });
 
 
