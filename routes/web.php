@@ -21,7 +21,11 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/home');
+
+Route::get('/home', function () {
+    return view('pages.home'); // this points to resources/views/home.blade.php
+});
 
 // Cards
 Route::controller(CardController::class)->group(function () {

@@ -28,7 +28,7 @@
             <header class="flex justify-between items-center px-12 py-12 bg-blue-400 shadow-lg">
                 <!-- Logo/Title -->
                 <h1 class="text-3xl font-bold text-purple-900">
-                    <a href="{{ url('/cards') }}" class="hover:text-gray-300 text-7xl font-semibold text-white">Lend-a-Hand</a>
+                    <a href="{{ url('/home') }}" class="hover:text-gray-300 text-7xl font-semibold text-white">Lend-a-Hand</a>
                 </h1>
 
                 <!-- Navigation Icons -->
@@ -66,42 +66,17 @@
 
                     <!-- User Profile -->
                     @if (Auth::check())
-                        <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
+                        <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" ><img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                             alt="User Profile Picture" 
-                            class="w-16 h-16 rounded-full object-cover">
+                            class="w-16 h-16 rounded-full object-cover"></a>
                     @endif
+
                 </div>
             </header>
 
-            <!-- Banner Section -->
-            <section class="bg-white py-16 shadow-md">
-                <div class="max-w-6xl mx-auto flex items-center flex-wrap lg:flex-nowrap px-6">
-                    <!-- Text Section -->
-                    <div class="w-full lg:w-1/2 text-left mb-8 lg:mb-0">
-                        <h2 class="text-4xl font-semibold mb-4 text-gray-800">Empowering Communities, One Event at a Time.</h2>
-                        <p class="text-2xl text-gray-600 mb-6">Join us now!</p>
-                    </div>
-
-                    <!-- Image Section -->
-                    <div class="w-full lg:w-1/2 flex justify-center lg:justify-end">
-                        <img src="{{ asset('images/others/main-pic.png') }}" alt="Main Picture" class="w-64 h-64 rounded-full object-cover shadow-lg">
-                    </div>
-                </div>
-            </section>
-
-            <!-- Categories Section -->
-            <section class="py-8 px-4">
-                <div class="flex flex-col items-center space-y-4">
-                    <button class="w-full max-w-md bg-blue-500 text-white text-lg font-medium py-3 rounded-lg shadow-md hover:bg-blue-600">
-                        Category #1
-                    </button>
-                    <button class="w-full max-w-md bg-blue-500 text-white text-lg font-medium py-3 rounded-lg shadow-md hover:bg-blue-600">
-                        Category #2
-                    </button>
-                    <button class="w-full max-w-md bg-blue-500 text-white text-lg font-medium py-3 rounded-lg shadow-md hover:bg-blue-600">
-                        ...
-                    </button>
-                </div>
+            <!-- Events Section -->
+            <section id="content" class="p-6 rounded-md max-w-6xl mx-auto">
+                @yield('content')
             </section>
 
             <!-- Footer Section -->
