@@ -43,7 +43,7 @@ class UserController extends Controller
             'username' => 'required|string|max:255|unique:user_account,username,' . $user->id, 
             'email' => 'required|email|max:255|unique:user_account,email,' . $user->id,  
             'password' => 'nullable|string|min:8|confirmed',  
-            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',  
+            'profilePicture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',  
         ]);
 
         // Update the user's details
@@ -51,26 +51,19 @@ class UserController extends Controller
         $user->username = $validatedData['username'];
         $user->email = $validatedData['email'];
 
-        // If a password is provided, hash and update it
         if ($request->filled('password')) {
             $user->password = bcrypt($validatedData['password']);
         }
 
-        // Handle the profile picture upload
-        if ($request->hasFile('profile_picture')) {
-            // Delete the old profile picture if it exists
-            if ($user->profile_picture) {
-                Storage::delete('public/' . $user->profile_picture);
+        if ($request->hasFile('profilePicture')) {
+            if ($user->profilePicture) {
+                Storage::delete('public/' . $user->profilePicture);
             }
-
-            // Store the new profile picture
-            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $user->profile_picture = $path;
+            $path = $request->file('profilePicture')->store('profilePictures', 'public');
+            $user->profilePicture = $path;
         }
 
-        // Save the user details
         $user->save();
-
         return redirect()->route('user.profile', ['id' => $user->id]);
     }
 

@@ -12,8 +12,8 @@
             <!-- Profile Picture Input -->
             <div class="mb-4 flex items-center space-x-4">
                 <div class="flex-shrink-0">
-                    @if ($user->profile_picture)
-                        <img id="profile-picture-preview" src="{{ asset('storage/' . $user->profile_picture) }}" alt="Current Profile Picture" class="w-32 h-32 rounded-full border-4 border-blue-400">
+                    @if ($user->profilePicture)
+                        <img id="profile-picture-preview" src="{{ asset('storage/' . $user->profilePicture) }}" alt="Current Profile Picture" class="w-32 h-32 rounded-full border-4 border-blue-400">
                     @else
                         <div id="profile-picture-preview" class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
                             <i class="fa-solid fa-user text-white text-3xl"></i>
@@ -21,9 +21,9 @@
                     @endif
                 </div>
                 <div>
-                    <label for="profile_picture" class="block text-lg font-semibold">Upload Image</label>
-                    <input type="file" id="profile_picture" name="profile_picture" class="w-full p-2 border border-gray-300 rounded-md mt-2" onchange="previewImage(event)">
-                    @error('profile_picture')
+                    <label for="profilePicture" class="block text-lg font-semibold">Upload Image</label>
+                    <input type="file" id="profilePicture" name="profilePicture" class="w-full p-2 border border-gray-300 rounded-md mt-2" onchange="previewImage(event)">
+                    @error('profilePicture')
                         <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
                     @enderror
                 </div>
