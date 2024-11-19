@@ -29,7 +29,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'profilePicture',
+        'profilepicture',
         'isDeleted',
         'isBlocked'
     ];
