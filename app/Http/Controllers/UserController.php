@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\User;
 
@@ -16,9 +17,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        $this->authorize('show', $user);  
-
-        return view('pages.user', [
+        return view('user.profile', [
             'user' => $user
         ]);
     }
@@ -37,7 +36,7 @@ class UserController extends Controller
         // if ($request->hasFile('profilePicture')) TO DO
 
         $user->save();
-        return redirect('user/'.$id);
+        return redirect()->route('user.profile', ['id' => $id]);
     }
 
     public function delete(Request $request, $id)
