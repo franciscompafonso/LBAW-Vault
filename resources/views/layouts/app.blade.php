@@ -48,6 +48,9 @@
                             <i class="fa-solid fa-question text-5xl"></i>
                         </a>
                         @if (Auth::check())
+                            <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" class="text-white hover:text-gray-300" title="Profile">
+                                <i class="fa-solid fa-user text-5xl"></i> <!-- Profile icon -->
+                            </a>
                             <span class="text-purple-800 font-medium text-5xl">{{ Auth::user()->picture }}</span>
                         @else
                             <a href="{{ url('/login') }}" title="Login" class="text-red-700 hover:text-red-500">
