@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
-
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -32,6 +32,9 @@ Route::controller(CardController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
     Route::get('/cards/{id}', 'show')->name('cards.show');
 });
+
+Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
 
 // API

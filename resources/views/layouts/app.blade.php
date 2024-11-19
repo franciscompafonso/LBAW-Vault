@@ -79,6 +79,12 @@
                 @yield('content')
             </section>
 
+            @if(Route::is('cards')) <!-- Show button only on /cards page -->
+                <a href="{{ route('event.create') }}" title="Create Event" class="fixed bottom-12 right-12 bg-blue-500 text-white hover:bg-blue-300 rounded-lg p-10 shadow-lg transform hover:scale-110 hover:shadow-2xl transition-all font-bold">
+                    Create Event
+                </a>
+            @endif
+
             <!-- Footer Section -->
             <footer class="bg-white w-full h-16 flex justify-center items-center shadow-md mt-auto">
                 <p class="text-gray-600">&copy; Lend-A-Hand 2024</p>
