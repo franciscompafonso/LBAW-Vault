@@ -547,32 +547,32 @@ CREATE TRIGGER trigger_block_notification
 
 -- INSERT ------------------------------------------------------------------------------------------------------------
 
-INSERT INTO user_account (id, name, username, email, password, isDeleted, isBlocked, profilePicture) VALUES
-(1, 'Ana Silva', 'anasilva', 'ana.silva@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'image/ana.png'),
-(2, 'João Pereira', 'joaopereira', 'joao.pereira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'image/joao.png'),
-(3, 'Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE, 'image/maria.png'),
-(4, 'Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 'image/pedro.png');
+INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked, profilePicture) VALUES
+('Ana Silva', 'anasilva', 'ana.silva@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'image/ana.png'),
+('João Pereira', 'joaopereira', 'joao.pereira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'image/joao.png'),
+('Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE, 'image/maria.png'),
+('Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 'image/pedro.png');
 
-INSERT INTO admin (id, email, password) VALUES
-(1, 'admin1@example.com', 'adminpass1'),
-(2, 'admin2@example.com', 'adminpass2');
+INSERT INTO admin (email, password) VALUES
+('admin1@example.com', 'adminpass1'),
+('admin2@example.com', 'adminpass2');
 
-INSERT INTO location (id, name) VALUES
-(1, 'Centro Comunitário A'),
-(2, 'Parque B'),
-(3, 'Escola C'),
-(4, 'Instituição D');
+INSERT INTO location (name) VALUES
+('Centro Comunitário A'),
+('Parque B'),
+('Escola C'),
+('Instituição D');
 
-INSERT INTO category (id, name) VALUES
-(1, 'Limpeza Ambiental'),
-(2, 'Apoio a Idosos'),
-(3, 'Distribuição de Alimentos'),
-(4, 'Apoio Escolar');
+INSERT INTO category (name) VALUES
+('Limpeza Ambiental'),
+('Apoio a Idosos'),
+('Distribuição de Alimentos'),
+('Apoio Escolar');
 
-INSERT INTO event (id, name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id) VALUES
-(1, 'Limpeza do Parque da Cidade', 'Evento para limpar o Parque da Cidade.', '2023-11-15 09:00:00', '2023-11-15 12:00:00', 'public', 50, 1, 2, 1),
-(2, 'Distribuição de Refeições', 'Distribuição de refeições para pessoas em situação de rua.', '2023-11-20 18:00:00', '2023-11-20 21:00:00', 'public', 30, 2, 1, 3),
-(3, 'Apoio Escolar', 'Aulas de reforço escolar para crianças de baixa renda.', '2023-12-01 14:00:00', '2023-12-01 17:00:00', 'private', 20, 1, 3, 4);
+INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id) VALUES
+('Limpeza do Parque da Cidade', 'Evento para limpar o Parque da Cidade.', '2023-11-15 09:00:00', '2023-11-15 12:00:00', 'public', 50, 1, 2, 1),
+('Distribuição de Refeições', 'Distribuição de refeições para pessoas em situação de rua.', '2023-11-20 18:00:00', '2023-11-20 21:00:00', 'public', 30, 2, 1, 3),
+('Apoio Escolar', 'Aulas de reforço escolar para crianças de baixa renda.', '2023-12-01 14:00:00', '2023-12-01 17:00:00', 'private', 20, 1, 3, 4);
 
 INSERT INTO participator (participator_id, event_id) VALUES
 (2, 1),
@@ -592,9 +592,9 @@ INSERT INTO answer_review (answered_by_id, question_id, about_event_id, rating, 
 (3, 2, 1, 5, '2023-11-16'),
 (1, 1, 3, 3, '2023-12-02');
 
-INSERT INTO comment (id, comment_by_id, event_id, text, is_pinned, score, edited, date) VALUES
-(1, 1, 1, 'This event looks amazing!', FALSE, 10, FALSE, '2023-11-15 09:00:00'),
-(2, 2, 1, 'Don’t miss this event!', TRUE, 20, FALSE, '2023-11-15 09:00:00'),
-(3, 3, 1, 'I can’t wait to attend!', FALSE, 0, FALSE, '2023-11-15 09:00:00'),
-(4, 4, 1, 'Looking forward to this!', FALSE, 5, TRUE, '2023-11-15 09:00:00'),
-(5, 2, 1, 'Great opportunity for networking.', FALSE, 15, FALSE, '2023-11-15 09:00:00');
+INSERT INTO comment (comment_by_id, event_id, text, is_pinned, score, edited, date) VALUES
+(1, 1, 'This event looks amazing!', FALSE, 10, FALSE, '2023-11-15 09:00:00'),
+(2, 1, 'Don’t miss this event!', TRUE, 20, FALSE, '2023-11-15 09:00:00'),
+(3, 1, 'I can’t wait to attend!', FALSE, 0, FALSE, '2023-11-15 09:00:00'),
+(4, 1, 'Looking forward to this!', FALSE, 5, TRUE, '2023-11-15 09:00:00'),
+(2, 1, 'Great opportunity for networking.', FALSE, 15, FALSE, '2023-11-15 09:00:00');
