@@ -62,7 +62,7 @@ class User extends Authenticatable
     public function allEvents()
     {
         $createdEvents = $this->myEvents()->get();
-        $participatedEvents = $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')->get();
+        $participatedEvents = $this->belongsToMany(Card::class, 'participator', 'participator_id', 'event_id')->get();
 
         // Combine and remove duplicates
         return $createdEvents->merge($participatedEvents)->unique('id');
@@ -70,18 +70,18 @@ class User extends Authenticatable
 
     public function myEvents(): HasMany
     {
-        return $this->hasMany(Event::class, 'creator_id');
+        return $this->hasMany(Card::class, 'creator_id');
     }
 
     public function participatedEvents()
     {
-        return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
+        return $this->belongsToMany(Card::class, 'participator', 'participator_id', 'event_id')
                     ->where('events.start_date', '<', now());
     }
 
     public function notYetParticipatedEvents()
     {
-        return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
+        return $this->belongsToMany(Card::class, 'participator', 'participator_id', 'event_id')
                     ->where('events.start_date', '>=', now());
     }
     

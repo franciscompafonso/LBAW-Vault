@@ -23,7 +23,7 @@ class CardPolicy
     public function show(User $user, Card $card): bool
     {
         // Only a card owner can see a card.
-        return $user->id === $card->user_id;
+        return $card->visibility === "public";
     }
 
     /**
