@@ -28,5 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('show', function ($currentUser, $user) {
             return $currentUser->id === $user->id || $currentUser->is_admin;
         });
+
+        Gate::define('edit_profile', [UserPolicy::class, 'edit_profile']);
     }
 }

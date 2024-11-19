@@ -64,8 +64,8 @@ Route::controller(UserController::class)->group(function () {
     // Show user profile (R203)
     Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
     // Edit profile form (R204) and action (R205)
-    Route::get('/user/{id}/edit', 'editForm')->where('id', '[0-9]+')->name('user.edit.form');
-    Route::post('/user/{id}/edit', 'edit')->name('user.edit.action');
+    Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
+    Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
     // Delete account (R206)
     Route::post('/user/{id}/delete_account', 'deleteAccount')->where('id', '[0-9]+')->name('user.delete');
     // Change password form (R207) and action (R208)
@@ -74,4 +74,9 @@ Route::controller(UserController::class)->group(function () {
     // Block user (R209) and unblock user (R210)
     Route::post('/user/{id}/block_user', 'block')->where('id', '[0-9]+')->name('user.block');
     Route::post('/user/{id}/unblock_user', 'unblock')->where('id', '[0-9]+')->name('user.unblock');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
+    Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
 });
