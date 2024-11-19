@@ -548,10 +548,10 @@ CREATE TRIGGER trigger_block_notification
 -- INSERT ------------------------------------------------------------------------------------------------------------
 
 INSERT INTO user_account (id, name, username, email, password, isDeleted, isBlocked, profilePicture) VALUES
-(1, 'Ana Silva', 'anasilva', 'ana.silva@example.com', 'password123', FALSE, FALSE, 'image/ana.png'),
-(2, 'João Pereira', 'joaopereira', 'joao.pereira@example.com', 'password456', FALSE, FALSE, 'image/joao.png'),
-(3, 'Maria Costa', 'mariacosta', 'maria.costa@example.com', 'password789', FALSE, TRUE, 'image/maria.png'),
-(4, 'Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', 'password101', TRUE, FALSE, 'image/pedro.png');
+(1, 'Ana Silva', 'anasilva', 'ana.silva@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'image/ana.png'),
+(2, 'João Pereira', 'joaopereira', 'joao.pereira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'image/joao.png'),
+(3, 'Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE, 'image/maria.png'),
+(4, 'Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 'image/pedro.png');
 
 INSERT INTO admin (id, email, password) VALUES
 (1, 'admin1@example.com', 'adminpass1'),
