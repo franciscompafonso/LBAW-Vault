@@ -26,31 +26,33 @@
         <body class="bg-gray-50">
             <main>
                 <!-- Header Section -->
-                <header class="flex justify-between items-center px-8 py-4 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 shadow-lg">
+                <header class="flex justify-between items-center px-12 py-12 bg-blue-400 shadow-lg">
                     <!-- Logo/Title -->
                     <h1 class="text-3xl font-bold text-purple-900">
-                        <a href="{{ url('/cards') }}" class="hover:text-purple-700">Lend-a-Hand</a>
+                        <a href="{{ url('/cards') }}" class="hover:text-gray-300 text-7xl font-semibold text-white">Lend-a-Hand</a>
                     </h1>
 
                     <!-- Navigation Icons -->
                     <div class="flex items-center space-x-6">
-                        <a href="{{ url('/home') }}" class="text-blue-700 hover:text-blue-500" title="Home">
-                            <i class="fa-solid fa-house text-2xl"></i>
+                        <a href="{{ url('/home') }}" class="text-white hover:text-gray-300" title="Home">
+                            <i class="fa-solid fa-house text-5xl"></i>
                         </a>
-                        <a href="{{ url('/info') }}" class="text-green-700 hover:text-green-500" title="Info">
-                            <i class="fa-solid fa-circle-info text-2xl"></i>
+                        <a href="{{ url('/info') }}" class="text-white hover:text-gray-300" title="Info">
+                            <i class="fa-solid fa-circle-info text-5xl"></i>
                         </a>
-                        <a href="{{ url('/help') }}" class="text-yellow-700 hover:text-yellow-500" title="Help">
-                            <i class="fa-solid fa-question text-2xl"></i>
+                        <a href="{{ url('/help') }}" class="text-white hover:text-gray-300" title="Help">
+                            <i class="fa-solid fa-question text-5xl"></i>
                         </a>
                         @if (Auth::check())
+                            <!-- 
                             <a href="{{ url('/logout') }}" title="Logout" class="text-red-700 hover:text-red-500">
-                                <i class="fa-solid fa-right-from-bracket text-2xl"></i>
-                            </a>
-                            <span class="text-purple-800 font-medium">{{ Auth::user()->name }}</span>
+                                <i class="fa-solid fa-right-from-bracket text-5xl"></i>
+                            </a> 
+                            -->
+                            <span class="text-purple-800 font-medium text-5xl">{{ Auth::user()->picture }}</span>
                         @else
                             <a href="{{ url('/login') }}" title="Login" class="text-red-700 hover:text-red-500">
-                                <i class="fa-solid fa-right-to-bracket text-2xl"></i>
+                                <i class="fa-solid fa-right-to-bracket text-5xl"></i>
                             </a>
                         @endif
                     </div>
