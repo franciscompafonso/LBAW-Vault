@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +24,9 @@ use App\Http\Controllers\Auth\RegisterController;
 // Home
 Route::redirect('/', '/home');
 
-Route::get('/home', function () {
-    return view('pages.home'); // this points to resources/views/home.blade.php
-});
+Route::get('/home', [HomeController::class, 'index'])->name('pages.home');
+
+Route::get('/events/category={id}', [EventController::class, 'showByCategory'])->name('events.category');
 
 // Cards
 Route::controller(CardController::class)->group(function () {

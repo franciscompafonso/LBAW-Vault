@@ -20,15 +20,13 @@
 <!-- Categories Section -->
 <section class="py-8 px-4">
     <div class="flex flex-col items-center space-y-4">
-        <button class="w-full max-w-md bg-blue-500 text-white text-lg font-medium py-3 rounded-lg shadow-md hover:bg-blue-600">
-            Category #1
-        </button>
-        <button class="w-full max-w-md bg-blue-500 text-white text-lg font-medium py-3 rounded-lg shadow-md hover:bg-blue-600">
-            Category #2
-        </button>
-        <button class="w-full max-w-md bg-blue-500 text-white text-lg font-medium py-3 rounded-lg shadow-md hover:bg-blue-600">
-            ...
-        </button>
+        @foreach ($categories as $category)
+            <a 
+                href="{{ url('events/category=' . $category->id) }}" 
+                class="w-full max-w-md bg-blue-500 text-white text-lg font-medium py-3 rounded-lg shadow-md hover:bg-blue-600 text-center">
+                {{ $category->name }}
+            </a>
+        @endforeach
     </div>
 </section>
 @endsection

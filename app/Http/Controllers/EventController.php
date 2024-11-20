@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class EventController extends Controller
 {
     // Display form to create a new event
-    public function create()
+    public function create(): Factory|View
     {
         $locations = Location::all(); // Get all locations from the database
         $categories = Category::all(); // Get all categories from the database
@@ -49,5 +49,17 @@ class EventController extends Controller
 
         // Redirect with success message
         return redirect()->route('cards')->with('success', 'Event created successfully!');
+    }
+
+    public function showByCategory($id)
+    {
+        // Fetch the category
+        $category = Category::findOrFail($id);
+
+        // Fetch events related to the category
+        $events = Event::where('category_id', $id)->get();
+
+        // Return the view with events and category information
+        return view('pages.events_by_category', compact('category', 'events'));
     }
 }

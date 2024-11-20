@@ -12,8 +12,8 @@
             <!-- Profile Picture Input -->
             <div class="mb-4 flex items-center space-x-4">
                 <div class="flex-shrink-0">
-                    @if ($user->profilePicture)
-                        <img id="profile-picture-preview" src="{{ asset('storage/' . $user->profilePicture) }}" alt="Current Profile Picture" class="w-32 h-32 rounded-full border-4 border-blue-400">
+                    @if ($user->profilepicture)
+                        <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Current Profile Picture" class="w-32 h-32 rounded-full border-2 border-blue-400">
                     @else
                         <div id="profile-picture-preview" class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
                             <i class="fa-solid fa-user text-white text-3xl"></i>
