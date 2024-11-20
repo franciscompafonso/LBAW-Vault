@@ -8,10 +8,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        skyBlue: '#97D7ED',
-        warmTaupe: '#936D4D',
-        deepNavy: '#264653',
-        softCream: '#F4E8C1'
+        burgundy: '#800020',
+        whiteSmoke: '#F4F4F4',
+        eerieBlack: '#191716',
+        keppel: '#3BA99C',
+        charcoal: '#464646'
       }
 
     },
