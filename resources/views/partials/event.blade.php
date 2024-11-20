@@ -6,7 +6,7 @@
 
         <p class="text-sm text-charcoal mt-2 line-clamp-2">{{ $event->description }}</p>
 
-        <a href="{{ route('events.show', $event->id) }}" class="mt-4 inline-block text-blue-400 hover:underline">
+        <a href="{{ route('events.show', $event->id) }}" class="mt-4 inline-block text-keppel-400 hover:underline">
             View Details
         </a>
     </div>

@@ -18,7 +18,7 @@
         <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
         @vite('resources/css/app.css')
     </head>
-    <body class="bg-whiteSmoke h-full flex flex-col">
+    <body class="bg-white h-full flex flex-col">
         <main class="flex-1 h-screen">
             <!-- Header Section -->
             <header class="flex justify-between items-center px-12 py-6 bg-eerieBlack shadow-lg">
