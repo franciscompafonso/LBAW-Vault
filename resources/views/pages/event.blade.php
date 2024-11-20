@@ -5,23 +5,23 @@
     <div class="flex flex-col lg:flex-row gap-10">
         <!-- Image Section (Left) -->
         <div class="flex-shrink-0 w-full lg:w-2/5">
-            <img src="{{ $card->image_url ?? 'default-image.jpg' }}" alt="{{ $card->name }}" class="w-full h-80 object-cover rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300">
+            <img src="{{ $event->image_url ?? 'default-image.jpg' }}" alt="{{ $event->name }}" class="w-full h-80 object-cover rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300">
         </div>
 
         <!-- Event Details Section (Right) -->
         <div class="flex-1 space-y-6">
-            <h1 class="text-4xl font-bold text-blue-600">{{ $card->name }}</h1>
-            <p class="text-gray-700 leading-relaxed text-lg">{{ $card->description }}</p>
+            <h1 class="text-4xl font-bold text-blue-600">{{ $event->name }}</h1>
+            <p class="text-gray-700 leading-relaxed text-lg">{{ $event->description }}</p>
 
             <div class="mt-6 space-y-4">
                 <p class="text-gray-800 text-lg">
-                    <strong class="font-semibold">Start Date:</strong> {{ \Carbon\Carbon::parse($card->start_date)->format('d/m/Y') }}
+                    <strong class="font-semibold">Start Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y') }}
                 </p>
                 <p class="text-gray-800 text-lg">
-                    <strong class="font-semibold">Start Time:</strong> {{ \Carbon\Carbon::parse($card->start_date)->format('H:i') }} <!-- 24-hour format -->
+                    <strong class="font-semibold">Start Time:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }} <!-- 24-hour format -->
                 </p>
                 <p class="text-gray-800 text-lg">
-                    <strong class="font-semibold">Location:</strong> {{ $card->location->name ?? 'No location specified' }}
+                    <strong class="font-semibold">Location:</strong> {{ $event->location->name ?? 'No location specified' }}
                 </p>
             </div>
 
@@ -38,7 +38,7 @@
         <div class="flex-1 bg-gray-50 p-6 rounded-lg shadow-lg">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-4">Reviews</h2>
             <div class="space-y-6">
-                @each('partials.item', $card->comments()->orderBy('id')->get(), 'item')
+                @each('partials.item', $event->comments()->orderBy('id')->get(), 'item')
             </div>
         </div>
 
@@ -46,7 +46,7 @@
         <div class="w-full lg:w-1/3 bg-gray-50 p-6 rounded-lg shadow-lg">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-4">Participants</h2>
             <ul class="mt-4 space-y-4">
-                @each('partials.participator', $card->participators()->orderBy('id')->get(), 'item')
+                @each('partials.participator', $event->participators()->orderBy('id')->get(), 'item')
             </ul>
         </div>
     </div>

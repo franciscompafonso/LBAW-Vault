@@ -2,19 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-.card:hover {
+.event:hover {
     transform: translateY(-5px); /* Slight elevation on hover */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
-.card img {
-    border-radius: 0.375rem 0.375rem 0 0; /* Match the card's rounded corners */
+.event img {
+    border-radius: 0.375rem 0.375rem 0 0; /* Match the event's rounded corners */
 }
 
 /* Adjustments for small screens */
 @media (max-width: 768px) {
-    .card {
+    .event {
         margin: 1rem auto;
     }
 }

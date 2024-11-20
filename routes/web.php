@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -28,28 +26,22 @@ Route::get('/home', [HomeController::class, 'index'])->name('pages.home');
 
 Route::get('/events/category={id}', [EventController::class, 'showByCategory'])->name('events.category');
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show')->name('cards.show');
-});
-
 Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
 Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
+// Events
+Route::controller(EventController::class)->group(function () {
+    Route::get('/events', 'index')->name('v');
+    Route::get('/events/{id}', 'show')->name('events.show');
+});
+
+
 
 // API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
+Route::controller(EventController::class)->group(function () {
+    Route::put('/api/events', 'create');
+    Route::delete('/api/events/{event_id}', 'delete');
 });
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
-
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {

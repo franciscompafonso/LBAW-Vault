@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class EventController extends Controller
 {
@@ -16,7 +17,51 @@ class EventController extends Controller
         $locations = Location::all(); // Get all locations from the database
         $categories = Category::all(); // Get all categories from the database
         return view('event.create', compact('locations', 'categories'));
-        
+    }
+
+    /**
+     * Show the event for a given id.
+     */
+    public function show(string $id): View
+    {
+        // Get the evemt.
+        $event = Event::findOrFail($id);
+
+        // Check if the current user can see (show) the event.
+        $this->authorize('show', $event);  
+
+        // Use the pages.event template to display the event.
+        return view('pages.event', [
+            'event' => $event
+        ]);
+    }
+
+    /**
+     * Shows all events.
+     */
+    public function index()
+    {
+        // Check if the user is logged in.
+        if (!Auth::check()) {
+            // Not logged in, redirect to login.
+            return redirect('/login');
+
+        } else {
+            // The user is logged in.
+
+            // Get events for user ordered by id.
+            $events = Auth::user()->myEvents()->orderBy('id')->get();
+
+            // Check if the current user can list the events.
+            $this->authorize('index', Event::class);
+
+            // The current user is authorized to list events.
+
+            // Use the pages.events template to display all events.
+            return view('pages.events', [
+                'events' => $events
+            ]);
+        }
     }
 
     // Store new event data
@@ -48,7 +93,7 @@ class EventController extends Controller
         ]);
 
         // Redirect with success message
-        return redirect()->route('cards')->with('success', 'Event created successfully!');
+        return redirect()->route('events.store')->with('success', 'Event created successfully!');
     }
 
     public function showByCategory($id)
@@ -61,5 +106,21 @@ class EventController extends Controller
 
         // Return the view with events and category information
         return view('pages.events_by_category', compact('category', 'events'));
+    }
+
+    /**
+     * Delete a event.
+     */
+    public function delete(Request $request, $id)
+    {
+        // Find the event.
+        $event = Event::find($id);
+
+        // Check if the current user is authorized to delete this event.
+        $this->authorize('delete', $event);
+
+        // Delete the event and return it as JSON.
+        $event->delete();
+        return response()->json($event);
     }
 }

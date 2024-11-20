@@ -33,18 +33,15 @@
 
                 <!-- Navigation Icons -->
                 <div class="flex items-center space-x-6">
-                    @if (!Request::is('login')) <!-- Only show if NOT on the login page -->
-                        <!-- Logout Button -->
-                        @if (Auth::check())
-                            <a href="{{ url('/logout') }}" title="Logout" class="text-red-700 hover:text-red-500">
-                                <i class="fa-solid fa-right-from-bracket text-5xl"></i>
-                            </a>
-                        @endif
-                    @endif
                     
-                    <!-- Home Button -->
-                    <a href="{{ url('/home') }}" class="text-white hover:text-gray-300" title="Home">
+                    <!-- All Events Page Button -->
+                    <a href="{{ url('/events') }}" class="text-white hover:text-gray-300" title="Events">
                         <i class="fa-solid fa-house text-5xl"></i>
+                    </a>
+
+                    <!-- Create Event -->
+                    <a href="{{ url('/event/create') }}" title="Create Event" class="text-white hover:text-gray-300">
+                        <i class="fa-solid fa-plus text-5xl"></i>
                     </a>
 
                     <!-- Info Button -->
@@ -64,11 +61,19 @@
                         </a>
                     @endif
 
-                    <!-- User Profile -->
+                    
                     @if (Auth::check())
+                        <!-- Profile Button -->
+                        @if (Request::is('user/*'))
+                            <a href="{{ url('/logout') }}" title="Logout" class="text-red-700 hover:text-red-500">
+                                <i class="fa-solid fa-right-from-bracket text-5xl"></i>
+                            </a>
+                        <!-- Logout Button in the user page -->
+                        @else
                         <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" ><img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                             alt="User Profile Picture" 
                             class="w-16 h-16 rounded-full object-cover"></a>
+                        @endif
                     @endif
 
                 </div>
@@ -78,12 +83,6 @@
             <section id="content" class="p-6 rounded-md max-w-6xl mx-auto">
                 @yield('content')
             </section>
-
-            @if(Route::is('cards')) <!-- Show button only on /cards page -->
-                <a href="{{ route('event.create') }}" title="Create Event" class="fixed bottom-12 right-12 bg-blue-500 text-white hover:bg-blue-300 rounded-lg p-10 shadow-lg transform hover:scale-110 hover:shadow-2xl transition-all font-bold">
-                    Create Event
-                </a>
-            @endif
 
             <!-- Footer Section -->
             <footer class="bg-white w-full h-16 flex justify-center items-center shadow-md mt-auto">
