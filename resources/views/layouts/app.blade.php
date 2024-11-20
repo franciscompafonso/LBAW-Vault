@@ -22,41 +22,41 @@
         <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
         @vite('resources/css/app.css')
     </head>
-    <body class="bg-gray-50 h-full flex flex-col">
+    <body class="bg-softCream h-full flex flex-col">
         <main class="flex-1 h-screen">
             <!-- Header Section -->
-            <header class="flex justify-between items-center px-12 py-12 bg-blue-400 shadow-lg">
+            <header class="flex justify-between items-center px-12 py-12 bg-skyBlue shadow-lg">
                 <!-- Logo/Title -->
-                <h1 class="text-3xl font-bold text-purple-900">
-                    <a href="{{ url('/home') }}" class="hover:text-gray-300 text-7xl font-semibold text-white">Lend-a-Hand</a>
+                <h1 class="text-3xl font-bold text-softCream">   
+                    <a href="{{ url('/home') }}" class="hover:text-warmTaupe text-7xl font-semibold text-white">Lend-a-Hand</a> 
                 </h1>
 
                 <!-- Navigation Icons -->
                 <div class="flex items-center space-x-6">
                     
                     <!-- All Events Page Button -->
-                    <a href="{{ url('/events') }}" class="text-white hover:text-gray-300" title="Events">
+                    <a href="{{ url('/events') }}" class="text-softCream hover:text-warmTaupe" title="Events">   
                         <i class="fa-solid fa-house text-5xl"></i>
                     </a>
 
                     <!-- Create Event -->
-                    <a href="{{ url('/event/create') }}" title="Create Event" class="text-white hover:text-gray-300">
+                    <a href="{{ url('/event/create') }}" title="Create Event" class="text-softCream hover:text-warmTaupe">   
                         <i class="fa-solid fa-plus text-5xl"></i>
                     </a>
 
                     <!-- Info Button -->
-                    <a href="{{ url('/info') }}" class="text-white hover:text-gray-300" title="Info">
+                    <a href="{{ url('/info') }}" class="text-softCream hover:text-warmTaupe" title="Info">   
                         <i class="fa-solid fa-circle-info text-5xl"></i>
                     </a>
 
                     <!-- Help Button -->
-                    <a href="{{ url('/help') }}" class="text-white hover:text-gray-300" title="Help">
+                    <a href="{{ url('/help') }}" class="text-softCream hover:text-warmTaupe" title="Help">   
                         <i class="fa-solid fa-question text-5xl"></i>
                     </a>
 
                     <!-- Login Button (only visible if user is not logged in and not on login page) -->
                     @if (Auth::guest() && !Request::is('login'))
-                        <a href="{{ url('/login') }}" title="Login" class="text-red-700 hover:text-red-500">
+                        <a href="{{ url('/login') }}" title="Login" class="text-deepNavy hover:text-warmTaupe">   
                             <i class="fa-solid fa-right-to-bracket text-5xl"></i>
                         </a>
                     @endif
@@ -65,8 +65,8 @@
                     @if (Auth::check())
                         <!-- Profile Button -->
                         @if (Request::is('user/*'))
-                            <a href="{{ url('/logout') }}" title="Logout" class="text-red-700 hover:text-red-500">
-                                <i class="fa-solid fa-right-from-bracket text-5xl"></i>
+                            <a href="{{ url('/logout') }}" title="Logout" class="text-deepNavy hover:text-warmTaupe">   
+                                <i class="fa-solid fa-right-from-bracket text-deepNavy text-5xl"></i>
                             </a>
                         <!-- Logout Button in the user page -->
                         @else
@@ -85,8 +85,8 @@
             </section>
 
             <!-- Footer Section -->
-            <footer class="bg-white w-full h-16 flex justify-center items-center shadow-md mt-auto">
-                <p class="text-gray-600">&copy; Lend-A-Hand 2024</p>
+            <footer class="bg-warmTaupe w-full h-16 flex justify-center items-center shadow-md mt-auto">   
+                <p class="text-softCream">&copy; Lend-A-Hand 2024</p>   
             </footer>
         </main>
     </body>
