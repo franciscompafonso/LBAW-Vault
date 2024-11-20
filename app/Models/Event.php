@@ -23,17 +23,7 @@ class Event extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'description',
-        'start_date',
-        'end_date',
-        'visibility',
-        'capacity',
-        'creator_id',
-        'location_id',
-        'category_id'
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be cast.
