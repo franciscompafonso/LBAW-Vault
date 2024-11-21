@@ -96,6 +96,32 @@ class EventController extends Controller
         return redirect()->route('events.store')->with('success', 'Event created successfully!');
     }
 
+    public function edit($id)
+    {
+        $event = Event::findOrFail($id);
+        $locations = Location::all();
+        $categories = Category::all();
+        return view('event.edit', compact('event', 'locations', 'categories'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $event = Event::findOrFail($id);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'start_date' => 'required|date|after:now',
+            'end_date' => 'required|date|after:start_date',
+            'visibility' => 'required|in:public,private',
+            'capacity' => 'required|integer|min:1',
+            'location_id' => 'required|integer', // Assuming location_id is an integer (foreign key)
+            'category_id' => 'required|integer', // Assuming category_id is an integer (foreign key)
+        ]);
+        $event->update($validated);
+        return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
+    }
+
+
     public function showByCategory($id)
     {
         // Fetch the category

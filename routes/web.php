@@ -28,6 +28,9 @@ Route::get('/events/category={id}', [EventController::class, 'showByCategory'])-
 
 Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
 Route::post('/events', [EventController::class, 'store'])->name('events.store');
+Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
 
 // Events
 Route::controller(EventController::class)->group(function () {

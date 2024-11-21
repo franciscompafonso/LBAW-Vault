@@ -17,9 +17,19 @@ class UserController extends Controller
     public function show(int $id)
     {
         $user = User::find($id);
+        $myEvents = $user->myEvents()->get();
+        /*
+        $participatedEvents = $user->participatedEvents()->get();
+        $notYetParticipatedEvents = $user->notYetParticipatedEvents()->get();
+        */
 
         return view('user.profile', [
-            'user' => $user
+            'user' => $user,
+            'myEvents' => $myEvents,
+            /*
+            'participatedEvents' => $participatedEvents,
+            'notYetParticipatedEvents' => $notYetParticipatedEvents,
+            */
         ]);
     }
 

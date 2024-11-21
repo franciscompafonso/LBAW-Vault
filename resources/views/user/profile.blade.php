@@ -40,6 +40,21 @@
                 Edit Profile
             </a>
         </div>
+
+        <!-- My Events -->
+        <div class="mt-8">
+            <h3 class="text-2xl font-bold text-ultraViolet mb-4">My Events</h3>
+            @if ($myEvents->isEmpty())
+                <p class="text-gray-500">You have not created any events yet.</p>
+            @else
+                <section id="events" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+                    @foreach ($myEvents as $event)
+                        @include('partials.event', ['event' => $event])
+                    @endforeach
+                </section>
+            @endif
+        </div>
+
     </div>
 @endsection
 

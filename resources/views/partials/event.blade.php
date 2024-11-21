@@ -9,5 +9,10 @@
         <a href="{{ route('events.show', $event->id) }}" class="mt-4 inline-block text-keppel-400 hover:underline">
             View Details
         </a>
+
+        @if ($event->creator_id === Auth::id())
+            <a href="{{ route('events.edit', $event->id) }}" class="text-blue-500 hover:text-blue-700 font-semibold">Edit Event</a>
+        @endif
+        
     </div>
 </article>
