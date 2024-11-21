@@ -137,10 +137,10 @@ class EventController extends Controller
     /**
      * Delete an event.
      */
-    public function deleteEvent(Request $request, $id)
+    public function deleteEvent($eventId)
     {
         // Find the event.
-        $event = Event::find($id);
+        $event = Event::find($eventId);
 
         // Check if the current user is authorized to delete this event.
         $this->authorize('delete', $event);
@@ -153,7 +153,7 @@ class EventController extends Controller
     /**
      * Join an event.
      */
-    public function joinEvent(Request $request, $eventId)
+    public function joinEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
 
@@ -171,7 +171,7 @@ class EventController extends Controller
     /**
      * Leave an event.
      */
-    public function leaveEvent(Request $request, $eventId)
+    public function leaveEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
 

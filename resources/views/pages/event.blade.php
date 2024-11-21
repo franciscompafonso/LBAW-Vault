@@ -25,12 +25,6 @@
                 </p>
             </div>
 
-            @if (session('message'))
-                <div class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
-                    {{ session('message') }}
-                </div>
-            @endif
-
             @if ($event->participators->contains('id', Auth::id()))
             <form action="{{ route('events.leave', $event->id) }}" method="POST">
                     @csrf

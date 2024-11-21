@@ -4,9 +4,11 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\HomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +43,6 @@ Route::controller(EventController::class)->group(function () {
 Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
 Route::post('/events/{event}/delete', [EventController::class, 'deleteEvent'])->name('events.delete');
 Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
-
 
 
 // API
@@ -83,3 +84,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
     Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
 });
+
+// Comments
+Route::post('/comments/{comment}/deleteComment', [CommentController::class, 'deleteComment'])->name('comments.delete');

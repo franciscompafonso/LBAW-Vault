@@ -207,7 +207,7 @@ CREATE TABLE event_update_notification (
 
 CREATE TABLE comment_notification (
     id INT REFERENCES notification(id),
-    comment_id INT REFERENCES comment(id),
+    comment_id INT REFERENCES comment(id) ON DELETE CASCADE,
     PRIMARY KEY (id, comment_id)
 );
 
@@ -594,6 +594,7 @@ INSERT INTO answer_review (answered_by_id, question_id, about_event_id, rating, 
 
 INSERT INTO comment (comment_by_id, event_id, text, is_pinned, score, edited, date) VALUES
 (1, 1, 'This event looks amazing!', FALSE, 10, FALSE, '2023-11-15 09:00:00'),
+(1, 1, 'This event looks like trash!', FALSE, 10, FALSE, '2023-11-15 09:01:00'),
 (2, 1, 'Don’t miss this event!', TRUE, 20, FALSE, '2023-11-15 09:00:00'),
 (3, 1, 'I can’t wait to attend!', FALSE, 0, FALSE, '2023-11-15 09:00:00'),
 (4, 1, 'Looking forward to this!', FALSE, 5, TRUE, '2023-11-15 09:00:00'),
