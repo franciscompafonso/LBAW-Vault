@@ -5,7 +5,7 @@
         <h3 class="text-2xl font-semibold text-ultraViolet">{{ $event->name }}</h3>
         <p class="text-darkSlateGrey mt-2">{{ $event->description }}</p>
         <p class="text-darkSlateGrey text-sm mt-4">
-            Date: {{ $event->date ? \Carbon\Carbon::parse($event->date)->format('d/m/Y') : 'Not available' }}
+            Date: {{ $event->start_date ? \Carbon\Carbon::parse($event->date)->format('d/m/Y') : 'Not available' }}
         </p>
 
         <div class="flex flex-col items-center space-y-6 py-8 px-4">

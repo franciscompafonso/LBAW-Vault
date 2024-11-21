@@ -25,10 +25,32 @@
                 </p>
             </div>
 
-            <!-- Action Button -->
-            <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">   
-                Join Event
-            </button>
+            @if ($event->participators->contains('id', Auth::id()))
+                <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
+                    <a href="">
+                        Leave Event
+                    </a>
+                </button>
+            @else
+                <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
+                    <a href="">
+                        Join Event
+                    </a>
+                </button>
+            @endif
+
+            @if ($event->creator_id === Auth::id())
+                <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">   
+                    <a href="">
+                        Delete Event
+                    </a>
+                </button>
+                <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">   
+                    <a href="{{ route('events.edit', $event->id) }}">
+                        Edit Event
+                    </a>
+                </button>
+            @endif
         </div>
     </div>
 
@@ -38,7 +60,7 @@
         <div class="flex-1 bg-whiteSmoke p-6 rounded-lg shadow-lg">   
             <h2 class="text-3xl font-bold text-burgundy mb-6 border-b-2 border-eerieBlack pb-4">Reviews</h2>
             <div class="space-y-6 text-eerieBlack">
-                @each('partials.item', $event->comments()->orderBy('id')->get(), 'item')
+                @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
         </div>
 
@@ -46,7 +68,7 @@
         <div class="w-full lg:w-1/3 bg-whiteSmoke p-6 rounded-lg shadow-lg">   
             <h2 class="text-3xl font-bold text-keppel mb-6 border-b-2 border-eerieBlack pb-4">Participants</h2>
             <ul class="mt-4 text-eerieBlack space-y-4">
-                @each('partials.participator', $event->participators()->orderBy('id')->get(), 'item')
+                @each('partials.participator', $event->participators()->orderBy('id')->get(), 'participator')
             </ul>
         </div>
     </div>

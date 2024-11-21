@@ -18,11 +18,29 @@ class Comment extends Model
     // Specify the table name
     protected $table = 'comment';
 
+    protected $fillable = [
+        'comment_by_id',
+        'event_id',
+        'text',
+        'is_pinned',
+        'score',
+        'edited',
+        'date',
+    ];
+
+    /**
+     * Get the user who commented.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'comment_by_id');
+    }
+
     /**
      * Get the event where the comment is included.
      */
     public function event(): BelongsTo
     {
-        return $this->belongsTo(Event::class);
+        return $this->belongsTo(Event::class, 'event_id');
     }
 }
