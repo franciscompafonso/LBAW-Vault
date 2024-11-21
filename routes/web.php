@@ -38,6 +38,10 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/events/{id}', 'show')->name('events.show');
 });
 
+Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
+Route::post('/events/{event}/delete', [EventController::class, 'deleteEvent'])->name('events.delete');
+Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
+
 
 
 // API

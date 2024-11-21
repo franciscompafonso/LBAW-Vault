@@ -25,26 +25,35 @@
                 </p>
             </div>
 
+            @if (session('message'))
+                <div class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+                    {{ session('message') }}
+                </div>
+            @endif
+
             @if ($event->participators->contains('id', Auth::id()))
-                <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
-                    <a href="">
+            <form action="{{ route('events.leave', $event->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
                         Leave Event
-                    </a>
-                </button>
+                    </button>
+                </form>
             @else
-                <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
-                    <a href="">
+                <form action="{{ route('events.join', $event->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
                         Join Event
-                    </a>
-                </button>
+                    </button>
+                </form>
             @endif
 
             @if ($event->creator_id === Auth::id())
-                <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">   
-                    <a href="">
-                        Delete Event
-                    </a>
-                </button>
+                <form action="{{ route('events.delete', $event->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
+                        Cancel Event
+                    </button>
+                </form>
                 <button class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">   
                     <a href="{{ route('events.edit', $event->id) }}">
                         Edit Event

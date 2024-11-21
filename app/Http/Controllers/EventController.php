@@ -135,9 +135,9 @@ class EventController extends Controller
     }
 
     /**
-     * Delete a event.
+     * Delete an event.
      */
-    public function delete(Request $request, $id)
+    public function deleteEvent(Request $request, $id)
     {
         // Find the event.
         $event = Event::find($id);
@@ -148,5 +148,41 @@ class EventController extends Controller
         // Delete the event and return it as JSON.
         $event->delete();
         return response()->json($event);
+    }
+
+    /**
+     * Join an event.
+     */
+    public function joinEvent(Request $request, $eventId)
+    {
+        $event = Event::findOrFail($eventId);
+
+        // Check if the user is already a participator
+        if ($event->participators()->where('id', Auth::id())->exists()) {
+            return back()->with('message', 'You are already participating in this event.');
+        }
+
+        // Attach the user to the participator list
+        $event->participators()->attach(Auth::id());
+
+        return back()->with('message', 'You have successfully joined the event!');
+    }
+
+    /**
+     * Leave an event.
+     */
+    public function leaveEvent(Request $request, $eventId)
+    {
+        $event = Event::findOrFail($eventId);
+
+        // Check if the user is a participator
+        if (!$event->participators()->where('id', Auth::id())->exists()) {
+            return back()->with('message', 'You are not participating in this event.');
+        }
+
+        // Detach the user from the participator list
+        $event->participators()->detach(Auth::id());
+
+        return back()->with('message', 'You have successfully left the event.');
     }
 }
