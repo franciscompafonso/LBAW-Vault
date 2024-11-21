@@ -14,18 +14,18 @@
             <!-- Profile Picture Input -->
             <div class="mb-4 flex items-center space-x-4">
                 <div class="flex-shrink-0">
-                    @if ($user->profilepicture)
-                        <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Current Profile Picture" class="w-32 h-32 rounded-full border-2 border-ultraViolet">
-                    @else
-                        <div id="profile-picture-preview" class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user text-white text-3xl"></i>
-                        </div>
-                    @endif
+                @if ($user->profilepicture)
+                    <img id="profile-picture-preview" src="{{ asset('storage/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 rounded-full border-2 border-ultraViolet">
+                @else
+                    <div id="profile-picture-preview" class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-user text-white text-3xl"></i>
+                    </div>
+                @endif
                 </div>
                 <div>
-                    <label for="profilePicture" class="block text-lg font-semibold font-montserrat">Upload Image</label>
-                    <input type="file" id="profilePicture" name="profilePicture" class="w-full p-2 border border-gray-300 rounded-md mt-2" onchange="previewImage(event)">
-                    @error('profilePicture')
+                    <label for="profilepicture" class="block text-lg font-semibold font-montserrat">Upload Image</label>
+                    <input type="file" id="profilepicture" name="profilepicture" class="w-full p-2 border border-gray-300 rounded-md mt-2" onchange="previewImage(event)">
+                    @error('profilepicture')
                         <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
                     @enderror
                 </div>

@@ -43,7 +43,7 @@ class UserController extends Controller
             'username' => 'required|string|max:255|unique:user_account,username,' . $user->id, 
             'email' => 'required|email|max:255|unique:user_account,email,' . $user->id,  
             'password' => 'nullable|string|min:8|confirmed',  
-            'profilePicture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',  
+            'profilepicture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',  
         ]);
 
         // Update the user's details
@@ -55,12 +55,12 @@ class UserController extends Controller
             $user->password = bcrypt($validatedData['password']);
         }
 
-        if ($request->hasFile('profilePicture')) {
-            if ($user->profilePicture) {
-                Storage::delete('public/' . $user->profilePicture);
+        if ($request->hasFile('profilepicture')) {
+            if ($user->profilepicture) {
+                Storage::delete('storage/profilepictures/' . $user->profilepicture);
             }
-            $path = $request->file('profilePicture')->store('profilePictures', 'public');
-            $user->profilePicture = $path;
+            $path = $request->file('profilepicture')->store('profilepictures', 'public');
+            $user->profilepicture = $path; 
         }
 
         $user->save();
