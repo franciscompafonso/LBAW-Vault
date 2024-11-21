@@ -2,16 +2,25 @@
     <img src="{{ $event->image_url ?? 'default-image.jpg' }}" alt="{{ $event->name }}" class="w-full h-40 object-cover">
 
     <div class="p-4">
-        <h3 class="text-lg font-bold text-charcoal">{{ $event->name }}</h3>
+        <h3 class="text-2xl font-semibold text-ultraViolet">{{ $event->name }}</h3>
+        <p class="text-darkSlateGrey mt-2">{{ $event->description }}</p>
+        <p class="text-darkSlateGrey text-sm mt-4">
+            Date: {{ $event->date ? \Carbon\Carbon::parse($event->date)->format('d/m/Y') : 'Not available' }}
+        </p>
 
-        <p class="text-sm text-charcoal mt-2 line-clamp-2">{{ $event->description }}</p>
-
-        <a href="{{ route('events.show', $event->id) }}" class="mt-4 inline-block text-keppel-400 hover:underline">
-            View Details
-        </a>
-
+        <div class="flex flex-col items-center space-y-6 py-8 px-4">
+            <a href="{{ route('events.show', $event->id) }}"
+                class="w-full max-w-md text-cambridgeBlue text-2xl font-bold py-3 rounded-lg hover:text-darkSlateGrey text-center transition-all duration-200 font-montserrat">
+                View Details
+            </a>
+        </div>
         @if ($event->creator_id === Auth::id())
-            <a href="{{ route('events.edit', $event->id) }}" class="text-blue-500 hover:text-blue-700 font-semibold">Edit Event</a>
+            <div class="flex flex-col items-center space-y-6 py-8 px-4">
+                <a href="{{ route('events.edit', $event->id) }}"
+                    class="w-full max-w-md text-cambridgeBlue text-2xl font-bold py-3 rounded-lg hover:text-darkSlateGrey text-center transition-all duration-200 font-montserrat">
+                    Edit Event
+                </a>
+            </div>
         @endif
         
     </div>
