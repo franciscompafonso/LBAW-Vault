@@ -43,6 +43,7 @@ Route::controller(EventController::class)->group(function () {
 Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
 Route::post('/events/{event}/delete', [EventController::class, 'deleteEvent'])->name('events.delete');
 Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
+Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
 
 
 // API

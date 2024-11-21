@@ -185,4 +185,22 @@ class EventController extends Controller
 
         return back()->with('message', 'You have successfully left the event.');
     }
+
+    /**
+     * Kick a participator from the event.
+     */
+    public function kickParticipator($eventId, $userId)
+    {
+        $event = Event::findOrFail($eventId);
+
+        // Check if the user is a participator
+        if (!$event->participators()->where('id', $userId)->exists()) {
+            return back()->with('message', 'The user is not participating in this event.');
+        }
+
+        // Detach the user from the participator list
+        $event->participators()->detach($userId);
+
+        return back()->with('message', 'You have removed the participator.');
+    }
 }

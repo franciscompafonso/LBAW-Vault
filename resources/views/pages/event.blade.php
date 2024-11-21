@@ -25,8 +25,16 @@
                 </p>
             </div>
 
+            <!-- cool for debugging!
+                @if (session('message'))
+                    <div class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+                        {{ session('message') }}
+                    </div>
+                @endif
+            -->
+
             @if ($event->participators->contains('id', Auth::id()))
-            <form action="{{ route('events.leave', $event->id) }}" method="POST">
+                <form action="{{ route('events.leave', $event->id) }}" method="POST">
                     @csrf
                     <button type="submit" class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
                         Leave Event
@@ -71,7 +79,12 @@
         <div class="w-full lg:w-1/3 bg-whiteSmoke p-6 rounded-lg shadow-lg">   
             <h2 class="text-3xl font-bold text-keppel mb-6 border-b-2 border-eerieBlack pb-4">Participants</h2>
             <ul class="mt-4 text-eerieBlack space-y-4">
-                @each('partials.participator', $event->participators()->orderBy('id')->get(), 'participator')
+            @foreach ($event->participators()->orderBy('id')->get() as $participator)
+                @include('partials.participator', [
+                    'participator' => $participator,
+                    'creatorId' => $event->creator_id
+                ])
+            @endforeach
             </ul>
         </div>
     </div>
