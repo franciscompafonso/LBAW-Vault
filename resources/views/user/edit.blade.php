@@ -2,7 +2,9 @@
 
 @section('content')
     <div class="max-w-2xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-3xl font-semibold text-blue-400 text-center">Edit Profile</h2>
+        <div class="text-center mb-6">
+            <h2 class="text-3xl font-bold text-ultraViolet font-montserrat">Edit Profile</h2>
+        </div>
 
         <!-- Edit Profile Form -->
         <form action="{{ route('user.edit.action', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
@@ -13,7 +15,7 @@
             <div class="mb-4 flex items-center space-x-4">
                 <div class="flex-shrink-0">
                     @if ($user->profilepicture)
-                        <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Current Profile Picture" class="w-32 h-32 rounded-full border-2 border-blue-400">
+                        <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Current Profile Picture" class="w-32 h-32 rounded-full border-2 border-ultraViolet">
                     @else
                         <div id="profile-picture-preview" class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
                             <i class="fa-solid fa-user text-white text-3xl"></i>
@@ -21,7 +23,7 @@
                     @endif
                 </div>
                 <div>
-                    <label for="profilePicture" class="block text-lg font-semibold">Upload Image</label>
+                    <label for="profilePicture" class="block text-lg font-semibold font-montserrat">Upload Image</label>
                     <input type="file" id="profilePicture" name="profilePicture" class="w-full p-2 border border-gray-300 rounded-md mt-2" onchange="previewImage(event)">
                     @error('profilePicture')
                         <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
@@ -31,8 +33,8 @@
 
             <!-- Name -->
             <div class="mb-4">
-                <label for="name" class="block text-lg font-semibold">Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md" required>
+                <label for="name" class="block text-lg font-semibold font-montserrat">Name</label>
+                <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
                 @error('name')
                     <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
                 @enderror
@@ -40,8 +42,8 @@
             
             <!-- Username -->
             <div class="mb-4">
-                <label for="username" class="block text-lg font-semibold">Username</label>
-                <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" class="w-full p-2 border border-gray-300 rounded-md" required>
+                <label for="username" class="block text-lg font-semibold font-montserrat">Username</label>
+                <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
                 @error('username')
                     <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
                 @enderror
@@ -49,8 +51,8 @@
 
             <!-- Email -->
             <div class="mb-4">
-                <label for="email" class="block text-lg font-semibold">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-md" required>
+                <label for="email" class="block text-lg font-semibold font-montserrat">Email</label>
+                <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
                 @error('email')
                     <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
                 @enderror
@@ -58,8 +60,8 @@
 
             <!-- Password -->
             <div class="mb-4">
-                <label for="password" class="block text-lg font-semibold">New Password</label>
-                <input type="password" id="password" name="password" class="w-full p-2 border border-gray-300 rounded-md">
+                <label for="password" class="block text-lg font-semibold font-montserrat">New Password</label>
+                <input type="password" id="password" name="password" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
                 @error('password')
                     <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
                 @enderror
@@ -67,8 +69,8 @@
 
             <!-- Confirm Password -->
             <div class="mb-4">
-                <label for="password_confirmation" class="block text-lg font-semibold">Confirm New Password</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" class="w-full p-2 border border-gray-300 rounded-md">
+                <label for="password_confirmation" class="block text-lg font-semibold font-montserrat">Confirm New Password</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
                 @error('password_confirmation')
                     <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
                 @enderror
@@ -76,7 +78,7 @@
 
             <!-- Submit Button -->
             <div class="mt-6 text-center">
-                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-800">Save Changes</button>
+                <button type="submit" class="bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">Save Changes</button>
             </div>
         </form>
     </div>

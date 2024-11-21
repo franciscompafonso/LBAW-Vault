@@ -12,10 +12,19 @@ export default {
         whiteSmoke: '#F4F4F4',
         eerieBlack: '#191716',
         keppel: '#3BA99C',
-        charcoal: '#464646'
-      }
+        charcoal: '#464646',
 
+        wisteria: '#C59FDF',
+        ultraViolet: '#4F517D',
+        darkSlateGrey: '#1A3A3A',
+        cambridgeBlue:'#7FC29B',
+        babyPowder: '#FFFFFB'
+
+      },
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'], 
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }
