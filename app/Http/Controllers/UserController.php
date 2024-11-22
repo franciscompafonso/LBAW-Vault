@@ -18,18 +18,17 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $myEvents = $user->myEvents()->get();
-        /*
+        
         $participatedEvents = $user->participatedEvents()->get();
         $notYetParticipatedEvents = $user->notYetParticipatedEvents()->get();
-        */
+        
 
         return view('user.profile', [
             'user' => $user,
             'myEvents' => $myEvents,
-            /*
             'participatedEvents' => $participatedEvents,
             'notYetParticipatedEvents' => $notYetParticipatedEvents,
-            */
+            
         ]);
     }
 
@@ -67,10 +66,18 @@ class UserController extends Controller
 
         if ($request->hasFile('profilepicture')) {
             if ($user->profilepicture) {
-                Storage::delete('storage/profilepictures/' . $user->profilepicture);
+                $oldPath = public_path('images/profile-pictures/' . $user->profilepicture);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
-            $path = $request->file('profilepicture')->store('profilepictures', 'public');
-            $user->profilepicture = $path; 
+    
+            $file = $request->file('profilepicture');
+            $filename = time() . '_' . $file->getClientOriginalName(); // Ensure a unique filename
+            $file->move(public_path('images/profile-pictures/'), $filename);
+        
+            // Save only the filename in the database
+            $user->profilepicture = $filename;
         }
 
         $user->save();

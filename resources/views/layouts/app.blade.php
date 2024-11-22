@@ -66,7 +66,7 @@
                         </a>
                     @else
                         <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}">
-                            <img src="{{ asset('storage/' . Auth::user()->profilepicture) }}" 
+                            <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                                     alt="User Profile Picture" 
                                     class="w-12 h-12 rounded-full object-cover border-2 border-whiteSmoke hover:border-darkSlateGrey">
                         </a>

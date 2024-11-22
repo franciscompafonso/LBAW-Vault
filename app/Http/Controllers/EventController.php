@@ -46,11 +46,19 @@ class EventController extends Controller
             // Not logged in, redirect to login.
             return redirect('/login');
 
-        } else {
-            // The user is logged in.
+        } 
 
-            // Get events for user ordered by id.
-            $events = Auth::user()->myEvents()->orderBy('id')->get();
+            // The user is logged in.
+            $user = Auth::user();
+
+            // Get events created by user.
+            $createdEvents = $user->myEvents()->orderBy('id')->get();
+            
+            // Get events user has already participated in.
+            $participatedEvents = $user->participatedEvents()->orderBy('start_date')->get();
+
+            //Get events user has not yet participated in.
+            $notYetParticipatedEvents = $user->notYetParticipatedEvents()->orderBy('start_date')->get();
 
             // Check if the current user can list the events.
             $this->authorize('index', Event::class);
@@ -58,10 +66,12 @@ class EventController extends Controller
             // The current user is authorized to list events.
 
             // Use the pages.events template to display all events.
-            return view('pages.events', [
-                'events' => $events
+            return view('profile.show', [
+                'createdEvents' => $createdEvents,
+                'participatedEvents' => $participatedEvents,
+                'notYetParticipatedEvents' => $notYetParticipatedEvents,
             ]);
-        }
+        
     }
 
     // Store new event data
