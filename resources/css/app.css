@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 .event:hover {
     transform: translateY(-5px); /* Slight elevation on hover */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -10,6 +12,12 @@
 
 .event img {
     border-radius: 0.375rem 0.375rem 0 0; /* Match the event's rounded corners */
+}
+
+.font-montserrat {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 /* Adjustments for small screens */

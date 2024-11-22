@@ -20,11 +20,8 @@ export default {
         cambridgeBlue:'#7FC29B',
         babyPowder: '#FFFFFB'
 
-      },
-      fontFamily: {
-        montserrat: ['Montserrat', 'sans-serif'], 
-      },
+      }
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [],
 }
