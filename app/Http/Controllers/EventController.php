@@ -213,4 +213,19 @@ class EventController extends Controller
 
         return back()->with('message', 'You have removed the participator.');
     }
+
+    /**
+     * Search
+     */
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+
+        // Perform a case-insensitive search by converting both sides to lower case
+        $events = Event::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])
+                    ->orWhereRaw('LOWER(description) LIKE ?', ['%' . strtolower($query) . '%'])
+                    ->get();
+
+        return response()->json($events);
+    }
 }
