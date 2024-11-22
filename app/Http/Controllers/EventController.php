@@ -71,7 +71,7 @@ class EventController extends Controller
                 'participatedEvents' => $participatedEvents,
                 'notYetParticipatedEvents' => $notYetParticipatedEvents,
             ]);
-        }
+        
     }
 
     // Store new event data
