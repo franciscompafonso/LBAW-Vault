@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<section id="event-detail" class="max-w-5xl mx-auto p-8 bg-babyPowder shadow-xl rounded-lg">   
+<section id="event-detail" class="max-w-full mx-auto p-8 bg-babyPowder shadow-xl rounded-lg">   
     <div class="flex flex-col lg:flex-row gap-10">
         <!-- Image Section (Left) -->
         <div class="flex-shrink-0 w-full lg:w-2/5">
@@ -25,13 +25,13 @@
                 </p>
             </div>
 
-            <!-- cool for debugging!
-                @if (session('message'))
-                    <div class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
-                        {{ session('message') }}
-                    </div>
-                @endif
-            -->
+            <!-- cool for debugging! -->
+            @if (session('message'))
+                <div class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+                    {{ session('message') }}
+                </div>
+            @endif
+            
 
             @if ($event->participators->contains('id', Auth::id()))
                 <form action="{{ route('events.leave', $event->id) }}" method="POST">
@@ -79,6 +79,28 @@
         <div class="w-full lg:w-1/3 bg-whiteSmoke p-6 rounded-lg shadow-lg">   
             <h2 class="text-3xl font-bold text-keppel mb-6 border-b-2 border-babyPowder pb-4">Participants</h2>
             <ul class="mt-4 text-babyPowder space-y-4">
+            <!-- Invite Form -->
+            <div class="mt-4">
+                <form action="{{ route('events.invite', $event->id) }}" method="POST" class="flex items-center space-x-2">
+                    @csrf
+                    <!-- Input Text Box -->
+                    <input 
+                        id="invite" 
+                        type="text" 
+                        name="username" 
+                        placeholder="@username" 
+                        class="block w-full rounded-md font-montserrat border-darkSlateGrey shadow-sm focus:ring-ultraViolet focus:border-ultraViolet" 
+                        required 
+                    >
+                    <!-- Optional Submit Button -->
+                    <button 
+                        type="submit" 
+                        class="bg-keppel text-white px-4 py-2 rounded-md font-semibold shadow-lg hover:bg-charcoal transition-colors duration-200"
+                    >
+                        ✔️
+                    </button>
+                </form>
+            </div>
             @foreach ($event->participators()->orderBy('id')->get() as $participator)
                 @include('partials.participator', [
                     'participator' => $participator,

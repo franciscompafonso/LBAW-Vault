@@ -7,8 +7,8 @@
                 >
                 <span class="text-gray-800 font-medium">{{ $comment->user->name }}</span>
                 <span class="text-gray-800 font-medium">{{ $comment->text }}</span>
-                <span class="text-gray-800 font-medium">{{ 'Score:' . $comment->score }}</span>
-                <span class="text-gray-800 font-medium">{{ \Carbon\Carbon::parse($comment->date)->format('d/m/Y') }}</span>
+                <span class="text-gray-800 font-medium">{{ 'Score: ' . $comment->score }}</span>
+                <span class="text-gray-800 font-medium">{{ \Carbon\Carbon::parse($comment->date)->format('d/m') }}</span>
                 <span class="text-gray-800 font-medium">{{ $comment->is_pinned ? 'Pinned' : '' }}</span>
                 <span class="text-gray-800 font-medium">{{ $comment->edited ? 'Edited' : '' }}</span>
                 
