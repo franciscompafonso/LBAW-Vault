@@ -25,14 +25,33 @@
 
     <!-- Categories Section -->
     <section class="py-8 px-4">
-        <div class="flex flex-col items-center space-y-6">
+        <div class="flex flex-col space-y-6">
             @foreach ($categories as $category)
+                <div class="group flex items-center space-x-4">
+            <!-- Category Name with Link -->
+            <h2 class="text-4xl font-montserrat font-semibold text-eerieBlack group-hover:font-bold transition-all inline-block">
                 <a href="{{ url('events/category=' . $category->id) }}" 
-                   class="w-full mx-2 max-w-md bg-wisteria text-whiteSmoke text-xl font-bold py-3 rounded-lg shadow-md hover:text-darkSlateGrey text-center transition-all duration-200 font-montserrat">
+                class="group-hover:text-eerieBlack group-hover:font-bold text-eerieBlack">
                     {{ $category->name }}
                 </a>
-            @endforeach
+            </h2>
+
+            <!-- "Explore all >" Link -->
+            <a href="{{ url('events/category=' . $category->id) }}" 
+            class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
+                Explore all >
+            </a>
         </div>
+            <!-- Display Events Under Each Category -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @forelse ($category->events as $event)
+                    @include('partials.home_event', ['event' => $event])
+                @empty
+                    <p class="text-eerieBlack col-span-full">No events available in this category.</p>
+                @endforelse
+            </div>
+        @endforeach
+    </div>
     </section>
 </div>
 @endsection

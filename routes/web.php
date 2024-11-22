@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\InviteController;
 
 
 /*
@@ -88,3 +89,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Comments
 Route::post('/comments/{comment}/deleteComment', [CommentController::class, 'deleteComment'])->name('comments.delete');
+
+// Invite
+Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->name('events.invite');
+
