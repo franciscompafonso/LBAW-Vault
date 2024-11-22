@@ -9,7 +9,7 @@
         <!-- Profile Picture Section -->
         <div class="flex justify-center mb-6">
         @if ($user->profilepicture)
-            <img src="{{ asset('storage/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 rounded-full border-2 border-darkSlateGrey">
+            <img src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 rounded-full border-2 border-darkSlateGrey">
         @else
             <div class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
                 <i class="fa-solid fa-user text-white text-3xl"></i>
