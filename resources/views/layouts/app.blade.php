@@ -41,7 +41,7 @@
                 </a>
 
                 <!-- Info Icon -->
-                <a href="{{ url('/info') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Info">
+                <a href="{{ url('/about') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Info">
                     <i class="fa-solid fa-circle-info text-3xl"></i>
                 </a>
 

@@ -27,6 +27,8 @@ Route::redirect('/', '/home');
 
 Route::get('/home', [HomeController::class, 'index'])->name('pages.home');
 
+Route::get('/about', function () { return view('pages.about');});
+
 Route::get('/search', [EventController::class, 'search'])->name('search');
 
 Route::get('/events/category={id}', [EventController::class, 'showByCategory'])->name('events.category');
