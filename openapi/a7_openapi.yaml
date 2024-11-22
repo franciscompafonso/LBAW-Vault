@@ -726,7 +726,7 @@ paths:
       summary: 'R401: List all Events'
       description: 'List all available events. Access: VST, USR, ADM'
       tags: 
-        - 'M04: Events'
+        - 'M04: Event'
       parameters:
         - in: query
           name: query
@@ -807,7 +807,7 @@ paths:
       summary: 'R402: View Event Page'
       description: 'Show detailed information about a specific event.'
       tags:
-        - 'M04: Events'
+        - 'M04: Event'
       parameters:
         - in: path
           name: id
@@ -828,7 +828,7 @@ paths:
       summary: 'R403: Delete Event'
       description: 'Delete a event. Access: CTR, ADM'
       tags:
-        - 'M04: Events'
+        - 'M04: Event'
       parameters:
         - in: path
           name: id
@@ -869,7 +869,7 @@ paths:
       summary: 'R404: Create Event Form'
       description: 'Provide a form to create an event. Access: USR'
       tags:
-        - 'M04: Events'
+        - 'M04: Event'
       responses:
         '200':
           description: 'Ok. Show Create Event Page'
@@ -878,7 +878,7 @@ paths:
       summary: 'R405: Create Event Action'
       description: 'Allows members to create new events. Access: USR'
       tags:
-        - 'M04: Events'
+        - 'M04: Event'
       requestBody:
         required: true
         content:
@@ -921,7 +921,7 @@ paths:
       summary: 'R406: Edit Events Form'
       description: 'Provide edit events form. Access: CTR, ADM'
       tags:
-        - 'M04: Events'
+        - 'M04: Event'
       parameters:
         - in: path
           name: id
@@ -939,7 +939,7 @@ paths:
       summary: 'R407: Edit Event Action'
       description: 'Processes the edit event form submission. Access: CTR, ADM'
       tags:
-        - 'M04: Events'
+        - 'M04: Event'
       parameters:
         - in: path
           name: id
