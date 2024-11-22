@@ -822,7 +822,7 @@ paths:
         '403':
           description: 'Forbidden. User does not have permission.'
   
-  /events/{id}/delete_account:
+  /events/{id}/delete_event:
     post:
       operationId: R403
       summary: 'R403: Delete Event'
