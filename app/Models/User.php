@@ -73,16 +73,16 @@ class User extends Authenticatable
         return $this->hasMany(Event::class, 'creator_id');
     }
 
-    /*public function participatedEvents()
+    public function participatedEvents()
     {
         return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
-                    ->where('events.start_date', '<', now()); 
+                    ->where('event.start_date', '<', now()); 
     }
 
     public function notYetParticipatedEvents()
     {
         return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
-                    ->where('events.start_date', '>=', now());
-    }*/
+                    ->where('event.start_date', '>=', now());
+    }
     
 }

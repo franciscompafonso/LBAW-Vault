@@ -18,18 +18,17 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $myEvents = $user->myEvents()->get();
-        /*
+        
         $participatedEvents = $user->participatedEvents()->get();
         $notYetParticipatedEvents = $user->notYetParticipatedEvents()->get();
-        */
+        
 
         return view('user.profile', [
             'user' => $user,
             'myEvents' => $myEvents,
-            /*
             'participatedEvents' => $participatedEvents,
             'notYetParticipatedEvents' => $notYetParticipatedEvents,
-            */
+            
         ]);
     }
 
