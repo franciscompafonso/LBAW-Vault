@@ -131,26 +131,29 @@
 
             function displaySearchResults(events) {
                 const resultsContainer = document.getElementById('searchResults');
-                resultsContainer.innerHTML = ''; // Clear previous results
+                resultsContainer.innerHTML = '';
 
                 if (events.length === 0) {
                     resultsContainer.innerHTML = '<p class="text-center text-gray-500">No events found.</p>';
                 } else {
                     events.forEach(event => {
-                        // Event card
                         const eventItem = document.createElement('div');
                         eventItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
+
+                        const formattedDate = event.start_date 
+                            ? new Date(event.start_date).toLocaleString() 
+                            : 'Not available';
 
                         eventItem.innerHTML = `
                             <div class="event-card">
                                 <h3 class="font-semibold text-xl text-gray-800">
                                     <a href="/events/${event.id}" class="text-md font-semibold font-montserrat text-ultraViolet hover:text-cambridgeBlue">${event.name}</a>
                                 </h3>
-                                <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${event.description}</p>
-                                <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">{{ $event->start_date ? \Carbon\Carbon::parse($event->date)->format('d/m/Y H:i') : 'Not available' }}</p>
+                                <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${event.description || 'No description available'}</p>
+                                <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${formattedDate}</p>
                             </div>
                         `;
-                        
+
                         resultsContainer.appendChild(eventItem);
                     });
                 }
