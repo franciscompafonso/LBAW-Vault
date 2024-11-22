@@ -9,8 +9,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\InviteController;
-use App\Http\Controllers\Auth\AdminLoginController;
-
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,14 +98,9 @@ Route::post('/comments/{comment}/deleteComment', [CommentController::class, 'del
 Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->name('events.invite');
 
 
-Route::prefix('admin')->group(function () {
-    Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/login', [AdminLoginController::class, 'authenticate']);
-    Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
-});
 
-use App\Http\Controllers\AdminController;
+Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');

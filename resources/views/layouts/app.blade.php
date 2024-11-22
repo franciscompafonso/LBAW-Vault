@@ -55,19 +55,25 @@
                     </a>
                 @endif
 
-                @if (Auth::check())
-                    <!-- Profile Icon -->
-                    @if (Request::is('user/*'))
-                        <a href="{{ url('/logout') }}" title="Logout" class="text-ultraViolet hover:text-cambridgeBlue">
+                @if (Auth::guard('web')->check())
+                    <!-- Profile Icon for regular user -->
+                    <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}">
+                        <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
+                             alt="User Profile Picture" 
+                             class="w-16 h-16 rounded-full object-cover border-2 border-whiteSmoke hover:border-darkSlateGrey">
+                    </a>
+                    <!-- Logout Icon for regular user -->
+                    <a href="{{ url('/logout') }}" title="Logout" class="text-ultraViolet hover:text-cambridgeBlue">
+                        <i class="fa-solid fa-right-from-bracket text-3xl"></i>
+                    </a>
+                @elseif (Auth::guard('admin')->check())
+    <!-- Logout Form for admin -->
+                    <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" class="inline">
+                    @csrf
+                        <button type="submit" title="Admin Logout" class="text-ultraViolet hover:text-cambridgeBlue">
                             <i class="fa-solid fa-right-from-bracket text-3xl"></i>
-                        </a>
-                    @else
-                        <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}">
-                            <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
-                                 alt="User Profile Picture" 
-                                 class="w-16 h-16 rounded-full object-cover border-2 border-whiteSmoke hover:border-darkSlateGrey">
-                        </a>
-                    @endif
+                        </button>
+                    </form>
                 @endif
             </div>
         </header>
