@@ -8,7 +8,7 @@
         @if ($creatorId === Auth::id())
                 <form action="{{ route('events.participators.kick', ['event' => $event->id, 'user' => $participator->id]) }}" method="POST">
                         @csrf
-                        <button type="submit" class="bg-charcoal text-white px-6 py-3 rounded-md font-semibold shadow-lg hover:bg-keppel transition-colors duration-200">
+                        <button type="submit" class="bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">
                                 X
                         </button>
                 </form>
