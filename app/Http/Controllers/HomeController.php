@@ -7,7 +7,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = Category::all(); // Fetch the categories
+        $categories = Category::with('events')->get();
         return view('pages.home', compact('categories')); // Pass them to the view
     }
 }

@@ -1,0 +1,18 @@
+<article class="event bg-white shadow-md rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300 w-full max-w-sm mx-auto">
+    <img src="{{ $event->image_url ?? 'default-image.jpg' }}" alt="{{ $event->name }}" class="w-full h-40 object-cover">
+
+    <div class="p-4">
+        <h3 class="text-2xl font-semibold text-ultraViolet">{{ $event->name }}</h3>
+        <p class="text-darkSlateGrey mt-2">{{ $event->description }}</p>
+        <p class="text-darkSlateGrey text-sm mt-4">
+            Date: {{ $event->start_date ? \Carbon\Carbon::parse($event->date)->format('d/m/Y') : 'Not available' }}
+        </p>
+
+        <div class="flex flex-col items-center space-y-6 py-8 px-4">
+            <a href="{{ route('events.show', $event->id) }}"
+               class="w-full text-cambridgeBlue text-2xl font-bold py-3 rounded-lg hover:text-darkSlateGrey text-center transition-all duration-200 font-montserrat">
+                View Details
+            </a>
+        </div>       
+    </div>
+</article>
