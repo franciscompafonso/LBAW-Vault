@@ -15,8 +15,15 @@
         <section class="mb-8">
             <h2 class="text-2xl font-bold font-montserrat text-ultraViolet">Our Story</h2>
             <p class="text-xl font-montserrat text-eerieBlack mt-4">
-                Founded in 2024, Lend-A-Hand was created with the goal of bridging the gap between people in need and those willing to lend a hand. We understand that meaningful connections are the foundation of any great community, and we’re here to facilitate those connections.
+                Founded in 2024, Lend-A-Hand was created with the goal of bridging the gap between people in need and those willing to lend a hand. We believe that meaningful connections are the foundation of any great community, and our mission is to make those connections easier and more accessible.
             </p>
+            <p class="text-xl font-montserrat text-eerieBlack mt-4">
+                Lend-A-Hand was developed as part of the Database and Web Applications Laboratory course during the 3rd year of the Informatics and Computing Engineering program at FEUP (Faculty of Engineering, University of Porto).
+            </p>
+            <p class="text-xl font-montserrat text-eerieBlack mt-4">
+                This project is a reflection of our commitment to combining technical skills with a drive to make a positive impact on society, creating a platform that fosters collaboration and support.
+            </p>
+
         </section>
 
         <section class="mb-8">
