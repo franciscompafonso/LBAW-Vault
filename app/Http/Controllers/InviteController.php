@@ -23,6 +23,9 @@ class InviteController extends Controller
         // Find the event
         $event = Event::findOrFail($eventId);
 
+        // Check if the user is authorized to invite
+        $this->authorize('invite', $event);
+
         // Find the invitee by username
         $invitee = User::where('username', $request->username)->first();
 
