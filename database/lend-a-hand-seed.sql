@@ -554,8 +554,8 @@ INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked,
 ('Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 'pedro.png');
 
 INSERT INTO admin (email, password) VALUES
-('admin1@example.com', 'adminpass1'),
-('admin2@example.com', 'adminpass2');
+('admin1@example.com', '$2y$10$ii5KNGv4MCXCh20tghqKg./7AzxujQjCGIvcRe5CO1iXYIUK59CoS'),
+('admin2@example.com', '$2y$10$IEkOO9H2AQe1WSf6qYZ5MeWBLzcvcOzh3koKw93wfQiuJBOvN9LmG');
 
 INSERT INTO location (name) VALUES
 ('Centro Comunitário A'),
