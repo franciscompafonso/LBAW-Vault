@@ -20,7 +20,7 @@
     </head>
     <body class="bg-white flex flex-col min-h-screen">
         <!-- Header Section -->
-        <header class="flex justify-between items-center p-4 bg-wisteria shadow-lg relative">
+        <header class="flex justify-between items-center p-4 {{ Auth::guard('admin')->check() ? 'bg-ultraViolet' : 'bg-wisteria' }} shadow-lg relative">
             <!-- Logo/Title -->
             <h1 class="text-3xl font-bold text-whiteSmoke">
             @if (Auth::guard('admin')->check()) 
@@ -37,6 +37,12 @@
                 <a href="javascript:void(0)" onclick="toggleSearchBar()" class="text-whiteSmoke hover:text-darkSlateGrey" title="Events">
                     <i class="fa-solid fa-magnifying-glass text-3xl"></i>
                 </a>
+
+                @if (Auth::guard('admin')->check())
+                <a href="{{ url('/admin/users') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Users">
+                    <i class="fa-solid fa-users-gear text-3xl"></i>
+                </a>
+                @endif
 
                 <!-- Create Event -->
                 @if (Auth::guard('web')->check())
@@ -89,7 +95,7 @@
                 @endif
 
                 @if (Auth::guard('web')->check() || Auth::guard('admin')->check() )
-                <a href="{{ url('/logout') }}" title="Logout" class="text-ultraViolet hover:text-cambridgeBlue">
+                <a href="{{ url('/logout') }}" title="Logout" class="text-whiteSmoke hover:text-darkSlateGrey">
                         <i class="fa-solid fa-right-from-bracket text-3xl"></i>
                 </a>
                 @endif
@@ -113,7 +119,7 @@
         </main>
 
         <!-- Footer Section -->
-        <footer class="bg-wisteria flex items-center justify-center text-center font-bold font-montserrat text-surface/75 h-16">
+        <footer class="{{ Auth::guard('admin')->check() ? 'bg-ultraViolet' : 'bg-wisteria' }} flex items-center justify-center text-center font-bold font-montserrat text-surface/75 h-16">
             <p class="text-white">&copy; Lend-A-Hand 2024</p>
         </footer>
 

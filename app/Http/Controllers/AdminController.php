@@ -23,7 +23,7 @@ class AdminController extends Controller
     public function listUsers()
     {
         // Retrieve all users
-        $users = User::all();
+        $users = User::paginate(3);
 
         // Return to a view with the users data
         return view('admin.index', compact('users'));
