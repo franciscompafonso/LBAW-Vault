@@ -18,9 +18,19 @@
     font-family: "Montserrat", sans-serif;
 }
 
+#notifications-dropdown {
+    display: none;
+    z-index: 100;
+}
+
+#notifications-dropdown.visible {
+    display: block;
+}
+
 /* Adjustments for small screens */
 @media (max-width: 768px) {
     .event {
         margin: 1rem auto;
     }
 }
+

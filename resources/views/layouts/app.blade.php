@@ -56,6 +56,24 @@
                 @endif
 
                 @if (Auth::guard('web')->check())
+                    <div class="relative">
+                        <!-- Bell Icon -->
+                        <a id="notifications-button" class="relative">
+                            <i class="fa-solid fa-bell text-3xl"></i>
+                            <div id="noti-number" class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">aaaa</div>
+                        </a>
+
+                        <!-- Notifications Dropdown -->
+                        <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-md hidden">
+                            <div class="flex justify-between items-center px-4 py-2 border-b">
+                                <h1 class="text-lg font-bold">Notifications</h1>
+                                <button class="text-sm text-blue-500 hover:underline" onclick="dismissAll()">Dismiss All</button>
+                            </div>
+                            <ul id="notifications-list" class="max-h-64 overflow-y-auto">
+                                <li class="p-4 border-b">No notifications found.</li>
+                            </ul>
+                        </div>
+                    </div>
                     <!-- Profile Icon for regular user -->
                     <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}">
                         <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
@@ -162,6 +180,86 @@
                     });
                 }
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+            const notificationsButton = document.getElementById('notifications-button');
+            const notificationsDropdown = document.getElementById('notifications-dropdown');
+
+            notificationsButton.addEventListener('mouseover', () => {
+                notificationsDropdown.classList.add('visible');
+                fetchNotifications();
+            });
+
+            notificationsDropdown.addEventListener('mouseleave', () => {
+                notificationsDropdown.classList.remove('visible');
+            });
+
+            function fetchNotifications() {
+                fetch('/notifications')
+                    .then(response => response.json())
+                    .then(data => displayNotifications(data))
+                    .catch(error => console.error('Error fetching notifications:', error));
+            }
+
+            function displayNotifications(notifications) {
+                const notificationsList = document.getElementById('notifications-list');
+                notificationsList.innerHTML = '';
+
+                if (notifications.length === 0) {
+                    notificationsList.innerHTML = '<li class="p-4 text-gray-500">No notifications found.</li>';
+                } else {
+                    notifications.forEach(notification => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'p-4 border-b flex justify-between items-center';
+
+                        listItem.innerHTML = `
+                            <span>${notification.message}</span>
+                            <button class="text-blue-500 hover:underline text-sm" onclick="dismissNotification(${notification.id})">
+                                Dismiss
+                            </button>
+                        `;
+
+                        notificationsList.appendChild(listItem);
+                    });
+                }
+            }
+
+            window.dismissNotification = function (notificationId) {
+                fetch('/notifications/dismiss', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ notification_id: notificationId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        fetchNotifications(); 
+                    }
+                })
+                .catch(error => console.error('Error dismissing notification:', error));
+            };
+
+            window.dismissAll = function () {
+                fetch('/notifications/dismiss-all', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        fetchNotifications(); 
+                    }
+                })
+                .catch(error => console.error('Error dismissing all notifications:', error));
+            };
+        });
+
+
         </script>
     </body>
 </html>

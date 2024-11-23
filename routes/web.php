@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +90,9 @@ Route::controller(UserController::class)->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
     Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
+    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->middleware('auth');
+    Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification'])->middleware('auth');
+    Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications'])->middleware('auth');
 });
 
 // Comments

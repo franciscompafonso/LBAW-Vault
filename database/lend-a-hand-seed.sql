@@ -553,6 +553,9 @@ INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked,
 ('Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE, 'maria.png'),
 ('Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 'pedro.png');
 
+INSERT INTO notification (emitted_by, emitted_to, date, viewed)
+VALUES (2, 1, CURRENT_TIMESTAMP, FALSE);
+
 INSERT INTO admin (email, password) VALUES
 ('admin1@example.com', '$2y$10$ii5KNGv4MCXCh20tghqKg./7AzxujQjCGIvcRe5CO1iXYIUK59CoS'),
 ('admin2@example.com', '$2y$10$IEkOO9H2AQe1WSf6qYZ5MeWBLzcvcOzh3koKw93wfQiuJBOvN9LmG');
