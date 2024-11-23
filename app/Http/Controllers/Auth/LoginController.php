@@ -44,13 +44,13 @@ class LoginController extends Controller
                 'email' => 'The provided credentials do not match our records or the user is deleted.',
             ])->onlyInput('email');
         }
-        
+
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
         }
 
         // Attempt to authenticate as a regular user
-        if (Auth::guard('web')->attempt(array_merge($credentials, ['isDeleted' => false]), $request->filled('remember'))) {
+        if (Auth::guard('web')->attempt(array_merge($credentials, ['isdeleted' => false]), $request->filled('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended('/home');
         }
