@@ -93,6 +93,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification'])->middleware('auth');
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications'])->middleware('auth');
+    Route::get('/notifications/count', [NotificationController::class, 'unreadCount']);
 });
 
 // Comments
