@@ -218,14 +218,19 @@ class EventController extends Controller
      * Search
      */
     public function search(Request $request)
-    {
-        $query = $request->get('q');
+{
+    $query = strtolower($request->get('q'));
 
-        // Perform a case-insensitive search by converting both sides to lower case
-        $events = Event::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])
-                    ->orWhereRaw('LOWER(description) LIKE ?', ['%' . strtolower($query) . '%'])
-                    ->get();
+    $events = Event::query()
+        ->join('location', 'event.location_id', '=', 'location.id')
+        ->join('category', 'event.category_id', '=', 'category.id')
+        ->whereRaw('LOWER(event.name) LIKE ?', ['%' . $query . '%'])
+        ->orWhereRaw('LOWER(event.description) LIKE ?', ['%' . $query . '%'])
+        ->orWhereRaw('LOWER(location.name) LIKE ?', ['%' . $query . '%'])
+        ->orWhereRaw('LOWER(category.name) LIKE ?', ['%' . $query . '%'])
+        ->select('event.*', 'location.name as location_name', 'category.name as category_name')
+        ->get();
 
-        return response()->json($events);
-    }
+    return response()->json($events);
+}
 }
