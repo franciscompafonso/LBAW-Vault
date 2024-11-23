@@ -111,7 +111,7 @@ CREATE TABLE question_review (
 );
 
 CREATE TABLE answer_review (
-    answered_by_id INT NOT NULL REFERENCES user_account(id),
+    answered_by_id INT REFERENCES user_account(id),
     question_id INT NOT NULL REFERENCES question_review(id),
     about_event_id INT NOT NULL REFERENCES event(id),
     rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,

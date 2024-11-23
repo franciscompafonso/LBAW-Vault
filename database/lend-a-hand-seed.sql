@@ -111,7 +111,7 @@ CREATE TABLE question_review (
 );
 
 CREATE TABLE answer_review (
-    answered_by_id INT NOT NULL REFERENCES user_account(id),
+    answered_by_id INT REFERENCES user_account(id),
     question_id INT NOT NULL REFERENCES question_review(id),
     about_event_id INT NOT NULL REFERENCES event(id),
     rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,
@@ -600,3 +600,4 @@ INSERT INTO comment (comment_by_id, event_id, text, is_pinned, score, edited, da
 (3, 1, 'I can’t wait to attend!', FALSE, 0, FALSE, '2023-11-15 09:00:00'),
 (4, 1, 'Looking forward to this!', FALSE, 5, TRUE, '2023-11-15 09:00:00'),
 (2, 1, 'Great opportunity for networking.', FALSE, 15, FALSE, '2023-11-15 09:00:00');
+
