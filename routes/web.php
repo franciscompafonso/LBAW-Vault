@@ -94,10 +94,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification'])->middleware('auth');
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications'])->middleware('auth');
     Route::get('/notifications/count', [NotificationController::class, 'unreadCount']);
+    Route::post('/events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');
 });
 
 // Comments
-Route::post('/comments/{comment}/deleteComment', [CommentController::class, 'deleteComment'])->name('comments.delete');
+Route::post('/comments/{comment}/delete', [CommentController::class, 'delete'])->name('comments.delete');
 
 // Invite
 Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->name('events.invite');

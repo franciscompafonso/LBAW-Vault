@@ -20,10 +20,9 @@ class EventPolicy
     /**
      * Determine if a given event can be shown to a user.
      */
-    public function show(User $user, Event $event): bool
+    public function show(?User $user, Event $event): bool
     {
-        // Only a event owner can see a event.
-        return $event->visibility === "public" || $user->id === $event->creator_id;
+        return $event->visibility === "public" || ($user && $user->id === $event->creator_id);
     }
 
     /**

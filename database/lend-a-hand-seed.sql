@@ -74,7 +74,7 @@ CREATE TABLE user_account (
     password VARCHAR(255) NOT NULL,
     isDeleted BOOLEAN DEFAULT FALSE,
     isBlocked BOOLEAN DEFAULT FALSE,
-    profilePicture VARCHAR(255) DEFAULT 'image/default-avatar.png'
+    profilePicture VARCHAR(255) DEFAULT 'default-avatar.png'
 );
 
 CREATE TABLE location (
@@ -98,6 +98,7 @@ CREATE TABLE "event" (
     creator_id INT REFERENCES user_account(id),
     location_id INT REFERENCES location(id),
     category_id INT REFERENCES category(id),
+    banner VARCHAR(255) DEFAULT 'default-banner.png'
     CONSTRAINT ck_start_end CHECK (start_date < end_date)
 );
 
