@@ -23,7 +23,12 @@
         <header class="flex justify-between items-center p-4 bg-wisteria shadow-lg relative">
             <!-- Logo/Title -->
             <h1 class="text-3xl font-bold text-whiteSmoke">
+            @if (Auth::guard('admin')->check()) 
+                <a href="{{ url('/admin/dashboard') }}" class="hover:text-darkSlateGrey font-montserrat text-5xl">Lend-A-Hand</a>
+            @else
                 <a href="{{ url('/home') }}" class="hover:text-darkSlateGrey font-montserrat text-5xl">Lend-A-Hand</a>
+            @endif
+
             </h1>
 
             <!-- Navigation Icons -->
@@ -34,9 +39,11 @@
                 </a>
 
                 <!-- Create Event -->
+                @if (Auth::guard('web')->check())
                 <a href="{{ url('/event/create') }}" title="Create Event" class="text-whiteSmoke hover:text-darkSlateGrey">
                     <i class="fa-solid fa-plus text-3xl"></i>
                 </a>
+                @endif
 
                 <!-- Info Icon -->
                 <a href="{{ url('/about') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Info">
@@ -79,17 +86,12 @@
                              class="w-16 h-16 rounded-full object-cover border-2 border-whiteSmoke hover:border-darkSlateGrey">
                     </a>
                     <!-- Logout Icon for regular user -->
-                    <a href="{{ url('/logout') }}" title="Logout" class="text-ultraViolet hover:text-cambridgeBlue">
+                @endif
+
+                @if (Auth::guard('web')->check() || Auth::guard('admin')->check() )
+                <a href="{{ url('/logout') }}" title="Logout" class="text-ultraViolet hover:text-cambridgeBlue">
                         <i class="fa-solid fa-right-from-bracket text-3xl"></i>
-                    </a>
-                @elseif (Auth::guard('admin')->check())
-                    <!-- Logout Form for admin -->
-                    <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" class="inline">
-                    @csrf
-                        <button type="submit" title="Admin Logout" class="text-ultraViolet hover:text-cambridgeBlue">
-                            <i class="fa-solid fa-right-from-bracket text-3xl"></i>
-                        </button>
-                    </form>
+                </a>
                 @endif
             </div>
         </header>

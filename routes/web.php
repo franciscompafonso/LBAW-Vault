@@ -108,4 +108,7 @@ Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.lo
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/user-management', [AdminController::class, 'showUserManagement'])->name('admin.user.management');
+    Route::get('/admin/search-user', [AdminController::class, 'searchUser'])->name('admin.search.user');
+    Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
 });
