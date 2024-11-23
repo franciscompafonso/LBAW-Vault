@@ -1,10 +1,8 @@
-<!-- resources/views/admin/users/index.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
     <h1>Users List</h1>
-
+    
     @if($users->count())
         <table>
             <thead>
@@ -35,7 +33,10 @@
         </table>
 
         <!-- Pagination links -->
-        
+        <div class="pagination mt-4">
+            {{ $users->links() }}
+        </div>
+    @else
         <p>No users found.</p>
     @endif
 @endsection

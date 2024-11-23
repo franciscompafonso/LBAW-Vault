@@ -105,10 +105,13 @@ Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->
 Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
 Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/user-management', [AdminController::class, 'showUserManagement'])->name('admin.user.management');
     Route::get('/admin/search-user', [AdminController::class, 'searchUser'])->name('admin.search.user');
     Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
     Route::get('/admin/users', [AdminController::class, 'listUsers'])->name('admin.index');
 
+});
+
+Route::middleware(['auth:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });

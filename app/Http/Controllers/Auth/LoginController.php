@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Admin;
 
 class LoginController extends Controller
 {
@@ -16,44 +17,34 @@ class LoginController extends Controller
     }
 
     // Handle the login request
-    public function authenticate(Request $request)
+   public function authenticate(Request $request)
 {
     $credentials = $request->only('email', 'password');
-    $userType = $request->input('user_type'); // New input to identify if it's a user or admin login
 
-    // Check if the email belongs to a non-deleted user
-    
+    // Check if the email belongs to an admin
+    $admin = Admin::where('email', $credentials['email'])->first();
 
-    // Log out any existing session if switching between user types
-    if ($userType === 'admin') {
-        if (Auth::guard('web')->check()) {
-            Auth::guard('web')->logout();
-        }
-
+    if ($admin) {
         // Attempt to authenticate as an admin
         if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/admin/dashboard');
+            return redirect()->route('admin.dashboard');
         }
-    } else {
-        $user = User::where('email', $credentials['email'])->where('isdeleted', false)->first();
+    }
 
-        if (!$user) {
-            // If the user doesn't exist or is marked as deleted, return an error
-            return back()->withErrors([
-                'email' => 'The provided credentials do not match our records or the user is deleted.',
-            ])->onlyInput('email');
-        }
+    // Otherwise, attempt to authenticate as a regular user
+    $user = User::where('email', $credentials['email'])->where('isdeleted', false)->first();
 
-        if (Auth::guard('admin')->check()) {
-            Auth::guard('admin')->logout();
-        }
+    if (!$user) {
+        // If the user doesn't exist or is marked as deleted, return an error
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records or the user is deleted.',
+        ])->onlyInput('email');
+    }
 
-        // Attempt to authenticate as a regular user
-        if (Auth::guard('web')->attempt(array_merge($credentials, ['isdeleted' => false]), $request->filled('remember'))) {
-            $request->session()->regenerate();
-            return redirect()->intended('/home');
-        }
+    if (Auth::guard('web')->attempt($credentials, $request->filled('remember'))) {
+        $request->session()->regenerate();
+        return redirect()->intended('/home');
     }
 
     // If authentication fails
@@ -61,6 +52,7 @@ class LoginController extends Controller
         'email' => 'The provided credentials do not match our records.',
     ])->onlyInput('email');
 }
+
 
     // Handle the logout request
     public function logout(Request $request)

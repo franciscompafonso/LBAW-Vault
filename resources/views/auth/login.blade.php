@@ -44,15 +44,6 @@
           <label for="remember" class="my-auto font-montserrat ml-2 block text-lg text-ultraViolet">Remember Me</label>
         </div>
 
-        <!-- User Type Selection -->
-        <div>
-          <label for="user_type" class="block text-lg font-montserrat font-medium text-darkSlateGrey">Login as</label>
-          <select name="user_type" id="user_type" required class="block w-full rounded-md font-montserrat border-darkSlateGrey shadow-sm focus:ring-ultraViolet focus:border-ultraViolet">
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        
         <!-- Sign In Button -->
         <div class="mt-6 text-center">
             <button type="submit" class="bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">Sign in</button>
