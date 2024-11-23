@@ -52,4 +52,13 @@ class EventPolicy
       // Only a event owner can delete it.
       return $user->id === $event->user_id;
     }
+
+    /**
+     * Determine if the user can invite others to an event.
+     */
+    public function invite(User $user, Event $event): bool
+    {
+        // Allow if the event is public or the user is the event's creator.
+        return $event->visibility === 'public' || $user->id === $event->creator_id;
+    }
 }

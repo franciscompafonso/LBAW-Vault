@@ -5,7 +5,6 @@ use App\Models\User;
 use App\Policies\UserPolicy;
 
 use App\Models\Event;
-use App\Policies\InvitePolicy;
 use App\Policies\EventPolicy;
 
 use Illuminate\Support\Facades\Gate;
@@ -19,7 +18,6 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        Event::class => InvitePolicy::class,
         Event::class => EventPolicy::class
     ];
 
