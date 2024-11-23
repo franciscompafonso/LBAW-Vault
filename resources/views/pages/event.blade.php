@@ -52,7 +52,7 @@
             @if ($event->creator_id === Auth::id())
                 <form action="{{ route('events.delete', $event->id) }}" method="POST">
                     @csrf
-                    <button type="submit" class=" font-montserratbg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">
+                    <button type="submit" class=" font-montserrat bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">
                         Cancel Event
                     </button>
                 </form>

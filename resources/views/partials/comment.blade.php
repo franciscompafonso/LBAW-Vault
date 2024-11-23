@@ -8,11 +8,11 @@
                     alt="{{ $comment->user->username }}" 
                     class="w-12 h-12 rounded-full object-cover"
                 >
-                <span class="font-semibold text-gray-900 text-lg">{{ $comment->user->name }}</span>
+                <span class="font-semibold font-montserrat text-gray-900 text-lg">{{ $comment->user->name }}</span>
             </div>
 
             <div class="col-span-3 text-right">
-                <span class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($comment->date)->format('d/m/Y') }}</span>
+                <span class="text-gray-500 text-sm font-montserrat">{{ \Carbon\Carbon::parse($comment->date)->format('d/m/Y') }}</span>
             </div>
         </div>
 
@@ -20,14 +20,14 @@
         <div class="grid grid-cols-3 items-center gap-4">
 
             <div class="col-span-2">
-                <p class="text-gray-800 text-left">{{ $comment->text }}</p>
+                <p class="text-gray-800 text-left font-montserrat">{{ $comment->text }}</p>
             </div>
 
             <div class="text-right">
                 @if ($comment->comment_by_id === Auth::id())
                     <form action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
-                        <a type="submit" class="text-red-200 hover:text-red-600 transition-colors duration-200">
+                        <a type="submit" class="text-red-200 font-montserrat hover:text-red-600 transition-colors duration-200">
                             X
                         </a>
                     </form>
