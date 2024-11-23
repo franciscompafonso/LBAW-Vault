@@ -13,9 +13,9 @@
                         <div class="flex items-center justify-end">
                                 <form action="{{ route('events.participators.kick', ['event' => $event->id, 'user' => $participator->id]) }}" class="m-0" method="POST">
                                         @csrf
-                                        <a type="submit" class="text-red-200 font-montserrat hover:text-red-600 transition-colors duration-200">
+                                        <button type="submit" class="text-red-200 font-montserrat hover:text-red-600 transition-colors duration-200 border-none hover:bg-transparent focus:outline-none">
                                                 X
-                                        </a>
+                                        </button>
                                 </form>
                         </div>
                 @endif

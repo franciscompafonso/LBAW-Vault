@@ -27,22 +27,22 @@
                 @if ($comment->comment_by_id === Auth::id())
                     <form action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
-                        <a type="submit" class="text-red-200 font-montserrat hover:text-red-600 transition-colors duration-200">
+                        <button type="submit" class="text-red-200 font-montserrat hover:text-red-600 transition-colors duration-200 border-none hover:bg-transparent focus:outline-none">
                             X
-                        </a>
+                        </button>
                     </form>
                 @else
                     <div class="flex justify-end items-center space-x-2">
-                        <a 
-                            class="like-btn text-gray-500 hover:text-green-500 transition-colors duration-200"
+                        <button 
+                            class="like-btn text-gray-500 hover:text-green-500 transition-colors duration-200 border-none hover:bg-transparent focus:outline-none"
                             onclick="toggleLike(this)">
                             <i class="fas fa-thumbs-up"></i>
-                        </a>
-                        <a 
-                            class="dislike-btn text-gray-500 hover:text-red-500 transition-colors duration-200"
+                        </button>
+                        <button 
+                            class="dislike-btn text-gray-500 hover:text-red-500 transition-colors duration-200 border-none hover:bg-transparent focus:outline-none"
                             onclick="toggleDislike(this)">
                             <i class="fas fa-thumbs-down"></i>
-                        </a>
+                        </button>
                     </div>
                 @endif
             </div>
