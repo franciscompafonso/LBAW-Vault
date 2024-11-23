@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Notification extends Model
 {
-    protected $table = 'notifications'; 
+    protected $table = 'notification'; 
     public $timestamps = false;
 
     protected $fillable = [

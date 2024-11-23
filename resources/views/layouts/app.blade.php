@@ -57,21 +57,19 @@
 
                 @if (Auth::guard('web')->check())
                     <div class="relative">
-                        <!-- Bell Icon -->
-                        <a id="notifications-button" class="relative">
+                        <!-- Bell Icon with Notification Count -->
+                        <a id="notifications-button" onclick="toggleNotificationsDropdown()" class="relative cursor-pointer">
                             <i class="fa-solid fa-bell text-3xl"></i>
-                            <div id="noti-number" class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">aaaa</div>
+                            <div id="noti-number" class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                0 <!-- This will dynamically update -->
+                            </div>
                         </a>
 
                         <!-- Notifications Dropdown -->
-                        <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-md hidden">
-                            <div class="flex justify-between items-center px-4 py-2 border-b">
-                                <h1 class="text-lg font-bold">Notifications</h1>
-                                <button class="text-sm text-blue-500 hover:underline" onclick="dismissAll()">Dismiss All</button>
+                        <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
+                            <p id="no-notifications" class="text-center text-gray-500">There are no notifications.</p>
+                            <div id="notifications-list">
                             </div>
-                            <ul id="notifications-list" class="max-h-64 overflow-y-auto">
-                                <li class="p-4 border-b">No notifications found.</li>
-                            </ul>
                         </div>
                     </div>
                     <!-- Profile Icon for regular user -->
@@ -85,7 +83,7 @@
                         <i class="fa-solid fa-right-from-bracket text-3xl"></i>
                     </a>
                 @elseif (Auth::guard('admin')->check())
-    <!-- Logout Form for admin -->
+                    <!-- Logout Form for admin -->
                     <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" class="inline">
                     @csrf
                         <button type="submit" title="Admin Logout" class="text-ultraViolet hover:text-cambridgeBlue">
@@ -118,6 +116,8 @@
         </footer>
 
         <script>
+            // Search
+
             function toggleSearchBar() {
                 const searchBar = document.getElementById('searchBar');
                 const searchInput = document.getElementById('searchInput');
@@ -181,85 +181,150 @@
                 }
             }
 
-            document.addEventListener('DOMContentLoaded', () => {
-            const notificationsButton = document.getElementById('notifications-button');
-            const notificationsDropdown = document.getElementById('notifications-dropdown');
+            // Notifications
 
-            notificationsButton.addEventListener('mouseover', () => {
-                notificationsDropdown.classList.add('visible');
-                fetchNotifications();
-            });
+            function toggleNotificationsDropdown() {
+                const notificationsDropdown = document.getElementById('notifications-dropdown');
 
-            notificationsDropdown.addEventListener('mouseleave', () => {
-                notificationsDropdown.classList.remove('visible');
-            });
+                notificationsDropdown.classList.toggle('hidden'); 
+
+                if (!notificationsDropdown.classList.contains('hidden')) {
+                    fetchNotifications();
+                }
+            }
 
             function fetchNotifications() {
                 fetch('/notifications')
                     .then(response => response.json())
-                    .then(data => displayNotifications(data))
-                    .catch(error => console.error('Error fetching notifications:', error));
+                    .then(data => {
+                        console.log('Notifications:', data);
+                        displayNotificationResults(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching notifications:', error);
+                    });
             }
 
-            function displayNotifications(notifications) {
+            function displayNotificationResults(notifications) {
+                const notificationsButton = document.getElementById('notifications-button');
+                const notificationsDropdown = document.getElementById('notifications-dropdown');
                 const notificationsList = document.getElementById('notifications-list');
+                const noNotificationsText = document.getElementById('no-notifications');
+                const notiNumber = document.getElementById('noti-number');
+                
                 notificationsList.innerHTML = '';
 
                 if (notifications.length === 0) {
-                    notificationsList.innerHTML = '<li class="p-4 text-gray-500">No notifications found.</li>';
+                    noNotificationsText.classList.remove('hidden');
                 } else {
+                    noNotificationsText.classList.add('hidden');
                     notifications.forEach(notification => {
-                        const listItem = document.createElement('li');
-                        listItem.className = 'p-4 border-b flex justify-between items-center';
+                        const notificationItem = document.createElement('div');
+                        notificationItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
 
-                        listItem.innerHTML = `
-                            <span>${notification.message}</span>
-                            <button class="text-blue-500 hover:underline text-sm" onclick="dismissNotification(${notification.id})">
-                                Dismiss
-                            </button>
+                        const formattedDate = new Date(notification.date).toLocaleString() || 'Not available';
+
+                        let notificationContent = `
+                            <div class="notification-card">
+                                <p class="font-semibold text-sm text-gray-600">${formattedDate}</p>
                         `;
 
-                        notificationsList.appendChild(listItem);
+                        if (notification.type === 'invite_notification') {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">You have been invited by X to an event. ${notification.invite_id}</p>
+                            `;
+                        } else if (notification.type === 'accepted_invite_notification') {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">Your invite was accepted for event ID: ${notification.event_id}</p>
+                            `;
+                        } else if (notification.type === 'event_update_notification') {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">Event ${notification.event_id} has been updated.</p>
+                            `;
+                        } else if (notification.type === 'comment_notification') {
+                            notificationContent += `
+                                <a class="text-md font-semibold text-indigo-600" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
+                                <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">You have a new comment on your post.</a>
+                            `;
+                        } else if (notification.type === 'poll_reminder') {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">Reminder: Don't forget to participate in poll ID: ${notification.poll_id}</p>
+                            `;
+                        } else if (notification.type === 'event_cancelation') {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">The event with ID: ${notification.event_id} has been canceled.</p>
+                            `;
+                        } else if (notification.type === 'event_reminder') {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">Reminder: Event with ID: ${notification.event_id} is coming soon!</p>
+                            `;
+                        } else if (notification.type === 'admin_action') {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">An administrative action has been performed.</p>
+                            `;
+                        } else if (notification.type === 'unblock_notification') {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">You have been unblocked.</p>
+                            `;
+                        } else {
+                            notificationContent += `
+                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">No specific details available for this notification type.</p>
+                            `;
+                        }
+
+                        notificationContent += `</div>`;
+
+                        notificationItem.innerHTML = notificationContent;
+
+                        notificationsList.appendChild(notificationItem);
                     });
                 }
             }
 
-            window.dismissNotification = function (notificationId) {
-                fetch('/notifications/dismiss', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({ notification_id: notificationId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        fetchNotifications(); 
-                    }
-                })
-                .catch(error => console.error('Error dismissing notification:', error));
-            };
+            document.addEventListener('DOMContentLoaded', () => {
+                window.dismissNotification = function (notificationId) {
+                    fetch('/notifications/dismiss', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({ notification_id: notificationId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            fetchNotifications();
+                        }
+                    })
+                    .catch(error => console.error('Error dismissing notification:', error));
+                };
 
-            window.dismissAll = function () {
-                fetch('/notifications/dismiss-all', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        fetchNotifications(); 
-                    }
-                })
-                .catch(error => console.error('Error dismissing all notifications:', error));
-            };
-        });
-
-
+                window.dismissAll = function () {
+                    fetch('/notifications/dismiss-all', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            fetchNotifications();
+                        }
+                    })
+                    .catch(error => console.error('Error dismissing all notifications:', error));
+                };
+            });
         </script>
     </body>
 </html>

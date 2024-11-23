@@ -90,7 +90,7 @@ Route::controller(UserController::class)->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
     Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
-    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->middleware('auth');
+    Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification'])->middleware('auth');
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications'])->middleware('auth');
 });

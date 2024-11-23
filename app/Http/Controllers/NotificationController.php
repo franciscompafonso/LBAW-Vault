@@ -3,19 +3,75 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Notification;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
+
 
 class NotificationController extends Controller
 {
-    public function getNotifications()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $user = Auth::user();
         $notifications = Notification::where('emitted_to', $user->id)
-                                      ->where('viewed', false)
-                                      ->orderBy('date', 'desc')
-                                      ->get();
+                                    ->where('viewed', false)
+                                    ->orderBy('date', 'desc')
+                                    ->get();
+
+        foreach ($notifications as $notification) {
+            $notificationData = $this->getType($notification->id);
+
+            $notification->type = $notificationData['type'];
+            
+            foreach ($notificationData as $key => $value) {
+                if ($key !== 'type') {
+                    $notification->$key = $value;
+                }
+            }
+        }
+
         return response()->json($notifications);
+    }
+
+    public function getType($notificationId)
+    {
+        $types = [
+            'invite_notification' => ['invite_id'],
+            'accepted_invite_notification' => ['event_id'],
+            'event_update_notification' => ['event_id'],
+            'comment_notification' => ['comment_id'],
+            'poll_reminder' => ['poll_id'],
+            'event_cancelation' => ['event_id'],
+            'event_reminder' => ['event_id'],
+            'admin_action' => [],
+            'unblock_notification' => []
+        ];
+
+        foreach ($types as $type => $params) {
+            $modelClass = '\\App\\Models\\NotificationSubtypes\\' . ucfirst(Str::camel($type));
+        
+            if (class_exists($modelClass)) {
+                $notification = $modelClass::find($notificationId);
+        
+                if ($notification) {
+                    if ($type == 'comment_notification') {
+                        $comment = Comment::find($notification->comment_id);
+                        
+                        if ($comment) {
+                            $result = $comment->show();
+                            return ['type' => $type, 'data' => $result];
+                        } else {
+                            return ['type' => $type, 'data' => 'Comment not found'];
+                        }
+                    } else {
+                        return ['type' => $type, 'data' => $notification->toArray()];
+                    }
+                }
+            }
+        }
+        
+        return ['type' => 'unknown'];
     }
 
     public function dismissNotification(Request $request)

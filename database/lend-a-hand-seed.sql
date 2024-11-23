@@ -184,7 +184,8 @@ CREATE TABLE invite (
     title VARCHAR(255) NOT NULL,
 	accepted BOOLEAN,
     description TEXT NOT NULL,
-    date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP)
+    date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP),
+    event_id INT REFERENCES event(id)
 );
 
 CREATE TABLE invite_notification (
@@ -552,9 +553,6 @@ INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked,
 ('João Pereira', 'joaopereira', 'joao.pereira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'joao.png'),
 ('Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE, 'maria.png'),
 ('Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 'pedro.png');
-
-INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-VALUES (2, 1, CURRENT_TIMESTAMP, FALSE);
 
 INSERT INTO admin (email, password) VALUES
 ('admin1@example.com', '$2y$10$ii5KNGv4MCXCh20tghqKg./7AzxujQjCGIvcRe5CO1iXYIUK59CoS'),

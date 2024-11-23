@@ -5,9 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-// Added to define Eloquent relationships.
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
 class Comment extends Model
 {
     use HasFactory;
@@ -27,6 +24,31 @@ class Comment extends Model
         'edited',
         'date',
     ];
+
+    /**
+     * Show the comment details by comment ID.
+     * 
+     * @param int $commentId
+     * @return array
+     */
+    public function show()
+    {
+        // Check if the current instance has an ID
+        if (!$this->id) {
+            return ['error' => 'Comment not found'];
+        }
+
+        // Return the comment data as an array using the current instance
+        return [
+            'comment_by_id' => $this->comment_by_id,
+            'event_id' => $this->event_id,
+            'text' => $this->text,
+            'is_pinned' => $this->is_pinned,
+            'score' => $this->score,
+            'edited' => $this->edited,
+            'date' => $this->date,
+        ];
+    }
 
     /**
      * Get the user who commented.
