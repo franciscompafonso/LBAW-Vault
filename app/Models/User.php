@@ -15,7 +15,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    // Don't add create and update timestamps in database.
+     // Don't add create and update timestamps in database.
     public $timestamps  = false;
     protected $table = 'user_account';
 
@@ -83,6 +83,18 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
                     ->where('event.start_date', '>=', now());
+    }
+
+    public function getDisplayNameAttribute()
+    {
+        // Check if the user is marked as deleted
+        if ($this->isdeleted) {
+            // Return the formatted deleted user name
+            return "deleted-user-" . $this->id;
+        }
+
+        // Otherwise, return the user's real name
+        return $this->name;
     }
     
 }

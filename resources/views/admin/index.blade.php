@@ -11,15 +11,16 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Created At</th>
+                    <th>isDeleted</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($users as $user)
                     <tr>
-                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->displayName }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->isdeleted }}</td>
                         <td>
                             <!-- Add your action buttons (view, edit, delete) here -->
                             <form action="{{ route('admin.delete.user', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">

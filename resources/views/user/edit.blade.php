@@ -34,7 +34,7 @@
             <!-- Name -->
             <div class="mb-4">
                 <label for="name" class="block text-lg font-semibold font-montserrat">Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
+                <input type="text" id="name" name="name" value="{{ old('name', $user->displayName) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
                 @error('name')
                     <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
                 @enderror

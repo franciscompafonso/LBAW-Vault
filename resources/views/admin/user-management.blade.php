@@ -29,7 +29,7 @@
         @if(isset($user))
             @if($user)
                 <div class="bg-white p-4 rounded-lg shadow-md">
-                    <h2 class="text-xl font-semibold">{{ $user->name }}</h2>
+                    <h2 class="text-xl font-semibold">{{ $user->displayName }}</h2>
                     <p>Email: {{ $user->email }}</p>
 
                     <!-- Delete User Button -->

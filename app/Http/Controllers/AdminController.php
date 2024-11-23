@@ -49,48 +49,19 @@ class AdminController extends Controller
     public function deleteUser($id)
 {
     try {
-        DB::beginTransaction();
-
+        // Find the user
         $user = User::findOrFail($id);
 
-        $deletedUserId = 'deleted-user-' . $user->id;
+        // Mark the user as deleted
+        $user->isdeleted = true;
+        $user->save();
 
-        // Log user information for debugging
-        \Log::info('Deleting user:', ['user' => $user]);
-
-        // Anonymize or disassociate user data in related tables
-        DB::table('event')->where('creator_id', $user->id)->update(['creator_id' => null]);
-        DB::table('comment')->where('comment_by_id', $user->id)->update(['comment_by_id' => null]);
-        DB::table('vote')->where('voted_by_id', $user->id)->update(['voted_by_id' => null]);
-        DB::table('poll_response')->where('user_id', $user->id)->update(['user_id' => null]);
-        DB::table('answer_review')->where('answered_by_id', $user->id)->update(['answered_by_id' => null]);
-        DB::table('review')->where('id_user', $user->id)->update(['id_user' => null]);
-
-        // Log the updates
-        \Log::info('User data anonymized or disassociated from related tables.');
-
-        // Soft delete or hard delete the user account
-        $user->delete();
-
-        // Log out the user if they are the currently authenticated user
-        if (Auth::id() == $user->id) {
-            Auth::logout();
-            session()->invalidate();
-            session()->regenerateToken();
-        }
-
-        DB::commit();
-
-        return redirect()->route('admin.dashboard')->with('status', 'User has been deleted successfully.');
+        return redirect()->route('admin.dashboard')->with('status', 'User has been marked as deleted successfully.');
     } catch (\Exception $e) {
-        DB::rollBack();
-        
-        // Log the exception for debugging
-        \Log::error('Error deleting user:', ['error' => $e->getMessage()]);
-
         return redirect()->back()->with('error', 'Error deleting user: ' . $e->getMessage());
     }
 }
+
 
 
 }
