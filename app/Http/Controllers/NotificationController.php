@@ -92,4 +92,15 @@ class NotificationController extends Controller
                    ->update(['viewed' => true]);
         return response()->json(['success' => true]);
     }
+
+    public function unreadCount(): \Illuminate\Http\JsonResponse
+    {
+        $user = Auth::user();
+        $unreadCount = Notification::where('emitted_to', $user->id)
+                                    ->where('viewed', false)
+                                    ->count();
+
+        return response()->json(['unreadCount' => $unreadCount]);
+    }
+
 }

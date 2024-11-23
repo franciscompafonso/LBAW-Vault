@@ -66,9 +66,9 @@
                     <div class="relative">
                         <!-- Bell Icon with Notification Count -->
                         <a id="notifications-button" onclick="toggleNotificationsDropdown()" class="relative cursor-pointer">
-                            <i class="fa-solid fa-bell text-3xl"></i>
-                            <div id="noti-number" class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                                0 <!-- This will dynamically update -->
+                            <i class="text-whiteSmoke hover:text-darkSlateGrey fa-solid fa-bell text-4xl"></i>
+                            <div id="noti-number" class="absolute top-0 right-0 translate-x-2 translate-y-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">
+                                0
                             </div>
                         </a>
 
@@ -327,6 +327,29 @@
                     .catch(error => console.error('Error dismissing all notifications:', error));
                 };
             });
+
+            function updateNotificationCount() {
+                const notiNumber = document.getElementById('noti-number');
+                
+                fetch('/notifications/count')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.unreadCount !== undefined) {
+                            notiNumber.textContent = data.unreadCount;
+                            notiNumber.classList.toggle('hidden', data.unreadCount === 0);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching notification count:', error));
+            }
+
+            // Update the count every 30 seconds
+            setInterval(updateNotificationCount, 30000);
+
+            // Update the count when the page loads
+            document.addEventListener('DOMContentLoaded', () => {
+                updateNotificationCount();
+            });
+
         </script>
     </body>
 </html>
