@@ -249,23 +249,39 @@ CREATE UNIQUE INDEX idx_user_username ON user_account(username);
 CREATE INDEX idx_event_start_date ON event(start_date);
 
 CREATE INDEX idx_event_category ON event(category_id); CLUSTER event USING idx_event_category;
-ALTER TABLE event
-ADD COLUMN tsvectors TSVECTOR;
+
+-- Search
+
+ALTER TABLE event ADD COLUMN ts_vector TSVECTOR;
+
+UPDATE event 
+SET ts_vector = to_tsvector('portuguese', name || ' ' || description || ' ' || 
+                    COALESCE((SELECT name FROM location WHERE location.id = event.location_id), '') || ' ' ||
+                    COALESCE((SELECT name FROM category WHERE category.id = event.category_id), '')
+);
 
 CREATE FUNCTION event_search_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        NEW.tsvectors := (
-            setweight(to_tsvector('english', NEW.name), 'A') ||
-            setweight(to_tsvector('english', NEW.description), 'B')
+        NEW.ts_vector := (
+            setweight(to_tsvector('portuguese', NEW.name), 'A') ||
+            setweight(to_tsvector('portuguese', NEW.description), 'B') ||
+            setweight(to_tsvector('portuguese', COALESCE((SELECT name FROM location WHERE location.id = NEW.location_id), '')), 'C') ||
+            setweight(to_tsvector('portuguese', COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), '')), 'C')
         );
     END IF;
 
     IF TG_OP = 'UPDATE' THEN
-        IF (NEW.name <> OLD.name OR NEW.description <> OLD.description) THEN
-            NEW.tsvectors := (
-                setweight(to_tsvector('english', NEW.name), 'A') ||
-                setweight(to_tsvector('english', NEW.description), 'B')
+        IF (NEW.name <> OLD.name OR 
+            NEW.description <> OLD.description OR 
+            NEW.location_id <> OLD.location_id OR 
+            NEW.category_id <> OLD.category_id) THEN
+
+            NEW.ts_vector := (
+                setweight(to_tsvector('portuguese', NEW.name), 'A') ||
+                setweight(to_tsvector('portuguese', NEW.description), 'B') ||
+                setweight(to_tsvector('portuguese', COALESCE((SELECT name FROM location WHERE location.id = NEW.location_id), '')), 'C') ||
+                setweight(to_tsvector('portuguese', COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), '')), 'C')
             );
         END IF;
     END IF;
@@ -273,12 +289,12 @@ BEGIN
 END $$ 
 LANGUAGE plpgsql;
 
-CREATE TRIGGER event_search_update
-    BEFORE INSERT OR UPDATE ON event
-    FOR EACH ROW
-    EXECUTE FUNCTION event_search_update();
 
-CREATE INDEX idx_event_full_text_search ON event USING GIN (tsvectors);
+CREATE TRIGGER event_search_update
+BEFORE INSERT OR UPDATE ON event
+FOR EACH ROW EXECUTE FUNCTION event_search_update();
+
+CREATE INDEX idx_event_full_text_search ON event USING GIN (ts_vector);
 
 -- Triggers
 

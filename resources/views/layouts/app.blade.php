@@ -119,7 +119,6 @@
 
         <script>
             // Search
-
             function toggleSearchBar() {
                 const searchBar = document.getElementById('searchBar');
                 const searchInput = document.getElementById('searchInput');
@@ -342,13 +341,22 @@
                     .catch(error => console.error('Error fetching notification count:', error));
             }
 
-            // Update the count every 30 seconds
-            setInterval(updateNotificationCount, 30000);
+            window.userIsAuthenticated = @json(Auth::check());
+            // Update the count every 30 seconds, but only if the user is authenticated
+            function startNotificationUpdates() {
+                if (window.userIsAuthenticated) {
+                    // Update the notification count every 30 seconds
+                    setInterval(updateNotificationCount, 5000);
 
-            // Update the count when the page loads
-            document.addEventListener('DOMContentLoaded', () => {
-                updateNotificationCount();
-            });
+                    // Update the notification count when the page loads
+                    document.addEventListener('DOMContentLoaded', () => {
+                        updateNotificationCount();
+                    });
+                }
+            }
+
+            // Call this function when the page is ready or at the appropriate time
+            startNotificationUpdates();
 
         </script>
     </body>

@@ -218,19 +218,16 @@ class EventController extends Controller
      * Search
      */
     public function search(Request $request)
-{
-    $query = strtolower($request->get('q'));
+    {
+        $query = $request->input('q');
 
-    $events = Event::query()
-        ->join('location', 'event.location_id', '=', 'location.id')
-        ->join('category', 'event.category_id', '=', 'category.id')
-        ->whereRaw('LOWER(event.name) LIKE ?', ['%' . $query . '%'])
-        ->orWhereRaw('LOWER(event.description) LIKE ?', ['%' . $query . '%'])
-        ->orWhereRaw('LOWER(location.name) LIKE ?', ['%' . $query . '%'])
-        ->orWhereRaw('LOWER(category.name) LIKE ?', ['%' . $query . '%'])
-        ->select('event.*', 'location.name as location_name', 'category.name as category_name')
-        ->get();
+        $events = Event::query()
+            ->select('event.*', 'location.name as location_name', 'category.name as category_name')
+            ->join('location', 'event.location_id', '=', 'location.id')
+            ->join('category', 'event.category_id', '=', 'category.id')
+            ->whereRaw("ts_vector @@ plainto_tsquery('portuguese', ?)", [$query])
+            ->get();
 
-    return response()->json($events);
-}
+        return response()->json($events);
+    }
 }
