@@ -1,7 +1,7 @@
 <ul data-id="{{$comment->id}}">
         <li data-id="{{$comment->id}}">
                 <img 
-                        src="{{ asset('storage/' . $comment->user->profilepicture) }}" 
+                        src="{{ asset('images/profile-pictures/' . $comment->user->profilepicture) }}" 
                         alt="{{ $comment->user->username }}" 
                         class="w-10 h-10 rounded-full object-cover"
                 >
