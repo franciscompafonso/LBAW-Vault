@@ -146,11 +146,14 @@ class EventController extends Controller
 
     public function showByCategory($id)
     {
-        // Fetch the category
-        $category = Category::findOrFail($id);
-
-        // Fetch events related to the category
-        $events = Event::where('category_id', $id)->get();
+        if ($id == 'all') {
+            $events = Event::all();
+            $category = null; 
+        } else {
+            $category = Category::findOrFail($id);
+            $events = Event::where('category_id', $id)->get();
+        }
+    
 
         // Return the view with events and category information
         return view('pages.events_by_category', compact('category', 'events'));

@@ -57,6 +57,21 @@
             <!-- Separator between categories -->
             <hr class="my-6 border-t-2 border-lightGrey">
         @endforeach
+
+        <div class="group flex items-center space-x-4">
+            <h2 class="text-4xl font-montserrat font-semibold text-eerieBlack group-hover:font-bold transition-all inline-block">
+                <a href="{{ url('events/category=all') }}" 
+                class="group-hover:text-eerieBlack group-hover:font-bold text-eerieBlack">
+                    All Categories
+                </a>
+            </h2>
+
+            <!-- "Explore all" Link -->
+            <a href="{{ url('events/category=all') }}" 
+            class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
+                Explore all >
+            </a>
+        </div>
         </div>
     </section>
 </div>
