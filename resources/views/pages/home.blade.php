@@ -72,7 +72,15 @@
                 Explore all >
             </a>
         </div>
+
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            @forelse ($category->events->take(5) as $event)
+                @include('partials.home_event', ['event' => $event])
+            @empty
+                <p class="text-eerieBlack col-span-full font-montserrat">No events available at the moment.</p>
+            @endforelse
         </div>
+
     </section>
 </div>
 @endsection
