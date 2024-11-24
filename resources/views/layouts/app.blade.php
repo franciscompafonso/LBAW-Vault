@@ -352,7 +352,7 @@
             function startNotificationUpdates() {
                 if (window.userIsAuthenticated) {
                     // Update the notification count every 30 seconds
-                    setInterval(updateNotificationCount, 5000);
+                    setInterval(updateNotificationCount, 30000);
 
                     // Update the notification count when the page loads
                     document.addEventListener('DOMContentLoaded', () => {

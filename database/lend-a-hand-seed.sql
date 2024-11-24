@@ -205,7 +205,7 @@ CREATE TABLE accepted_invite_notification (
 
 CREATE TABLE event_update_notification (
     id INT REFERENCES notification(id),
-    event_id INT REFERENCES event(id),
+    event_id INT REFERENCES event(id)  ON DELETE CASCADE,
     PRIMARY KEY (id, event_id)
 );
 

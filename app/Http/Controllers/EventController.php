@@ -157,7 +157,8 @@ class EventController extends Controller
 
         // Delete the event and return it as JSON.
         $event->delete();
-        return response()->json($event);
+        return redirect()->route('pages.home')->with('message', 'The event has been canceled.');
+
     }
 
     /**

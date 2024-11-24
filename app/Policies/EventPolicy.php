@@ -49,7 +49,7 @@ class EventPolicy
     public function delete(User $user, Event $event): bool
     {
       // Only a event owner can delete it.
-      return $user->id === $event->user_id;
+      return $user->id === $event->creator_id;
     }
 
     /**
