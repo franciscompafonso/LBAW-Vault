@@ -32,7 +32,7 @@ class AdminController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-
+        // go back to home
         return redirect()->route('pages.home')->with('message', 'New admin account created successfully!');
     }
 
