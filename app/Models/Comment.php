@@ -73,4 +73,15 @@ class Comment extends Model
     {
         return $this->hasMany(Photo::class, 'comment_id');
     }
+
+    /**
+     * Get the feedbacks for the comment.
+     */
+    public function feedback($user_id)
+    {
+        // This will return the feedback value, or null if no feedback exists for this user
+        return $this->hasMany(CommentFeedback::class, 'comment_id')
+                    ->where('user_id', $user_id)
+                    ->value('feedback');
+    }
 }

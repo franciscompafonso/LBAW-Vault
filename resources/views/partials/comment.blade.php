@@ -24,7 +24,6 @@
             </div>
 
             <div class="text-right">
-                
                 @if (auth()->guard('admin')->check())
                     <form action="{{ route('admin.comment.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
@@ -41,16 +40,51 @@
                     </form>
                 @else
                     <div class="flex justify-end items-center space-x-2">
-                        <button 
-                            class="like-btn text-gray-500 hover:text-green-500 focus:text-green-500 transition-colors duration-200 border-none hover:bg-transparent focus:bg-transparent focus:outline-none"
-                            onclick="toggleLike(this)">
-                            <i class="fas fa-thumbs-up"></i>
-                        </button>
-                        <button 
-                            class="dislike-btn text-gray-500 hover:text-red-500 focus:text-red-500 transition-colors duration-200 border-none hover:bg-transparent focus:bg-transparent focus:outline-none"
-                            onclick="toggleDislike(this)">
-                            <i class="fas fa-thumbs-down"></i>
-                        </button>
+                        <!-- Like button form -->
+                        <form action="{{ route('comment.like') }}" method="POST" class="inline">
+                            @csrf
+                            <input type="hidden" name="comment_id" value="{{ $comment->id }}">
+                            @if ($comment->feedback(Auth::id()) == 1)
+                                <button 
+                                    type="submit"
+                                    class="like-btn hover:text-gray-500 text-green-500 focus:text-green-500 transition-colors duration-200 border-none hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
+                                    <i class="fas fa-thumbs-up"></i>
+                                </button>
+                            @else
+                                <button 
+                                    type="submit"
+                                    class="like-btn text-gray-500 hover:text-green-500 focus:text-green-500 transition-colors duration-200 border-none hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
+                                    <i class="fas fa-thumbs-up"></i>
+                                </button>
+                            @endif
+                        </form>
+                        
+                        <!-- Dislike button form -->
+                        <form action="{{ route('comment.dislike') }}" method="POST" class="inline">
+                            @csrf
+                            <input type="hidden" name="comment_id" value="{{ $comment->id }}">
+                            @if ($comment->feedback(Auth::id()) == -1)
+                                <button 
+                                    type="submit"
+                                    class="dislike-btn hover:text-gray-500 text-red-500 focus:text-red-500 transition-colors duration-200 border-none hover:bg-transparent focus:bg-transparent focus:outline-none" 
+                                    aria-label="Dislike this comment">
+                                    <i class="fas fa-thumbs-down"></i>
+                                </button>
+                            @else
+                                <button 
+                                    type="submit"
+                                    class="dislike-btn text-gray-500 hover:text-red-500 focus:text-red-500 transition-colors duration-200 border-none hover:bg-transparent focus:bg-transparent focus:outline-none" 
+                                    aria-label="Dislike this comment">
+                                    <i class="fas fa-thumbs-down"></i>
+                                </button>
+                            @endif
+                        </form>
+
+                        <span 
+                            class="font-semibold font-montserrat text-lg 
+                                {{ $comment->score > 0 ? 'text-green-500' : ($comment->score < 0 ? 'text-red-500' : 'text-gray-500') }}">
+                            ({{ $comment->score }})
+                        </span>
                     </div>
                 @endif
             </div>
@@ -74,29 +108,3 @@
         @endif
     </li>
 </ul>
-
-<script>
-    function toggleLike(button) {
-        button.classList.toggle('text-green-500');
-        button.classList.toggle('text-gray-500');
-
-        // Remove dislike if active
-        const siblingDislike = button.nextElementSibling;
-        if (siblingDislike.classList.contains('text-red-500')) {
-            siblingDislike.classList.remove('text-red-500');
-            siblingDislike.classList.add('text-gray-500');
-        }
-    }
-
-    function toggleDislike(button) {
-        button.classList.toggle('text-red-500');
-        button.classList.toggle('text-gray-500');
-
-        // Remove like if active
-        const siblingLike = button.previousElementSibling;
-        if (siblingLike.classList.contains('text-green-500')) {
-            siblingLike.classList.remove('text-green-500');
-            siblingLike.classList.add('text-gray-500');
-        }
-    }
-</script>
