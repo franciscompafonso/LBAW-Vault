@@ -40,7 +40,7 @@
                         Leave Event
                     </button>
                 </form>
-            @else
+            @elseif (Auth::guard('web')->check())
                 <form action="{{ route('events.join', $event->id) }}" method="POST">
                     @csrf
                     <button type="submit" class=" font-montserrat bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">
@@ -49,7 +49,7 @@
                 </form>
             @endif
 
-            @if ($event->creator_id === Auth::id())
+            @if ($event->creator_id === Auth::id() )
                 <form action="{{ route('events.delete', $event->id) }}" method="POST">
                     @csrf
                     <button type="submit" class=" font-montserrat bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">
@@ -61,7 +61,9 @@
                         Edit Event
                     </a>
                 </button>
+                
             @endif
+            
         </div>
     </div>
 

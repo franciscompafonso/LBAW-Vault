@@ -124,6 +124,7 @@
         </footer>
 
         <script>
+            const isAdmin = @json(Auth::guard('admin')->check());
             // Search
             function toggleSearchBar() {
                 const searchBar = document.getElementById('searchBar');
@@ -168,15 +169,18 @@
                     events.forEach(event => {
                         const eventItem = document.createElement('div');
                         eventItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
-
+                        
+                        
                         const formattedDate = event.start_date 
                             ? new Date(event.start_date).toLocaleString() 
                             : 'Not available';
 
+                        const eventUrl = isAdmin ? `/admin/events/${event.id}` : `/events/${event.id}`;
+
                         eventItem.innerHTML = `
                             <div class="event-card">
                                 <h3 class="font-semibold text-xl text-gray-800">
-                                    <a href="/events/${event.id}" class="text-md font-semibold font-montserrat text-ultraViolet hover:text-cambridgeBlue">${event.name}</a>
+                                    <a href="${eventUrl}" class="text-md font-semibold font-montserrat text-ultraViolet hover:text-cambridgeBlue">${event.name}</a>
                                 </h3>
                                 <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${event.description || 'No description available'}</p>
                                 <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${formattedDate}</p>

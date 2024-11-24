@@ -36,6 +36,18 @@ class EventController extends Controller
         ]);
     }
 
+    public function showAsAdmin($id)
+    {
+        $event = Event::findOrFail($id);
+
+        // Check if the user is an admin
+        if (!auth()->guard('admin')->check()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('admin.event', ['event' => $event]);
+    }
+
     /**
      * Shows all events.
      */
