@@ -117,9 +117,18 @@ public function deleteAsAdmin($id)
             abort(403, 'Unauthorized action.');
         }
 
+        $event->participators()->detach();  // This removes the association in the pivot table
+        $event->reviews()->delete();  // This will delete all reviews related to the event
+        
+        $event->comments->each(function ($comment) {
+            // Delete photos linked to this comment before deleting the comment itself
+            $comment->photos()->delete();  // Assuming a relationship `photos()` is defined in Comment model
+            $comment->delete();
+        });
+
         $event->delete();
 
-        return redirect()->route('admin.events.index')->with('message', 'Event successfully deleted by admin.');
+        return redirect()->route('admin.dashboard')->with('message', 'Event successfully deleted by admin.');
     }
 
 
