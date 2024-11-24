@@ -8,11 +8,16 @@
         <div class="max-w-6xl mx-auto flex items-center flex-col lg:flex-row px-6">
             <!-- Text Section -->
             <div class="w-full lg:w-1/2 text-left mb-8 lg:mb-0">
-                <h2 class="text-4xl font-montserrat font-semibold mb-4 text-eerieBlack">Empowering Communities, One Event at a Time.</h2>
-                @if (!Auth::check())
-                    <p class="text-2xl font-montserrat text-deepNavy mb-6">Join us now!</p>
-                @else
+                
+                @if ( Auth::guard('admin')->check() )
+                    <h2 class="text-4xl font-montserrat font-semibold mb-4 text-eerieBlack"> Shaping Communities, One Decision at a Time.</h2>
+                    <p class="text-2xl font-montserrat text-deepNavy mb-6">Welcome back, Admin!</p>
+                @elseif (Auth::guard('web')->check())
+                    <h2 class="text-4xl font-montserrat font-semibold mb-4 text-eerieBlack"> Empowering Communities, One Event at a Time.</h2>
                     <p class="text-2xl font-montserrat text-deepNavy mb-6">Welcome back, {{Auth::user()->name}}!</p>
+                @else
+                    <h2 class="text-4xl font-montserrat font-semibold mb-4 text-eerieBlack"> Empowering Communities, One Event at a Time.</h2>
+                    <p class="text-2xl font-montserrat text-deepNavy mb-6">Join us now!</p>  
                 @endif
             </div>
 

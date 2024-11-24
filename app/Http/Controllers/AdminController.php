@@ -5,11 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\Comment;
 use App\Models\Event;
+use Illuminate\Support\Facades\Hash;
+
 class AdminController extends Controller
 {
-    
+    public function showCreateAdminForm()
+    {
+        $admins = Admin::paginate(5); // Fetch users, paginate them if you have many
+        return view('admin.create-admin', compact('admins'));
+    }
+
+    public function storeAdmin(Request $request)
+    {
+        // Validate the input
+        $validated = $request->validate([
+            'email' => 'required|email|unique:admin,email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        // Create a new admin
+        Admin::create([
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+
+        return redirect()->route('pages.home')->with('message', 'New admin account created successfully!');
+    }
+
     public function search(Request $request)
 {
     // Validate the search input

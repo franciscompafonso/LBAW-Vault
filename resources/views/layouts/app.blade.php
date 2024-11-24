@@ -23,12 +23,7 @@
         <header class="flex justify-between items-center p-4 {{ Auth::guard('admin')->check() ? 'bg-ultraViolet' : 'bg-wisteria' }} shadow-lg relative">
             <!-- Logo/Title -->
             <h1 class="text-3xl font-bold text-whiteSmoke">
-            @if (Auth::guard(name: 'admin')->check()) 
                 <a href="{{ url(path: '/home') }}" class="hover:text-darkSlateGrey font-montserrat text-5xl">Lend-A-Hand</a>
-            @else
-                <a href="{{ url('/home') }}" class="hover:text-darkSlateGrey font-montserrat text-5xl">Lend-A-Hand</a>
-            @endif
-
             </h1>
 
             <!-- Navigation Icons -->
@@ -41,6 +36,9 @@
                 @if (Auth::guard('admin')->check())
                 <a href="{{ url('/admin/user-management') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Users">
                     <i class="fa-solid fa-users-gear text-3xl"></i>
+                </a>
+                <a href="{{ url('/admin/create') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Admins">
+                    <i class="fa-solid fa-user-tie text-3xl"></i>
                 </a>
                 @endif
 
@@ -61,9 +59,9 @@
                     <i class="fa-solid fa-question text-3xl"></i>
                 </a>
 
-                @if (Auth::guest() && !Request::is('login'))
+                @if (Auth::guest() && !Request::is('login') && (!Auth::guard('admin')->check()))
                     <!-- Login Icon -->
-                    <a href="{{ url('/login') }}" title="Login" class="text-yellow hover:text-darkSlateGrey">
+                    <a href="{{ url('/login') }}" title="Login" class="text-whiteSmoke hover:text-darkSlateGrey">
                         <i class="fa-solid fa-right-to-bracket text-3xl"></i>
                     </a>
                 @endif
