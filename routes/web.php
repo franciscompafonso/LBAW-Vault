@@ -51,6 +51,7 @@ Route::get('/photos/{id}', [PhotoController::class, 'show'])->name('photos.show'
 
 Route::post('/comment/like', [CommentFeedbackController::class, 'like'])->name('comment.like');
 Route::post('/comment/dislike', [CommentFeedbackController::class, 'dislike'])->name('comment.dislike');
+Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
 
 // API
 Route::controller(EventController::class)->group(function () {

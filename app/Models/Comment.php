@@ -84,4 +84,13 @@ class Comment extends Model
                     ->where('user_id', $user_id)
                     ->value('feedback');
     }
+
+    /**
+     * Get the replies to the current comment for the same event.
+     */
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'reply_to')
+                    ->where('event_id', $this->event_id);
+    }
 }

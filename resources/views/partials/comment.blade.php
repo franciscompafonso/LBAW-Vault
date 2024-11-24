@@ -106,5 +106,68 @@
             @endforeach
         </div>
         @endif
+    
+        <!-- Reply Button -->
+        @if (Auth::check())
+        <div class="text-left mt-2">
+            <button 
+                class="text-blue-500 font-montserrat hover:text-blue-800 transition-colors duration-200 border-none hover:bg-transparent focus:bg-transparent focus:outline-none"
+                onclick="toggleReplyForm({{ $comment->id }})">
+                Reply
+            </button>
+        </div>
+        @endif
+
+        <!-- Reply Form -->
+        <div id="reply-form-{{ $comment->id }}" class="mt-4 hidden">
+            <form action="{{ route('comments.reply', $comment->id) }}" method="POST">
+                @csrf
+                <div class="flex items-center space-x-2">
+                    <textarea name="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Write your reply..." required></textarea>
+                </div>
+                <div class="text-right mt-2">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Submit Reply</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Display Replies if they exist -->
+        @if ($comment->replies->isNotEmpty())
+            <ul class="space-y-4 mt-4 pl-6">
+            @foreach ($comment->replies as $reply)
+                <li class="bg-white shadow-md p-4 rounded-lg border border-gray-200 space-y-4">
+                    <div class="grid grid-cols-4 items-center gap-4">
+                        <div class="flex items-center space-x-2">
+                            <img 
+                                src="{{ asset('images/profile-pictures/' . $reply->user->profilepicture) }}" 
+                                alt="{{ $reply->user->username }}" 
+                                class="w-12 h-12 rounded-full object-cover"
+                            >
+                            <span class="font-semibold font-montserrat text-gray-900 text-lg">{{ $reply->user->name }}</span>
+                        </div>
+                        <div class="col-span-3 text-right">
+                            <span class="text-gray-500 text-sm font-montserrat">{{ \Carbon\Carbon::parse($reply->date)->format('d/m/Y') }}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 items-center gap-4">
+                        <div class="col-span-2">
+                            <p class="text-gray-800 text-left font-montserrat">{{ $reply->text }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Reply actions like delete, like/dislike buttons, etc., can be here -->
+                </li>
+            @endforeach
+            </ul>
+        @endif
     </li>
 </ul>
+
+<!-- JavaScript to Toggle Reply Form -->
+<script>
+    function toggleReplyForm(commentId) {
+        const form = document.getElementById('reply-form-' + commentId);
+        form.classList.toggle('hidden'); // Toggles visibility of the form
+    }
+</script>

@@ -22,19 +22,17 @@ class CommentFeedbackController extends Controller
 
     private function handleFeedback(Request $request, int $feedbackValue)
     {
-        // Validate input data
         $validator = Validator::make($request->all(), [
-            'comment_id' => 'required|exists:comment,id', // Ensure the table name matches your database
+            'comment_id' => 'required|exists:comment,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Invalid data provided.',
                 'errors' => $validator->errors(),
-            ], 400); // Return error response for failed validation
+            ], 400);
         }
 
-        // Check if the user has already provided feedback for this comment
         $existingFeedback = CommentFeedback::where('user_id', Auth::id())
             ->where('comment_id', $request->comment_id)
             ->first();
@@ -43,22 +41,19 @@ class CommentFeedbackController extends Controller
         
         if ($existingFeedback) {
             if ($existingFeedback->feedback === $feedbackValue) {
-                // User is toggling off their feedback
                 $existingFeedback->delete();
-                $comment->score -= $feedbackValue; // Revert the feedback
+                $comment->score -= $feedbackValue;
             } else {
-                // User is switching feedback
                 $existingFeedback->update(['feedback' => $feedbackValue]);
-                $comment->score += 2 * $feedbackValue; // Adjust score (+2 or -2)
+                $comment->score += 2 * $feedbackValue;
             }
         } else {
-            // Insert new feedback
             CommentFeedback::create([
                 'user_id' => Auth::id(),
                 'comment_id' => $request->comment_id,
                 'feedback' => $feedbackValue,
             ]);
-            $comment->score += $feedbackValue; // Add the new feedback
+            $comment->score += $feedbackValue;
         }
 
         $comment->save();

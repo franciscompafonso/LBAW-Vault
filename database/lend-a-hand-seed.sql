@@ -126,6 +126,7 @@ CREATE TABLE answer_review (
 
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
+    reply_to INT REFERENCES comment(id),
     comment_by_id INT REFERENCES user_account(id),
     event_id INT REFERENCES event(id) ON DELETE CASCADE,
     text TEXT NOT NULL,
@@ -1010,6 +1011,9 @@ INSERT INTO comment (comment_by_id, event_id, text, is_pinned, score, edited, da
 (19, 15, 'Looking forward to it', FALSE, 35, FALSE, '2023-11-29 11:15:00'),
 (39, 15, 'Is there a detailed agenda?', FALSE, 28, TRUE, '2023-11-29 12:00:00'),
 (53, 15, 'Just registered!', FALSE, 32, FALSE, '2023-11-29 12:45:00');
+
+INSERT INTO comment (reply_to, comment_by_id, event_id, text, is_pinned, score, edited, date) VALUES
+(3, 22, 1, 'Yes!', FALSE, 8, FALSE, '2023-11-15 10:32:00');
 
 INSERT INTO photo (comment_id, path) VALUES
 (1, 'comment_pic_1.JPG'),

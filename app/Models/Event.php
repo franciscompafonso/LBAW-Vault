@@ -69,7 +69,7 @@ class Event extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'event_id')
-                    ->with('user');
+                    ->whereNull('reply_to');
     }
 
     

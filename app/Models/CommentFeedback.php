@@ -21,4 +21,9 @@ class CommentFeedback extends Model
     ];
 
     public $timestamps = false;
+
+    public function getKeyName()
+    {
+        return $this->primaryKey;
+    }
 }
