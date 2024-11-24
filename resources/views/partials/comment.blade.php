@@ -2,7 +2,7 @@
     <li class="bg-white shadow-md p-4 rounded-lg border border-gray-200 space-y-4">
         <!-- Profile Image, Username, and Date -->
         <div class="grid grid-cols-4 items-center gap-4">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center col-span-2 space-x-2">
                 <img 
                     src="{{ asset('images/profile-pictures/' . $comment->user->profilepicture) }}" 
                     alt="{{ $comment->user->username }}" 
@@ -11,7 +11,7 @@
                 <span class="font-semibold font-montserrat text-gray-900 text-lg">{{ $comment->user->name }}</span>
             </div>
 
-            <div class="col-span-3 text-right">
+            <div class="col-span-2 text-right">
                 <span class="text-gray-500 text-sm font-montserrat">{{ \Carbon\Carbon::parse($comment->date)->format('d/m/Y') }}</span>
             </div>
         </div>
@@ -123,7 +123,7 @@
             <form action="{{ route('comments.reply', $comment->id) }}" method="POST">
                 @csrf
                 <div class="flex items-center space-x-2">
-                    <textarea name="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Write your reply..." required></textarea>
+                    <textarea name="text" class="w-full p-2 border text-black border-gray-300 rounded-lg" placeholder="Write your reply..." required></textarea>
                 </div>
                 <div class="text-right mt-2">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Submit Reply</button>

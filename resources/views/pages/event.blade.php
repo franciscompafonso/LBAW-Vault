@@ -130,9 +130,9 @@
                             <!-- Optional Submit Button -->
                             <button 
                                 type="submit" 
-                                class="font-montserrat bg-keppel text-white px-4 py-2 rounded-md font-semibold shadow-lg hover:bg-charcoal transition-colors duration-200"
+                                class="text-ultraViolet font-montserrat hover:text-cambridgeBlue text-4xl transition-colors duration-200 border-none hover:bg-transparent bg-transparent focus:outline-none"
                             >
-                                ✔️
+                                <i class="fa-solid fa-check"></i>
                             </button>
                         </form>
                     </div>
