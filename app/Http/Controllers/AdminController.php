@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Comment;
 use App\Models\Event;
 class AdminController extends Controller
 {
@@ -117,20 +118,24 @@ public function deleteAsAdmin($id)
             abort(403, 'Unauthorized action.');
         }
 
-        $event->participators()->detach();  // This removes the association in the pivot table
-        $event->reviews()->delete();  // This will delete all reviews related to the event
-        
-        $event->comments->each(function ($comment) {
-            // Delete photos linked to this comment before deleting the comment itself
-            $comment->photos()->delete();  // Assuming a relationship `photos()` is defined in Comment model
-            $comment->delete();
-        });
-
         $event->delete();
 
         return redirect()->route('admin.dashboard')->with('message', 'Event successfully deleted by admin.');
     }
 
+    public function deleteComment($id)
+    {
+        // Find the comment.
+        $comment = Comment::find($id);
+
+        if (!auth()->guard('admin')->check()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Delete the comment and return it as JSON.
+        $comment->delete();
+        return back()->with('message', 'successfully deleted the comment!');
+    }   
 
 
 }

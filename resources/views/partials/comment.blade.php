@@ -24,7 +24,15 @@
             </div>
 
             <div class="text-right">
-                @if ($comment->comment_by_id === Auth::id())
+                
+                @if (auth()->guard('admin')->check())
+                    <form action="{{ route('admin.comment.delete', $comment->id) }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="text-red-200 font-montserrat hover:text-red-600 transition-colors duration-200 border-none hover:bg-transparent bg-transparent focus:outline-none">
+                            X
+                        </button>
+                    </form>
+                @elseif ($comment->comment_by_id === Auth::id())
                     <form action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
                         <button type="submit" class="text-red-200 font-montserrat hover:text-red-600 transition-colors duration-200 border-none hover:bg-transparent bg-transparent focus:outline-none">

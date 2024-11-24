@@ -106,7 +106,7 @@ CREATE TABLE "event" (
 
 CREATE TABLE participator (
     participator_id INT REFERENCES user_account(id),
-    event_id INT REFERENCES event(id),
+    event_id INT REFERENCES event(id) ON DELETE CASCADE,
     PRIMARY KEY (participator_id, event_id)
 );
 
@@ -118,7 +118,7 @@ CREATE TABLE question_review (
 CREATE TABLE answer_review (
     answered_by_id INT REFERENCES user_account(id),
     question_id INT NOT NULL REFERENCES question_review(id),
-    about_event_id INT NOT NULL REFERENCES event(id),
+    about_event_id INT NOT NULL REFERENCES event(id) ON DELETE CASCADE,
     rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,
     date DATE CHECK (date <= CURRENT_DATE) NOT NULL,
     PRIMARY KEY (answered_by_id, question_id, about_event_id)
@@ -127,7 +127,7 @@ CREATE TABLE answer_review (
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
     comment_by_id INT REFERENCES user_account(id),
-    event_id INT REFERENCES event(id),
+    event_id INT REFERENCES event(id) ON DELETE CASCADE,
     text TEXT NOT NULL,
     is_pinned BOOLEAN,
     score INT DEFAULT 0,
@@ -249,7 +249,7 @@ CREATE TABLE unblock_notification (
 
 CREATE TABLE photo (
     id SERIAL PRIMARY KEY,
-    comment_id INT REFERENCES comment(id),
+    comment_id INT REFERENCES comment(id) ON DELETE CASCADE,
     path VARCHAR(255) NOT NULL
 );
 

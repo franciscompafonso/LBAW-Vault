@@ -123,6 +123,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/user-management/block-user/{user}', [AdminController::class, 'blockUser'])->name('admin.block.user');
     Route::patch('/admin/user-management/unblock-user/{user}', [AdminController::class, 'unblockUser'])->name('admin.unblock.user');
     Route::delete('/admin/events/{id}', [AdminController::class, 'deleteAsAdmin'])->name('admin.events.delete');
-
+    Route::post('/admin/comments/delete/{comment}', [AdminController::class, 'deleteComment'])->name('admin.comment.delete');
     Route::get('/admin/events/{id}', [EventController::class, 'showAsAdmin'])->name('admin.events.show');
 });

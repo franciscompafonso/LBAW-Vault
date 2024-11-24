@@ -167,14 +167,6 @@ class EventController extends Controller
         // Check if the current user is authorized to delete this event.
         $this->authorize('delete', $event);
 
-        $event->participators()->detach();
-        $event->reviews()->delete();
-        $event->comments->each(function ($comment) {
-            // Delete photos linked to this comment before deleting the comment itself
-            $comment->photos()->delete();  // Assuming a relationship `photos()` is defined in Comment model
-            $comment->delete();
-        });
-
         // Delete the event and return it as JSON.
         $event->delete();
         return redirect()->route('pages.home')->with('message', 'The event has been canceled.');
