@@ -9,13 +9,7 @@ use App\Models\Comment;
 use App\Models\Event;
 class AdminController extends Controller
 {
-    // Display the admin dashboard
-    public function index()
-    {
-        return view('admin.dashboard');
-    }
-
-    // Display the user management page
+    
     public function search(Request $request)
 {
     // Validate the search input
@@ -120,7 +114,7 @@ public function deleteAsAdmin($id)
 
         $event->delete();
 
-        return redirect()->route('admin.dashboard')->with('message', 'Event successfully deleted by admin.');
+        return redirect()->route('pages.home')->with('message', 'Event successfully deleted by admin.');
     }
 
     public function deleteComment($id)

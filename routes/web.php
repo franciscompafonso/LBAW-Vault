@@ -108,15 +108,6 @@ Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.lo
 
 Route::middleware(['auth:admin'])->group(function () {
 
-    // Route to dashboard (This route automatically redirects to the dashboard)
-    Route::get('/admin', function () {
-        return redirect()->route('admin.dashboard');
-    });
-
-    // Admin dashboard route
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-
-    // User management routes
     Route::get('/admin/user-management', [AdminController::class, 'listUsers'])->name('admin.user-management');
     Route::get('/admin/user-management/search-user', [AdminController::class, 'search'])->name('admin.search.user');
     Route::delete('/admin/user-management/delete-user/{user}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');

@@ -23,8 +23,8 @@
         <header class="flex justify-between items-center p-4 {{ Auth::guard('admin')->check() ? 'bg-ultraViolet' : 'bg-wisteria' }} shadow-lg relative">
             <!-- Logo/Title -->
             <h1 class="text-3xl font-bold text-whiteSmoke">
-            @if (Auth::guard('admin')->check()) 
-                <a href="{{ url('/admin/dashboard') }}" class="hover:text-darkSlateGrey font-montserrat text-5xl">Lend-A-Hand</a>
+            @if (Auth::guard(name: 'admin')->check()) 
+                <a href="{{ url(path: '/home') }}" class="hover:text-darkSlateGrey font-montserrat text-5xl">Lend-A-Hand</a>
             @else
                 <a href="{{ url('/home') }}" class="hover:text-darkSlateGrey font-montserrat text-5xl">Lend-A-Hand</a>
             @endif
