@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PhotoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,9 @@ Route::post('/events/{event}/delete', [EventController::class, 'deleteEvent'])->
 Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
 Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
 
+Route::get('/comments/{commentId}/photos', [PhotoController::class, 'getPhotosByComment']);
+Route::post('/comments/{comment}/photos', [PhotoController::class, 'store'])->name('photos.store');
+Route::get('/photos/{id}', [PhotoController::class, 'show'])->name('photos.show');
 
 // API
 Route::controller(EventController::class)->group(function () {

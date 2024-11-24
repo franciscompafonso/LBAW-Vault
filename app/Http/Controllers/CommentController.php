@@ -27,11 +27,15 @@ class CommentController extends Controller
 
     public function store(Event $event)
     {
+        // Validate incoming request
         $data = request()->validate([
             'content' => 'required|string|max:1000',
+            'photos' => 'nullable|array|max:15', // Allow up to 15 photos
+            'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048', // Validate each photo
         ]);
 
-        $event->comments()->create([
+        // Store the comment
+        $comment = $event->comments()->create([
             'comment_by_id' => Auth::id(),
             'text' => $data['content'],
             'is_pinned' => false,
@@ -39,6 +43,10 @@ class CommentController extends Controller
             'edited' => false,
             'date' => now(),
         ]);
+
+        if (isset($data['photos'])) {
+            PhotoController::storePhotos($comment, $data['photos']);
+        }
 
         return redirect()->back()->with('success', 'Comentário adicionado com sucesso!');
     }

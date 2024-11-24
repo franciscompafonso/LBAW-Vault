@@ -245,6 +245,12 @@ CREATE TABLE unblock_notification (
     PRIMARY KEY (id, admin_id)
 );
 
+CREATE TABLE photo (
+    id SERIAL PRIMARY KEY,
+    comment_id INT REFERENCES comment(id),
+    path VARCHAR(255) NOT NULL
+);
+
 -- Indexes
 
 CREATE UNIQUE INDEX idx_user_username ON user_account(username);
@@ -621,3 +627,16 @@ INSERT INTO comment (comment_by_id, event_id, text, is_pinned, score, edited, da
 (4, 1, 'Looking forward to this!', FALSE, 5, TRUE, '2023-11-15 09:00:00'),
 (2, 1, 'Great opportunity for networking.', FALSE, 15, FALSE, '2023-11-15 09:00:00');
 
+INSERT INTO photo (comment_id, path) VALUES
+(1, 'comment_pic_1.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG')

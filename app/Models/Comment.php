@@ -65,4 +65,12 @@ class Comment extends Model
     {
         return $this->belongsTo(Event::class, 'event_id');
     }
+
+    /**
+     * Get the photos for the comment.
+     */
+    public function photos()
+    {
+        return $this->hasMany(Photo::class, 'comment_id');
+    }
 }

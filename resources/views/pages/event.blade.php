@@ -74,7 +74,7 @@
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
             @if ($event->participators->contains('id', Auth::id()))
-                <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6">
+                <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
                     @csrf
                     <textarea 
                         name="content" 
@@ -82,6 +82,21 @@
                         class="w-full p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-burgundy resize-none"
                         placeholder="Add your comment here..."
                         required></textarea>
+
+                    <!-- Photo upload section -->
+                    <div class="mt-4">
+                        <label for="photos" class="block text-gray-700">Upload up to 15 photos:</label>
+                        <input 
+                            type="file" 
+                            name="photos[]" 
+                            id="photos" 
+                            multiple 
+                            accept="image/*"
+                            class="mt-2 w-full p-2 border border-gray-300 rounded-lg" 
+                            onchange="validatePhotos()" />
+                        <small class="text-gray-500">You can upload up to 15 photos.</small>
+                    </div>
+
                     <div class="mt-4 flex justify-end">
                         <button 
                             type="submit" 
@@ -130,4 +145,15 @@
         </div>
     </div>
 </section>
+<script>
+    function validatePhotos() {
+        const photosInput = document.getElementById('photos');
+        const fileCount = photosInput.files.length;
+
+        if (fileCount > 15) {
+            alert('You can only upload up to 15 photos.');
+            photosInput.value = ''; // Clear the file input
+        }
+    }
+</script>
 @endsection

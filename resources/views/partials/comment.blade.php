@@ -47,6 +47,23 @@
                 @endif
             </div>
         </div>
+
+        <!-- Display Photos if they exist -->
+        @if ($comment->photos->isNotEmpty())
+        <div class="grid grid-cols-3 gap-4 mt-4">
+            @foreach ($comment->photos as $photo)
+                <div class="w-full h-32 bg-gray-100 rounded-lg overflow-hidden">
+                    <a href="{{ route('photos.show', $photo->id) }}">
+                        <img 
+                                src="{{ asset('images/others/' . $photo->path) }}" 
+                                alt="Comment Photo"
+                                class="w-full h-full object-cover cursor-pointer"
+                        >
+                   </a>
+                </div>
+            @endforeach
+        </div>
+        @endif
     </li>
 </ul>
 
