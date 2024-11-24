@@ -14,11 +14,7 @@ class CommentFeedback extends Model
     // Define the composite primary key
     protected $primaryKey = ['user_id', 'comment_id'];
 
-    protected $fillable = [
-        'user_id',
-        'comment_id',
-        'feedback',
-    ];
+    protected $guarded = [];
 
     public $timestamps = false;
 
