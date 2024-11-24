@@ -1,17 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\InviteController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PhotoController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +46,9 @@ Route::post('/events/{event}/participators/{user}/kick', [EventController::class
 Route::get('/comments/{commentId}/photos', [PhotoController::class, 'getPhotosByComment']);
 Route::post('/comments/{comment}/photos', [PhotoController::class, 'store'])->name('photos.store');
 Route::get('/photos/{id}', [PhotoController::class, 'show'])->name('photos.show');
+
+Route::post('/comment/like', [CommentFeedbackController::class, 'like'])->name('comment.like');
+Route::post('/comment/dislike', [CommentFeedbackController::class, 'dislike'])->name('comment.dislike');
 
 // API
 Route::controller(EventController::class)->group(function () {

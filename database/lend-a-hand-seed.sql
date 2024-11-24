@@ -32,6 +32,8 @@ DROP TABLE IF EXISTS question_review CASCADE;
 DROP TABLE IF EXISTS participator CASCADE;
 DROP TABLE IF EXISTS event CASCADE;
 DROP TABLE IF EXISTS user_account CASCADE;
+DROP TABLE IF EXISTS photo CASCADE;
+DROP TABLE IF EXISTS comment_feedback CASCADE;
 
 -- drop indexes
 DROP INDEX IF EXISTS idx_user_username;
@@ -249,6 +251,13 @@ CREATE TABLE photo (
     id SERIAL PRIMARY KEY,
     comment_id INT REFERENCES comment(id),
     path VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE comment_feedback (
+    user_id INT REFERENCES user_account(id),
+    comment_id INT REFERENCES comment(id),
+    feedback INT NOT NULL,
+    PRIMARY KEY (user_id, comment_id)
 );
 
 -- Indexes
