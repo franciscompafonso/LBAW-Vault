@@ -110,13 +110,20 @@ Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->
 Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
 Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin/user-management', [AdminController::class, 'showUserManagement'])->name('admin.user.management');
-    Route::get('/admin/search-user', [AdminController::class, 'searchUser'])->name('admin.search.user');
-    Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
-    Route::get('/admin/users', [AdminController::class, 'listUsers'])->name('admin.index');
 
-});
+    // Route to dashboard (This route automatically redirects to the dashboard)
+    Route::get('/admin', function () {
+        return redirect()->route('admin.dashboard');
+    });
 
-Route::middleware(['auth:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    // Admin dashboard route
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+    // User management routes
+    Route::get('/admin/user-management', [AdminController::class, 'listUsers'])->name('admin.user-management');
+    Route::get('/admin/user-management/search-user', [AdminController::class, 'search'])->name('admin.search.user');
+    Route::delete('/admin/user-management/delete-user/{user}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
+    Route::patch('/admin/user-management/undelete-user/{user}', [AdminController::class, 'undeleteUser'])->name('admin.undelete.user');
+    Route::post('/admin/user-management/block-user/{user}', [AdminController::class, 'blockUser'])->name('admin.block.user');
+    Route::patch('/admin/user-management/unblock-user/{user}', [AdminController::class, 'unblockUser'])->name('admin.unblock.user');
 });

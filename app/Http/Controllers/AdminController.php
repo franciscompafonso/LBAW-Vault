@@ -15,35 +15,32 @@ class AdminController extends Controller
     }
 
     // Display the user management page
-    public function showUserManagement()
-    {
-        return view('admin.user-management');
-    }
+    public function search(Request $request)
+{
+    // Validate the search input
+    $request->validate([
+        'email' => 'nullable|email',  // Only validate email if it's provided
+    ]);
+
+    // Store the search query
+    $search = $request->email;
+
+    // Search logic
+    $users = User::where('email', 'like', '%' . $search . '%')->paginate(5);
+
+    // Return the results to the same view
+    return view('admin.user-management', compact('users', 'search'));
+}
 
     public function listUsers()
     {
         // Retrieve all users
-        $users = User::paginate(3);
+        $users = User::orderBy('id','asc')->paginate(5);
 
         // Return to a view with the users data
-        return view('admin.index', compact('users'));
+        return view('admin.user-management', compact('users'));
     }
 
-    // Handle user search by email
-    public function searchUser(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email'
-        ]);
-
-        // Search for the user by email
-        $user = User::where('email', $request->input('email'))->first();
-
-        return view('admin.user-management', [
-            'user' => $user,
-            'search' => $request->input('email')
-        ]);
-    }
 
     // Delete the user by ID
     public function deleteUser($id)
@@ -56,9 +53,58 @@ class AdminController extends Controller
         $user->isdeleted = true;
         $user->save();
 
-        return redirect()->route('admin.dashboard')->with('status', 'User has been marked as deleted successfully.');
+        return redirect()->route('admin.user-management')->with('status', 'User has been marked as deleted successfully.');
     } catch (\Exception $e) {
         return redirect()->back()->with('error', 'Error deleting user: ' . $e->getMessage());
+    }
+}
+
+    public function undeleteUser($id)
+    {
+        try {
+            // Find the user
+            $user = User::findOrFail($id);
+
+            // Mark the user as deleted
+            $user->isdeleted = false;
+            $user->save();
+
+            return redirect()->route('admin.user-management')->with('status', 'User has been unmarked as deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error deleting user: ' . $e->getMessage());
+        }
+    }
+
+public function blockUser($userId)
+{
+    try {
+        
+        // Execute the SQL statement
+        DB::table('user_account')
+            ->where('id', $userId)
+            ->update(['isblocked' => true]);
+        
+        return redirect()->route('admin.user-management')->with('status', 'User has been marked as blocked successfully.');
+
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Error blocking user: ' . $e->getMessage());
+    }
+}
+
+
+public function unblockUser($id)
+{
+    try {
+        // Find the user
+        $user = User::findOrFail($id);
+
+        // Mark the user as deleted
+        $user->isblocked = false;
+        $user->save();
+
+        return redirect()->route('admin.users')->with('status', 'User has been unmarked as blocked successfully.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Error unblocking user: ' . $e->getMessage());
     }
 }
 

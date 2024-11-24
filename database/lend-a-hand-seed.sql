@@ -546,18 +546,22 @@ CREATE TRIGGER trigger_unblock_notification
     WHEN (NEW.status IN ('approved', 'denied') AND OLD.status IS DISTINCT FROM NEW.status)
     EXECUTE FUNCTION create_unblock_notification();
 
-CREATE FUNCTION create_block_notification() RETURNS TRIGGER AS
+/*
+CREATE FUNCTION create_block_notification(admin_id INT) RETURNS TRIGGER AS
 $BODY$
 DECLARE
     notification_id INT;
 BEGIN
+    -- Check if the user was blocked in the update
     IF NEW.isBlocked = TRUE AND OLD.isBlocked = FALSE THEN
+        -- Insert a new notification
         INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.admin_id, NEW.id, CURRENT_TIMESTAMP, FALSE)
+        VALUES (NEW.id, NEW.id, CURRENT_TIMESTAMP, FALSE)
         RETURNING id INTO notification_id;
 
+        -- Log the action in the admin_action table
         INSERT INTO admin_action (id, admin_id)
-        VALUES (notification_id, NEW.admin_id);
+        VALUES (notification_id, admin_id);
     END IF;
 
     RETURN NEW;
@@ -565,12 +569,13 @@ END;
 $BODY$
 LANGUAGE plpgsql;
 
+
 CREATE TRIGGER trigger_block_notification
     AFTER UPDATE OF isBlocked ON user_account
     FOR EACH ROW
     WHEN (OLD.isBlocked IS DISTINCT FROM NEW.isBlocked AND NEW.isBlocked = TRUE)
     EXECUTE FUNCTION create_block_notification();
-
+*/
 
 -- INSERT ------------------------------------------------------------------------------------------------------------
 

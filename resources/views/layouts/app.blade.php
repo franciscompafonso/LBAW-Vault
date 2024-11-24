@@ -39,7 +39,7 @@
                 </a>
 
                 @if (Auth::guard('admin')->check())
-                <a href="{{ url('/admin/users') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Users">
+                <a href="{{ url('/admin/user-management') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Users">
                     <i class="fa-solid fa-users-gear text-3xl"></i>
                 </a>
                 @endif
