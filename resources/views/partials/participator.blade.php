@@ -6,7 +6,10 @@
                         alt="{{ $participator->username }}" 
                         class="w-12 h-12 rounded-full object-cover"
                         >
-                        <span class="font-semibold font-montserrat text-gray-900 text-xl">{{ $participator->name }}</span>
+                        <a href="{{ route('user.profile', ['id' => $participator->id]) }}" 
+                                class="text-lg font-semibold text-gray-900 font-montserrat">
+                                {{ $participator->displayName }}
+                        </a>
                 </div>
         
                 @if ($creatorId === Auth::id())

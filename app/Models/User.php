@@ -94,7 +94,7 @@ class User extends Authenticatable
         }
 
         // Otherwise, return the user's real name
-        return $this->name;
+        return $this->username;
     }
     
 }

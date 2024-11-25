@@ -10,7 +10,7 @@
                 >
                 <a href="{{ route('user.profile', ['id' => $comment->user->id]) }}" 
                 class="text-lg font-semibold text-gray-900 font-montserrat">
-                    {{ $comment->user->name }}
+                    {{ $comment->user->displayName }}
                 </a>
             </div>
 
@@ -160,7 +160,7 @@
                             >
                             <a href="{{ route('user.profile', ['id' => $reply->user->id]) }}" 
                                 class="text-lg font-semibold text-gray-900 font-montserrat">
-                                    {{ $reply->user->name }}
+                                    {{ $reply->user->username }}
                             </a>
                         </div>
                         <div class="col-span-3 text-right">

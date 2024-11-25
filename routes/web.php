@@ -116,19 +116,11 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::patch('/admin/user-management/unblock-user/{user}', [AdminController::class, 'unblockUser'])->name('admin.unblock.user');
     Route::delete('/admin/events/{id}', [AdminController::class, 'deleteAsAdmin'])->name('admin.events.delete');
     Route::post('/admin/comments/delete/{comment}', [AdminController::class, 'deleteComment'])->name('admin.comment.delete');
-    Route::get('/admin/events/{id}', [EventController::class, 'showAsAdmin'])->name('admin.events.show');
+    Route::get('/admin/events/{id}', [EventController::class, 'show'])->name('admin.events.show');
     Route::get('/admin/create', [AdminController::class, 'showCreateAdminForm'])->name('admin.admins.create');
     Route::post('/admin/store', [AdminController::class, 'storeAdmin'])->name('admin.admins.store');
     
 });
 
-Route::get('/events/{id}', function ($id) {
-    // If the user is logged in as an admin, redirect to /admin/events/{id}
-    if (auth()->guard('admin')->check()) {
-        return redirect("/admin/events/{$id}");
-    }
 
-    // Otherwise, continue to the standard event page
-    return app(\App\Http\Controllers\EventController::class)->show($id);
-})->name('events.show');
 

@@ -14,7 +14,7 @@
                     <p class="text-2xl font-montserrat text-deepNavy mb-6">Welcome back, Admin!</p>
                 @elseif (Auth::guard('web')->check())
                     <h2 class="text-4xl font-montserrat font-semibold mb-4 text-eerieBlack"> Empowering Communities, One Event at a Time.</h2>
-                    <p class="text-2xl font-montserrat text-deepNavy mb-6">Welcome back, {{Auth::user()->name}}!</p>
+                    <p class="text-2xl font-montserrat text-deepNavy mb-6">Welcome back, {{Auth::user()->displayName}}!</p>
                 @else
                     <h2 class="text-4xl font-montserrat font-semibold mb-4 text-eerieBlack"> Empowering Communities, One Event at a Time.</h2>
                     <p class="text-2xl font-montserrat text-deepNavy mb-6">Join us now!</p>  

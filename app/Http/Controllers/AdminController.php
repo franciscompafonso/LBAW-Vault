@@ -33,7 +33,7 @@ class AdminController extends Controller
         ]);
 
         // go back to home
-        return redirect()->route('pages.home')->with('message', 'New admin account created successfully!');
+        return redirect()->route('admin.admins.create')->with('message', 'New admin account created successfully!');
     }
 
     public function search(Request $request)
@@ -74,11 +74,19 @@ class AdminController extends Controller
         $user->isdeleted = true;
         $user->save();
 
-        return redirect()->route('admin.user-management')->with('status', 'User has been marked as deleted successfully.');
+        // Delete any upcoming events created by this user
+        // Assuming there's a relationship between Event and User
+        // where the Event has a 'user_id' field and a 'date' field
+        Event::where('user_id', $id)
+            ->where('date', '>', now()) // Check if the event date is in the future
+            ->delete();
+
+        return redirect()->route('admin.user-management')->with('status', 'User has been marked as deleted successfully, and upcoming events have been removed.');
     } catch (\Exception $e) {
         return redirect()->back()->with('error', 'Error deleting user: ' . $e->getMessage());
     }
 }
+
 
     public function undeleteUser($id)
     {

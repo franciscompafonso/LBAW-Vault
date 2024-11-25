@@ -28,24 +28,12 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         // Check if the current user can see (show) the event.
-        $this->authorize('show', $event);  
+        
 
         // Use the pages.event template to display the event.
         return view('pages.event', [
             'event' => $event
         ]);
-    }
-
-    public function showAsAdmin($id)
-    {
-        $event = Event::findOrFail($id);
-
-        // Check if the user is an admin
-        if (!auth()->guard('admin')->check()) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        return view('admin.event', ['event' => $event]);
     }
 
     /**
@@ -140,7 +128,14 @@ class EventController extends Controller
             'category_id' => 'required|integer', // Assuming category_id is an integer (foreign key)
         ]);
         $event->update($validated);
-        return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
+
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route('admin.events.show', $event->id)->with('success', 'Event updated successfully!');
+        }
+        else {
+            return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
+        }
+        
     }
 
 
