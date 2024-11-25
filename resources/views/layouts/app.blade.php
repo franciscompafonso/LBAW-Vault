@@ -79,7 +79,7 @@
                         </a>
 
                         <!-- Notifications Dropdown -->
-                        <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-4 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-80">
+                        <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-4 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-100">
                             <p id="no-notifications" class="text-center text-gray-500">There are no notifications.</p>
                             <div id="notifications-list">
                             </div>
@@ -241,9 +241,31 @@
                         `;
 
                         if (notification.type === 'invite_notification') {
+                            /*notificationContent += `
+                                <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
+                                <p class="text-sm text-gray-600">
+                                    You have been invited by 
+                                    <a class="text-blue-600 hover:underline" href="/user/${notification.data.invite_by_id}">
+                                        ${notification.data.invite_by_name ? notification.data.invite_by_name : ''}
+                                    </a> 
+                                    to 
+                                    <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
+                                        ${notification.data.title ? notification.data.title : 'an event'}
+                                    </a>
+                                    ${notification.data.description ? notification.data.description : ''}
+                                </p>
+
+                            `;*/
                             notificationContent += `
-                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
-                                <p class="text-sm text-gray-600">You have been invited by X to an event. ${notification.invite_id}</p>
+                                <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
+                                <p class="text-sm text-gray-600">
+                                    You have been invited to 
+                                    <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
+                                        ${notification.data.title ? notification.data.title : 'an event'}
+                                    </a>
+                                    <br>Message: ${notification.data.description ? notification.data.description : ''}
+                                </p>
+
                             `;
                         } else if (notification.type === 'accepted_invite_notification') {
                             notificationContent += `

@@ -1,6 +1,5 @@
 <?php
 namespace App\Models\NotificationSubtypes;
-
 use Illuminate\Database\Eloquent\Model;
 
 class InviteNotification extends Model

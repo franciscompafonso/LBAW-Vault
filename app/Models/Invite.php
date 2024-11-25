@@ -17,6 +17,7 @@ class Invite extends Model
     protected $fillable = [
         'invite_by_id',
         'invite_to_id',
+        'event_id',
         'title',
         'accepted',
         'description',
@@ -28,6 +29,24 @@ class Invite extends Model
         'accepted' => 'boolean',
     ];
 
+    public function show()
+    {
+        // Check if the current instance has an ID
+        if (!$this->id) {
+            return ['error' => 'Invite not found'];
+        }
+
+        // Return the comment data as an array using the current instance
+        return [
+            'invite_by_id' => $this->invite_by_id,
+            'invite_to_id' => $this->invite_by_id,
+            'event_id' => $this->event_id,
+            'title' => $this->title,
+            'accepted' => $this->accepted,
+            'description' => $this->description,
+            'date' => $this->date,
+        ];
+    }
  
     public function inviteBy(): BelongsTo
     {

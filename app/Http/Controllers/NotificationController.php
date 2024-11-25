@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Notification;
 use App\Models\Comment;
+use App\Models\Invite;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -63,6 +64,15 @@ class NotificationController extends Controller
                             return ['type' => $type, 'data' => $result];
                         } else {
                             return ['type' => $type, 'data' => 'Comment not found'];
+                        }
+                    } elseif ($type == 'invite_notification') {
+                        $invite = Invite::find($notification->invite_id);
+                        
+                        if ($invite) {
+                            $result = $invite->show();
+                            return ['type' => $type, 'data' => $result];
+                        } else {
+                            return ['type' => $type, 'data' => 'Invite not found'];
                         }
                     } else {
                         return ['type' => $type, 'data' => $notification->toArray()];

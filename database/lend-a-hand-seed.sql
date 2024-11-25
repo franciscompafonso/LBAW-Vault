@@ -187,11 +187,11 @@ CREATE TABLE invite (
     id SERIAL PRIMARY KEY,
     invite_by_id INT REFERENCES user_account(id),
     invite_to_id INT REFERENCES user_account(id),
+    event_id INT REFERENCES event(id),
     title VARCHAR(255) NOT NULL,
 	accepted BOOLEAN,
     description TEXT NOT NULL,
-    date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP),
-    event_id INT REFERENCES event(id)
+    date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP)
 );
 
 CREATE TABLE invite_notification (
@@ -340,16 +340,25 @@ CREATE TRIGGER trigger_prevent_duplicate_poll_response
     FOR EACH ROW
     EXECUTE FUNCTION prevent_duplicate_poll_response();
 
-CREATE FUNCTION create_invite_notification() RETURNS TRIGGER AS
+CREATE OR REPLACE FUNCTION create_invite_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    notification_id INT;
 BEGIN
+    -- Insert a new notification and retrieve the generated ID
     INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-    VALUES (NEW.invite_by_id, NEW.invite_to_id, CURRENT_TIMESTAMP, FALSE);
-    
+    VALUES (NEW.invite_by_id, NEW.invite_to_id, CURRENT_TIMESTAMP, FALSE)
+    RETURNING id INTO notification_id;
+
+    -- Insert the invite notification entry using the retrieved notification ID
+    INSERT INTO invite_notification (id, invite_id)
+    VALUES (notification_id, NEW.id);
+
     RETURN NEW;
 END;
 $BODY$
 LANGUAGE plpgsql;
+
 
 CREATE TRIGGER trigger_create_invite_notification
     AFTER INSERT ON invite

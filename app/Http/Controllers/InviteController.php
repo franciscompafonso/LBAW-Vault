@@ -18,6 +18,7 @@ class InviteController extends Controller
         // Validate the input username
         $request->validate([
             'username' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255'
         ]);
 
         // Find the event
@@ -32,6 +33,9 @@ class InviteController extends Controller
         if (!$invitee) {
             return back()->with('message', 'The user with the specified username does not exist.');
         }
+
+        // Retrieve the name of the authenticated user
+        $authUserName = User::where('id', Auth::id())->value('name');
 
         // Check if the user is already a participator or has been invited
         $isParticipator = $event->participators()->where('id', $invitee->id)->exists();
@@ -53,8 +57,9 @@ class InviteController extends Controller
         $inviteData = [
             'invite_by_id' => Auth::id(),
             'invite_to_id' => $invitee->id,
+            'event_id' => $eventId,
             'title' => $event->name,
-            'description' => '', // Empty description, but can be modified as needed
+            'description' => $request->description ?? '',
             'date' => now(),
             'accepted' => false,
         ];

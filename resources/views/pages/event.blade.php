@@ -21,16 +21,10 @@
                     </p>
                 @endif
                 <p class="text-darkSlateGrey text-lg font-montserrat">
-                    <strong class="font-semibold">Start Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y') }}
-                </p>
-                <p class="text-darkSlateGrey text-lg font-montserrat">
-                    <strong class="font-semibold">Start Time:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }} 
+                    <strong class="font-semibold">Start:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y') }} {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }}
                 </p>
                 <p class="text-lg text-darkSlateGrey font-montserrat">
-                    <strong class="font-semibold">End Date:</strong> {{ \Carbon\Carbon::parse($event->end_date)->format('d/m/Y') }}
-                </p>
-                <p class="text-lg text-darkSlateGrey font-montserrat">
-                    <strong class="font-semibold">End Time:</strong> {{ \Carbon\Carbon::parse($event->end_date)->format('H:i') }} 
+                    <strong class="font-semibold">End:</strong> {{ \Carbon\Carbon::parse($event->end_date)->format('d/m/Y') }} {{ \Carbon\Carbon::parse($event->end_date)->format('H:i') }}
                 </p>
                 <p class="text-darkSlateGrey text-lg font-montserrat">
                     <strong class="font-semibold">Location:</strong> {{ $event->location->name ?? 'No location specified' }}
@@ -146,7 +140,6 @@
                     <!-- Photo Upload for Participators -->
                     @if ($event->participators->contains('id', Auth::id()))
                         <div class="mt-4">
-                            <label for="photos" class="block text-gray-700">Upload up to 15 photos:</label>
                             <input 
                                 type="file" 
                                 name="photos[]" 
@@ -190,12 +183,19 @@
                         <form action="{{ route('events.invite', $event->id) }}" method="POST" class="flex items-center space-x-2">
                             @csrf
                             <input 
-                                id="invite" 
+                                id="invite_user" 
                                 type="text" 
                                 name="username" 
                                 placeholder="@username" 
                                 class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" 
                                 required 
+                            >
+                            <input 
+                                id="invite_desc" 
+                                type="text" 
+                                name="description" 
+                                placeholder="You should come" 
+                                class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" 
                             >
                             <button 
                                 type="submit" 
