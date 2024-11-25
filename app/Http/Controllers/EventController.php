@@ -24,18 +24,16 @@ class EventController extends Controller
      */
     public function show(string $id): View
     {
-        // Get the evemt.
-        $event = Event::findOrFail($id);
+        // Get the event with its polls and poll responses.
+        $event = Event::with(['polls.responses'])->findOrFail($id);
 
         // Check if the current user can see (show) the event.
         $this->authorize('show', $event);  
 
-        $polls = $event->polls;
-
         // Use the pages.event template to display the event.
         return view('pages.event', [
             'event' => $event,
-            'polls' => $polls,
+            'polls' => $event->polls,
         ]);
     }
 

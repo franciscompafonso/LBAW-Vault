@@ -58,8 +58,10 @@ class PollController extends Controller
             ->first();
         
         if ($existingVote) {
-            return back()->with('error', 'You have already voted on this poll.')
-                         ->with('voted_option', $existingVote->option);
+            return back()->with([
+                'error' => 'You have already voted on this poll.',
+                'poll_id' => $pollId,
+            ])->with('voted_option', $existingVote->option);
         }
 
         PollResponse::create([
