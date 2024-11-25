@@ -41,13 +41,13 @@
 
         <!-- Delete Account Form -->
         <div class="mt-6 text-center">
-        <form action="{{ route('user.delete', ['id' => $user->id]) }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-montserrat font-bold transition-all duration-200">
-                Delete Account
-            </button>
-        </form>
+            <form action="{{ route('user.delete', ['id' => $user->id]) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-montserrat font-bold transition-all duration-200">
+                    Delete Account
+                </button>
+            </form>
         </div>
     </div>
 

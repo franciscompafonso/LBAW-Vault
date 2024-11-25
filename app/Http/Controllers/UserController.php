@@ -95,8 +95,8 @@ class UserController extends Controller
             $user->save();
     
             // Delete any upcoming events created by this user
-            Event::where('user_id', $id)
-                ->where('date', '>', now()) // Check if the event date is in the future
+            Event::where('creator_id', $id)
+                ->where('start_date', '>', now()) // Check if the event date is in the future
                 ->delete();
     
             // Log out the user
