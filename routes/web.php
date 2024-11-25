@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\PollController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,9 @@ Route::get('/photos/{id}', [PhotoController::class, 'show'])->name('photos.show'
 Route::post('/comment/like', [CommentFeedbackController::class, 'like'])->name('comment.like');
 Route::post('/comment/dislike', [CommentFeedbackController::class, 'dislike'])->name('comment.dislike');
 Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
+
+Route::post('/events/{event}/polls', [PollController::class, 'store'])->name('polls.store');
+Route::post('/polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
 
 // API
 Route::controller(EventController::class)->group(function () {

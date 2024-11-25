@@ -83,6 +83,56 @@
             <div class="space-y-6 text-babyPowder">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
+            @foreach($event->polls as $poll)
+                <div class="poll bg-whiteSmoke p-6 rounded-lg shadow-lg mb-6">
+                    <!-- Poll Question -->
+                    <h3 class="text-xl font-bold text-ultraViolet font-montserrat mb-4">{{ $poll->name }}</h3>
+                    <p class="text-lg text-darkSlateGrey font-montserrat mb-4">
+                        <strong class="font-semibold">Poll Duration:</strong> 
+                        {{ \Carbon\Carbon::parse($poll->start_time)->format('d/m/Y H:i') }} - 
+                        {{ \Carbon\Carbon::parse($poll->end_time)->format('d/m/Y H:i') }}
+                    </p>
+
+                    @if(session('error'))
+                        <div class="alert alert-danger text-red-500 mb-4 p-2 rounded-md">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                <!-- Poll Form -->
+                <form action="{{ route('polls.vote', $poll->id) }}" method="POST">
+                    @csrf
+                    <div class="space-y-4">
+                        @foreach(explode(',', $poll->options) as $index => $option)
+                            <div class="poll-option flex items-center space-x-2">
+                                <input 
+                                    type="radio" 
+                                    name="option" 
+                                    value="{{ $index }}" 
+                                    id="option_{{ $poll->id }}_{{ $index }}"
+                                    @if(session('voted_option') === (string) $index) checked @endif
+                                    @if(session('voted_option') !== null) disabled @endif
+                                    class="w-5 h-5 text-ultraViolet border-darkSlateGrey focus:ring-ultraViolet"
+                                >
+                                <label for="option_{{ $poll->id }}_{{ $index }}" class="text-lg text-darkSlateGrey font-montserrat">
+                                    {{ $option }}
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @if(!session('voted_option')) 
+                        <div class="mt-4">
+                            <button 
+                                type="submit" 
+                                class="px-6 py-2 font-bold text-white bg-ultraViolet hover:bg-cambridgeBlue border-ultraViolet hover:border-cambridgeBlue rounded-md transition-all duration-200">
+                                Vote
+                            </button>
+                        </div>
+                    @endif
+                </form>
+        </div>
+        @endforeach
             @if (Auth::id())
                 <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
                     @csrf
@@ -117,6 +167,16 @@
                         </button>
                     </div>
                 </form>
+            @endif
+
+            @if (Auth::id() === $event->creator_id)
+                <div class="flex justify-end mt-4">
+                    <button 
+                        class="px-6 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                        onclick="togglePollForm()">
+                        Create Poll
+                    </button>
+                </div>
             @endif
         </div>
 
@@ -155,6 +215,8 @@
         </div>
     </div>
 </section>
+
+@include('partials.poll-form', ['event' => $event])
 
 <script>
     function validatePhotos() {

@@ -38,4 +38,10 @@ class Poll extends Model
     {
         return $this->belongsTo(Event::class);
     }
+
+    public function responses()
+    {
+        return $this->hasMany(PollResponse::class, 'poll_id');
+    }
+    
 }

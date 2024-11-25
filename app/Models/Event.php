@@ -95,4 +95,5 @@ class Event extends Model
     {
         return $this->hasMany(EventCancelation::class, 'event_id');
     }
+
 }
