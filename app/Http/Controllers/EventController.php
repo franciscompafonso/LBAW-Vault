@@ -128,13 +128,8 @@ class EventController extends Controller
             'category_id' => 'required|integer', // Assuming category_id is an integer (foreign key)
         ]);
         $event->update($validated);
-
-        if (Auth::guard('admin')->check()) {
-            return redirect()->route('admin.events.show', $event->id)->with('success', 'Event updated successfully!');
-        }
-        else {
-            return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
-        }
+        
+        return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
         
     }
 
@@ -167,7 +162,7 @@ class EventController extends Controller
 
         // Delete the event and return it as JSON.
         $event->delete();
-        return redirect()->route('pages.home')->with('message', 'The event has been canceled.');
+        return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
 
     }
 

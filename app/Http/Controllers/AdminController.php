@@ -137,20 +137,6 @@ public function unblockUser($id)
     }
 }
 
-public function deleteAsAdmin($id)
-    {
-        $event = Event::findOrFail($id);
-
-        // Check if the user is an admin
-        if (!auth()->guard('admin')->check()) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $event->delete();
-
-        return redirect()->route('pages.home')->with('message', 'Event successfully deleted by admin.');
-    }
-
     public function deleteComment($id)
     {
         // Find the comment.
@@ -164,7 +150,6 @@ public function deleteAsAdmin($id)
         $comment->delete();
         return back()->with('message', 'successfully deleted the comment!');
     }   
-
 
 }
 

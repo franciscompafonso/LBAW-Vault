@@ -58,16 +58,19 @@
 
             <!-- Event Actions for Admins and Event Creators -->
             @if (Auth::guard('admin')->check() || $event->creator_id === Auth::id())
-                <form action="{{ route('events.delete', $event->id) }}" method="POST">
+                <form action="{{ route('events.delete', $event->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                         Delete Event
                     </button>
                 </form>
-                <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">   
-                    <a href="{{ route('events.edit', $event->id) }}">Edit Event</a>
-                </button>
+
+                <a href="{{ route('events.edit', $event->id) }}" class="inline-block">
+                    <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                        Edit Event
+                    </button>
+                </a>
             @endif
         </div>
     </div>

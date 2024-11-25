@@ -47,10 +47,16 @@ class EventPolicy
      * Determine if a event can be deleted by a user.
      */
     public function delete(User $user, Event $event): bool
-    {
-      // Only a event owner can delete it.
-      return $user->id === $event->creator_id;
-    }
+{
+    \Log::info('Checking delete permissions', [
+        'user_id' => $user->id,
+        'event_creator_id' => $event->creator_id,
+        'is_admin' => auth()->guard('admin')->check(),
+    ]);
+
+    return $user->id === $event->creator_id || auth()->guard('admin')->check();
+}
+
 
     /**
      * Determine if the user can invite others to an event.

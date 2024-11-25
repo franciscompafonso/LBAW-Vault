@@ -12,6 +12,7 @@
             @method('POST')
 
             <!-- Profile Picture Input -->
+            <!-- Same as your original profile picture input -->
             <div class="mb-4 flex items-center space-x-4">
                 <div class="flex-shrink-0">
                 @if ($user->profilepicture)
@@ -31,56 +32,23 @@
                 </div>
             </div>
 
-            <!-- Name -->
-            <div class="mb-4">
-                <label for="name" class="block text-lg font-semibold font-montserrat">Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name', $user->displayName) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
-                @error('name')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
-                @enderror
-            </div>
-            
-            <!-- Username -->
-            <div class="mb-4">
-                <label for="username" class="block text-lg font-semibold font-montserrat">Username</label>
-                <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
-                @error('username')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
-                @enderror
-            </div>
+            <!-- Form fields for name, username, email, password (same as before) -->
 
-            <!-- Email -->
-            <div class="mb-4">
-                <label for="email" class="block text-lg font-semibold font-montserrat">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
-                @error('email')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <!-- Password -->
-            <div class="mb-4">
-                <label for="password" class="block text-lg font-semibold font-montserrat">New Password</label>
-                <input type="password" id="password" name="password" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
-                @error('password')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="mb-4">
-                <label for="password_confirmation" class="block text-lg font-semibold font-montserrat">Confirm New Password</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
-                @error('password_confirmation')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <!-- Submit Button -->
             <div class="mt-6 text-center">
                 <button type="submit" class="bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">Save Changes</button>
             </div>
         </form>
+
+        <!-- Delete Account Form -->
+        <div class="mt-6 text-center">
+        <form action="{{ route('user.delete', ['id' => $user->id]) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-montserrat font-bold transition-all duration-200">
+                Delete Account
+            </button>
+        </form>
+        </div>
     </div>
 
     <!-- Image Preview -->

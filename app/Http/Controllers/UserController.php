@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\User;
-
+use App\Models\Event;
 class UserController extends Controller
 {
 
@@ -85,14 +85,30 @@ class UserController extends Controller
     }
 
 
-    public function delete(Request $request, $id)
-    {
-        $user = User::find($id);
-
-        $this->authorize('delete', $user, Auth::user());
-
-        $user->delete();
-
-        return redirect('/');
+    public function deleteAccount($id){
+        try {
+            // Find the user
+            $user = User::findOrFail($id);
+    
+            // Mark the user as deleted
+            $user->isdeleted = true;
+            $user->save();
+    
+            // Delete any upcoming events created by this user
+            Event::where('user_id', $id)
+                ->where('date', '>', now()) // Check if the event date is in the future
+                ->delete();
+    
+            // Log out the user
+            Auth::logout();
+    
+            // Redirect to the homepage with a status message
+            return redirect('/home')->with('status', 'Your account has been deleted successfully, and upcoming events have been removed.');
+        } catch (\Exception $e) {
+            // Redirect back with an error message in case of an exception
+            return redirect()->back()->with('error', 'Error deleting account: ' . $e->getMessage());
+        }
     }
+
+   
 }
