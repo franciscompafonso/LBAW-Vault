@@ -31,6 +31,22 @@ class Poll extends Model
         'end_time' => 'datetime',
         'options' => 'array', // Must confirm this
     ];
+
+    public function show()
+    {
+        // Check if the current instance has an ID
+        if (!$this->id) {
+            return ['error' => 'Invite not found'];
+        }
+
+        // Return the comment data as an array using the current instance
+        return [
+            'event_id' => $this->event_id,
+            'end_time' => $this->end_time,
+            'name' => $this->name
+        ];
+    }
+
     /**
      * Get the event where the poll is included.
      */

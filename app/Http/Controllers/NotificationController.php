@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\Notification;
 use App\Models\Comment;
 use App\Models\Invite;
+use App\Models\Poll;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -73,6 +74,15 @@ class NotificationController extends Controller
                             return ['type' => $type, 'data' => $result];
                         } else {
                             return ['type' => $type, 'data' => 'Invite not found'];
+                        }
+                    } elseif ($type == 'poll_reminder') {
+                        $poll = Poll::find($notification->poll_id);
+                        
+                        if ($poll) {
+                            $result = $poll->show();
+                            return ['type' => $type, 'data' => $result];
+                        } else {
+                            return ['type' => $type, 'data' => 'Poll not found'];
                         }
                     } else {
                         return ['type' => $type, 'data' => $notification->toArray()];

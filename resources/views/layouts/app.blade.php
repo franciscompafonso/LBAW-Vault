@@ -283,9 +283,17 @@
                                 <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">You have a new comment on your post.</a>
                             `;
                         } else if (notification.type === 'poll_reminder') {
+                            /*notificationContent += `
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
+                                <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">
+                                    You have up until ${notification.data.end_time} to answer to the ${notification.data.name} poll.
+                                </a>
+                            `;*/
                             notificationContent += `
                                 <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
-                                <p class="text-sm text-gray-600">Reminder: Don't forget to participate in poll ID: ${notification.poll_id}</p>
+                                <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">
+                                    Don't forget to answer to the ${notification.data.name} poll.
+                                </a>
                             `;
                         } else if (notification.type === 'event_cancelation') {
                             notificationContent += `
