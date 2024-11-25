@@ -34,12 +34,15 @@
         </div>
 
         <!-- Edit Profile Link -->
-        <div class="flex flex-col items-center space-y-6 py-8 px-4">
-            <a href="{{ route('user.edit.form', ['id' => $user->id]) }}" 
+        @if(Auth::id() === $user->id)
+            <div class="flex flex-col items-center space-y-6 py-8 px-4">
+                <a href="{{ route('user.edit.form', ['id' => $user->id]) }}" 
                 class="w-full max-w-md bg-ultraViolet hover:bg-cambridgeBlue text-whiteSmoke text-2xl font-bold py-3 rounded-lg shadow-md hover:text-darkSlateGrey text-center transition-all duration-200 font-montserrat">
-                Edit Profile
-            </a>
-        </div>
+                    Edit Profile
+                </a>
+            </div>
+        @endif
+
 
         <!-- My Events -->
         <div class="mt-8">

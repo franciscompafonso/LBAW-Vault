@@ -17,7 +17,7 @@
                 View Details
             </a>
         </div>
-        @if ($event->creator_id === Auth::id())
+        @if ($event->creator_id === Auth::id() && Auth::id() === $user->id)
             <div class="flex flex-col items-center py-2 px-1">
                 <a href="{{ route('events.edit', $event->id) }}"
                     class="w-full max-w-md text-cambridgeBlue text-2xl font-bold py-3 rounded-lg hover:text-darkSlateGrey text-center transition-all duration-200 font-montserrat">

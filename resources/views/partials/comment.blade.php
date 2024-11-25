@@ -8,7 +8,10 @@
                     alt="{{ $comment->user->username }}" 
                     class="object-cover w-12 h-12 rounded-full"
                 >
-                <span class="text-lg font-semibold text-gray-900 font-montserrat">{{ $comment->user->name }}</span>
+                <a href="{{ route('user.profile', ['id' => $comment->user->id]) }}" 
+                class="text-lg font-semibold text-gray-900 font-montserrat">
+                    {{ $comment->user->name }}
+                </a>
             </div>
 
             <div class="col-span-2 text-right">
@@ -155,7 +158,10 @@
                                 alt="{{ $reply->user->username }}" 
                                 class="object-cover w-12 h-12 rounded-full"
                             >
-                            <span class="text-lg font-semibold text-gray-900 font-montserrat">{{ $reply->user->name }}</span>
+                            <a href="{{ route('user.profile', ['id' => $reply->user->id]) }}" 
+                                class="text-lg font-semibold text-gray-900 font-montserrat">
+                                    {{ $reply->user->name }}
+                            </a>
                         </div>
                         <div class="col-span-3 text-right">
                             <span class="text-sm text-gray-500 font-montserrat">{{ \Carbon\Carbon::parse($reply->date)->format('d/m/Y') }}</span>
