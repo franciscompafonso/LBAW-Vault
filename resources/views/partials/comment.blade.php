@@ -41,44 +41,56 @@
                 @else
                     <div class="flex items-center justify-end space-x-2">
                         <!-- Like button form -->
-                        <form action="{{ route('comment.like') }}" method="POST" class="inline">
-                            @csrf
-                            <input type="hidden" name="comment_id" value="{{ $comment->id }}">
-                            @if ($comment->feedback(Auth::id()) == 1)
-                                <button 
-                                    type="submit"
-                                    class="text-green-500 transition-colors duration-200 border-none like-btn hover:text-gray-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
-                                    <i class="fas fa-thumbs-up"></i>
-                                </button>
-                            @else
-                                <button 
-                                    type="submit"
-                                    class="text-gray-500 transition-colors duration-200 border-none like-btn hover:text-green-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
-                                    <i class="fas fa-thumbs-up"></i>
-                                </button>
-                            @endif
-                        </form>
-                        
-                        <!-- Dislike button form -->
-                        <form action="{{ route('comment.dislike') }}" method="POST" class="inline">
-                            @csrf
-                            <input type="hidden" name="comment_id" value="{{ $comment->id }}">
-                            @if ($comment->feedback(Auth::id()) == -1)
-                                <button 
-                                    type="submit"
-                                    class="text-red-500 transition-colors duration-200 border-none dislike-btn hover:text-gray-500 focus:text-red-500 hover:bg-transparent focus:bg-transparent focus:outline-none" 
-                                    aria-label="Dislike this comment">
-                                    <i class="fas fa-thumbs-down"></i>
-                                </button>
-                            @else
-                                <button 
-                                    type="submit"
-                                    class="text-gray-500 transition-colors duration-200 border-none dislike-btn hover:text-red-500 focus:text-red-500 hover:bg-transparent focus:bg-transparent focus:outline-none" 
-                                    aria-label="Dislike this comment">
-                                    <i class="fas fa-thumbs-down"></i>
-                                </button>
-                            @endif
-                        </form>
+                        @if (Auth::check())
+                            <form action="{{ route('comment.like') }}" method="POST" class="inline">
+                                @csrf
+                                <input type="hidden" name="comment_id" value="{{ $comment->id }}">
+                                @if ($comment->feedback(Auth::id()) == 1)
+                                    <button 
+                                        type="submit"
+                                        class="text-green-500 transition-colors duration-200 border-none like-btn hover:text-gray-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
+                                        <i class="fas fa-thumbs-up"></i>
+                                    </button>
+                                @else
+                                    <button 
+                                        type="submit"
+                                        class="text-gray-500 transition-colors duration-200 border-none like-btn hover:text-green-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
+                                        <i class="fas fa-thumbs-up"></i>
+                                    </button>
+                                @endif
+                            </form>
+                            
+                            <!-- Dislike button form -->
+                            <form action="{{ route('comment.dislike') }}" method="POST" class="inline">
+                                @csrf
+                                <input type="hidden" name="comment_id" value="{{ $comment->id }}">
+                                @if ($comment->feedback(Auth::id()) == -1)
+                                    <button 
+                                        type="submit"
+                                        class="text-red-500 transition-colors duration-200 border-none dislike-btn hover:text-gray-500 focus:text-red-500 hover:bg-transparent focus:bg-transparent focus:outline-none" 
+                                        aria-label="Dislike this comment">
+                                        <i class="fas fa-thumbs-down"></i>
+                                    </button>
+                                @else
+                                    <button 
+                                        type="submit"
+                                        class="text-gray-500 transition-colors duration-200 border-none dislike-btn hover:text-red-500 focus:text-red-500 hover:bg-transparent focus:bg-transparent focus:outline-none" 
+                                        aria-label="Dislike this comment">
+                                        <i class="fas fa-thumbs-down"></i>
+                                    </button>
+                                @endif
+                            </form>
+                        @else
+                            <a href="{{ url('/login') }}" title="Login"
+                                class="text-gray-500 transition-colors duration-200 border-none like-btn hover:text-green-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
+                                <i class="fas fa-thumbs-up"></i>
+                            </a>
+                            <a href="{{ url('/login') }}" title="Login"
+                                class="text-gray-500 transition-colors duration-200 border-none dislike-btn hover:text-red-500 focus:text-red-500 hover:bg-transparent focus:bg-transparent focus:outline-none" 
+                                aria-label="Dislike this comment">
+                                <i class="fas fa-thumbs-down"></i>
+                            </a>
+                        @endif
 
                         <span 
                             class="font-semibold font-montserrat text-lg 
@@ -155,8 +167,6 @@
                             <p class="text-left text-gray-800 font-montserrat">{{ $reply->text }}</p>
                         </div>
                     </div>
-
-                    <!-- Reply actions like delete, like/dislike buttons, etc., can be here -->
                 </li>
             @endforeach
             </ul>

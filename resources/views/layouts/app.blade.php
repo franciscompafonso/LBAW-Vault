@@ -18,51 +18,53 @@
         <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
         @vite('resources/css/app.css')
     </head>
-    <body class="bg-white flex flex-col min-h-screen">
+    <body class="flex flex-col min-h-screen bg-white">
         <!-- Header Section -->
         <header class="flex justify-between items-center p-4 {{ Auth::guard('admin')->check() ? 'bg-ultraViolet' : 'bg-wisteria' }} shadow-lg relative">
             <!-- Logo/Title -->
             <h1 class="text-3xl font-bold text-whiteSmoke">
-                <a href="{{ url(path: '/home') }}" class="hover:text-darkSlateGrey font-montserrat text-5xl">Lend-A-Hand</a>
+                <a href="{{ url(path: '/home') }}" class="text-5xl hover:text-darkSlateGrey font-montserrat">Lend-A-Hand</a>
             </h1>
 
             <!-- Navigation Icons -->
             <div class="flex items-center space-x-6">
                 <!-- Search Icon -->
-                <a href="javascript:void(0)" onclick="toggleSearchBar()" class="text-whiteSmoke hover:text-darkSlateGrey" title="Events">
-                    <i class="fa-solid fa-magnifying-glass text-3xl"></i>
-                </a>
+                @if (!Request::is('login') && !Request::is('register'))
+                    <a href="javascript:void(0)" onclick="toggleSearchBar()" class="text-whiteSmoke hover:text-darkSlateGrey" title="Events">
+                        <i class="text-3xl fa-solid fa-magnifying-glass"></i>
+                    </a>
+                @endif
 
                 @if (Auth::guard('admin')->check())
                 <a href="{{ url('/admin/user-management') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Users">
-                    <i class="fa-solid fa-users-gear text-3xl"></i>
+                    <i class="text-3xl fa-solid fa-users-gear"></i>
                 </a>
                 <a href="{{ url('/admin/create') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Admins">
-                    <i class="fa-solid fa-user-tie text-3xl"></i>
+                    <i class="text-3xl fa-solid fa-user-tie"></i>
                 </a>
                 @endif
 
                 <!-- Create Event -->
                 @if (Auth::guard('web')->check())
                 <a href="{{ url('/event/create') }}" title="Create Event" class="text-whiteSmoke hover:text-darkSlateGrey">
-                    <i class="fa-solid fa-plus text-3xl"></i>
+                    <i class="text-3xl fa-solid fa-plus"></i>
                 </a>
                 @endif
 
                 <!-- Info Icon -->
                 <a href="{{ url('/about') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Info">
-                    <i class="fa-solid fa-circle-info text-3xl"></i>
+                    <i class="text-3xl fa-solid fa-circle-info"></i>
                 </a>
 
                 <!-- Help Icon -->
                 <a href="{{ url('/help') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Help">
-                    <i class="fa-solid fa-question text-3xl"></i>
+                    <i class="text-3xl fa-solid fa-question"></i>
                 </a>
 
                 @if (Auth::guest() && !Request::is('login') && (!Auth::guard('admin')->check()))
                     <!-- Login Icon -->
                     <a href="{{ url('/login') }}" title="Login" class="text-whiteSmoke hover:text-darkSlateGrey">
-                        <i class="fa-solid fa-right-to-bracket text-3xl"></i>
+                        <i class="text-3xl fa-solid fa-right-to-bracket"></i>
                     </a>
                 @endif
 
@@ -70,14 +72,14 @@
                     <div class="relative">
                         <!-- Bell Icon with Notification Count -->
                         <a id="notifications-button" onclick="toggleNotificationsDropdown()" class="relative cursor-pointer">
-                            <i class="text-whiteSmoke hover:text-darkSlateGrey fa-solid fa-bell text-4xl"></i>
-                            <div id="noti-number" class="absolute top-0 right-0 translate-x-2 translate-y-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">
+                            <i class="text-4xl text-whiteSmoke hover:text-darkSlateGrey fa-solid fa-bell"></i>
+                            <div id="noti-number" class="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 text-xs font-bold text-white translate-x-2 translate-y-1 bg-red-500 rounded-full">
                                 0
                             </div>
                         </a>
 
                         <!-- Notifications Dropdown -->
-                        <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
+                        <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-4 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-80">
                             <p id="no-notifications" class="text-center text-gray-500">There are no notifications.</p>
                             <div id="notifications-list">
                             </div>
@@ -87,31 +89,31 @@
                     <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}">
                         <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                              alt="User Profile Picture" 
-                             class="w-16 h-16 rounded-full object-cover border-2 border-whiteSmoke hover:border-darkSlateGrey">
+                             class="object-cover w-16 h-16 border-2 rounded-full border-whiteSmoke hover:border-darkSlateGrey">
                     </a>
                     <!-- Logout Icon for regular user -->
                 @endif
 
                 @if (Auth::guard('web')->check() || Auth::guard('admin')->check() )
                 <a href="{{ url('/logout') }}" title="Logout" class="text-whiteSmoke hover:text-darkSlateGrey">
-                        <i class="fa-solid fa-right-from-bracket text-3xl"></i>
+                        <i class="text-3xl fa-solid fa-right-from-bracket"></i>
                 </a>
                 @endif
             </div>
         </header>
 
         <!-- Search Bar & Results -->
-        <div id="searchBar" class="hidden absolute top-0 left-1/2 transform -translate-x-1/2 mt-16 w-full max-w-4xl p-4 bg-white rounded-lg shadow-lg z-10">
+        <div id="searchBar" class="absolute top-0 z-10 hidden w-full max-w-4xl p-4 mt-16 transform -translate-x-1/2 bg-white rounded-lg shadow-lg left-1/2">
             <div class="relative w-full">
                 <input type="text" id="searchInput" 
-                    class="search-input p-4 w-full rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none pl-12" 
+                    class="w-full p-4 pl-12 border border-gray-300 rounded-full search-input focus:ring-2 focus:ring-blue-500 focus:outline-none" 
                     placeholder="Search events..." onkeyup="searchEvents()">
             </div>
             
-            <div id="searchResults" class="mt-4 max-h-80 overflow-y-auto"></div>
+            <div id="searchResults" class="mt-4 overflow-y-auto max-h-80"></div>
         </div>
 
-        <main id="main" class="flex items-center justify-center flex-1 overflow-auto p-8">
+        <main id="main" class="flex items-center justify-center flex-1 p-8 overflow-auto">
             <!-- Content Section -->
             @yield('content')
         </main>
@@ -177,8 +179,8 @@
 
                         eventItem.innerHTML = `
                             <div class="event-card">
-                                <h3 class="font-semibold text-xl text-gray-800">
-                                    <a href="${eventUrl}" class="text-md font-semibold font-montserrat text-ultraViolet hover:text-cambridgeBlue">${event.name}</a>
+                                <h3 class="text-xl font-semibold text-gray-800">
+                                    <a href="${eventUrl}" class="font-semibold text-md font-montserrat text-ultraViolet hover:text-cambridgeBlue">${event.name}</a>
                                 </h3>
                                 <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${event.description || 'No description available'}</p>
                                 <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${formattedDate}</p>
@@ -235,57 +237,57 @@
 
                         let notificationContent = `
                             <div class="notification-card">
-                                <p class="font-semibold text-sm text-gray-600">${formattedDate}</p>
+                                <p class="text-sm font-semibold text-gray-600">${formattedDate}</p>
                         `;
 
                         if (notification.type === 'invite_notification') {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">You have been invited by X to an event. ${notification.invite_id}</p>
                             `;
                         } else if (notification.type === 'accepted_invite_notification') {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">Your invite was accepted for event ID: ${notification.event_id}</p>
                             `;
                         } else if (notification.type === 'event_update_notification') {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">Event ${notification.event_id} has been updated.</p>
                             `;
                         } else if (notification.type === 'comment_notification') {
                             notificationContent += `
-                                <a class="text-md font-semibold text-indigo-600" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
+                                <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
                                 <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">You have a new comment on your post.</a>
                             `;
                         } else if (notification.type === 'poll_reminder') {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">Reminder: Don't forget to participate in poll ID: ${notification.poll_id}</p>
                             `;
                         } else if (notification.type === 'event_cancelation') {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">The event with ID: ${notification.event_id} has been canceled.</p>
                             `;
                         } else if (notification.type === 'event_reminder') {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">Reminder: Event with ID: ${notification.event_id} is coming soon!</p>
                             `;
                         } else if (notification.type === 'admin_action') {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">An administrative action has been performed.</p>
                             `;
                         } else if (notification.type === 'unblock_notification') {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">You have been unblocked.</p>
                             `;
                         } else {
                             notificationContent += `
-                                <p class="text-md font-semibold text-indigo-600">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">No specific details available for this notification type.</p>
                             `;
                         }
