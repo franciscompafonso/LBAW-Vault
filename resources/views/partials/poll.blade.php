@@ -57,13 +57,17 @@
             @endforeach
         </div>
 
-        @if(!$userResponse && Auth::id())
+        @if(!$userResponse && Auth::id() && now()->between($poll->start_time, $poll->end_time))
             <div class="mt-4">
                 <button 
                     type="submit" 
                     class="px-6 py-2 font-bold text-white bg-ultraViolet hover:bg-cambridgeBlue border-ultraViolet hover:border-cambridgeBlue rounded-md transition-all duration-200">
                     Vote
                 </button>
+            </div>
+        @elseif(now()->isAfter($poll->end_time))
+            <div class="mt-4 text-red-500">
+                Voting has ended for this poll.
             </div>
         @endif
     </form>

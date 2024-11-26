@@ -53,6 +53,20 @@ class PollController extends Controller
 
         $poll = Poll::findOrFail($pollId);
 
+        if (now()->isBefore($poll->start_time)) {
+            return back()->with([
+                'error' => 'Voting has not started yet.',
+                'poll_id' => $pollId,
+            ]);
+        }
+    
+        if (now()->isAfter($poll->end_time)) {
+            return back()->with([
+                'error' => 'Voting has ended for this poll.',
+                'poll_id' => $pollId,
+            ]);
+        }
+
         $existingVote = PollResponse::where('poll_id', $poll->id)
             ->where('user_id', auth()->id()) 
             ->first();
