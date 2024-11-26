@@ -245,11 +245,11 @@ class EventController extends Controller
     public function showSurvey($eventId)
     {
         $event = Event::findOrFail($eventId);
-    $questions = QuestionReview::all();
-    $hasSubmitted = AnswerReview::where('answered_by_id', auth()->id())
-                                ->where('about_event_id', $eventId)
-                                ->exists();
-    return view('partials.survey', compact('event', 'questions', 'hasSubmitted'));
+        $questions = QuestionReview::all();
+        $hasSubmitted = AnswerReview::where('answered_by_id', auth()->id())
+                                    ->where('about_event_id', $eventId)
+                                    ->exists();
+        return view('partials.survey', compact('event', 'questions', 'hasSubmitted'));
     }
 
     public function submitSurvey(Request $request, $eventId)
@@ -274,15 +274,37 @@ class EventController extends Controller
     public function showSurveyStats($eventId)
     {
         $event = Event::findOrFail($eventId);
+
+        // Check if the event has ended (optional)
         if ($event->end_date > now()) {
-            return redirect()->route('events.show', $eventId)->with('error', 'Survey results are not available until the event has ended.');
+            return redirect()->route('events.show', $eventId)->with('error', 'Survey results are available only after the event ends.');
         }
+
+        // Get all answers for the event
         $answers = AnswerReview::where('about_event_id', $eventId)
                                 ->join('question_review', 'answer_review.question_id', '=', 'question_review.id')
-                                ->select('question_review.question_text', DB::raw('AVG(answer_review.rating) as average_rating'))
-                                ->groupBy('question_review.question_text')
+                                ->select('question_review.id as question_id', 'question_review.question_text', 'answer_review.rating')
                                 ->get();
-        return view('partials.survey_stats', compact('event', 'answers'));
+
+        // Prepare data for each question with a distribution of answers
+        $chartData = [];
+
+        foreach ($answers->groupBy('question_id') as $questionId => $responses) {
+            $ratings = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+
+            // Count the occurrences of each rating for the current question
+            foreach ($responses as $response) {
+                $ratings[$response->rating]++;
+            }
+
+            // Store data for the question and its rating distribution
+            $chartData[] = [
+                'question_text' => $responses->first()->question_text,
+                'ratings' => $ratings
+            ];
+        }
+
+        return view('partials.survey_stats', compact('event', 'chartData'));
     }
 
 }
