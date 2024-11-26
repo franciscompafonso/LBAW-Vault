@@ -29,7 +29,7 @@
                     <tr>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>Delete</th>
+                        <th>Status</th>
                         <th>Block</th>
                     </tr>
                 </thead>
@@ -45,18 +45,18 @@
                             <td>{{ $user->email }}</td>
                             <td>
                                 @if($user->isdeleted)
-                                    <!-- Undelete Button -->
-                                    <form action="{{ route('admin.undelete.user', $user->id) }}" method="POST" id="undelete-form-{{ $user->id }}" class="toggle-form">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md undelete-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" data-user-id="{{ $user->id }}">Undelete</button>
-                                    </form>
+                                    <!-- Disabled DELETED Button -->
+                                    <button type="button" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-red-600 cursor-not-allowed" disabled>
+                                        DELETED
+                                    </button>
                                 @else
                                     <!-- Delete Button -->
-                                    <form action="{{ route('admin.delete.user', $user->id) }}" method="POST" id="delete-form-{{ $user->id }}" class="toggle-form">
+                                    <form action="{{ route('admin.delete.user', $user->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md delete-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" data-user-id="{{ $user->id }}">Delete</button>
+                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md delete-btn font-montserrat bg-ultraViolet hover:bg-red-600 hover:text-white border-ultraViolet hover:border-red-600">
+                                            Delete
+                                        </button>
                                     </form>
                                 @endif
                             </td>
@@ -89,26 +89,4 @@
             <p>No users found.</p>
         @endif
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        // JavaScript to toggle the button states between Delete and Undelete
-        document.querySelectorAll('.toggle-form').forEach(form => {
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent form submission
-
-                const userId = form.querySelector('button').getAttribute('data-user-id');
-                
-                // Toggle between Delete and Undelete button
-                if (form.querySelector('button').textContent === 'Delete') {
-                    // Show 'Undelete' button and handle form submission
-                    document.querySelector(`#undelete-form-${userId}`).submit();
-                } else {
-                    // Show 'Delete' button and handle form submission
-                    document.querySelector(`#delete-form-${userId}`).submit();
-                }
-            });
-        });
-    </script>
 @endsection
