@@ -35,6 +35,10 @@ Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show'
 Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
 Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
 
+Route::get('/faqs', function () {
+    return view('pages.faqs'); 
+})->name('faqs');
+
 // Events
 Route::controller(EventController::class)->group(function () {
     Route::get('/events', 'index')->name('v');

@@ -57,7 +57,7 @@
                 </a>
 
                 <!-- Help Icon -->
-                <a href="{{ url('/help') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Help">
+                <a href="{{ url('/faqs') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="FAQs">
                     <i class="text-3xl fa-solid fa-question"></i>
                 </a>
 

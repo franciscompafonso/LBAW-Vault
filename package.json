@@ -6,6 +6,8 @@
         "build": "vite build"
     },
     "dependencies": {
+        "@popperjs/core": "^2.11.8",
+        "bootstrap": "^5.3.3",
         "tailwindcss": "^3.4.15"
     },
     "devDependencies": {
