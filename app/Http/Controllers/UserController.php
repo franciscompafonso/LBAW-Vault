@@ -87,30 +87,35 @@ class UserController extends Controller
     }
 
 
-    public function deleteAccount($id){
-        try {
-            // Find the user
-            $user = User::findOrFail($id);
-    
-            // Mark the user as deleted
-            $user->isdeleted = true;
-            $user->save();
-    
-            // Delete any upcoming events created by this user
-            Event::where('creator_id', $id)
-                ->where('start_date', '>', now()) // Check if the event date is in the future
-                ->delete();
-    
-            // Log out the user
-            Auth::logout();
-    
-            // Redirect to the homepage with a status message
-            return redirect('/home')->with('status', 'Your account has been deleted successfully, and upcoming events have been removed.');
-        } catch (\Exception $e) {
-            // Redirect back with an error message in case of an exception
-            return redirect()->back()->with('error', 'Error deleting account: ' . $e->getMessage());
-        }
+    public function deleteAccount($id)
+{
+    try {
+        // Find the user
+        $user = User::findOrFail($id);
+
+        // Delete participations in upcoming events only
+        $user->notYetParticipatedEvents()->detach(); // Detach from future events only
+
+        // Mark the user as deleted (soft delete)
+        $user->isdeleted = true;
+        $user->save();
+
+        // Delete any upcoming events created by this user
+        Event::where('creator_id', $id)
+            ->where('start_date', '>', now()) // Check if the event date is in the future
+            ->delete();
+
+        // Log out the user
+        Auth::logout();
+
+        // Redirect to the homepage with a status message
+        return redirect('/home')->with('status', 'Your account has been deleted successfully, and upcoming events have been removed.');
+    } catch (\Exception $e) {
+        // Redirect back with an error message in case of an exception
+        return redirect()->back()->with('error', 'Error deleting account: ' . $e->getMessage());
     }
+}
+
 
    
 }

@@ -70,15 +70,16 @@ class AdminController extends Controller
         // Find the user
         $user = User::findOrFail($id);
 
-        // Mark the user as deleted
+        // Delete participations in upcoming events only
+        $user->notYetParticipatedEvents()->detach(); // Detach user from future events only
+
+        // Mark the user as deleted (soft delete)
         $user->isdeleted = true;
         $user->save();
 
         // Delete any upcoming events created by this user
-        // Assuming there's a relationship between Event and User
-        // where the Event has a 'user_id' field and a 'date' field
-        Event::where('user_id', $id)
-            ->where('date', '>', now()) // Check if the event date is in the future
+        Event::where('creator_id', $id)
+            ->where('start_date', '>', now()) // Check if the event date is in the future
             ->delete();
 
         return redirect()->route('admin.user-management')->with('status', 'User has been marked as deleted successfully, and upcoming events have been removed.');
