@@ -34,9 +34,6 @@ class InviteController extends Controller
             return back()->with('message', 'The user with the specified username does not exist.');
         }
 
-        // Retrieve the name of the authenticated user
-        $authUserName = User::where('id', Auth::id())->value('name');
-
         // Check if the user is already a participator or has been invited
         $isParticipator = $event->participators()->where('id', $invitee->id)->exists();
         $isAlreadyInvited = Invite::where('invite_to_id', $invitee->id)

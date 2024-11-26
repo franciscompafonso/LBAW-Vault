@@ -239,7 +239,6 @@
                             <div class="notification-card">
                                 <p class="text-sm font-semibold text-gray-600">${formattedDate}</p>
                         `;
-
                         if (notification.type === 'invite_notification') {
                             notificationContent += `
                                 <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
@@ -251,7 +250,7 @@
                                     to 
                                     <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
                                         ${notification.data.title ? notification.data.title : 'an event'}
-                                    </a>
+                                    </a><br>
                                     ${notification.data.description ? notification.data.description : ''}
                                 </p>
 
