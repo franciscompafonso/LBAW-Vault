@@ -25,7 +25,6 @@ DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS notification CASCADE;
 DROP TABLE IF EXISTS poll_response CASCADE;
 DROP TABLE IF EXISTS poll CASCADE;
-DROP TABLE IF EXISTS vote CASCADE;
 DROP TABLE IF EXISTS comment CASCADE;
 DROP TABLE IF EXISTS answer_review CASCADE;
 DROP TABLE IF EXISTS question_review CASCADE;
@@ -95,11 +94,11 @@ CREATE TABLE "event" (
     description TEXT NOT NULL,
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
-    visibility VARCHAR(50),
+    visibility VARCHAR(50) NOT NULL,
     capacity INT,
-    creator_id INT REFERENCES user_account(id),
-    location_id INT REFERENCES location(id),
-    category_id INT REFERENCES category(id),
+    creator_id INT REFERENCES user_account(id) NOT NULL,
+    location_id INT REFERENCES location(id) NOT NULL,
+    category_id INT REFERENCES category(id) NOT NULL,
     banner VARCHAR(255) DEFAULT 'default-banner.png'
     CONSTRAINT ck_start_end CHECK (start_date < end_date)
 );
@@ -134,13 +133,6 @@ CREATE TABLE comment (
     score INT DEFAULT 0,
     edited BOOLEAN DEFAULT FALSE NOT NULL,
     date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP)
-);
-
-CREATE TABLE vote (
-    voted_by_id INT REFERENCES user_account(id),
-    comment_id INT REFERENCES comment(id),
-    type INT NOT NULL CHECK (type = -1 OR type = 1),
-    PRIMARY KEY (voted_by_id, comment_id)
 );
 
 CREATE TABLE poll (
