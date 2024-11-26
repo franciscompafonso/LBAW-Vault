@@ -10,15 +10,15 @@
             <div class="flex">
                 <input 
                     type="text" 
-                    name="email" 
+                    name="username" 
                     class="w-full p-3 border rounded-l-lg focus:outline-none"
-                    placeholder="Search by user email" 
-                    value="{{ old('email', $search ?? '') }}">
+                    placeholder="Search by username" 
+                    value="{{ old('username', $search ?? '') }}">
                 <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Search
                 </button>
             </div>
-            @error('email')
+            @error('username')
                 <p class="mt-2 text-red-500">{{ $message }}</p>
             @enderror
         </form>
@@ -27,7 +27,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Username</th>
                         <th>Email</th>
                         <th>Delete</th>
                         <th>Block</th>
@@ -36,7 +36,12 @@
                 <tbody>
                     @foreach($users as $user)
                         <tr>
-                            <td>{{ $user->displayName }}</td>
+                            <td>
+                                <a href="{{ route('user.profile', ['id' => $user->id]) }}" 
+                                class="font-bold">
+                                    {{ $user->username }}
+                                </a>
+                            </td>
                             <td>{{ $user->email }}</td>
                             <td>
                                 @if($user->isdeleted)

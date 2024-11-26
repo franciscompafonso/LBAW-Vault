@@ -40,14 +40,14 @@ class AdminController extends Controller
 {
     // Validate the search input
     $request->validate([
-        'email' => 'nullable|email',  // Only validate email if it's provided
+        'username' => 'nullable|string|max:255',  // Only validate username if it's provided
     ]);
 
     // Store the search query
-    $search = $request->email;
+    $search = $request->username;
 
     // Search logic
-    $users = User::where('email', 'like', '%' . $search . '%')->paginate(5);
+    $users = User::where('username', 'like', '%' . $search . '%')->paginate(5);
 
     // Return the results to the same view
     return view('admin.user-management', compact('users', 'search'));
