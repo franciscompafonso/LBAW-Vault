@@ -21,11 +21,11 @@
         <div class="text-center">
             <div class="flex justify-center items-center space-x-2">
                 <p class="text-2xl font-montserrat font-semibold">Name:</p>
-                <p class="text-2xl font-montserrat">{{ $user->displayName }}</p>
+                <p class="text-2xl font-montserrat">{{ $user->name }}</p>
             </div>
             <div class="flex justify-center items-center space-x-2">
                 <p class="text-2xl font-montserrat font-semibold">Username:</p>
-                <p class="text-2xl font-montserrat">{{ $user->username }}</p>
+                <p class="text-2xl font-montserrat">{{ $user->displayName }}</p>
             </div>
             <div class="flex justify-center items-center space-x-2">
                 <p class="text-2xl font-montserrat font-semibold">Email:</p>
