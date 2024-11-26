@@ -117,7 +117,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/user-management', [AdminController::class, 'listUsers'])->name('admin.user-management');
     Route::get('/admin/user-management/search-user', [AdminController::class, 'search'])->name('admin.search.user');
     Route::delete('/admin/user-management/delete-user/{user}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
-    Route::patch('/admin/user-management/undelete-user/{user}', [AdminController::class, 'undeleteUser'])->name('admin.undelete.user');
     Route::post('/admin/user-management/block-user/{user}', [AdminController::class, 'blockUser'])->name('admin.block.user');
     Route::patch('/admin/user-management/unblock-user/{user}', [AdminController::class, 'unblockUser'])->name('admin.unblock.user');
     Route::post('/admin/comments/delete/{comment}', [AdminController::class, 'deleteComment'])->name('admin.comment.delete');

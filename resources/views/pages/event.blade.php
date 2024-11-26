@@ -15,12 +15,6 @@
             <p class="text-lg leading-relaxed text-darkSlateGrey font-montserrat">{{ $event->description }}</p>
 
             <div class="mt-6 space-y-4">
-                <!-- Show Creator Info for Admins -->
-                @if(Auth::guard('admin')->check())
-                    <p class="text-lg text-darkSlateGrey font-montserrat">
-                        <strong class="font-semibold">Creator:</strong> {{ $event->creator_id ?? 'No creator specified' }}
-                    </p>
-                @endif
                 <p class="text-lg text-darkSlateGrey font-montserrat">
                     <strong class="font-semibold">Start:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y') }} {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }}
                 </p>

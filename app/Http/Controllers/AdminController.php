@@ -87,23 +87,6 @@ class AdminController extends Controller
     }
 }
 
-
-    public function undeleteUser($id)
-    {
-        try {
-            // Find the user
-            $user = User::findOrFail($id);
-
-            // Mark the user as deleted
-            $user->isdeleted = false;
-            $user->save();
-
-            return redirect()->route('admin.user-management')->with('status', 'User has been unmarked as deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error deleting user: ' . $e->getMessage());
-        }
-    }
-
 public function blockUser($userId)
 {
     try {
