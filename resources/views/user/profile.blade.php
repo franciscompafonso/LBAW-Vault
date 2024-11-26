@@ -64,7 +64,7 @@
                 @if ($myEvents->isEmpty())
                     <p class="text-gray-500">You have not created any events yet.</p>
                 @else
-                    <section id="events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+                    <section id="events" class="grid grid-cols-1 gap-10 p-4 md:grid-cols-2 lg:grid-cols-3">
                         @foreach ($myEvents as $event)
                             @include('partials.event', ['event' => $event])
                         @endforeach

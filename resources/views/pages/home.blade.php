@@ -50,9 +50,9 @@
             </div>
 
             <!-- Events Grid -->
-            <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 @foreach ($category->events->take(5) as $event) <!-- Limite o número de eventos -->
-                    @include('partials.home_event', ['event' => $event])
+                    @include('partials.event', ['event' => $event])
                 @endforeach
 
                 @if($category->events->isEmpty())
