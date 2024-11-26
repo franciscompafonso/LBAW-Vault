@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'User Management')
-    
+@section('Title', 'Contact us')
 @section('content')
-    <div class="container mx-auto p-8">
-        <h1 class="text-5xl font-montserrat font-bold mb-6">User Management</h1>
+    <div class="container p-8 mx-auto">
+        <h1 class="mb-6 text-5xl font-bold font-montserrat">User Management</h1>
 
         <!-- Search Form -->
         <form action="{{ route('admin.search.user') }}" method="GET" class="mb-6">
@@ -15,12 +14,12 @@
                     class="w-full p-3 border rounded-l-lg focus:outline-none"
                     placeholder="Search by user email" 
                     value="{{ old('email', $search ?? '') }}">
-                <button type="submit" class="font-montserrat bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">
+                <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Search
                 </button>
             </div>
             @error('email')
-                <p class="text-red-500 mt-2">{{ $message }}</p>
+                <p class="mt-2 text-red-500">{{ $message }}</p>
             @enderror
         </form>
 
@@ -45,14 +44,14 @@
                                     <form action="{{ route('admin.undelete.user', $user->id) }}" method="POST" id="undelete-form-{{ $user->id }}" class="toggle-form">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="undelete-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200" data-user-id="{{ $user->id }}">Undelete</button>
+                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md undelete-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" data-user-id="{{ $user->id }}">Undelete</button>
                                     </form>
                                 @else
                                     <!-- Delete Button -->
                                     <form action="{{ route('admin.delete.user', $user->id) }}" method="POST" id="delete-form-{{ $user->id }}" class="toggle-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="delete-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200" data-user-id="{{ $user->id }}">Delete</button>
+                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md delete-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" data-user-id="{{ $user->id }}">Delete</button>
                                     </form>
                                 @endif
                             </td>
@@ -61,14 +60,14 @@
                                     <form action="{{ route('admin.unblock.user', $user->id) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="unblock-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">
+                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md unblock-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                                             Unblock
                                         </button>
                                     </form>
                                 @else
                                     <form action="{{ route('admin.block.user', $user->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="block-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">Block</button>
+                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md block-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">Block</button>
                                     </form>
                                 @endif
                             </td>
@@ -78,7 +77,7 @@
             </table>
 
             <!-- Pagination links -->
-            <div class="pagination mt-4">
+            <div class="mt-4 pagination">
                 {{ $users->links() }}
             </div>
         @else

@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
+@section('Title', 'Edit Profile')
 @section('content')
-    <div class="max-w-2xl mx-auto mt-6 p-6 bg-white rounded-lg shadow-md">
-        <div class="text-center mb-6">
+    <div class="max-w-2xl p-6 mx-auto mt-6 bg-white rounded-lg shadow-md">
+        <div class="mb-6 text-center">
             <h2 class="text-3xl font-bold text-ultraViolet font-montserrat">Edit Profile</h2>
         </div>
 
@@ -13,21 +14,21 @@
 
             <!-- Profile Picture Input -->
             <!-- Same as your original profile picture input -->
-            <div class="mb-4 flex items-center space-x-4">
+            <div class="flex items-center mb-4 space-x-4">
                 <div class="flex-shrink-0">
                 @if ($user->profilepicture)
-                    <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 rounded-full border-2 border-ultraViolet">
+                    <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-ultraViolet">
                 @else
-                    <div id="profile-picture-preview" class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
-                        <i class="fa-solid fa-user text-white text-3xl"></i>
+                    <div id="profile-picture-preview" class="flex items-center justify-center w-32 h-32 bg-gray-300 rounded-full">
+                        <i class="text-3xl text-white fa-solid fa-user"></i>
                     </div>
                 @endif
                 </div>
                 <div>
                     <label for="profilepicture" class="block text-lg font-semibold font-montserrat">Upload Image</label>
-                    <input type="file" id="profilepicture" name="profilepicture" class="w-full p-2 border border-gray-300 rounded-md mt-2" onchange="previewImage(event)">
+                    <input type="file" id="profilepicture" name="profilepicture" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)">
                     @error('profilepicture')
-                        <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                        <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -37,7 +38,7 @@
                 <label for="name" class="block text-lg font-semibold font-montserrat">Name</label>
                 <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
                 @error('name')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
             </div>
             
@@ -46,7 +47,7 @@
                 <label for="username" class="block text-lg font-semibold font-montserrat">Username</label>
                 <input type="text" id="username" name="username" value="{{ old('username', $user->displayName) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
                 @error('username')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -55,7 +56,7 @@
                 <label for="email" class="block text-lg font-semibold font-montserrat">Email</label>
                 <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
                 @error('email')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -64,7 +65,7 @@
                 <label for="password" class="block text-lg font-semibold font-montserrat">New Password</label>
                 <input type="password" id="password" name="password" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
                 @error('password')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -73,11 +74,11 @@
                 <label for="password_confirmation" class="block text-lg font-semibold font-montserrat">Confirm New Password</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
                 @error('password_confirmation')
-                    <div class="text-red-600 text-sm mt-2">{{ $message }}</div>
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
             </div>
             <div class="mt-6 text-center">
-                <button type="submit" class="bg-ultraViolet hover:bg-cambridgeBlue text-white px-6 py-2 rounded-md hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat font-bold transition-all duration-200">Save Changes</button>
+                <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">Save Changes</button>
             </div>
         </form>
 
@@ -86,7 +87,7 @@
             <form action="{{ route('user.delete', ['id' => $user->id]) }}" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-montserrat font-bold transition-all duration-200">
+                <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 bg-red-600 rounded-md hover:bg-red-700 font-montserrat">
                     Delete Account
                 </button>
             </form>
