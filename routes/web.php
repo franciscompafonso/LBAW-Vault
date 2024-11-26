@@ -113,7 +113,7 @@ Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->
 Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
 Route::middleware(['auth:admin'])->group(function () {
-
+    
     Route::get('/admin/user-management', [AdminController::class, 'listUsers'])->name('admin.user-management');
     Route::get('/admin/user-management/search-user', [AdminController::class, 'search'])->name('admin.search.user');
     Route::delete('/admin/user-management/delete-user/{user}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
@@ -123,5 +123,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/comments/delete/{comment}', [AdminController::class, 'deleteComment'])->name('admin.comment.delete');
     Route::get('/admin/create', [AdminController::class, 'showCreateAdminForm'])->name('admin.admins.create');
     Route::post('/admin/store', [AdminController::class, 'storeAdmin'])->name('admin.admins.store');
+
+    Route::get('admin/user/{id}/edit', [AdminController::class, 'adminEditForm'])->name('admin.edit.form');
+    Route::post('admin/user/{id}/edit', [AdminController::class, 'adminEdit'])->name('admin.edit.action');
     
 });

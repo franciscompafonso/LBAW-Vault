@@ -151,5 +151,66 @@ public function unblockUser($id)
         return back()->with('message', 'successfully deleted the comment!');
     }   
 
+    public function adminEditForm(int $id)
+{
+    // Make sure the authenticated user is an admin
+    if (!auth()->guard('admin')->check()) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    $user = User::find($id);
+
+    // Optionally, add another authorization check if needed
+    // $this->authorize('edit_any_profile', $user);
+
+    return view('user.edit', compact('user'));
 }
 
+public function adminEdit(int $id, Request $request)
+{
+    // Make sure the authenticated user is an admin
+    if (!auth()->guard('admin')->check()) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    $user = User::find($id);
+
+    // Validate the incoming data for admin
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'username' => 'required|string|max:255|unique:user_account,username,' . $user->id,
+        'email' => 'required|email|max:255|unique:user_account,email,' . $user->id,
+        'password' => 'nullable|string|min:8|confirmed',
+        'profilepicture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+    ]);
+
+
+    // Update user information
+    $user->name = $validatedData['name'];
+    $user->username = $validatedData['username'];
+    $user->email = $validatedData['email'];
+
+    if ($request->filled('password')) {
+        $user->password = bcrypt($validatedData['password']);
+    }
+
+    if ($request->hasFile('profilepicture')) {
+        if ($user->profilepicture) {
+            $oldPath = public_path('images/profile-pictures/' . $user->profilepicture);
+            if (file_exists($oldPath)) {
+                @unlink($oldPath);
+            }
+        }
+
+        $file = $request->file('profilepicture');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('images/profile-pictures/'), $filename);
+        $user->profilepicture = $filename;
+    }
+
+    $user->save();
+    return redirect()->route('user.profile', ['id' => $user->id]);
+
+}
+
+}

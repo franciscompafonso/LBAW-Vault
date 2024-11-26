@@ -8,7 +8,7 @@
         </div>
 
         <!-- Edit Profile Form -->
-        <form action="{{ route('user.edit.action', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ auth()->guard('admin')->check() ? route('admin.edit.action', ['id' => $user->id]) : route('user.edit.action', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('POST')
 
@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-<!-- Name -->
+            <!-- Name -->
             <div class="mb-4">
                 <label for="name" class="block text-lg font-semibold font-montserrat">Name</label>
                 <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>

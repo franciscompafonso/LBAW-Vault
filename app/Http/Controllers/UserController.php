@@ -43,8 +43,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        // Ensure the user has permission to edit their profile
-        $this->authorize('edit_profile', $user, Auth::user());
+        // Check if the authenticated user is the owner or an admin
+        if (Auth::user()->cannot('edit_profile', $user) && !auth()->guard('admin')->check()) {
+            abort(403, 'Unauthorized action.');
+        }
 
         // Validate the incoming data
         $validatedData = $request->validate([
