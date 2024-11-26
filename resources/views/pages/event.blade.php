@@ -127,7 +127,7 @@
         <div class="w-full p-6 rounded-lg shadow-lg lg:w-1/3 bg-whiteSmoke">   
             <h2 class="pb-4 mb-6 text-3xl font-bold border-b-2 font-montserrat text-keppel border-babyPowder">Participants</h2>
             <ul class="mt-4 space-y-4 text-babyPowder">
-                @if ($event->participators->contains('id', Auth::id()) && Auth::guard('web')->check())
+                @if ($event->participators->contains('id', Auth::id()) && Auth::guard('web')->check() )
                     <!-- Invite Form -->
                     <div class="mt-4">
                         <form action="{{ route('events.invite', $event->id) }}" method="POST" class="flex items-center space-x-2">

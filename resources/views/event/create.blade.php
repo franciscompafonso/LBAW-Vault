@@ -101,7 +101,7 @@
     <!-- Capacity -->
     <div class="mb-4">
       <label for="capacity" class="block text-lg font-semibold font-montserrat">Capacity</label>
-      <input id="capacity" type="number" name="capacity" value="{{ old('capacity') }}" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm bg-eerieBlack focus:ring-2 focus:ring-keppel placeholder-charcoal sm:text-base">
+      <input id="capacity" type="number" name="capacity" value="{{ old('capacity') }}" required class="block text-lg font-semibold font-montserrat">
       @if ($errors->has('capacity'))
         <span class="mt-1 text-sm text-red-600">{{ $errors->first('capacity') }}</span>
       @endif

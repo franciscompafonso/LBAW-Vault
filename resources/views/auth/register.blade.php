@@ -15,7 +15,7 @@
       <div>
         <label for="name" class="block text-lg font-medium font-montserrat text-darkSlateGrey">Name</label>   
         <div class="mt-2">
-          <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full px-3 py-2 text-white border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-keppel focus:border-keppel placeholder-charcoal sm:text-base">   
+          <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
           @if ($errors->has('name'))
             <span class="mt-1 text-sm text-red-600">
               {{ $errors->first('name') }}
