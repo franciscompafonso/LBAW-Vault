@@ -241,7 +241,7 @@
                         `;
 
                         if (notification.type === 'invite_notification') {
-                            /*notificationContent += `
+                            notificationContent += `
                                 <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
                                 <p class="text-sm text-gray-600">
                                     You have been invited by 
@@ -253,17 +253,6 @@
                                         ${notification.data.title ? notification.data.title : 'an event'}
                                     </a>
                                     ${notification.data.description ? notification.data.description : ''}
-                                </p>
-
-                            `;*/
-                            notificationContent += `
-                                <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
-                                <p class="text-sm text-gray-600">
-                                    You have been invited to 
-                                    <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
-                                        ${notification.data.title ? notification.data.title : 'an event'}
-                                    </a>
-                                    <br>Message: ${notification.data.description ? notification.data.description : ''}
                                 </p>
 
                             `;
@@ -283,16 +272,23 @@
                                 <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">You have a new comment on your post.</a>
                             `;
                         } else if (notification.type === 'poll_reminder') {
-                            /*notificationContent += `
-                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
-                                <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">
-                                    You have up until ${notification.data.end_time} to answer to the ${notification.data.name} poll.
-                                </a>
-                            `;*/
+                            const eventEndTime = new Date(notification.data.end_time);
+
+                            // Format the date and time
+                            const formattedDate = eventEndTime.toLocaleDateString('en-GB', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                            });
+                            const formattedTime = eventEndTime.toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            });
+
                             notificationContent += `
                                 <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">
-                                    Don't forget to answer to the ${notification.data.name} poll.
+                                    You have up until ${formattedDate} ${formattedTime} to answer to the ${notification.data.name} poll.
                                 </a>
                             `;
                         } else if (notification.type === 'event_cancelation') {
