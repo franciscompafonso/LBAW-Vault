@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Location;
 use App\Models\Category;
+use App\Models\QuestionReview;
+use App\Models\AnswerReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+
 
 class EventController extends Controller
 {
@@ -237,4 +241,48 @@ class EventController extends Controller
 
         return response()->json($events);
     }
+
+    public function showSurvey($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+    $questions = QuestionReview::all();
+    $hasSubmitted = AnswerReview::where('answered_by_id', auth()->id())
+                                ->where('about_event_id', $eventId)
+                                ->exists();
+    return view('partials.survey', compact('event', 'questions', 'hasSubmitted'));
+    }
+
+    public function submitSurvey(Request $request, $eventId)
+    {
+        $request->validate([
+            'answers.*' => 'required|integer|between:1,5',
+        ]);
+
+        foreach ($request->answers as $questionId => $rating) {
+            AnswerReview::create([
+                'answered_by_id' => auth()->id(),
+                'question_id' => $questionId,
+                'about_event_id' => $eventId,
+                'rating' => $rating,
+                'date' => now(),
+            ]);
+        }
+
+        return redirect()->route('events.show', $eventId)->with('success', 'Thank you for your feedback!');
+    }
+
+    public function showSurveyStats($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        if ($event->end_date > now()) {
+            return redirect()->route('events.show', $eventId)->with('error', 'Survey results are not available until the event has ended.');
+        }
+        $answers = AnswerReview::where('about_event_id', $eventId)
+                                ->join('question_review', 'answer_review.question_id', '=', 'question_review.id')
+                                ->select('question_review.question_text', DB::raw('AVG(answer_review.rating) as average_rating'))
+                                ->groupBy('question_review.question_text')
+                                ->get();
+        return view('partials.survey_stats', compact('event', 'answers'));
+    }
+
 }
