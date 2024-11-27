@@ -94,7 +94,8 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         // Delete participations in upcoming events only
-        $user->notYetParticipatedEvents()->detach(); // Detach from future events only
+        $upcomingEventIds = $user->notYetParticipatedEvents()->pluck('event_id')->toArray();
+        $user->participatedEvents()->detach($upcomingEventIds);
 
         // Mark the user as deleted (soft delete)
         $user->isdeleted = true;
