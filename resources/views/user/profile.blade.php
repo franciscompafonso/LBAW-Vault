@@ -3,6 +3,13 @@
 @section('Title', 'Profile')
 @section('content')
     <div class="p-6 mx-auto mt-6 bg-white rounded-lg shadow-md max-w-10xl">
+        @if ($user->isblocked)
+            <div class="p-4 mb-6 text-white bg-red-500 rounded-md">
+                <p class="text-lg font-semibold text-center">
+                    This user is currently blocked. Some features may not be available.
+                </p>
+            </div>
+        @endif
         <div class="mb-6 text-center">
             <h2 class="text-3xl font-bold text-ultraViolet font-montserrat">User Information</h2>
         </div>
