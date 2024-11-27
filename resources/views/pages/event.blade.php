@@ -26,43 +26,48 @@
                 </p>
             </div>
 
-            <!-- Event Actions for Regular Users -->
             @if (Auth::guard('web')->check())
+                @php
+                    $user = Auth::user();
+                    // Check if there's an active join request
+                    $hasActiveRequest = $event->requests 
+                        ? $event->requests->where('request_by_id', $user->id)->where('accepted', false)->isNotEmpty() 
+                        : false;
+                @endphp
+
                 @if ($event->participators->contains('id', Auth::id()))
+                    <!-- Leave Event Button -->
                     <form action="{{ route('events.leave', $event->id) }}" method="POST">
                         @csrf
                         <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                             Leave Event
                         </button>
                     </form>
-                    @if ($event->end_date < now() && $event->creator_id != Auth::id()) 
-                        <a href="{{ route('events.survey', $event->id) }}" class="block mt-4 text-center">
-                            <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
-                                Take Survey
-                            </button>
-                        </a>
-                    @endif
-                @else
-                    @if ($event->visibility === 'public')
-                        <!-- Join Event Button -->
-                        <form action="{{ route('events.join', $event->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
-                                Join Event
-                            </button>
-                        </form>
-                    @elseif ($event->visibility === 'request_only')
-                        <!-- Request to Join Button -->
-                        <form action="{{ route('events.request', $event->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-yellow-500 hover:bg-cambridgeBlue hover:text-darkSlateGrey border-yellow-500 hover:border-cambridgeBlue">
-                                Request to Join
-                            </button>
-                        </form>
-                    @endif
+                @elseif ($event->creator_id === $user->id)
+                    <p class="text-gray-600">You are the creator of this event.</p>
+                @elseif ($hasActiveRequest)
+                    <!-- Disabled Request to Join Button -->
+                    <button disabled class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-gray-400 cursor-not-allowed">
+                        Request Sent
+                    </button>
+                @elseif ($event->visibility === 'public')
+                    <!-- Join Event Button -->
+                    <form action="{{ route('events.join', $event->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                            Join Event
+                        </button>
+                    </form>
+                @elseif ($event->visibility === 'request_only')
+                    <!-- Request to Join Button -->
+                    <form action="{{ route('events.request', $event->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-yellow-500 hover:bg-cambridgeBlue hover:text-darkSlateGrey border-yellow-500 hover:border-cambridgeBlue">
+                            Request to Join
+                        </button>
+                    </form>
                 @endif
             @endif
-
 
             <!-- Event Actions for Admins and Event Creators -->
             @if (Auth::guard('admin')->check() || $event->creator_id === Auth::id())

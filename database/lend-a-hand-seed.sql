@@ -213,13 +213,13 @@ CREATE TABLE join_request (
 
 CREATE TABLE join_request_notification (
     id INT REFERENCES notification(id),
-    join_request_id INT REFERENCES join_request(id),
+    join_request_id INT REFERENCES join_request(id) ON DELETE CASCADE,
     PRIMARY KEY (id, join_request_id)
 );
 
 CREATE TABLE accepted_join_request_notification (
     id INT REFERENCES notification(id),
-    join_request_id INT REFERENCES join_request(id),
+    join_request_id INT REFERENCES join_request(id) ON DELETE CASCADE,
     PRIMARY KEY (id, join_request_id)
 );
 

@@ -101,4 +101,9 @@ class Event extends Model
         return $this->visibility;
     }
 
+    public function requests()
+    {
+        return $this->hasMany(JoinRequest::class, 'event_id');
+    }
+
 }
