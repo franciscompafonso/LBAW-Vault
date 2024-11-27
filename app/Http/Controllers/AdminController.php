@@ -91,14 +91,20 @@ class AdminController extends Controller
 public function blockUser($userId)
 {
     try {
-        
-        // Execute the SQL statement
-        DB::table('user_account')
-            ->where('id', $userId)
-            ->update(['isblocked' => true]);
-        
-        return redirect()->route('admin.user-management')->with('status', 'User has been marked as blocked successfully.');
+        // Find the user
+        $user = User::findOrFail($userId);
 
+        // Get IDs of upcoming events
+        $upcomingEventIds = $user->notYetParticipatedEvents()->pluck('event_id')->toArray();
+
+        // Detach the user only from upcoming events
+        $user->participatedEvents()->detach($upcomingEventIds);
+
+        // Mark the user as blocked
+        $user->isblocked = true;
+        $user->save();
+
+        return redirect()->route('admin.user-management')->with('status', 'User has been blocked, and future participations have been removed successfully.');
     } catch (\Exception $e) {
         return redirect()->back()->with('error', 'Error blocking user: ' . $e->getMessage());
     }

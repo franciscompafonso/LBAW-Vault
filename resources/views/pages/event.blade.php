@@ -43,7 +43,7 @@
                             Join Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'request_only')
+                @elseif ($event->visibility === 'request_only' && !Auth::user()->isblocked)
                     @if ($event->creator_id === Auth::id())
                         <!-- Join Event Button -->
                         <form action="{{ route('events.join', $event->id) }}" method="POST">
