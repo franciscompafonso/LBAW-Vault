@@ -44,7 +44,7 @@ class Invite extends Model
         return [
             'invite_id' => $this->id,
             'invite_by_id' => $this->invite_by_id,
-            'invite_to_id' => $this->invite_by_id,
+            'invite_to_id' => $this->invite_to_id,
             'invite_by_name' => $inviteByName,
             'invite_to_name' => $inviteToName,
             'event_id' => $this->event_id,

@@ -22,7 +22,26 @@ class EventPolicy
      */
     public function show(?User $user, Event $event): bool
     {
-        return $event->visibility === "public" || ($user && $user->id === $event->creator_id);
+        if($event->visibility === "public"){
+            return true;
+        }
+
+        if($event->visibility === "request_only"){
+            return true;
+        }
+
+        if($user){
+            if($user->id === $event->creator_id){
+                return true;
+            }
+
+            if ($event->participators()->where('user_id', $user->id)->exists()) {
+                return true;
+            }
+
+        }
+        
+        return false;
     }
 
     /**

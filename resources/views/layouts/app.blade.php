@@ -305,7 +305,60 @@
                                     </a>
                                 </p>
                             `;
-                        } else if (notification.type === 'event_update_notification') {
+                        } /*else if (notification.type === 'join_request_notification') {
+                            notificationContent += `
+                                <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
+                                <p class="text-sm text-gray-600">
+                                    <a class="text-blue-600 hover:underline" href="/user/${notification.data.join_request_by_id}">
+                                        ${notification.data.join_request_by_name ? notification.data.join_request_by_name : ''}
+                                    </a> 
+                                    has requested to join the
+                                    <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
+                                        ${notification.data.event_title ? notification.data.event_title : 'an event'}
+                                    </a> 
+                                    event.
+                                </p>
+                                <!-- Container for the buttons, using flex to position them side by side -->
+                                <div class="flex space-x-4">
+                                    <!-- Accept Button -->
+                                    <form action="/requests/${notification.data.request_id}/accept" method="POST">
+                                        <input type="hidden" name="_token" value="${csrfToken}">
+                                        <input type="hidden" name="notification_id" value="${notification.id}">
+                                        <button 
+                                            type="submit" 
+                                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-[#8D9D8D] hover:text-gray-100 border-[#A3C1AD] hover:border-[#8D9D8D]"
+                                        >
+                                            Accept
+                                        </button>
+                                    </form>
+
+                                    <!-- Decline Button -->
+                                    <form action="/notifications/dismiss" method="POST">
+                                        <input type="hidden" name="_token" value="${csrfToken}">
+                                        <input type="hidden" name="notification_id" value="${notification.id}">
+                                        <button 
+                                            type="submit" 
+                                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-[#6B0010] hover:text-gray-100 border-[#800020] hover:border-[#6B0010]"
+                                        >
+                                            Decline
+                                        </button>
+                                    </form>
+                                </div>
+                            `;
+                        } else if (notification.type === 'accepted_join_request_notification') {
+                            notificationContent += `
+                                <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
+                                <p class="text-sm text-gray-600">
+                                    <a class="text-blue-600 hover:underline" href="/user/${notification.data.event_creator_id}">
+                                        ${notification.data.event_creator_name ? notification.data.event_creator_name : 'The event creator'}
+                                    </a>
+                                    accepted your request to join
+                                    <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
+                                        ${notification.data.event_title ? notification.data.event_title : 'an event'}
+                                    </a>.
+                                </p>
+                            `;
+                        }*/ else if (notification.type === 'event_update_notification') {
                             notificationContent += `
                                 <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">Event ${notification.event_id} has been updated.</p>

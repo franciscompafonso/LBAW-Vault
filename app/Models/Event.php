@@ -96,4 +96,9 @@ class Event extends Model
         return $this->hasMany(EventCancelation::class, 'event_id');
     }
 
+    public function visibility(): ?string
+    {
+        return $this->visibility;
+    }
+
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Location;
 use App\Models\Category;
+use App\Models\JoinRequest;
 use App\Models\QuestionReview;
 use App\Models\AnswerReview;
 use Illuminate\Http\Request;
@@ -170,6 +171,37 @@ class EventController extends Controller
         return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
 
     }
+
+    public function requestToJoin(Event $event)
+    {
+        $user = Auth::user();
+
+        // Check if the user is already a participator or the creator of the event
+        if ($event->participators->contains($user) || $event->creator_id === $user->id) {
+            return redirect()->back()->with('message', 'You are already part of this event.');
+        }
+
+        // Check if a request already exists for this user and event
+        $existingRequest = JoinRequest::where('join_request_by_id', $user->id)
+            ->where('event_id', $event->id)
+            ->where('accepted', false) // Ensure it's a pending request
+            ->first();
+
+        if ($existingRequest) {
+            return redirect()->back()->with('message', 'You have already requested to join this event.');
+        }
+
+        // Create a new request
+        JoinRequest::create([
+            'request_by_id' => $user->id,
+            'event_id' => $event->id,
+            'accepted' => false,
+            'date' => now(),
+        ]);
+
+        return redirect()->back()->with('message', 'Your request to join has been sent.');
+    }
+
 
     /**
      * Join an event.

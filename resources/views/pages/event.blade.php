@@ -43,14 +43,26 @@
                         </a>
                     @endif
                 @else
-                    <form action="{{ route('events.join', $event->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
-                            Join Event
-                        </button>
-                    </form>
+                    @if ($event->visibility === 'public')
+                        <!-- Join Event Button -->
+                        <form action="{{ route('events.join', $event->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                                Join Event
+                            </button>
+                        </form>
+                    @elseif ($event->visibility === 'request_only')
+                        <!-- Request to Join Button -->
+                        <form action="{{ route('events.request', $event->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-yellow-500 hover:bg-cambridgeBlue hover:text-darkSlateGrey border-yellow-500 hover:border-cambridgeBlue">
+                                Request to Join
+                            </button>
+                        </form>
+                    @endif
                 @endif
             @endif
+
 
             <!-- Event Actions for Admins and Event Creators -->
             @if (Auth::guard('admin')->check() || $event->creator_id === Auth::id())

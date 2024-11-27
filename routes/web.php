@@ -48,6 +48,7 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/events/{id}', 'show')->name('events.show');
 });
 
+Route::post('/events/{event}/request', [EventController::class, 'requestToJoin'])->name('events.request');
 Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
 Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('events.delete');
 

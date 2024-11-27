@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\Notification;
 use App\Models\Comment;
 use App\Models\Invite;
+use App\Models\JoinRequest;
 use App\Models\Poll;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,6 +42,8 @@ class NotificationController extends Controller
         $types = [
             'invite_notification' => ['invite_id'],
             'accepted_invite_notification' => ['invite_id'],
+            'join_request_notification' => ['join_request_id'],
+            'accepted_join_request_notification' => ['join_request_id'],
             'event_update_notification' => ['event_id'],
             'comment_notification' => ['comment_id'],
             'poll_reminder' => ['poll_id'],
@@ -83,6 +86,23 @@ class NotificationController extends Controller
                             return ['type' => $type, 'data' => $result];
                         } else {
                             return ['type' => $type, 'data' => 'Invite not found'];
+                        }
+                    } elseif ($type == 'accepted_join_request_notification') {
+                        $join_request = JoinRequest::find($notification->join_request_id);
+                        
+                        if ($join_request) {
+                            $result = $join_request->show();
+                            return ['type' => $type, 'data' => $result];
+                        } else {
+                            return ['type' => $type, 'data' => 'Join request not found'];
+                        }
+                    } elseif ($type == 'join_request_notification') {
+                        $join_request = JoinRequest::find($notification->join_request_id);
+                        if ($join_request) {
+                            $result = $join_request->show();
+                            return ['type' => $type, 'data' => $result];
+                        } else {
+                            return ['type' => $type, 'data' => 'Join request not found'];
                         }
                     } elseif ($type == 'poll_reminder') {
                         $poll = Poll::find($notification->poll_id);

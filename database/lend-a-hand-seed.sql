@@ -16,6 +16,9 @@ DROP TABLE IF EXISTS event_update_notification CASCADE;
 DROP TABLE IF EXISTS accepted_invite_notification CASCADE;
 DROP TABLE IF EXISTS invite_notification CASCADE;
 DROP TABLE IF EXISTS invite CASCADE;
+DROP TABLE IF EXISTS accepted_join_request_notification CASCADE;
+DROP TABLE IF EXISTS join_request_notification CASCADE;
+DROP TABLE IF EXISTS join_request CASCADE;
 DROP TABLE IF EXISTS unblock_request CASCADE;
 DROP TABLE IF EXISTS admin CASCADE;
 DROP TABLE IF EXISTS location CASCADE;
@@ -43,6 +46,8 @@ DROP TRIGGER IF EXISTS event_search_update ON event;
 DROP TRIGGER IF EXISTS trigger_prevent_duplicate_poll_response ON poll_response;
 DROP TRIGGER IF EXISTS trigger_create_invite_notification ON invite;
 DROP TRIGGER IF EXISTS trigger_accepted_invite_notification ON invite;
+DROP TRIGGER IF EXISTS trigger_create_join_request_notification ON join_request;
+DROP TRIGGER IF EXISTS trigger_accepted_join_request_notification ON join_request;
 DROP TRIGGER IF EXISTS trigger_event_update_notification ON event;
 DROP TRIGGER IF EXISTS trigger_comment_notification ON comment;
 DROP TRIGGER IF EXISTS trigger_event_cancellation ON event;
@@ -56,6 +61,8 @@ DROP FUNCTION IF EXISTS event_search_update();
 DROP FUNCTION IF EXISTS prevent_duplicate_poll_response();
 DROP FUNCTION IF EXISTS create_invite_notification();
 DROP FUNCTION IF EXISTS create_accepted_invite_notification();
+DROP FUNCTION IF EXISTS create_join_request_notification();
+DROP FUNCTION IF EXISTS create_accepted_join_request_notification();
 DROP FUNCTION IF EXISTS create_event_update_notification();
 DROP FUNCTION IF EXISTS create_comment_notification();
 DROP FUNCTION IF EXISTS notify_event_cancellation();
@@ -194,6 +201,26 @@ CREATE TABLE accepted_invite_notification (
     id INT REFERENCES notification(id),
     invite_id INT REFERENCES invite(id),
     PRIMARY KEY (id, invite_id)
+);
+
+CREATE TABLE join_request (
+    id SERIAL PRIMARY KEY,
+    join_request_by_id INT REFERENCES user_account(id),
+    event_id INT REFERENCES event(id),
+	accepted BOOLEAN,
+    date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP)
+);
+
+CREATE TABLE join_request_notification (
+    id INT REFERENCES notification(id),
+    join_request_id INT REFERENCES join_request(id),
+    PRIMARY KEY (id, join_request_id)
+);
+
+CREATE TABLE accepted_join_request_notification (
+    id INT REFERENCES notification(id),
+    join_request_id INT REFERENCES join_request(id),
+    PRIMARY KEY (id, join_request_id)
 );
 
 CREATE TABLE event_update_notification (
@@ -373,6 +400,70 @@ CREATE TRIGGER trigger_accepted_invite_notification
     FOR EACH ROW
     WHEN (NEW.accepted IS TRUE AND OLD.accepted IS DISTINCT FROM NEW.accepted)
     EXECUTE FUNCTION create_accepted_invite_notification();
+
+CREATE OR REPLACE FUNCTION create_join_request_notification() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    notification_id INT;
+    join_request_to_id INT;
+BEGIN
+    -- Fetch the creator_id from the event table based on the event_id in the join_request
+    SELECT creator_id INTO join_request_to_id
+    FROM event
+    WHERE id = NEW.event_id;
+
+    -- Insert a new notification and retrieve the generated ID
+    INSERT INTO notification (emitted_by, emitted_to, date, viewed)
+    VALUES (NEW.join_request_by_id, join_request_to_id, CURRENT_TIMESTAMP, FALSE)
+    RETURNING id INTO notification_id;
+
+    -- Insert the join request notification entry using the retrieved notification ID
+    INSERT INTO join_request_notification (id, join_request_id)
+    VALUES (notification_id, NEW.id);
+
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_create_join_request_notification
+    AFTER INSERT ON join_request
+    FOR EACH ROW
+    EXECUTE FUNCTION create_join_request_notification();
+
+CREATE OR REPLACE FUNCTION create_accepted_join_request_notification() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    notification_id INT;
+    join_request_to_id INT;
+BEGIN
+    -- Fetch the creator_id from the event table based on the event_id in the join request
+    SELECT creator_id INTO join_request_to_id
+    FROM event
+    WHERE id = NEW.event_id;
+
+    -- Create a notification only if the join_request is accepted
+    IF NEW.accepted = TRUE THEN
+        -- Insert a new notification and retrieve the generated ID
+        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
+        VALUES (join_request_to_id, NEW.join_request_by_id, CURRENT_TIMESTAMP, FALSE)
+        RETURNING id INTO notification_id;
+
+        -- Insert the accepted join_request notification entry using the retrieved notification ID
+        INSERT INTO accepted_join_request_notification (id, join_request_id)
+        VALUES (notification_id, NEW.id);
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_accepted_join_request_notification
+    AFTER UPDATE ON join_request
+    FOR EACH ROW
+    WHEN (NEW.accepted IS TRUE AND OLD.accepted IS DISTINCT FROM NEW.accepted)
+    EXECUTE FUNCTION create_accepted_join_request_notification();
 
 CREATE FUNCTION create_event_update_notification() RETURNS TRIGGER AS
 $BODY$
@@ -719,7 +810,7 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Reading Group', 'Contemporary literature discussion.', '2024-01-07 14:00:00', '2024-01-07 16:00:00', 'public', 25, 38, 2, 4),
 ('Music Workshop', 'Introduction to musical instruments.', '2024-01-08 15:00:00', '2024-01-08 18:00:00', 'public', 20, 39, 11, 4),
 ('Health Day', 'Activities focused on health and well-being.', '2024-01-09 09:00:00', '2024-01-09 17:00:00', 'public', 300, 40, 3, 1),
-('Nutrition Workshop', 'Guidance on healthy eating.', '2024-01-10 14:00:00', '2024-01-10 17:00:00', 'public', 50, 1, 3, 1),
+('Private Nutrition Workshop', 'Guidance on healthy eating.', '2024-01-10 14:00:00', '2024-01-10 17:00:00', 'private', 50, 1, 3, 1),
 ('Science Fair', 'Exhibition of scientific projects.', '2024-01-11 09:00:00', '2024-01-11 18:00:00', 'public', 200, 2, 8, 2),
 ('Pet Meet-up', 'Socialization of pets.', '2024-01-12 10:00:00', '2024-01-12 15:00:00', 'public', 100, 3, 7, 3),
 ('Theater Festival', 'Community theater performances.', '2024-01-13 16:00:00', '2024-01-13 22:00:00', 'public', 150, 4, 12, 4),
@@ -759,7 +850,7 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Urban Garden', 'Cultivation in small spaces.', '2024-02-16 09:00:00', '2024-02-16 12:00:00', 'public', 25, 38, 14, 8),
 ('Active Citizenship', 'Rights and duties.', '2024-02-17 19:00:00', '2024-02-17 21:00:00', 'public', 100, 39, 8, 9),
 ('Educational Support', 'Support for refugees.', '2024-02-18 14:00:00', '2024-02-18 17:00:00', 'public', 30, 40, 2, 10),
-('Outdoor Yoga', 'Morning practice.', '2024-02-19 07:00:00', '2024-02-19 08:30:00', 'public', 50, 1, 7, 1),
+('Request only Outdoor Yoga', 'Morning practice.', '2024-02-19 07:00:00', '2024-02-19 08:30:00', 'request_only', 50, 1, 7, 1),
 ('Educational Games', 'Pedagogical activities.', '2024-02-20 14:00:00', '2024-02-20 16:00:00', 'public', 30, 2, 1, 2),
 ('Puppy Fair', 'Adoption of puppies.', '2024-02-21 10:00:00', '2024-02-21 16:00:00', 'public', 80, 3, 7, 3),
 ('Outdoor Cinema', 'Movie screening.', '2024-02-22 19:00:00', '2024-02-22 22:00:00', 'public', 200, 4, 7, 4),
