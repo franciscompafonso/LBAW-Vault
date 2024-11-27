@@ -261,26 +261,32 @@
                                     </a><br>
                                     ${notification.data.description ? notification.data.description : ''}
                                 </p>
-                                <form action="/invites/${notification.data.invite_id}/accept" method="POST">
-                                    <input type="hidden" name="_token" value="${csrfToken}">
-                                    <input type="hidden" name="notification_id" value="${notification.id}">
-                                    <button 
-                                        type="submit" 
-                                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-green-500 hover:bg-green-600 hover:text-gray-100 border-green-500 hover:border-green-600"
-                                    >
-                                        Accept
-                                    </button>
-                                </form>
-                                <form action="/notifications/dismiss" method="POST">
-                                    <input type="hidden" name="_token" value="${csrfToken}">
-                                    <input type="hidden" name="notification_id" value="${notification.id}">
-                                    <button 
-                                        type="submit" 
-                                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-red-500 hover:bg-red-600 hover:text-gray-100 border-red-500 hover:border-red-600"
-                                    >
-                                        Decline
-                                    </button>
-                                </form>
+                                <!-- Container for the buttons, using flex to position them side by side -->
+                                <div class="flex space-x-4">
+                                    <!-- Accept Button -->
+                                    <form action="/invites/${notification.data.invite_id}/accept" method="POST">
+                                        <input type="hidden" name="_token" value="${csrfToken}">
+                                        <input type="hidden" name="notification_id" value="${notification.id}">
+                                        <button 
+                                            type="submit" 
+                                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-[#8D9D8D] hover:text-gray-100 border-[#A3C1AD] hover:border-[#8D9D8D]"
+                                        >
+                                            Accept
+                                        </button>
+                                    </form>
+
+                                    <!-- Decline Button -->
+                                    <form action="/notifications/dismiss" method="POST">
+                                        <input type="hidden" name="_token" value="${csrfToken}">
+                                        <input type="hidden" name="notification_id" value="${notification.id}">
+                                        <button 
+                                            type="submit" 
+                                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-[#6B0010] hover:text-gray-100 border-[#800020] hover:border-[#6B0010]"
+                                        >
+                                            Decline
+                                        </button>
+                                    </form>
+                                </div>
                             `;
                         } else if (notification.type === 'accepted_invite_notification') {
                             notificationContent += `
