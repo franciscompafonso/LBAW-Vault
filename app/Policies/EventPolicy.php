@@ -67,14 +67,11 @@ class EventPolicy
      */
     public function delete(User $user, Event $event): bool
 {
-    \Log::info('Checking delete permissions', [
-        'user_id' => $user->id,
-        'event_creator_id' => $event->creator_id,
-        'is_admin' => auth()->guard('admin')->check(),
-    ]);
+    $isAdmin = auth()->guard('admin')->check();
 
-    return $user->id === $event->creator_id || auth()->guard('admin')->check();
+    return $user->id === $event->creator_id || $isAdmin;
 }
+
 
 
     /**

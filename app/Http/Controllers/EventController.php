@@ -159,18 +159,25 @@ class EventController extends Controller
      * Delete an event.
      */
     public function deleteEvent($eventId)
-    {
-        // Find the event.
-        $event = Event::find($eventId);
+{
+    // Find the event.
+    $event = Event::findOrFail($eventId);
 
-        // Check if the current user is authorized to delete this event.
-        $this->authorize('delete', $event);
+    // Determine if the current user is authorized to delete the event.
+    $isAdmin = auth()->guard('admin')->check(); // Check if logged in as admin
+    $isEventCreator = auth()->check() && auth()->user()->id === $event->creator_id; // Check if the logged-in user is the event creator
 
-        // Delete the event and return it as JSON.
-        $event->delete();
-        return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
-
+    if (!$isAdmin && !$isEventCreator) {
+        // Deny access if neither admin nor event creator.
+        abort(403, 'Unauthorized action.');
     }
+
+    // Proceed to delete the event.
+    $event->delete();
+
+    return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
+}
+
 
     public function requestToJoin(Event $event)
     {
