@@ -87,7 +87,7 @@
             @if ($ongoingEvents->isEmpty())
                 <p class="text-gray-500">You have not shown interest in any events yet.</p>
             @else
-                <section id="not-yet-participated-events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+                <section id="ongoing-events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($ongoingEvents as $event)
                         @include('partials.event', ['event' => $event])
                     @endforeach

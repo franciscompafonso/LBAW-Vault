@@ -75,16 +75,28 @@ class User extends Authenticatable
     }
 
     public function participatedEvents()
-    {
-        return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
-                    ->where('event.start_date', '<', now()); 
-    }
+{
+    return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
+                ->where('event.start_date', '<', now()) // Events that have started
+                ->where('event.end_date', '<=', now()); // Events that have ended
+}
 
-    public function notYetParticipatedEvents()
-    {
-        return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
-                    ->where('event.start_date', '>=', now());
-    }
+
+public function notYetParticipatedEvents()
+{
+    return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
+                ->where('event.start_date', '>=', now()) // Upcoming events
+                ->where('event.end_date', '>', now()); // Events that haven't ended yet
+}
+
+
+    public function ongoingEvents()
+{
+    return $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')
+                ->where('event.start_date', '<=', now()) // Events that have already started
+                ->where('event.end_date', '>=', now()); // Events that have not yet ended
+}
+
 
     public function getDisplayNameAttribute()
     {

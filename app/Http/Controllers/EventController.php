@@ -66,6 +66,8 @@ class EventController extends Controller
             //Get events user has not yet participated in.
             $notYetParticipatedEvents = $user->notYetParticipatedEvents()->orderBy('start_date')->get();
 
+            $ongoingEvents = $user->ongoingEvents()->orderBy('start_date')->get();
+
             // Check if the current user can list the events.
             $this->authorize('index', Event::class);
 
@@ -76,6 +78,7 @@ class EventController extends Controller
                 'createdEvents' => $createdEvents,
                 'participatedEvents' => $participatedEvents,
                 'notYetParticipatedEvents' => $notYetParticipatedEvents,
+                'ongoingEvents' => $ongoingEvents,
             ]);
         
     }

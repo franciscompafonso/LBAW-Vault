@@ -21,14 +21,14 @@ class UserController extends Controller
         
         $participatedEvents = $user->participatedEvents()->get();
         $notYetParticipatedEvents = $user->notYetParticipatedEvents()->get();
-        
+        $ongoingEvents = $user->ongoingEvents()->get();
 
         return view('user.profile', [
             'user' => $user,
             'myEvents' => $myEvents,
             'participatedEvents' => $participatedEvents,
             'notYetParticipatedEvents' => $notYetParticipatedEvents,
-            
+            'ongoingEvents' => $ongoingEvents
         ]);
     }
 
