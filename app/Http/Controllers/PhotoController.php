@@ -29,10 +29,14 @@ class PhotoController extends Controller
      */
     public static function storePhotos($comment, $photos)
     {
+        $counter = 0;
+
         foreach ($photos as $photo) {
             // Generate a unique filename for each photo
-            $filename = time() . '_' . $photo->getClientOriginalName();
+            $filename = time() . '_' . $comment->id . '_'. $counter;
 
+            $counter++;
+            
             // Move the photo to the 'images/others' directory
             $photo->move(public_path('images/others'), $filename);
 
