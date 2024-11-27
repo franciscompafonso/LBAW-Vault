@@ -216,6 +216,8 @@
                     });
             }
 
+            const csrfToken = "{{ csrf_token() }}";
+
             function displayNotificationResults(notifications) {
                 const notificationsButton = document.getElementById('notifications-button');
                 const notificationsDropdown = document.getElementById('notifications-dropdown');
@@ -233,7 +235,13 @@
                         const notificationItem = document.createElement('div');
                         notificationItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
 
-                        const formattedDate = new Date(notification.date).toLocaleString() || 'Not available';
+                        const formattedDate = new Date(notification.date).toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        }).replace(',', '') || 'Not available';
 
                         let notificationContent = `
                             <div class="notification-card">
@@ -253,12 +261,39 @@
                                     </a><br>
                                     ${notification.data.description ? notification.data.description : ''}
                                 </p>
-
+                                <form action="/invites/${notification.data.invite_id}/accept" method="POST">
+                                    <input type="hidden" name="_token" value="${csrfToken}">
+                                    <input type="hidden" name="notification_id" value="${notification.id}">
+                                    <button 
+                                        type="submit" 
+                                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-green-500 hover:bg-green-600 hover:text-gray-100 border-green-500 hover:border-green-600"
+                                    >
+                                        Accept
+                                    </button>
+                                </form>
+                                <form action="/notifications/dismiss" method="POST">
+                                    <input type="hidden" name="_token" value="${csrfToken}">
+                                    <input type="hidden" name="notification_id" value="${notification.id}">
+                                    <button 
+                                        type="submit" 
+                                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-red-500 hover:bg-red-600 hover:text-gray-100 border-red-500 hover:border-red-600"
+                                    >
+                                        Decline
+                                    </button>
+                                </form>
                             `;
                         } else if (notification.type === 'accepted_invite_notification') {
                             notificationContent += `
                                 <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
-                                <p class="text-sm text-gray-600">Your invite was accepted for event ID: ${notification.event_id}</p>
+                                <p class="text-sm text-gray-600">
+                                    <a class="text-blue-600 hover:underline" href="/user/${notification.data.invite_to_id}">
+                                        ${notification.data.invite_to_name ? notification.data.invite_to_name : 'Someone'}
+                                    </a>
+                                    accepted your invite for
+                                    <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
+                                        ${notification.data.title ? notification.data.title : 'an event'}
+                                    </a>
+                                </p>
                             `;
                         } else if (notification.type === 'event_update_notification') {
                             notificationContent += `

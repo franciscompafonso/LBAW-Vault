@@ -66,6 +66,25 @@ class InviteController extends Controller
         return back()->with('message', 'Invitation sent successfully!');
     }
 
+    public function acceptInvite(Request $request, $inviteId)
+    {
+        $invite = Invite::findOrFail($inviteId);
+
+        // Mark the invite as accepted
+        $invite->accepted = true;
+        $invite->save();
+
+        // Join the event using EventController's logic
+        $eventController = app(EventController::class);
+        $eventController->joinEvent($invite->event_id);
+
+        // Dismiss the notification
+        $notificationController = app(NotificationController::class);
+        $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
+
+        return back()->with('success', 'You have successfully joined the event and accepted the invite!');
+    }
+
     
 }
 

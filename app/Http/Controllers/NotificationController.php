@@ -40,7 +40,7 @@ class NotificationController extends Controller
     {
         $types = [
             'invite_notification' => ['invite_id'],
-            'accepted_invite_notification' => ['event_id'],
+            'accepted_invite_notification' => ['invite_id'],
             'event_update_notification' => ['event_id'],
             'comment_notification' => ['comment_id'],
             'poll_reminder' => ['poll_id'],
@@ -65,6 +65,15 @@ class NotificationController extends Controller
                             return ['type' => $type, 'data' => $result];
                         } else {
                             return ['type' => $type, 'data' => 'Comment not found'];
+                        }
+                    } elseif ($type == 'accepted_invite_notification') {
+                        $invite = Invite::find($notification->invite_id);
+                        
+                        if ($invite) {
+                            $result = $invite->show();
+                            return ['type' => $type, 'data' => $result];
+                        } else {
+                            return ['type' => $type, 'data' => 'Invite not found'];
                         }
                     } elseif ($type == 'invite_notification') {
                         $invite = Invite::find($notification->invite_id);
@@ -101,7 +110,7 @@ class NotificationController extends Controller
             $notification->viewed = true;
             $notification->save();
         }
-        return response()->json(['success' => true]);
+        return back()->with('success', 'You have dismissed the notification');
     }
 
 

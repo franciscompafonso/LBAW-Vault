@@ -38,12 +38,15 @@ class Invite extends Model
 
         // Fetch the username based on invite_by_id
         $inviteByName = User::find($this->invite_by_id)->name ?? 'Unknown User';
+        $inviteToName = User::find($this->invite_to_id)->name ?? 'Someone';
 
         // Return the comment data as an array using the current instance
         return [
+            'invite_id' => $this->id,
             'invite_by_id' => $this->invite_by_id,
             'invite_to_id' => $this->invite_by_id,
             'invite_by_name' => $inviteByName,
+            'invite_to_name' => $inviteToName,
             'event_id' => $this->event_id,
             'title' => $this->title,
             'accepted' => $this->accepted,
