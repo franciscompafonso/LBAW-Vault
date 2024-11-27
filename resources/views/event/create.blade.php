@@ -91,6 +91,7 @@
       <label for="visibility" class="block text-lg font-semibold font-montserrat">Visibility</label>
       <select id="visibility" name="visibility" required class="block px-2 text-lg font-semibold font-montserrat">
         <option value="public" {{ old('visibility') == 'public' ? 'selected' : '' }}>Public</option>
+        <option value="request_only" {{ old('visibility') == 'request_only' ? 'selected' : '' }}>Request Only</option>
         <option value="private" {{ old('visibility') == 'private' ? 'selected' : '' }}>Private</option>
       </select>
       @if ($errors->has('visibility'))

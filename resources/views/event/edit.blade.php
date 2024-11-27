@@ -106,6 +106,7 @@
         <div class="mt-2">
           <select id="visibility" name="visibility" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm bg-eerieBlack focus:ring-2 focus:ring-keppel sm:text-base">
             <option value="public" {{ old('visibility', $event->visibility) == 'public' ? 'selected' : '' }}>Public</option>
+            <option value="request_only" {{ old('visibility', $event->visibility) == 'request_only' ? 'selected' : '' }}>Request Only</option>
             <option value="private" {{ old('visibility', $event->visibility) == 'private' ? 'selected' : '' }}>Private</option>
           </select>
           @if ($errors->has('visibility'))
