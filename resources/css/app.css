@@ -17,10 +17,3 @@
 .font-montserrat {
     font-family: "Montserrat", sans-serif;
 }
-
-/* Adjustments for small screens */
-@media (max-width: 768px) {
-    .event {
-        margin: 1rem auto;
-    }
-}

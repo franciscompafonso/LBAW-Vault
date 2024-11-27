@@ -94,13 +94,15 @@ CREATE TABLE category (
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
+CREATE TYPE VisibilityTypes AS ENUM ('public', 'private', 'request_only', 'canceled');
+
 CREATE TABLE "event" (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
-    visibility VARCHAR(50) NOT NULL,
+    visibility VisibilityTypes NOT NULL,
     capacity INT,
     creator_id INT REFERENCES user_account(id) NOT NULL,
     location_id INT REFERENCES location(id) NOT NULL,
@@ -776,11 +778,11 @@ INSERT INTO category (name) VALUES
 ('Refugee Support');
 
 INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id) VALUES
-('Blood Donation Campaign', 'Campaign to encourage blood donation.', '2023-12-01 09:00:00', '2023-12-01 17:00:00', 'public', 100, 1, 3, 1),
-('Recycling Workshop', 'Learn recycling and sustainability techniques.', '2023-12-02 14:00:00', '2023-12-02 17:00:00', 'public', 50, 2, 1, 1),
-('Yoga Class for Seniors', 'Yoga session adapted for the elderly.', '2023-12-03 10:00:00', '2023-12-03 11:30:00', 'public', 30, 3, 4, 5),
-('Food Distribution', 'Distribution of basic food baskets for underprivileged families.', '2023-12-04 08:00:00', '2023-12-04 12:00:00', 'public', 200, 4, 5, 3),
-('Tree Planting', 'Urban reforestation project.', '2023-12-05 07:00:00', '2023-12-05 12:00:00', 'public', 80, 5, 7, 1),
+('Blood Donation Campaign', 'Campaign to encourage blood donation.', '2023-12-01 09:00:00', '2023-12-01 17:00:00', 'private', 100, 1, 3, 1),
+('Recycling Workshop', 'Learn recycling and sustainability techniques.', '2023-12-02 14:00:00', '2023-12-02 17:00:00', 'private', 50, 2, 1, 1),
+('Yoga Class for Seniors', 'Yoga session adapted for the elderly.', '2023-12-03 10:00:00', '2023-12-03 11:30:00', 'private', 30, 3, 4, 5),
+('Food Distribution', 'Distribution of basic food baskets for underprivileged families.', '2023-12-04 08:00:00', '2023-12-04 12:00:00', 'request_only', 200, 4, 5, 3),
+('Tree Planting', 'Urban reforestation project.', '2023-12-05 07:00:00', '2023-12-05 12:00:00', 'request_only', 80, 5, 7, 1),
 ('Art Workshop for Children', 'Artistic activities for child development.', '2023-12-06 14:00:00', '2023-12-06 17:00:00', 'public', 40, 6, 2, 4),
 ('Mental Health Lecture', 'Discussion about psychological well-being.', '2023-12-07 19:00:00', '2023-12-07 21:00:00', 'public', 150, 7, 8, 7),
 ('Community Cleanup', 'Central square community cleaning.', '2023-12-08 08:00:00', '2023-12-08 12:00:00', 'public', 100, 8, 7, 1),
@@ -818,7 +820,7 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Reading Group', 'Contemporary literature discussion.', '2024-01-07 14:00:00', '2024-01-07 16:00:00', 'public', 25, 38, 2, 4),
 ('Music Workshop', 'Introduction to musical instruments.', '2024-01-08 15:00:00', '2024-01-08 18:00:00', 'public', 20, 39, 11, 4),
 ('Health Day', 'Activities focused on health and well-being.', '2024-01-09 09:00:00', '2024-01-09 17:00:00', 'public', 300, 40, 3, 1),
-('Private Nutrition Workshop', 'Guidance on healthy eating.', '2024-01-10 14:00:00', '2024-01-10 17:00:00', 'private', 50, 1, 3, 1),
+('Private Nutrition Workshop', 'Guidance on healthy eating.', '2024-01-10 14:00:00', '2024-01-10 17:00:00', 'public', 50, 1, 3, 1),
 ('Science Fair', 'Exhibition of scientific projects.', '2024-01-11 09:00:00', '2024-01-11 18:00:00', 'public', 200, 2, 8, 2),
 ('Pet Meet-up', 'Socialization of pets.', '2024-01-12 10:00:00', '2024-01-12 15:00:00', 'public', 100, 3, 7, 3),
 ('Theater Festival', 'Community theater performances.', '2024-01-13 16:00:00', '2024-01-13 22:00:00', 'public', 150, 4, 12, 4),

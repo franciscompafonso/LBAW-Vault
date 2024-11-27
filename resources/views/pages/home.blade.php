@@ -51,7 +51,7 @@
 
             <!-- Events Grid -->
             <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                @foreach ($category->events->take(5) as $event) <!-- Limite o número de eventos -->
+                @foreach ($category->events->take(5) as $event)
                     @include('partials.event', ['event' => $event])
                 @endforeach
 
@@ -72,7 +72,6 @@
                 </a>
             </h2>
 
-            <!-- "Explore all" Link -->
             <a href="{{ url('events/category=all') }}" 
             class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
                 Explore all >
@@ -80,8 +79,8 @@
         </div>
 
         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            @forelse ($category->events->take(5) as $event)
-                @include('partials.home_event', ['event' => $event])
+            @forelse ($category->events as $event)
+                @include('partials.event', ['event' => $event])
             @empty
                 <p class="text-eerieBlack col-span-full font-montserrat">No events available at the moment.</p>
             @endforelse

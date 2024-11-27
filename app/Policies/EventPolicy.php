@@ -35,7 +35,7 @@ class EventPolicy
                 return true;
             }
 
-            if ($event->participators()->where('user_id', $user->id)->exists()) {
+            if ($event->participators()->where('participator_id', $user->id)->exists()) {
                 return true;
             }
 

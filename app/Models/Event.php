@@ -81,19 +81,19 @@ class Event extends Model
     
     public function eventUpdateNotifications(): HasMany
     {
-        return $this->hasMany(EventUpdateNotification::class, 'event_id');
+        return $this->hasMany(NotificationSubtypes\EventUpdateNotification::class, 'event_id');
     }
 
     
     public function eventReminders(): HasMany
     {
-        return $this->hasMany(EventReminder::class, 'event_id');
+        return $this->hasMany(NotificationSubtypes\EventReminder::class, 'event_id');
     }
 
     
     public function eventCancelations(): HasMany
     {
-        return $this->hasMany(EventCancelation::class, 'event_id');
+        return $this->hasMany(NotificationSubtypes\EventCancelation::class, 'event_id');
     }
 
     public function visibility(): ?string
