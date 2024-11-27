@@ -113,8 +113,12 @@
             <div id="searchResults" class="mt-4 overflow-y-auto max-h-80"></div>
         </div>
 
-        <main id="main" class="flex items-center justify-center flex-1 p-8 overflow-auto">
-            <!-- Content Section -->
+        <main id="main" 
+            class="flex items-center justify-center flex-1 p-8 overflow-auto" 
+            style="
+                {{ Request::is('faqs') ? 'padding-top: 250px;' : '' }}
+                {{ Request::is('events/*/survey/stats') && isset($hasResponses) && $hasResponses ? 'padding-top: 1000px;' : '' }}
+            ">
             @yield('content')
         </main>
 

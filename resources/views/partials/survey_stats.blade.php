@@ -12,17 +12,23 @@
 
         @if(empty($chartData))
             <p>No responses yet.</p>
+            @php
+                $hasResponses = false;
+            @endphp
         @else
+            @php
+                $hasResponses = true;
+            @endphp
             @foreach ($chartData as $data)
                 <div class="mt-6">
                     <h2 class="text-xl font-semibold">{{ $data['question_text'] }}</h2>
-                    <canvas id="chart-{{ $loop->index }}"></canvas>
+                    <canvas id="chart-{{ $loop->index }}" width="350" height="350"></canvas>
 
                     <script>
                         new Chart(document.getElementById('chart-{{ $loop->index }}'), {
-    type: 'pie',  // Change chart type to 'pie'
+    type: 'pie', 
     data: {
-        labels: ['1', '2', '3', '4', '5'],  // Ratings (labels for pie segments)
+        labels: ['1', '2', '3', '4', '5'],  
         datasets: [{
             data: [
                 {{ $data['ratings'][1] }},

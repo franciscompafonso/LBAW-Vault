@@ -1038,8 +1038,20 @@ INSERT INTO question_review (id, question_text) VALUES
 
 INSERT INTO answer_review (answered_by_id, question_id, about_event_id, rating, date) VALUES
 (2, 1, 1, 4, '2023-11-16'),
+(2, 2, 1, 5, '2023-11-16'),
+(2, 3, 1, 4, '2023-11-16'),
+(2, 4, 1, 5, '2023-11-16'),
+(2, 5, 1, 4, '2023-11-16'),
+(3, 1, 1, 5, '2023-11-16'),
 (3, 2, 1, 5, '2023-11-16'),
-(1, 1, 3, 3, '2023-12-02');
+(3, 3, 1, 5, '2023-11-16'),
+(3, 4, 1, 3, '2023-11-16'),
+(3, 5, 1, 3, '2023-11-16'),
+(1, 1, 3, 3, '2023-12-02'),
+(1, 2, 3, 3, '2023-12-02'),
+(1, 3, 3, 3, '2023-12-02'),
+(1, 4, 3, 3, '2023-12-02'),
+(1, 5, 3, 3, '2023-12-02');
 
 INSERT INTO comment (comment_by_id, event_id, text, is_pinned, score, edited, date) VALUES
 -- Event 1 (8 comments)

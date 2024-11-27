@@ -275,29 +275,22 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        // Check if the event has ended (optional)
         if ($event->end_date > now()) {
             return redirect()->route('events.show', $eventId)->with('error', 'Survey results are available only after the event ends.');
         }
 
-        // Get all answers for the event
         $answers = AnswerReview::where('about_event_id', $eventId)
                                 ->join('question_review', 'answer_review.question_id', '=', 'question_review.id')
                                 ->select('question_review.id as question_id', 'question_review.question_text', 'answer_review.rating')
                                 ->get();
 
-        // Prepare data for each question with a distribution of answers
         $chartData = [];
 
         foreach ($answers->groupBy('question_id') as $questionId => $responses) {
             $ratings = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
-
-            // Count the occurrences of each rating for the current question
             foreach ($responses as $response) {
                 $ratings[$response->rating]++;
             }
-
-            // Store data for the question and its rating distribution
             $chartData[] = [
                 'question_text' => $responses->first()->question_text,
                 'ratings' => $ratings
