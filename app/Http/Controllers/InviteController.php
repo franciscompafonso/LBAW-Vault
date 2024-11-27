@@ -6,6 +6,7 @@ use App\Models\Invite;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 
 class InviteController extends Controller
@@ -85,6 +86,21 @@ class InviteController extends Controller
         return back()->with('success', 'You have successfully joined the event and accepted the invite!');
     }
 
-    
+    public function declineInvite(Request $request, $inviteId)
+    {
+        $invite = Invite::findOrFail($inviteId);
+
+        $invite->delete();
+
+        $notificationId = $request->notification_id;
+        $notification = Notification::find($notificationId);
+
+        if ($notification) {
+            $notification->viewed = true;
+            $notification->save();
+        }
+
+        return back()->with('success', 'You have successfully declined the invite and dismissed the notification.');
+    }
 }
 

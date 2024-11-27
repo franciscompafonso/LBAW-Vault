@@ -55,14 +55,19 @@ class Invite extends Model
         ];
     }
  
-    public function inviteBy(): BelongsTo
+    public function inviter()
     {
         return $this->belongsTo(User::class, 'invite_by_id');
     }
 
-    public function inviteTo(): BelongsTo
+    public function invitee()
     {
         return $this->belongsTo(User::class, 'invite_to_id');
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
     }
 
     public function accept(): bool

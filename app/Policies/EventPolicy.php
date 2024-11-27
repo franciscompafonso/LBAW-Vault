@@ -39,8 +39,10 @@ class EventPolicy
                 return true;
             }
 
+            if ($event->invites()->where('invite_to_id', $user->id)->where('accepted', false)->exists()) {
+                return true;
+            }
         }
-        
         return false;
     }
 

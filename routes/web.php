@@ -51,6 +51,9 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/events/{id}', 'show')->name('events.show');
 });
 
+
+Route::post('/invites/{invitesId}/decline', [InviteController::class, 'declineInvite'])->name('invites.decline');
+Route::post('/invites/{invitesId}/accept', [InviteController::class, 'acceptInvite'])->name('invites.accept');
 Route::post('/requests/{requestId}/decline', [JoinRequestController::class, 'declineRequest'])->name('requests.decline');
 Route::post('/requests/{requestId}/accept', [JoinRequestController::class, 'acceptRequest'])->name('requests.accept');
 Route::post('/events/{event}/request', [EventController::class, 'requestToJoin'])->name('events.request');
@@ -121,8 +124,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
     Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
     Route::get('/notifications', [NotificationController::class, 'index']);
-    Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification'])->middleware('auth');
-    Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications'])->middleware('auth');
+    Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification']);
+    Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications']);
     Route::get('/notifications/count', [NotificationController::class, 'unreadCount']);
     Route::post('/events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');
 });

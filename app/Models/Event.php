@@ -59,6 +59,11 @@ class Event extends Model
         return $this->belongsToMany(User::class, 'participator', 'event_id', 'participator_id');
     }
 
+    public function invites()
+    {
+        return $this->hasMany(Invite::class, 'event_id');
+    }
+
     
     public function polls(): HasMany
     {

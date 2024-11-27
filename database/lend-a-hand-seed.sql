@@ -196,13 +196,13 @@ CREATE TABLE invite (
 
 CREATE TABLE invite_notification (
     id INT REFERENCES notification(id),
-    invite_id INT REFERENCES invite(id),
+    invite_id INT REFERENCES invite(id) ON DELETE CASCADE,
     PRIMARY KEY (id, invite_id)
 );
 
 CREATE TABLE accepted_invite_notification (
     id INT REFERENCES notification(id),
-    invite_id INT REFERENCES invite(id),
+    invite_id INT REFERENCES invite(id) ON DELETE CASCADE,
     PRIMARY KEY (id, invite_id)
 );
 

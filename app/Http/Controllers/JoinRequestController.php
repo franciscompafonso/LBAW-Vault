@@ -53,8 +53,5 @@ class JoinRequestController extends Controller
         // Redirect back with a success message
         return back()->with('success', 'You have successfully declined the request and dismissed the notification.');
     }
-
-
-    
 }
 

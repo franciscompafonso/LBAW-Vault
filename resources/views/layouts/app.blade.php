@@ -280,7 +280,7 @@
                                     </form>
 
                                     <!-- Decline Button -->
-                                    <form action="/notifications/dismiss" method="POST">
+                                    <form action="/invites/${notification.data.invite_id}/decline" method="POST">
                                         <input type="hidden" name="_token" value="${csrfToken}">
                                         <input type="hidden" name="notification_id" value="${notification.id}">
                                         <button 
