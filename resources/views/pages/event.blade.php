@@ -35,7 +35,7 @@
                             Leave Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'public')
+                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked)
                     <!-- Join Event Button -->
                     <form action="{{ route('events.join', $event->id) }}" method="POST">
                         @csrf
