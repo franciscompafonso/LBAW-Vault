@@ -278,7 +278,7 @@ class EventController extends Controller
             ->select('event.*', 'location.name as location_name', 'category.name as category_name')
             ->join('location', 'event.location_id', '=', 'location.id')
             ->join('category', 'event.category_id', '=', 'category.id')
-            ->whereRaw("ts_vector @@ plainto_tsquery('portuguese', ?)", [$query])
+            ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$query])
             ->get();
 
         return response()->json($events);

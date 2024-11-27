@@ -75,7 +75,7 @@ class UserController extends Controller
             }
     
             $file = $request->file('profilepicture');
-            $filename = time() . '_' . $file->getClientOriginalName(); // Ensure a unique filename
+            $filename = time() . '_' . $user->username; // Ensure a unique filename
             $file->move(public_path('images/profile-pictures/'), $filename);
         
             // Save only the filename in the database
