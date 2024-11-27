@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\JoinRequestController;
 use App\Http\Controllers\PollController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +87,16 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+Route::controller(MailController::class)->group(function () {
+    Route::post('forgot-password/email', 'sendResetLink')->name('password.email');
+});
+
+Route::controller(ResetPasswordController::class)->group(function () {
+    Route::get('password/reset', 'showLinkRequestForm')->name('password.request'); // Show request form
+    Route::get('password/reset/{token}', 'showResetForm')->name('password.reset'); // Show reset form
+    Route::post('password/reset', 'resetPassword')->name('password.update'); // Submit reset form
 });
 
 // Users

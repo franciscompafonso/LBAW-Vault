@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\PasswordResetToken;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -96,5 +97,4 @@ class User extends Authenticatable
         // Otherwise, return the user's real name
         return $this->username;
     }
-    
 }

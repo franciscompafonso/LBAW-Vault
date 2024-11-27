@@ -27,7 +27,7 @@
         <div>
           <div class="flex justify-between">
             <label for="password" class="block text-lg font-medium font-montserrat text-darkSlateGrey">Password</label>
-            <a href="#" class="text-lg font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue">Forgot password?</a>
+            <a href="{{ route('password.request') }}" class="text-lg font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue">Forgot password?</a>
           </div>
           <div class="mt-1">
             <input id="password" type="password" name="password" required autocomplete="current-password" 
