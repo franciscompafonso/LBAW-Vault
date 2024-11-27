@@ -4,8 +4,6 @@ CREATE SCHEMA lbaw2414;
 
 SET search_path TO lbaw2414;
 
-CREATE EXTENSION IF NOT EXISTS unaccent;
-
 -- drop tables
 DROP TABLE IF EXISTS unblock_notification CASCADE;
 DROP TABLE IF EXISTS admin_action CASCADE;
@@ -267,19 +265,19 @@ ALTER TABLE event ADD COLUMN ts_vector TSVECTOR;
 
 
 UPDATE event
-SET ts_vector = to_tsvector('portuguese', unaccent(name || ' ' || description || ' ' ||
+SET ts_vector = to_tsvector('english', name || ' ' || description || ' ' ||
                 COALESCE((SELECT name FROM location WHERE location.id = event.location_id), '') || ' ' ||
                 COALESCE((SELECT name FROM category WHERE category.id = event.category_id), '')
-));
+);
 
 CREATE FUNCTION event_search_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         NEW.ts_vector := (
-            setweight(to_tsvector('portuguese', unaccent(NEW.name)), 'A') ||
-            setweight(to_tsvector('portuguese', unaccent(NEW.description)), 'B') ||
-            setweight(to_tsvector('portuguese', unaccent(COALESCE((SELECT name FROM location WHERE location.id = NEW.location_id), ''))), 'C') ||
-            setweight(to_tsvector('portuguese', unaccent(COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), ''))), 'C')
+            setweight(to_tsvector('english', NEW.name), 'A') ||
+            setweight(to_tsvector('english', NEW.description), 'B') ||
+            setweight(to_tsvector('english', COALESCE((SELECT name FROM location WHERE location.id = NEW.location_id), '')), 'C') ||
+            setweight(to_tsvector('english', COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), '')), 'C')
         );
     END IF;
 
@@ -290,10 +288,10 @@ BEGIN
             NEW.category_id <> OLD.category_id) THEN
 
             NEW.ts_vector := (
-                setweight(to_tsvector('portuguese', unaccent(NEW.name)), 'A') ||
-                setweight(to_tsvector('portuguese', unaccent(NEW.description)), 'B') ||
-                setweight(to_tsvector('portuguese', unaccent(COALESCE((SELECT name FROM location WHERE location.id = NEW.location_id), ''))), 'C') ||
-                setweight(to_tsvector('portuguese', unaccent(COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), ''))), 'C')
+                setweight(to_tsvector('english', NEW.name), 'A') ||
+                setweight(to_tsvector('english', NEW.description), 'B') ||
+                setweight(to_tsvector('english', COALESCE((SELECT name FROM location WHERE location.id = NEW.location_id), '')), 'C') ||
+                setweight(to_tsvector('english', COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), '')), 'C')
             );
         END IF;
     END IF;
