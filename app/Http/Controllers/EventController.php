@@ -193,7 +193,7 @@ class EventController extends Controller
 
         // Create a new request
         JoinRequest::create([
-            'request_by_id' => $user->id,
+            'join_request_by_id' => $user->id,
             'event_id' => $event->id,
             'accepted' => false,
             'date' => now(),

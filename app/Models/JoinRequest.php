@@ -41,6 +41,7 @@ class JoinRequest extends Model
 
         // Fetch the name of the event creator
         $eventCreatorName = $event ? User::find($event->creator_id)->name ?? 'Unknown Creator' : 'Unknown Creator';
+        $eventTitle = $event ? $event->name : '';
 
         // Return the request data as an array using the current instance
         return [
@@ -50,6 +51,7 @@ class JoinRequest extends Model
             'join_request_by_name' => $joinRequestByName,
             'event_creator_name' => $eventCreatorName,
             'event_id' => $this->event_id,
+            'event_title' => $eventTitle,
             'accepted' => $this->accepted,
             'date' => $this->date,
         ];

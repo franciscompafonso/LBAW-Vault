@@ -314,7 +314,7 @@
                                     </a> 
                                     has requested to join the
                                     <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
-                                        ${notification.data.event_title ? notification.data.event_title : 'an event'}
+                                        ${notification.data.event_title ? notification.data.event_title : 'an '}
                                     </a> 
                                     event.
                                 </p>
