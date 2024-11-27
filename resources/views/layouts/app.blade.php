@@ -305,7 +305,7 @@
                                     </a>
                                 </p>
                             `;
-                        } /*else if (notification.type === 'join_request_notification') {
+                        } else if (notification.type === 'join_request_notification') {
                             notificationContent += `
                                 <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
                                 <p class="text-sm text-gray-600">
@@ -321,7 +321,7 @@
                                 <!-- Container for the buttons, using flex to position them side by side -->
                                 <div class="flex space-x-4">
                                     <!-- Accept Button -->
-                                    <form action="/requests/${notification.data.request_id}/accept" method="POST">
+                                    <form action="/requests/${notification.data.join_request_id}/accept" method="POST">
                                         <input type="hidden" name="_token" value="${csrfToken}">
                                         <input type="hidden" name="notification_id" value="${notification.id}">
                                         <button 
@@ -358,7 +358,7 @@
                                     </a>.
                                 </p>
                             `;
-                        }*/ else if (notification.type === 'event_update_notification') {
+                        } else if (notification.type === 'event_update_notification') {
                             notificationContent += `
                                 <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
                                 <p class="text-sm text-gray-600">Event ${notification.event_id} has been updated.</p>

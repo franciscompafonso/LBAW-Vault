@@ -54,11 +54,7 @@ class JoinRequest extends Model
             'date' => $this->date,
         ];
     }
- 
-    public function joinRequestBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'join_request_by_id');
-    }
+
 
     public function accept(): bool
     {
@@ -76,5 +72,16 @@ class JoinRequest extends Model
     {
         return $this->accepted;
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'join_request_by_id');
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
+
 
 }

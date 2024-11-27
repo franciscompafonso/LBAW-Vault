@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\JoinRequestController;
 use App\Http\Controllers\PollController;
 
 /*
@@ -48,6 +49,7 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/events/{id}', 'show')->name('events.show');
 });
 
+Route::post('/requests/{requestId}/accept', [JoinRequestController::class, 'acceptRequest'])->name('requests.accept');
 Route::post('/events/{event}/request', [EventController::class, 'requestToJoin'])->name('events.request');
 Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
 Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('events.delete');

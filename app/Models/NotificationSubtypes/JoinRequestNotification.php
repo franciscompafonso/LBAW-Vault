@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class JoinRequestNotification extends Model
 {
-    protected $table = 'request_notification';
+    protected $table = 'join_request_notification';
     public $timestamps = false;
 
     protected $fillable = [
