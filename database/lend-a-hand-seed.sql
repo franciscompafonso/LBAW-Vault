@@ -634,6 +634,7 @@ CREATE TRIGGER trigger_unblock_notification
     WHEN (NEW.status IN ('approved', 'denied') AND OLD.status IS DISTINCT FROM NEW.status)
     EXECUTE FUNCTION create_unblock_notification();
 
+/*
 CREATE FUNCTION create_block_notification(admin_id INT) RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -662,6 +663,7 @@ CREATE TRIGGER trigger_block_notification
     FOR EACH ROW
     WHEN (OLD.isBlocked IS DISTINCT FROM NEW.isBlocked AND NEW.isBlocked = TRUE)
     EXECUTE FUNCTION create_block_notification();
+*/
 
 -- INSERT ------------------------------------------------------------------------------------------------------------
 
