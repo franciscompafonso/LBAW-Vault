@@ -345,28 +345,6 @@ CREATE INDEX idx_event_full_text_search ON event USING GIN (ts_vector);
 
 -- Triggers
 
-CREATE FUNCTION prevent_duplicate_poll_response() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF EXISTS (
-        SELECT 1
-        FROM poll_response
-        WHERE poll_id = NEW.poll_id
-          AND user_id = NEW.user_id
-    ) THEN
-        RAISE EXCEPTION 'Duplicate poll response: The user has already responded to this poll.';
-    END IF;
-    
-    RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_prevent_duplicate_poll_response
-    BEFORE INSERT ON poll_response
-    FOR EACH ROW
-    EXECUTE FUNCTION prevent_duplicate_poll_response();
-
 CREATE OR REPLACE FUNCTION create_invite_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -656,7 +634,6 @@ CREATE TRIGGER trigger_unblock_notification
     WHEN (NEW.status IN ('approved', 'denied') AND OLD.status IS DISTINCT FROM NEW.status)
     EXECUTE FUNCTION create_unblock_notification();
 
-/*
 CREATE FUNCTION create_block_notification(admin_id INT) RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -685,7 +662,6 @@ CREATE TRIGGER trigger_block_notification
     FOR EACH ROW
     WHEN (OLD.isBlocked IS DISTINCT FROM NEW.isBlocked AND NEW.isBlocked = TRUE)
     EXECUTE FUNCTION create_block_notification();
-*/
 
 -- INSERT ------------------------------------------------------------------------------------------------------------
 
