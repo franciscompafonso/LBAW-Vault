@@ -11,16 +11,14 @@ use App\Models\AnswerReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
 
 
 class EventController extends Controller
 {
-    // Display form to create a new event
     public function create(): Factory|View
     {
-        $locations = Location::all(); // Get all locations from the database
-        $categories = Category::all(); // Get all categories from the database
+        $locations = Location::all();
+        $categories = Category::all();
         return view('event.create', compact('locations', 'categories'));
     }
 
@@ -29,13 +27,10 @@ class EventController extends Controller
      */
     public function show(string $id): View
     {
-        // Get the event with its polls and poll responses.
         $event = Event::with(['polls.responses'])->findOrFail($id);
 
-        // Check if the current user can see (show) the event.
         $this->authorize('show', $event);  
 
-        // Use the pages.event template to display the event.
         return view('pages.event', [
             'event' => $event,
             'polls' => $event->polls,
@@ -47,33 +42,24 @@ class EventController extends Controller
      */
     public function index()
     {
-        // Check if the user is logged in.
         if (!Auth::check()) {
-            // Not logged in, redirect to login.
             return redirect('/login');
 
         } 
 
-            // The user is logged in.
             $user = Auth::user();
 
-            // Get events created by user.
             $createdEvents = $user->myEvents()->orderBy('id')->get();
             
-            // Get events user has already participated in.
             $participatedEvents = $user->participatedEvents()->orderBy('start_date')->get();
 
-            //Get events user has not yet participated in.
             $notYetParticipatedEvents = $user->notYetParticipatedEvents()->orderBy('start_date')->get();
 
             $ongoingEvents = $user->ongoingEvents()->orderBy('start_date')->get();
 
-            // Check if the current user can list the events.
             $this->authorize('index', Event::class);
 
-            // The current user is authorized to list events.
 
-            // Use the pages.events template to display all events.
             return view('pages.events', [
                 'createdEvents' => $createdEvents,
                 'participatedEvents' => $participatedEvents,
@@ -83,10 +69,8 @@ class EventController extends Controller
         
     }
 
-    // Store new event data
     public function store(Request $request)
     {
-        // Validate the form data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -94,11 +78,11 @@ class EventController extends Controller
             'end_date' => 'required|date|after:start_date',
             'visibility' => 'required|in:public,private',
             'capacity' => 'required|integer|min:1',
-            'location_id' => 'required|integer', // Assuming location_id is an integer (foreign key)
-            'category_id' => 'required|integer', // Assuming category_id is an integer (foreign key)
+            'location_id' => 'required|integer',
+            'category_id' => 'required|integer',
+            'banner' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-        // Create the event
         $event = Event::create([
             'name' => $validated['name'],
             'description' => $validated['description'],
@@ -106,13 +90,21 @@ class EventController extends Controller
             'end_date' => $validated['end_date'],
             'visibility' => $validated['visibility'],
             'capacity' => $validated['capacity'],
-            'creator_id' => Auth::id(), // Logged in user ID
+            'creator_id' => Auth::id(),
             'location_id' => $validated['location_id'],
             'category_id' => $validated['category_id'],
         ]);
 
-        // Redirect with success message
-        return redirect()->route('events.store')->with('success', 'Event created successfully!');
+        if ($request->hasFile('banner')) {
+            $file = $request->file('banner');
+            $filename = time() . '_' . $event->id;
+            $file->move(public_path('images/banner'), $filename);
+        }
+
+        $event->banner = $filename;
+        $event->save();
+
+        return redirect()->route('events.show', ['id' => $event->id])->with('success', 'Event created successfully!');
     }
 
     public function edit($id)
@@ -133,10 +125,20 @@ class EventController extends Controller
             'end_date' => 'required|date|after:start_date',
             'visibility' => 'required|in:public,private',
             'capacity' => 'required|integer|min:1',
-            'location_id' => 'required|integer', // Assuming location_id is an integer (foreign key)
-            'category_id' => 'required|integer', // Assuming category_id is an integer (foreign key)
+            'location_id' => 'required|integer',
+            'category_id' => 'required|integer',
+            'banner' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
         $event->update($validated);
+
+        if ($request->hasFile('banner')) {
+            $file = $request->file('banner');
+            $filename = time() . '_' . $event->id;
+            $file->move(public_path('images/banner'), $filename);
+        }
+
+        $event->banner = $filename;
+        $event->save();
         
         return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
         
@@ -154,7 +156,6 @@ class EventController extends Controller
         }
     
 
-        // Return the view with events and category information
         return view('pages.events_by_category', compact('category', 'events'));
     }
 
@@ -162,46 +163,39 @@ class EventController extends Controller
      * Delete an event.
      */
     public function deleteEvent($eventId)
-{
-    // Find the event.
-    $event = Event::findOrFail($eventId);
+    {
+        $event = Event::findOrFail($eventId);
 
-    // Determine if the current user is authorized to delete the event.
-    $isAdmin = auth()->guard('admin')->check(); // Check if logged in as admin
-    $isEventCreator = auth()->check() && auth()->user()->id === $event->creator_id; // Check if the logged-in user is the event creator
+        $isAdmin = auth()->guard('admin')->check();
+        $isEventCreator = auth()->check() && auth()->user()->id === $event->creator_id;
 
-    if (!$isAdmin && !$isEventCreator) {
-        // Deny access if neither admin nor event creator.
-        abort(403, 'Unauthorized action.');
+        if (!$isAdmin && !$isEventCreator) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $event->delete();
+
+        return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
     }
-
-    // Proceed to delete the event.
-    $event->delete();
-
-    return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
-}
 
 
     public function requestToJoin(Event $event)
     {
         $user = Auth::user();
 
-        // Check if the user is already a participator or the creator of the event
         if ($event->participators->contains($user) || $event->creator_id === $user->id) {
             return redirect()->back()->with('message', 'You are already part of this event.');
         }
 
-        // Check if a request already exists for this user and event
         $existingRequest = JoinRequest::where('join_request_by_id', $user->id)
             ->where('event_id', $event->id)
-            ->where('accepted', false) // Ensure it's a pending request
+            ->where('accepted', false)
             ->first();
 
         if ($existingRequest) {
             return redirect()->back()->with('message', 'You have already requested to join this event.');
         }
 
-        // Create a new request
         JoinRequest::create([
             'join_request_by_id' => $user->id,
             'event_id' => $event->id,
@@ -220,12 +214,10 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        // Check if the user is already a participator
         if ($event->participators()->where('id', Auth::id())->exists()) {
             return back()->with('message', 'You are already participating in this event.');
         }
 
-        // Attach the user to the participator list
         $event->participators()->attach(Auth::id());
 
         return back()->with('message', 'You have successfully joined the event!');
@@ -238,12 +230,10 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        // Check if the user is a participator
         if (!$event->participators()->where('id', Auth::id())->exists()) {
             return back()->with('message', 'You are not participating in this event.');
         }
 
-        // Detach the user from the participator list
         $event->participators()->detach(Auth::id());
 
         return back()->with('message', 'You have successfully left the event.');
@@ -256,12 +246,10 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        // Check if the user is a participator
         if (!$event->participators()->where('id', $userId)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');
         }
 
-        // Detach the user from the participator list
         $event->participators()->detach($userId);
 
         return back()->with('message', 'You have removed the participator.');

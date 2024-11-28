@@ -9,8 +9,17 @@
   </div>
 
   <!-- Form Container -->
-  <form method="POST" action="{{ route('events.store') }}" class="space-y-8">
+  <form method="POST" action="{{ route('events.store') }}" class="space-y-8" enctype="multipart/form-data">
     @csrf
+
+    <!-- Banner -->
+    <div class="flex items-center mb-4 space-x-4">
+      <label for="banner" class="block text-lg font-semibold font-montserrat">Upload Image</label>
+      <input type="file" id="banner" name="banner" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)">
+      @error('banner')
+          <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+      @enderror
+    </div>
 
     <!-- Event Name -->
     <div class="mb-4">

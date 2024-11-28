@@ -68,10 +68,8 @@
         <div class="mt-8">
             @if (!$user->isdeleted)
                 <h3 class="mb-4 text-2xl font-bold text-ultraViolet">My Events</h3>
-                @if (Auth::id() == $user->id && $participatedEvents->isEmpty())
-                    <p class="text-gray-500">You have not created any events yet.</p>
-                @elseif (Auth::id() != $user->id && $participatedEvents->isEmpty())
-                    <p class="text-gray-500">The user has not created any events yet.</p>
+                @if ($myEvents->isEmpty())
+                    <p class="text-gray-500"> User hasn't created any events yet.</p>
                 @elseif (Auth::id() == $user->id)
                     <section id="events" class="grid grid-cols-1 gap-10 p-4 md:grid-cols-2 lg:grid-cols-3">
                         @foreach ($myEvents as $event)
@@ -92,10 +90,16 @@
         <div class="mt-8">
             <h3 class="mb-4 text-2xl font-bold text-ultraViolet"> Ongoing Events </h3>
             @if ($ongoingEvents->isEmpty())
-                <p class="text-gray-500">You have not shown interest in any events yet.</p>
-            @else
-                <section id="ongoing-events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+                <p class="text-gray-500"> User doesn't have any ongoing events. </p>
+            @elseif (Auth::id() == $user->id)
+                <section id="events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($ongoingEvents as $event)
+                        @include('partials.event', ['event' => $event])
+                    @endforeach
+                </section>
+            @else
+                <section id="events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($ongoingEvents->filter(fn($event) => $event->visibility !== 'private') as $event)
                         @include('partials.event', ['event' => $event])
                     @endforeach
                 </section>
@@ -106,18 +110,16 @@
         <!-- Participated Events Section -->
         <div class="mt-8">
             <h3 class="mb-4 text-2xl font-bold text-ultraViolet"> Past Events </h3>
-            @if (Auth::id() == $user->id && $participatedEvents->isEmpty())
-                <p class="text-gray-500">You have not participated in any events yet.</p>
-            @elseif (Auth::id() != $user->id && $participatedEvents->isEmpty())
-                <p class="text-gray-500">This user has not participated in any events yet.</p>
+            @if ($participatedEvents->isEmpty())
+                <p class="text-gray-500"> User hasn't participated in any events. </p>
             @elseif (Auth::id() == $user->id)
-                <section id="participated-events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+                <section id="events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($participatedEvents as $event)
                         @include('partials.event', ['event' => $event])
                     @endforeach
                 </section>
             @else
-                <section id="participated-events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+                <section id="events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($participatedEvents->filter(fn($event) => $event->visibility !== 'private') as $event)
                         @include('partials.event', ['event' => $event])
                     @endforeach
@@ -127,11 +129,9 @@
 
         <!-- Not Yet Participated Events Section -->
         <div class="mt-8">
-            <h3 class="mb-4 text-2xl font-bold text-ultraViolet"> Future Events </h3>
-            @if (Auth::id() == $user->id && $participatedEvents->isEmpty())
-                <p class="text-gray-500">You have not shown interest in any events yet.</p>
-            @elseif (Auth::id() != $user->id && $participatedEvents->isEmpty())
-                <p class="text-gray-500">This user has not shown interest in any events yet.</p>
+            <h3 class="mb-4 text-2xl font-bold text-ultraViolet"> Upcoming Events </h3>
+            @if ($notYetParticipatedEvents->isEmpty())
+                <p class="text-gray-500"> User doesn't have any upcoming events. </p>
             @elseif (Auth::id() == $user->id)
                 <section id="not-yet-participated-events" class="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
                     @foreach ($notYetParticipatedEvents as $event)

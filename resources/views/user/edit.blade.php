@@ -13,7 +13,6 @@
             @method('POST')
 
             <!-- Profile Picture Input -->
-            <!-- Same as your original profile picture input -->
             <div class="flex items-center mb-4 space-x-4">
                 <div class="flex-shrink-0">
                 @if ($user->profilepicture)
