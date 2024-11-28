@@ -1,0 +1,67 @@
+<div id="poll-form" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+    <div class="w-1/2 p-6 bg-white rounded-lg shadow-lg">
+        <h2 class="mb-4 text-2xl font-bold">Create Poll</h2>
+        <form action="{{ route('polls.store', $event->id) }}" method="POST">
+            @csrf
+            <div class="mb-4">
+                <label for="poll_name" class="block mb-2 text-gray-700">Poll Name</label>
+                <input 
+                    type="text" 
+                    name="name" 
+                    id="poll_name" 
+                    class="w-full p-2 border border-gray-300 rounded-lg" 
+                    required>
+            </div>
+
+            <div class="mb-4">
+                <label for="poll_options" class="block mb-2 text-gray-700">Options (comma-separated)</label>
+                <textarea 
+                    name="options" 
+                    id="poll_options" 
+                    rows="3" 
+                    class="w-full p-2 border border-gray-300 rounded-lg" 
+                    required></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="poll_start_time" class="block mb-2 text-gray-700">Start Time</label>
+                <input 
+                    type="datetime-local" 
+                    name="start_time" 
+                    id="poll_start_time" 
+                    class="w-full p-2 border border-gray-300 rounded-lg" 
+                    required>
+            </div>
+
+            <div class="mb-4">
+                <label for="poll_end_time" class="block mb-2 text-gray-700">End Time</label>
+                <input 
+                    type="datetime-local" 
+                    name="end_time" 
+                    id="poll_end_time" 
+                    class="w-full p-2 border border-gray-300 rounded-lg" 
+                    required>
+            </div>
+
+            <div class="flex justify-end space-x-4">
+                <button 
+                    type="button" 
+                    onclick="togglePollForm()" 
+                    class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
+                    Cancel
+                </button>
+                <button 
+                    type="submit" 
+                    class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">
+                    Create Poll
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function togglePollForm() {
+        document.getElementById('poll-form').classList.toggle('hidden');
+    }
+</script>
