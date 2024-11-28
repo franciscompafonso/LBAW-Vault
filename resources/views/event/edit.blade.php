@@ -10,9 +10,29 @@
 
   <!-- Form Container -->
   <div class="p-8 rounded-lg shadow-lg bg-eerieBlack">
-    <form method="POST" action="{{ route('events.update', $event->id) }}" class="space-y-8">
+    <form method="POST" action="{{ route('events.update', $event->id) }}" class="space-y-8" enctype="multipart/form-data">
       @csrf
       @method('PUT') <!-- Add this to indicate the update method -->
+
+      <!-- Banner Input -->
+      <div class="flex items-center mb-4 space-x-4">
+        <div class="flex-shrink-0">
+        @if ($event->banner)
+            <img id="banner-preview" src="{{ asset('images/banner/' . $event->banner) }}" alt="Banner" class="w-32 h-32 border-2 rounded-full border-ultraViolet">
+        @else
+            <div id="banner-preview" class="flex items-center justify-center w-32 h-32 bg-gray-300 rounded-full">
+                <i class="text-3xl text-white fa-solid fa-user"></i>
+            </div>
+        @endif
+        </div>
+        <div>
+            <label for="banner" class="block text-lg font-semibold font-montserrat">Upload Image</label>
+            <input type="file" id="banner" name="banner" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)">
+            @error('banner')
+                <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
 
       <!-- Event Name -->
       <div>
