@@ -1,0 +1,1475 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0'
+  title: 'LBAW Lend-A-Hand Web API'
+  description: 'Web Resources Specification (A7) for Lend-A-Hand'
+
+servers:
+  - url: http://lbaw2414.fe.up.pt
+    description: Production server
+
+externalDocs:
+  description: 'Find more info here.'
+  url: 'https://gitlab.up.pt/lbaw/lbaw2425/lbaw2414/-/wikis/eap.md'
+
+tags:
+  - name: 'M01: Authentication'
+  - name: 'M02: Individual Profile'
+  - name: 'M03: Notifications'
+  - name: 'M04: Event'
+  - name: 'M05: Comments'
+  - name: 'M06: User Administration'
+  - name: 'M07: Static pages'
+  - name: 'M08: Search'
+
+paths:
+
+### M01: Authentication
+
+  /login:
+    get:
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Display login form. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Ok. Show login UI'
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission and authenticate user. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required: [email, password]
+
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Login was successful. Redirect to User Profile.'
+                  value: '/users/{id}'
+                302Error:
+                  description: 'Login failed. Redirect back to login form'
+                  value: '/login'
+        '400':
+          description: 'Bad Request. Malformed data or validation error.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+  /logout:
+
+    post:
+      operationId: R103
+      summary: 'R103: Logout Action'
+      description: 'Logout the current authenticated user. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Logout was successful. Redirect to login page'
+                  value: '/login'
+
+  /register:
+    get:
+      operationId: R104
+      summary: 'R104: Register Form'
+      description: 'Provide new user registration form. Access: VST'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Ok. Show Sign-Up UI'
+
+    post:
+      operationId: R105
+      summary: 'R105: Register Action'
+      description: 'Processes the new user registration form submission. Access: VST'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string   
+                  format: password
+                confirm_password:
+                  type: string    
+                  format: password
+                picture:
+                  type: string
+                  format: binary
+              required: [name, username, email, password, confirm_password]
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Registration was successful. Redirect to user profile.'
+                  value: '/user/{id}'
+                302Failure:
+                  description: 'Registration failed. Redirect back to the registration form.'
+                  value: '/register'
+        '400':
+          description: 'Bad Request. Malformed data or validation error.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+  /forgot-password/email:
+    post:
+      operationId: R106
+      summary: 'R106: Send Password Reset Link'
+      description: 'Sends a password reset link to the provided email address.'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+              required:
+                - email
+      responses:
+        '200':
+          description: 'Password reset link sent successfully.'
+        '400':
+          description: 'Bad Request. Invalid email format.'
+        '404':
+          description: 'Email not found in the system.'
+        '500':
+          description: 'Internal Server Error. An unexpected error occurred.'
+
+
+  /password/reset:
+    post:
+      operationId: R107
+      summary: 'R107: Reset User Password'
+      description: 'Resets the user password after receiving a valid token.'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                  format: password
+                verify_password:
+                  type: string
+                  format: password
+              required:
+                - token
+                - password
+                - verify_password
+      responses:
+        '200':
+          description: 'Password reset successfully.'
+        '400':
+          description: 'Bad Request. Invalid or missing data.'
+        '404':
+          description: 'Invalid or expired reset token.'
+        '500':
+          description: 'Internal Server Error. An unexpected error occurred.'
+
+
+### M02: Individual Profile
+
+  /user/{id}:
+    get:
+      operationId: R201
+      summary: 'R201: View Profile'
+      description: 'Show the individual user profile. Access: USR, VST, ADM'
+      tags:
+        - 'M02: Individual Profile'
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: 'OK. Show the profile of the user.'
+        '302':
+           description: 'User does not exist or is not logged in.'
+           headers:
+             Location:
+               schema:
+                 type: string
+               example:
+                 302Failure:
+                   description: 'Failed. No user of given ID found.'
+                   value: '/'
+        '404':
+          description: 'User not found.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+  /user/{id}/edit:
+    get:
+      operationId: R202
+      summary: 'R202: Edit Profile Form'
+      description: 'Provide edit profile form. Access: USR, ADM'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        
+      responses:
+        '200':
+          description: 'OK. Show Edit Profile UI.'
+        '403':
+          description: 'Forbidden. The user is not logged in.'
+          headers:
+            Location:
+              schema:
+               type: string
+              examples:
+                401Success:
+                  description: 'Redirect back to home page UI.'
+                  value: '/'
+    post:
+      operationId: R203
+      summary: 'R203: Edit Profile Action'
+      description: 'Processes the edit profile form submission. Access: USR, ADM'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:          
+                  type: string
+                username:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+                email:
+                  type: string
+                  format: email
+                password:    
+                  type: string
+                  format: password
+              required: [name, username, picture, email, password]
+
+      responses:
+        '302':
+          description: 'Redirect after editing profile.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Changes were successful. Redirect to User UI.'
+                  value: '/user/{id}'
+                302Error:
+                  description: 'Failed, redirect to edit profile UI.'
+                  value: '/user/{id}/edit'
+        '400':
+          description: 'Bad request. Invalid or missing fields.'
+        '403':
+          description: 'Forbidden. User cannot edit this profile.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+  /user/{id}/delete:
+    post:
+      operationId: R204
+      summary: 'R204: Delete User Account'
+      description: 'Delete a user account. Access: USR, ADM'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required: [id]
+      responses:
+        '302':
+          description: 'Redirect after deleting user account.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account was successfully deleted. Redirect to home page UI.'
+                  value: '/home'
+        '403':
+          description: 'Forbidden. User does not have access.'
+        '404':
+          description: 'Not Found. User account not found.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+  /user/{id}/change_password:
+    get:
+      operationId: R205
+      summary: 'R205: Change Password Form'
+      description: 'Provide change password form. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        
+      responses:
+        '200':
+          description: 'OK. Show Change Password UI.'
+        '403':
+          description: 'Forbidden. The user is not logged in.'
+
+    post:
+      operationId: R206
+      summary: 'R206: Change Password Action'
+      description: 'Change user password. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                current_password:
+                  type: string
+                new_password:
+                  type: string
+                confirm_password:
+                  type: string
+              required: [id, current_password, new_password, confirm_password]
+      responses:
+        '200':
+          description: 'Success. Password changed.'
+        '400':
+          description: 'Bad request. Passwords do not match or invalid format.'
+        '401':
+          description: 'Unauthorized. Current password incorrect.'
+        '403':
+          description: 'Forbidden. User cannot change this password.'
+        '404':
+          description: 'User not found.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+  
+  /user/{id}/block_user:
+    post:
+      operationId: R207
+      summary: 'R207: Block User Account'
+      description: 'Block a user account. Access: ADM'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required: [id]
+      responses:
+        '302':
+          description: 'Redirect after blocking user account.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account was successfully blocked. Redirect to home page UI.'
+                  value: '/'
+        '403':
+          description: 'Forbidden. User does not have access.'
+        '404':
+          description: 'Not Found. User account not found.'
+  
+  /user/{id}/unblock_user:
+    post:
+      operationId: R208
+      summary: 'R208: Unblock User Account'
+      description: 'Unblock a user account. Access: ADM'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required: [id]
+      responses:
+        '302':
+          description: 'Redirect after unblocking user account.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account was successfully unblocked. Redirect to user page UI.'
+                  value: '/user/{id}'
+        '403':
+          description: 'Forbidden. User not authorized to block.'
+        '404':
+          description: 'User not found.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+### M03: Notifications
+
+  /notifications:
+    get:
+      operationId: R301
+      summary: 'R301: Get Notifications'
+      description: 'Retrieve a list of all notifications for the user. Access: USR'
+      tags:
+        - 'M03: Notifications'
+      responses:
+        '200':
+          description: 'List of notifications retrieved successfully.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    message:
+                      type: string
+                    read:
+                      type: boolean
+                    created_at:
+                      type: string
+                      format: date-time
+        '403':
+          description: 'Forbidden. User not authorized.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+  /notifications/dismiss:
+    post:
+      operationId: R302
+      summary: 'R302: Dismiss Notification'
+      description: 'Dismiss a specific notification by its ID. Access: USR'
+      tags:
+        - 'M03: Notifications'
+      responses:
+        '200':
+          description: 'Notification dismissed successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  notification_id:
+                    type: integer
+        '404':
+          description: 'Notification not found.'
+        '403':
+          description: 'Forbidden. User not authorized.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+  /notifications/dismiss-all:
+    post:
+      operationId: R303
+      summary: 'R303: Dismiss All Notifications'
+      description: 'Dismiss all notifications for the user. Access: USR'
+      tags:
+        - 'M03: Notifications'
+      responses:
+        '200':
+          description: 'All notifications dismissed successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '403':
+          description: 'Forbidden. User not authorized.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+
+  /notifications/count:
+    get:
+      operationId: R304
+      summary: 'R304: Count Unread Notifications'
+      description: 'Retrieve the count of unread notifications for the user. Access: USR'
+      tags:
+        - 'M03: Notifications'
+      responses:
+        '200':
+          description: 'Unread notifications count retrieved successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unread_count:
+                    type: integer
+        '403':
+          description: 'Forbidden. User not authorized.'
+        '500':
+          description: 'Internal Server Error. An unexpected issue occurred.'
+    
+### M04: Event
+
+  /events:
+    get:
+      operationId: 'R401'
+      summary: 'R401: List events created.'
+      description: 'List all events created by the user. Access: VST, USR, ADM'
+      tags:
+        - 'M04: Event'
+      responses:
+        '200':
+          description: A list of events created by user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    date:
+                      type: string
+                      format: date-time
+    post:
+      operationId: 'R402'
+      summary: 'R402: Create Event.'
+      description: 'Create Event. Access: USR'
+      tags:
+        - 'M04: Event'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Event created successfully
+        '400':
+          description: Invalid input
+
+  /events/{id}:
+    delete:
+      operationId: 'R403'
+      summary: 'R403: Delete Event.'
+      description: 'Delete Event. Access: CRT, ADM'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event to delete
+      responses:
+        '204':
+          description: Event deleted successfully
+        '404':
+          description: Event not found
+    get:
+      operationId: 'R404'
+      summary: 'R404: Details of Event.'
+      description: 'Displays the page of the event with its details. Access: VST, USR'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      responses:
+        '200':
+          description: Event details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  date:
+                    type: string
+                    format: date-time
+        '404':
+          description: Event not found
+  
+  /events/{event}:
+    put:
+      operationId: 'R405'
+      summary: 'R405: Update Event.'
+      description: 'Update Event. Access: CRT'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Event updated successfully
+        '400':
+          description: Invalid input
+        '404':
+          description: Event not found
+
+  /events/{event}/polls:
+    post:
+      operationId: 'R406'
+      summary: 'R406: Create Poll for Event.'
+      description: 'Create Poll for Event. Access: PCT'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      responses:
+        '201':
+          description: Poll created successfully
+        '400':
+          description: Invalid input
+
+  /events/{event}/request:
+    post:
+      operationId: 'R407'
+      summary: 'R407: Request to Join an Event.'
+      description: 'Request to Join an Event. Access: USR'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      responses:
+        '200':
+          description: Request to join sent successfully
+        '400':
+          description: Invalid input
+
+  /events/{event}/join:
+    post:
+      operationId: 'R408'
+      summary: 'R408: Join an Event.'
+      description: 'Join an Event. Access: USR'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      responses:
+        '200':
+          description: Successfully joined the event
+        '400':
+          description: Invalid input
+
+  /events/{event}/leave:
+    post:
+      operationId: 'R409'
+      summary: 'R409: Leave an event.'
+      description: 'Leave an event. Access: PCT'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      responses:
+        '200':
+          description: Successfully left the event
+        '400':
+          description: Invalid input
+
+  /events/{event}/participators/{user}/kick:
+    post:
+      operationId: 'R410'
+      summary: 'R410: Kick a Participant from Event.'
+      description: 'Kick a Participant from Event. Access: CRT, ADM'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+        - name: user
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user to be kicked
+      responses:
+        '200':
+          description: Successfully kicked the participant
+        '404':
+          description: Participant or event not found    
+
+  /events/category={id}:
+    get:
+      operationId: 'R411'
+      summary: 'R411: Events by Category.'
+      description: 'Events by Category. Access: VST, USR, ADM'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the category
+      responses:
+        '200':
+          description: A list of events in the specified category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    date:
+                      type: string
+                      format: date-time
+
+  /event/create:
+    get:
+      operationId: 'R412'
+      summary: 'R412: Event Create Form.'
+      description: 'Event Create Form. Access: USR'
+      tags:
+        - 'M04: Event'
+      responses:
+        '200':
+          description: Event create form
+        '400':
+          description: Invalid input
+
+  /events/{event}/edit:
+    get:
+      operationId: 'R413'
+      summary: 'R413: Event Edit Form.'
+      description: 'Event Edit Form. Access: CRT'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      responses:
+        '200':
+          description: Event edit form
+        '404':
+          description: Event not found    
+
+  /events/{event}/survey:
+    get:
+      operationId: 'R414'
+      summary: 'R414: Get survey details for the event.'
+      description: 'Get survey details for the event. Access: CRT'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      responses:
+        '200':
+          description: Survey details for the event
+        '404':
+          description: Event not found
+    post:
+      operationId: 'R415'
+      summary: 'R415: Submit a survey response for an event.'
+      description: 'Submit a survey response for an event. Access: PTC'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                responses:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Survey submitted successfully
+        '400':
+          description: Invalid input
+
+  /events/{event}/survey/stats:
+    get:
+      operationId: 'R416'
+      summary: 'R416: Get survey statistics for the event.'
+      description: 'Get survey statistics for the event. Access: CRT'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event
+      responses:
+        '200':
+          description: Survey statistics for the event
+        '404':
+          description: Event not found
+
+### M05: Comments
+
+  /comments/{comment}/delete:
+    post:
+      operationId: R501
+      summary: 'R501: Delete a comment'
+      description: 'Deletes a specific comment from the system. Access: VST, USR, ADM'
+      tags:
+        - 'M05: Comments'
+      parameters:
+        - name: comment
+          in: path
+          description: 'ID of the comment to delete'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required: [id]
+      responses:
+        '302':
+          description: 'Redirect after deleting comment.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Comment was successfully deleted. Redirect to Home page.'
+                  value: '/'
+        '403':
+          description: 'Forbidden. User does not have access.'
+        '404':
+          description: 'Not Found. Comment not found.'
+        '500':
+          description: 'Internal Server Error. Unexpected issue occurred.'
+
+  /comments/{commentId}/photos:
+    get:
+      operationId: R502
+      summary: 'R502: Get photos for a comment'
+      description: 'Fetches all photos associated with a specific comment.'
+      tags:
+        - 'M05: Comments'
+      parameters:
+        - name: commentId
+          in: path
+          description: 'ID of the comment to retrieve photos for'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successfully retrieved photos for the comment.'
+        '404':
+          description: 'Comment not found.'
+        '500':
+          description: 'Internal server error. Unable to fetch photos.'
+
+  /comments/{comment}/photos:
+    post:
+      operationId: R503
+      summary: 'R503: Add photos to a comment'
+      description: 'Stores photos associated with a specific comment.'
+      tags:
+        - 'M05: Comments'
+      parameters:
+        - name: comment
+          in: path
+          description: 'ID of the comment to associate photos with'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Photos successfully added to the comment.'
+        '400':
+          description: 'Bad request. Invalid data submitted.'
+        '500':
+          description: 'Internal server error. Unable to add photos.'
+
+  /photos/{id}:
+    get:
+      operationId: R504
+      summary: 'R504: Get a photo'
+      description: 'Fetches a specific photo by its ID.'
+      tags:
+        - 'M05: Comments'
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of the photo to retrieve'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successfully retrieved the photo.'
+        '404':
+          description: 'Photo not found.'
+        '500':
+          description: 'Internal server error. Unable to fetch the photo.'
+
+  /comment/like:
+    post:
+      operationId: R505
+      summary: 'R505: Like a comment'
+      description: 'Allows a user to like a specific comment.'
+      tags:
+        - 'M05: Comments'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required: [id]
+      responses:
+        '302':
+          description: 'Successful like.'
+        '403':
+          description: 'Forbidden. User does not have access.'
+        '500':
+          description: 'Internal Server Error. Unexpected issue occurred.'
+
+  /comment/dislike:
+    post:
+      operationId: R506
+      summary: 'R506: Dislike a comment'
+      description: 'Allows a user to dislike a specific comment. Access: CTR, PTC, ADM'
+      tags:
+        - 'M05: Comments'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required: [id]
+      responses:
+        '302':
+          description: 'Successful like.'
+        '403':
+          description: 'Forbidden. User does not have access.'
+        '500':
+          description: 'Internal Server Error. Unexpected issue occurred.'
+
+  /comments/{comment}/reply:
+    post:
+      operationId: R507
+      summary: 'R507: Reply to a comment'
+      description: 'Replies to a specific comment.'
+      tags:
+        - 'M05: Comments'
+      parameters:
+        - name: comment
+          in: path
+          description: 'ID of the comment to reply to'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successfully posted a reply to the comment.'
+        '400':
+          description: 'Bad request. Invalid data submitted.'
+        '500':
+          description: 'Internal server error. Unable to reply to the comment.'
+
+
+### M06: User Administration 
+  
+  /admin/logout:
+    post:
+      operationId: R601
+      summary: 'R601: Admin logout'
+      description: 'Logs out the admin from the system. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      responses:
+        '200':
+          description: 'Successfully logged out.'
+        '401':
+          description: 'Unauthorized. Admin not logged in.'
+        '500':
+          description: 'Internal server error. Unable to log out.'
+
+  /admin/user-management:
+    get:
+      operationId: R602
+      summary: 'R602: List all users'
+      description: 'Fetches a list of all users for management. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      responses:
+        '200':
+          description: 'Successfully retrieved user list.'
+        '500':
+          description: 'Internal server error. Unable to retrieve users.'
+
+  /admin/user-management/search-user:
+    get:
+      operationId: R603
+      summary: 'R603: Search users'
+      description: 'Allows searching for users by criteria. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      responses:
+        '200':
+          description: 'Successfully fetched search results.'
+        '500':
+          description: 'Internal server error. Unable to perform search.'
+
+  /admin/user-management/delete-user/{user}:
+    delete:
+      operationId: R604
+      summary: 'R604: Delete a user'
+      description: 'Deletes a user from the system. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      parameters:
+        - name: user
+          in: path
+          description: 'ID of the user to delete'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'User successfully deleted.'
+        '404':
+          description: 'User not found.'
+        '500':
+          description: 'Internal server error. Unable to delete user.'
+
+  /admin/user-management/block-user/{user}:
+    post:
+      operationId: R605
+      summary: 'R605: Block a user'
+      description: 'Blocks a user from the platform. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      parameters:
+        - name: user
+          in: path
+          description: 'ID of the user to block'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'User successfully blocked.'
+        '404':
+          description: 'User not found.'
+        '500':
+          description: 'Internal server error. Unable to block user.'
+
+  /admin/user-management/unblock-user/{user}:
+    patch:
+      operationId: R606
+      summary: 'R606: Unblock a user'
+      description: 'Unblocks a previously blocked user. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      parameters:
+        - name: user
+          in: path
+          description: 'ID of the user to unblock'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'User successfully unblocked.'
+        '404':
+          description: 'User not found.'
+        '500':
+          description: 'Internal server error. Unable to unblock user.'
+
+  /admin/comments/delete/{comment}:
+    post:
+      operationId: R607
+      summary: 'R607: Delete a comment'
+      description: 'Deletes a comment from the system. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      parameters:
+        - name: comment
+          in: path
+          description: 'ID of the comment to delete'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Comment successfully deleted.'
+        '404':
+          description: 'Comment not found.'
+        '500':
+          description: 'Internal server error. Unable to delete comment.'
+
+  /admin/create:
+    get:
+      operationId: R608
+      summary: 'R608: Show create admin form'
+      description: 'Displays the form to create a new admin. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:          
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:    
+                  type: string
+                  format: password
+              required: [name, username, picture, email, password]
+      responses:
+        '200':
+          description: 'OK. Admin created successfully.'
+        '400':
+          description: 'Bad Request. Invalid category data.'
+        '403':
+          description: 'Forbidden. User does not have permission.'
+
+  /admin/store:
+    post:
+      operationId: R609
+      summary: 'R609: Store a new admin'
+      description: 'Stores the details of a new admin in the system. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      responses:
+        '200':
+          description: 'Admin successfully created.'
+        '400':
+          description: 'Bad request. Validation failed.'
+        '500':
+          description: 'Internal server error. Unable to create admin.'
+
+  /admin/user/{id}/edit:
+    get:
+      operationId: R610
+      summary: 'R610: Show edit form for admin'
+      description: 'Displays the form to edit an admin user. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of the admin to edit'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successfully retrieved the edit form.'
+        '404':
+          description: 'Admin not found.'
+        '500':
+          description: 'Internal server error. Unable to retrieve form.'
+    post:
+      operationId: R611
+      summary: 'R611: Edit admin details'
+      description: 'Saves the changes to an admin user. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of the admin to edit'
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: 'Bad request. Validation failed.'
+        '404':
+          description: 'Admin not found.'
+        '500':
+          description: 'Internal server error. Unable to update admin.'
+
+### M07: Static pages
+
+  /home:
+    get:
+      operationId: R701
+      summary: 'R701: Access Home Page'
+      description: 'Shows the homepage with a brief presentation of the website. Access: VST, USR, ADM'
+      tags:
+        - 'M07: Static pages'
+      responses:
+        '200':
+          description: 'Homepage content delivered successfully.'
+        '500':
+          description: 'Internal server error. Unable to load the homepage.'
+
+  /about:
+    get:
+      operationId: R702
+      summary: 'R702: Access About Us Page'
+      description: 'Shows details about the platform and its creators. Access: VST, USR, ADM'
+      tags:
+        - 'M07: Static pages'
+      responses:
+        '200':
+          description: 'About Us page content delivered successfully.'
+        '500':
+          description: 'Internal server error. Unable to load the About Us page.'
+  
+  /faqs:
+    get:
+      operationId: R703
+      summary: 'R703: Access FAQs Page'
+      description: 'Shows the Frequently Asked Questions (FAQs) page with common queries and answers. Access: VST, USR, ADM'
+      tags:
+        - 'M07: Static pages'
+      responses:
+        '200':
+          description: 'FAQs page content delivered successfully.'
+        '500':
+          description: 'Internal server error. Unable to load the FAQs page.'
+
+### M08: Search
+
+  /search:
+    get:
+      operationId: R801
+      summary: 'R801: Search for events. Access: USR, VST, ADM'
+      description: 'Results for events search'
+      tags:
+        - 'M08: Search'
+
+      responses:
+        '200':
+          description: 'OK. Show the results.'
+        '500':
+          description: 'Internal server error. Unable to load the home page UI.'
+
