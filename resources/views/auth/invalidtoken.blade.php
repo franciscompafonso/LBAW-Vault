@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('Title', 'Reset Token Expired')
+
 @section('content')
     <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
         <div class="text-center">
