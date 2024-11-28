@@ -135,7 +135,6 @@ Route::post('/comments/{comment}/delete', [CommentController::class, 'delete'])-
 
 // Invite
 Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->name('events.invite');
-Route::post('/invites/{invite}/accept', [InviteController::class, 'acceptInvite'])->name('invites.accept');
 
 Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
