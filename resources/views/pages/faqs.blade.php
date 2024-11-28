@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('Title', 'FAQs')
+
 @section('content')
 
 <div class="container mx-auto py-10 px-6">

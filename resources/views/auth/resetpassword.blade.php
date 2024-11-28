@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('Title', 'Reset Password')
+
 @section('content')
     <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
         <h2 class="text-2xl font-semibold text-center mb-4">Reset Password</h2>
