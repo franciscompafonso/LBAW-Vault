@@ -137,7 +137,6 @@ public function unblockUser($id)
             abort(403, 'Unauthorized action.');
         }
 
-        // Delete the comment and return it as JSON.
         $comment->delete();
         return back()->with('message', 'successfully deleted the comment!');
     }   

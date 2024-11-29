@@ -21,7 +21,6 @@ class CommentController extends Controller
         // Check if the current user is authorized to delete this comment.
         $this->authorize('delete', $comment);
 
-        // Delete the comment and return it as JSON.
         $comment->delete();
         return back()->with('message', 'successfully deleted the comment!');
     }
