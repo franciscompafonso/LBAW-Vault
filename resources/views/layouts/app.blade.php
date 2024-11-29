@@ -179,7 +179,7 @@
                             ? new Date(event.start_date).toLocaleString() 
                             : 'Not available';
 
-                        const eventUrl = isAdmin ? `/admin/events/${event.id}` : `/events/${event.id}`;
+                        const eventUrl = `/events/${event.id}`;
 
                         eventItem.innerHTML = `
                             <div class="event-card">

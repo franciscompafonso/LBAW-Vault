@@ -72,7 +72,7 @@ class AdminController extends Controller
 
         // Delete participations in upcoming events only
         $upcomingEventIds = $user->notYetParticipatedEvents()->pluck('event_id')->toArray();
-        $user->participatedEvents()->detach($upcomingEventIds);
+        $user->notYetParticipatedEvents()->detach($upcomingEventIds);
 
         // Mark the user as deleted (soft delete)
         $user->isdeleted = true;
