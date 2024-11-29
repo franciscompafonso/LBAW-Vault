@@ -27,6 +27,13 @@
             </div>
 
             @if (Auth::guard('web')->check())
+                @if ($event->end_date < now() && $event->creator_id != Auth::id()) 
+                    <a href="{{ route('events.survey', $event->id) }}" class="block mt-4 text-center">
+                        <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
+                            Take Survey
+                        </button>
+                    </a>
+                @endif
                 @if ($event->participators->contains('id', Auth::id()))
                     <!-- Leave Event Button -->
                     <form action="{{ route('events.leave', $event->id) }}" method="POST">

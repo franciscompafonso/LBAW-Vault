@@ -72,7 +72,7 @@ class AdminController extends Controller
 
         // Delete participations in upcoming events only
         $upcomingEventIds = $user->notYetParticipatedEvents()->pluck('event_id')->toArray();
-        $user->participatedEvents()->detach($upcomingEventIds);
+        $user->notYetParticipatedEvents()->detach($upcomingEventIds);
 
         // Mark the user as deleted (soft delete)
         $user->isdeleted = true;
@@ -137,6 +137,7 @@ public function unblockUser($id)
             abort(403, 'Unauthorized action.');
         }
 
+        // Delete the comment and return it as JSON.
         $comment->delete();
         return back()->with('message', 'successfully deleted the comment!');
     }   
