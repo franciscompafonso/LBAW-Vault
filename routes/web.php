@@ -28,7 +28,6 @@ Route::get('/faqs', function () {return view('pages.faqs'); })->name('faqs');
 
 Route::get('/home', [HomeController::class, 'index'])->name('pages.home');
 
-Route::get('/search', [EventController::class, 'search'])->name('search');
 Route::get('/events/category={id}', [EventController::class, 'showByCategory'])->name('events.category');
 Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
 Route::post('/events', [EventController::class, 'store'])->name('events.store');
@@ -46,8 +45,10 @@ Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->na
 Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
 
 // API
-Route::put('/api/events', [EventController::class, 'create']);
-Route::delete('/api/events/{event_id}', [EventController::class, 'delete']);
+Route::get('/api/search', [EventController::class, 'search'])->name('search');
+
+// Route::put('/api/events', [EventController::class, 'create']);
+// Route::delete('/api/events/{event_id}', [EventController::class, 'delete']);
 
 Route::post('/invites/{invitesId}/decline', [InviteController::class, 'declineInvite'])->name('invites.decline');
 Route::post('/invites/{invitesId}/accept', [InviteController::class, 'acceptInvite'])->name('invites.accept');
@@ -56,7 +57,6 @@ Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->
 Route::post('/requests/{requestId}/decline', [JoinRequestController::class, 'declineRequest'])->name('requests.decline');
 Route::post('/requests/{requestId}/accept', [JoinRequestController::class, 'acceptRequest'])->name('requests.accept');
 
-Route::get('/comments/{commentId}/photos', [PhotoController::class, 'getPhotosByComment']);
 Route::post('/comments/{comment}/photos', [PhotoController::class, 'store'])->name('photos.store');
 Route::get('/photos/{id}', [PhotoController::class, 'show'])->name('photos.show');
 
@@ -107,11 +107,13 @@ Route::controller(UserController::class)->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
     Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
-    Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification']);
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications']);
     Route::get('/notifications/count', [NotificationController::class, 'unreadCount']);
     Route::post('/events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');
+
+    // API
+    Route::get('/api/notifications', [NotificationController::class, 'index']);
 });
 
 Route::middleware(['auth:admin'])->group(function () {

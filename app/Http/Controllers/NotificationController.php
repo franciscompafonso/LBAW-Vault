@@ -15,40 +15,40 @@ use Illuminate\Support\Facades\Auth;
 class NotificationController extends Controller
 {
     public function index(): \Illuminate\Http\JsonResponse
-{
-    try {
-        $user = Auth::user();
-        $notifications = Notification::where('emitted_to', $user->id)
-                                     ->where('viewed', false)
-                                     ->orderBy('date', 'desc')
-                                     ->get();
+    {
+        try {
+            $user = Auth::user();
+            $notifications = Notification::where('emitted_to', $user->id)
+                                        ->where('viewed', false)
+                                        ->orderBy('date', 'desc')
+                                        ->get();
 
-        foreach ($notifications as $notification) {
-            $notificationData = $this->getType($notification->id);
+            foreach ($notifications as $notification) {
+                $notificationData = $this->getType($notification->id);
 
-            $notification->type = $notificationData['type'];
-            
-            foreach ($notificationData as $key => $value) {
-                if ($key !== 'type') {
-                    $notification->$key = $value;
+                $notification->type = $notificationData['type'];
+                
+                foreach ($notificationData as $key => $value) {
+                    if ($key !== 'type') {
+                        $notification->$key = $value;
+                    }
                 }
             }
+
+            return response()->json($notifications);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Error fetching notifications: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            // Return the error as JSON response
+            return response()->json([
+                'error' => 'Failed to fetch notifications.',
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json($notifications);
-    } catch (\Exception $e) {
-        // Log the error for debugging
-        \Log::error('Error fetching notifications: ' . $e->getMessage(), [
-            'trace' => $e->getTraceAsString(),
-        ]);
-
-        // Return the error as JSON response
-        return response()->json([
-            'error' => 'Failed to fetch notifications.',
-            'message' => $e->getMessage(),
-        ], 500);
     }
-}
 
 
     public function getType($notificationId)
