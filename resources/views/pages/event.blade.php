@@ -42,7 +42,7 @@
                             Leave Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->start_date < now())
+                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->start_date > now())
                     <!-- Join Event Button -->
                     <form action="{{ route('events.join', $event->id) }}" method="POST">
                         @csrf
@@ -50,7 +50,7 @@
                             Join Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'request_only' && !Auth::user()->isblocked && $event->start_date < now())
+                @elseif ($event->visibility === 'request_only' && !Auth::user()->isblocked && $event->start_date > now())
                     @if ($event->creator_id === Auth::id())
                         <!-- Join Event Button -->
                         <form action="{{ route('events.join', $event->id) }}" method="POST">

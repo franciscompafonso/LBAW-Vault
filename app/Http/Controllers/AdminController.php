@@ -9,6 +9,7 @@ use App\Models\Admin;
 use App\Models\Comment;
 use App\Models\Event;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -64,30 +65,38 @@ class AdminController extends Controller
 
 
     // Delete the user by ID
-    public function deleteUser($id)
+    use Carbon\Carbon;
+
+public function deleteUser($id)
 {
     try {
-        // Find the user
+        // Encontrar o usuário
         $user = User::findOrFail($id);
 
-        // Delete participations in upcoming events only
-        $upcomingEventIds = $user->notYetParticipatedEvents()->pluck('event_id')->toArray();
+        // Remover participações em eventos futuros
+        $upcomingEventIds = $user->notYetParticipatedEvents()
+            ->where('start_date', '>', Carbon::now()) // Usa Carbon para verificar datas futuras
+            ->pluck('event_id')
+            ->toArray();
         $user->notYetParticipatedEvents()->detach($upcomingEventIds);
 
-        // Mark the user as deleted (soft delete)
+        // Marcar o usuário como deletado (soft delete)
         $user->isdeleted = true;
         $user->save();
 
-        // Delete any upcoming events created by this user
+        // Remover eventos futuros criados por este usuário
         Event::where('creator_id', $id)
-            ->where('start_date', '>', now()) // Check if the event date is in the future
+            ->where('start_date', '>', Carbon::now()) // Verifica eventos com start_date no futuro
             ->delete();
 
-        return redirect()->route('admin.user-management')->with('status', 'User has been marked as deleted successfully, and upcoming events have been removed.');
+        return redirect()->route('admin.user-management')
+            ->with('status', 'User has been marked as deleted successfully, and upcoming events have been removed.');
     } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Error deleting user: ' . $e->getMessage());
+        return redirect()->back()
+            ->with('error', 'Error deleting user: ' . $e->getMessage());
     }
 }
+
 
 public function blockUser($userId)
 {
