@@ -8,10 +8,16 @@
                     alt="{{ $comment->user->username }}" 
                     class="object-cover w-12 h-12 rounded-full"
                 >
-                <a href="{{ route('user.profile', ['id' => $comment->user->id]) }}" 
-                class="text-lg font-semibold text-gray-900 font-montserrat">
-                    {{ $comment->user->displayName }}
-                </a>
+                @if(!$comment->user->isdeleted)
+                    <a href="{{ route('user.profile', ['id' => $comment->user->id]) }}" 
+                    class="text-lg font-semibold text-gray-900 font-montserrat">
+                        {{ $comment->user->displayName }}
+                    </a>
+                @else
+                    <span class="text-lg font-semibold text-gray-500 font-montserrat">
+                        {{ $comment->user->displayName }}
+                    </span>
+                @endif
             </div>
 
             <div class="col-span-2 text-right">

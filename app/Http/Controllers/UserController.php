@@ -17,6 +17,8 @@ class UserController extends Controller
     public function show(int $id)
     {
         $user = User::find($id);
+
+        if (!$user | $user->isdeleted) {abort(404, 'User not found');}
         $myEvents = $user->myEvents()->get();
         
         $participatedEvents = $user->participatedEvents()->get();

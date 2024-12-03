@@ -6,10 +6,16 @@
                 alt="{{ $participator->username }}" 
                 class="w-12 h-12 rounded-full object-cover"
             >
-            <a href="{{ route('user.profile', ['id' => $participator->id]) }}" 
-               class="text-lg font-semibold text-gray-900 font-montserrat">
-               {{ $participator->displayName }}
-            </a>
+            @if(!$participator->isdeleted)
+                <a href="{{ route('user.profile', ['id' => $participator->id]) }}" 
+                class="text-lg font-semibold text-gray-900 font-montserrat">
+                {{ $participator->displayName }}
+                </a>
+            @else
+                <span class="text-lg font-semibold text-gray-500 font-montserrat">
+                    {{ $participator->displayName }}
+                </span>
+            @endif
 
             <!-- Display "(Creator)" next to the name if the participator is the creator -->
             @if($participator->id === $creatorId)

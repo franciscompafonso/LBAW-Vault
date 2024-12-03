@@ -151,9 +151,6 @@ public function unblockUser($id)
 
     $user = User::find($id);
 
-    // Optionally, add another authorization check if needed
-    // $this->authorize('edit_any_profile', $user);
-
     return view('user.edit', compact('user'));
 }
 

@@ -103,7 +103,7 @@ public function notYetParticipatedEvents()
         // Check if the user is marked as deleted
         if ($this->isdeleted) {
             // Return the formatted deleted user name
-            return "deleted-user-" . $this->id;
+            return "deleted-user";
         }
 
         // Otherwise, return the user's real name
