@@ -148,7 +148,7 @@
                 console.log("Searching for: " + query); // Add this line to debug the input
 
                 if (query.length >= 3) {
-                    fetch(`/search?q=${query}`)
+                    fetch(`/api/search?q=${query}`)
                         .then(response => response.json())
                         .then(data => {
                             console.log('Search results:', data); // Debug the response
@@ -209,7 +209,7 @@
             }
 
             function fetchNotifications() {
-                fetch('/notifications')
+                fetch('/api/notifications')
                     .then(response => response.json())
                     .then(data => {
                         console.log('Notifications:', data);
