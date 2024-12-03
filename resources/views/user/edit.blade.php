@@ -77,7 +77,7 @@
                 @enderror
             </div>
             <div class="mt-6 text-center">
-                <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">Save Changes</button>
+                <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">Save Changes</button>
             </div>
         </form>
 
@@ -86,9 +86,10 @@
             <form action="{{ route('user.delete', ['id' => $user->id]) }}" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 bg-red-600 rounded-md hover:bg-red-700 font-montserrat">
+                <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-500 hover:text-darkSlateGrey hover:border-red-500">
                     Delete Account
                 </button>
+
             </form>
         </div>
     </div>

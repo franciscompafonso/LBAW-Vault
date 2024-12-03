@@ -218,6 +218,10 @@ class EventController extends Controller
             return back()->with('message', 'You are already participating in this event.');
         }
 
+        else if ($event->start_date < now()) {
+            return back()->with('message', 'You cannot join an event that has already started.');
+        }
+
         $event->participators()->attach(Auth::id());
 
         return back()->with('message', 'You have successfully joined the event!');

@@ -42,7 +42,7 @@
                             Leave Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked)
+                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->start_date < now())
                     <!-- Join Event Button -->
                     <form action="{{ route('events.join', $event->id) }}" method="POST">
                         @csrf
@@ -50,7 +50,7 @@
                             Join Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'request_only' && !Auth::user()->isblocked)
+                @elseif ($event->visibility === 'request_only' && !Auth::user()->isblocked && $event->start_date < now())
                     @if ($event->creator_id === Auth::id())
                         <!-- Join Event Button -->
                         <form action="{{ route('events.join', $event->id) }}" method="POST">
@@ -81,9 +81,10 @@
                 <form action="{{ route('events.delete', $event->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                    <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-500 hover:text-darkSlateGrey hover:border-red-500">
                         Delete Event
                     </button>
+
                 </form>
 
                 <a href="{{ route('events.edit', $event->id) }}" class="inline-block">
