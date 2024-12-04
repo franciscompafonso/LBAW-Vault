@@ -4,7 +4,7 @@
         <div class="grid items-center grid-cols-4 gap-4">
             <div class="flex items-center col-span-2 space-x-2">
                 <img 
-                    src="{{ asset('images/profile-pictures/' . $comment->user->profilepicture) }}" 
+                    src="{{ asset($comment->user->profilepicture) }}" 
                     alt="{{ $comment->user->username }}" 
                     class="object-cover w-12 h-12 rounded-full"
                 >
@@ -112,7 +112,7 @@
                 <div class="w-full h-32 overflow-hidden bg-gray-100 rounded-lg">
                     <a href="{{ route('photos.show', $photo->id) }}">
                         <img 
-                                src="{{ asset('images/others/' . $photo->path) }}" 
+                                src="{{ asset($photo->path) }}" 
                                 alt="Comment Photo"
                                 class="object-cover w-full h-full cursor-pointer"
                         >
@@ -154,7 +154,7 @@
                     <div class="grid items-center grid-cols-4 gap-4">
                         <div class="flex items-center space-x-2">
                             <img 
-                                src="{{ asset('images/profile-pictures/' . $reply->user->profilepicture) }}" 
+                                src="{{ asset($reply->user->profilepicture) }}" 
                                 alt="{{ $reply->user->username }}" 
                                 class="object-cover w-12 h-12 rounded-full"
                             >

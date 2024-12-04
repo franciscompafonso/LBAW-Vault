@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
@@ -38,12 +39,12 @@ class PhotoController extends Controller
             $counter++;
             
             // Move the photo to the 'images/others' directory
-            $photo->move(public_path('images/others'), $filename);
+            Storage::disk('public')->put('others/' . $filename, file_get_contents($photo));
 
             // Store the photo in the database and associate it with the comment
             Photo::create([
                 'comment_id' => $comment->id,  // Associate the photo with the comment
-                'path' => $filename,  // Store the relative path
+                'path' => 'storage/others/'.$filename,  // Store the relative path
             ]);
         }
     }

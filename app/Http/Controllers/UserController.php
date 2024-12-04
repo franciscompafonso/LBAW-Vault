@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\User;
@@ -68,7 +66,7 @@ class UserController extends Controller
 
         if ($request->hasFile('profilepicture')) {
             if ($user->profilepicture) {
-                $oldPath = public_path('images/profile-pictures/' . $user->profilepicture);
+                $oldPath = 'profile-images/' . $user->profilepicture;
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
                 }
@@ -76,7 +74,7 @@ class UserController extends Controller
     
             $file = $request->file('profilepicture');
             $filename = time() . '_' . $user->username; // Ensure a unique filename
-            $file->move(public_path('images/profile-pictures/'), $filename);
+            Storage::put('profile-pictures/' . $filename, file_get_contents($file));
         
             // Save only the filename in the database
             $user->profilepicture = $filename;

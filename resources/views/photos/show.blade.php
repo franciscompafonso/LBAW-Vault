@@ -8,7 +8,7 @@
             <a href="{{ url()->previous() }}" class="text-red-500 hover:text-red-600">&times;</a>
         </div>
         <div class="max-w-full max-h-screen overflow-auto">
-            <img src="{{ asset('images/others/' . $photo->path) }}" alt="Photo" class="object-contain w-full h-auto">
+            <img src="{{ asset($photo->path) }}" alt="Photo" class="object-contain w-full h-auto">
         </div>
     </div>
 </div>
