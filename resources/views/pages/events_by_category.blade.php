@@ -3,7 +3,7 @@
 @if($category)
     @section('Title', $category->name)
 @else
-@section('Title', 'All Categories')
+    @section('Title', 'All Categories')
 @endif
 
 @section('content')
