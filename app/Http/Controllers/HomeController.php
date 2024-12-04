@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
 {
     $categories = Category::with(['events' => function ($query) {
-        $query->where('start_date', '>', Carbon::now())->where('visibility', '<>', 'private');
+        $query->where('end_date', '>', Carbon::now())->where('visibility', '<>', 'private');
     }])->get();
 
     return view('pages.home', compact('categories')); // Pass them to the view

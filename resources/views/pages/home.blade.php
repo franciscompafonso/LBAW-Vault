@@ -51,7 +51,7 @@
 
             <!-- Events Grid -->
             <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                @forelse ($category->events->filter(fn($event) => $event->visibility !== 'private' && $event->end_date > now())->take(5) as $event)
+                @forelse ($category->events->take(5) as $event)
                     @include('partials.event', ['event' => $event])
                 @empty
                     <p class="text-eerieBlack col-span-full font-montserrat">No events available at the moment.</p>
@@ -79,7 +79,7 @@
         </div>
 
         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            @forelse ($category->events->filter(fn($event) => $event->visibility !== 'private')->take(5) as $event)
+            @forelse ($category->events->take(5) as $event)
                 @include('partials.event', ['event' => $event])
             @empty
                 <p class="text-eerieBlack col-span-full font-montserrat">No events available at the moment.</p>
