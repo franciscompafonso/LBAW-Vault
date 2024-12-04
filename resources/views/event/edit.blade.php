@@ -2,157 +2,128 @@
 
 @section('Title', 'Edit Event')
 @section('content')
-<section id="edit-event" class="max-w-4xl p-8 mx-auto mt-10 rounded-lg shadow-xl bg-whiteSmoke">
-  <div class="flex flex-col items-center justify-center">
+<section id="edit-event" class="max-w-2xl p-6 mx-auto mt-6 bg-white rounded-lg shadow-md">
+  <div class="mb-6 text-center">
     <!-- Page Title -->
-    <h2 class="mb-10 text-4xl font-bold text-eerieBlack">Edit Event</h2>
+    <h2 class="text-3xl font-bold text-ultraViolet font-montserrat">Edit Event</h2>
   </div>
 
   <!-- Form Container -->
-  <div class="p-8 rounded-lg shadow-lg bg-eerieBlack">
-    <form method="POST" action="{{ route('events.update', $event->id) }}" class="space-y-8" enctype="multipart/form-data">
-      @csrf
-      @method('PUT') <!-- Add this to indicate the update method -->
+  <form method="POST" action="{{ route('events.update', $event->id) }}" class="space-y-8" enctype="multipart/form-data">
+    @csrf
+    @method('PUT') <!-- Indicate the update method -->
 
-      <!-- Banner Input -->
-      <div class="flex items-center mb-4 space-x-4">
-        <div class="flex-shrink-0">
-        @if ($event->banner)
-            <img id="banner-preview" src="{{ asset('images/banner/' . $event->banner) }}" alt="Banner" class="w-32 h-32 border-2 rounded-full border-ultraViolet">
-        @else
-            <div id="banner-preview" class="flex items-center justify-center w-32 h-32 bg-gray-300 rounded-full">
-                <i class="text-3xl text-white fa-solid fa-user"></i>
-            </div>
-        @endif
-        </div>
-        <div>
-            <label for="banner" class="block text-lg font-semibold font-montserrat">Upload Image</label>
-            <input type="file" id="banner" name="banner" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)">
-            @error('banner')
-                <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
-            @enderror
-        </div>
+    <!-- Banner Input -->
+    <div class="flex items-center mb-4 space-x-4">
+      <label for="banner" class="block text-lg font-semibold font-montserrat">Upload Image</label>
+      <input type="file" id="banner" name="banner" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)">
+      @error('banner')
+          <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+      @enderror
     </div>
 
-      <!-- Event Name -->
-      <div>
-        <label for="name" class="block text-lg font-semibold text-whiteSmoke">Event Name</label>
-        <div class="mt-2">
-          <input id="name" type="text" name="name" value="{{ old('name', $event->name) }}" required autofocus autocomplete="name" class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-keppel focus:border-keppel placeholder-charcoal sm:text-base">
-          @if ($errors->has('name'))
-            <span class="mt-1 text-sm text-red-600">{{ $errors->first('name') }}</span>
-          @endif
-        </div>
-      </div>
+    <!-- Event Name -->
+    <div class="mb-4">
+      <label for="name" class="block text-lg font-semibold font-montserrat">Event Name</label>
+      <input id="name" type="text" name="name" value="{{ old('name', $event->name) }}" required autofocus autocomplete="name" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
+      @if ($errors->has('name'))
+        <span class="mt-1 text-sm text-red-600">{{ $errors->first('name') }}</span>
+      @endif
+    </div>
 
-      <!-- Description -->
-      <div>
-        <label for="description" class="block text-lg font-semibold text-whiteSmoke">Description</label>
-        <div class="mt-2">
-          <textarea id="description" name="description" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-keppel focus:border-keppel placeholder-charcoal sm:text-base">{{ old('description', $event->description) }}</textarea>
-          @if ($errors->has('description'))
-            <span class="mt-1 text-sm text-red-600">{{ $errors->first('description') }}</span>
-          @endif
-        </div>
-      </div>
+    <!-- Description -->
+    <div class="mb-4">
+      <label for="description" class="block text-lg font-semibold font-montserrat">Description</label>
+      <textarea id="description" name="description" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat">{{ old('description', $event->description) }}</textarea>
+      @if ($errors->has('description'))
+        <span class="mt-1 text-sm text-red-600">{{ $errors->first('description') }}</span>
+      @endif
+    </div>
 
-      <!-- Start Date and Time -->
-      <div>
-        <label for="start_date" class="block text-lg font-semibold text-whiteSmoke">Start Date & Time</label>
-        <div class="relative mt-2">
-          <input id="start_date" type="datetime-local" name="start_date" value="{{ old('start_date', $event->start_date) }}" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-keppel focus:border-keppel placeholder-charcoal sm:text-base">
-          <style>
-            input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-              filter: invert(1) grayscale(1) contrast(2);
-            }
-          </style>
-        </div>
-        @if ($errors->has('start_date'))
-          <span class="mt-1 text-sm text-red-600">{{ $errors->first('start_date') }}</span>
-        @endif
-      </div>
+    <!-- Start Date and Time -->
+    <div class="mb-4">
+      <label for="start_date" class="block text-lg font-semibold font-montserrat">Start Date & Time</label>
+      <input id="start_date" type="datetime-local" name="start_date" value="{{ old('start_date', $event->start_date) }}" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
+      <style>
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+          filter: invert(1) grayscale(1) contrast(2);
+        }
+      </style>
+      @if ($errors->has('start_date'))
+        <span class="mt-1 text-sm text-red-600">{{ $errors->first('start_date') }}</span>
+      @endif
+    </div>
 
-      <!-- End Date and Time -->
-      <div>
-        <label for="end_date" class="block text-lg font-semibold text-whiteSmoke">End Date & Time</label>
-        <div class="relative mt-2">
-          <input id="end_date" type="datetime-local" name="end_date" value="{{ old('end_date', $event->end_date) }}" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-keppel focus:border-keppel placeholder-charcoal sm:text-base">
-          <style>
-            input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-              filter: invert(1) grayscale(1) contrast(2);
-            }
-          </style>
-        </div>
-        @if ($errors->has('end_date'))
-          <span class="mt-1 text-sm text-red-600">{{ $errors->first('end_date') }}</span>
-        @endif
-      </div>
+    <!-- End Date and Time -->
+    <div class="mb-4">
+      <label for="end_date" class="block text-lg font-semibold font-montserrat">End Date & Time</label>
+      <input id="end_date" type="datetime-local" name="end_date" value="{{ old('end_date', $event->end_date) }}" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
+      <style>
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+          filter: invert(1) grayscale(1) contrast(2);
+        }
+      </style>
+      @if ($errors->has('end_date'))
+        <span class="mt-1 text-sm text-red-600">{{ $errors->first('end_date') }}</span>
+      @endif
+    </div>
 
-      <!-- Location Selector -->
-      <div>
-        <label for="location_id" class="block text-lg font-semibold text-whiteSmoke">Location</label>
-        <div class="mt-2">
-          <select id="location_id" name="location_id" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm bg-eerieBlack focus:ring-2 focus:ring-keppel sm:text-base">
-            <option value="">Select a Location</option>
-            @foreach($locations as $location)
-              <option value="{{ $location->id }}" {{ old('location_id', $event->location_id) == $location->id ? 'selected' : '' }}>{{ $location->name }}</option>
-            @endforeach
-          </select>
-          @if ($errors->has('location_id'))
-            <span class="mt-1 text-sm text-red-600">{{ $errors->first('location_id') }}</span>
-          @endif
-        </div>
-      </div>
+    <!-- Location Selector -->
+    <div class="mb-4">
+      <label for="location_id" class="block text-lg font-semibold font-montserrat">Location</label>
+      <select id="location_id" name="location_id" required class="block px-2 text-lg font-semibold font-montserrat">
+        <option value="">Select a Location</option>
+        @foreach($locations as $location)
+          <option value="{{ $location->id }}" {{ old('location_id', $event->location_id) == $location->id ? 'selected' : '' }}>{{ $location->name }}</option>
+        @endforeach
+      </select>
+      @if ($errors->has('location_id'))
+        <span class="mt-1 text-sm text-red-600">{{ $errors->first('location_id') }}</span>
+      @endif
+    </div>
 
-      <!-- Category Selector -->
-      <div>
-        <label for="category_id" class="block text-lg font-semibold text-whiteSmoke">Category</label>
-        <div class="mt-2">
-          <select id="category_id" name="category_id" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm bg-eerieBlack focus:ring-2 focus:ring-keppel sm:text-base">
-            <option value="">Select a Category</option>
-            @foreach($categories as $category)
-              <option value="{{ $category->id }}" {{ old('category_id', $event->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-            @endforeach
-          </select>
-          @if ($errors->has('category_id'))
-            <span class="mt-1 text-sm text-red-600">{{ $errors->first('category_id') }}</span>
-          @endif
-        </div>
-      </div>
+    <!-- Category Selector -->
+    <div class="mb-4">
+      <label for="category_id" class="block text-lg font-semibold font-montserrat">Category</label>
+      <select id="category_id" name="category_id" required class="block px-2 text-lg font-semibold font-montserrat">
+        <option value="">Select a Category</option>
+        @foreach($categories as $category)
+          <option value="{{ $category->id }}" {{ old('category_id', $event->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+        @endforeach
+      </select>
+      @if ($errors->has('category_id'))
+        <span class="mt-1 text-sm text-red-600">{{ $errors->first('category_id') }}</span>
+      @endif
+    </div>
 
-      <!-- Visibility -->
-      <div>
-        <label for="visibility" class="block text-lg font-semibold text-whiteSmoke">Visibility</label>
-        <div class="mt-2">
-          <select id="visibility" name="visibility" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm bg-eerieBlack focus:ring-2 focus:ring-keppel sm:text-base">
-            <option value="public" {{ old('visibility', $event->visibility) == 'public' ? 'selected' : '' }}>Public</option>
-            <option value="request_only" {{ old('visibility', $event->visibility) == 'request_only' ? 'selected' : '' }}>Request Only</option>
-            <option value="private" {{ old('visibility', $event->visibility) == 'private' ? 'selected' : '' }}>Private</option>
-          </select>
-          @if ($errors->has('visibility'))
-            <span class="mt-1 text-sm text-red-600">{{ $errors->first('visibility') }}</span>
-          @endif
-        </div>
-      </div>
+    <!-- Visibility -->
+    <div class="mb-4">
+      <label for="visibility" class="block text-lg font-semibold font-montserrat">Visibility</label>
+      <select id="visibility" name="visibility" required class="block px-2 text-lg font-semibold font-montserrat">
+        <option value="public" {{ old('visibility', $event->visibility) == 'public' ? 'selected' : '' }}>Public</option>
+        <option value="request_only" {{ old('visibility', $event->visibility) == 'request_only' ? 'selected' : '' }}>Request Only</option>
+        <option value="private" {{ old('visibility', $event->visibility) == 'private' ? 'selected' : '' }}>Private</option>
+      </select>
+      @if ($errors->has('visibility'))
+        <span class="mt-1 text-sm text-red-600">{{ $errors->first('visibility') }}</span>
+      @endif
+    </div>
 
-      <!-- Capacity -->
-      <div>
-        <label for="capacity" class="block text-lg font-semibold text-whiteSmoke">Capacity</label>
-        <div class="mt-2">
-          <input id="capacity" type="number" name="capacity" value="{{ old('capacity', $event->capacity) }}" required class="block w-full px-4 py-3 text-white border-gray-300 rounded-md shadow-sm bg-eerieBlack focus:ring-2 focus:ring-keppel placeholder-charcoal sm:text-base">
-          @if ($errors->has('capacity'))
-            <span class="mt-1 text-sm text-red-600">{{ $errors->first('capacity') }}</span>
-          @endif
-        </div>
-      </div>
+    <!-- Capacity -->
+    <div class="mb-4">
+      <label for="capacity" class="block text-lg font-semibold font-montserrat">Capacity</label>
+      <input id="capacity" type="number" name="capacity" value="{{ old('capacity', $event->capacity) }}" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
+      @if ($errors->has('capacity'))
+        <span class="mt-1 text-sm text-red-600">{{ $errors->first('capacity') }}</span>
+      @endif
+    </div>
 
-      <!-- Submit Button -->
-      <div class="pt-4">
-        <button type="submit" class="flex justify-center w-full px-8 py-3 font-semibold text-white transition-colors duration-200 rounded-md shadow-lg bg-charcoal hover:bg-keppel">
-          Update Event
-        </button>
-      </div>
-    </form>
-  </div>
+    <!-- Submit Button -->
+    <div class="mt-6 text-center">
+      <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">
+        Update Event
+      </button>
+    </div>
+  </form>
 </section>
 @endsection
