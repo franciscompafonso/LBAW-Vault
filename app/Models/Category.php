@@ -21,8 +21,8 @@ class Category extends Model
     /**
      * Get the events that belong to that category.
      */
-    public function events() : HasMany
+    public function events(): HasMany
     {
-        return $this->hasMany(Event::class);
+        return $this->hasMany(Event::class)->where('visibility', '<>', 'private');
     }
 }

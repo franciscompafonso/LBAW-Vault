@@ -59,13 +59,11 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'user_id');
     }
 
-    // TO DO: Adaptar funções quando event for feito
     public function allEvents()
     {
         $createdEvents = $this->myEvents()->get();
         $participatedEvents = $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')->get();
         $notYetParticipatedEvents = $this->belongsToMany(Event::class, 'participator', 'participator_id', 'event_id')->where('event.start_date', '>=', now());
-        // Combine and remove duplicates
         return $createdEvents->merge($participatedEvents)->unique('id');
     }
 

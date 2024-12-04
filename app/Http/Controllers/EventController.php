@@ -145,16 +145,32 @@ class EventController extends Controller
     }
 
 
-    public function showByCategory($id)
+    public function showByCategory(Request $request, $id)
     {
-        if ($id == 'all') {
-            $events = Event::all();
-            $category = null; 
-        } else {
+        $query = Event::query();
+
+        if ($id !== 'all') {
             $category = Category::findOrFail($id);
-            $events = Event::where('category_id', $id)->get();
+            $query->where('category_id', $id);
+        } else {
+            $category = null;
         }
-    
+
+        $query->where('visibility', '<>', 'private');
+
+        $status = $request->get('status'); // 'ended', 'ongoing', 'future'
+        if ($status === 'ended') {
+            $query->where('end_date', '<', now());
+        } elseif ($status === 'ongoing') {
+            $query->where('start_date', '<=', now())->where('end_date', '>=', now());
+        } elseif ($status === 'future') {
+            $query->where('start_date', '>', now());
+        }
+
+        $order = $request->get('order', 'asc');
+        $query->orderBy('start_date', $order);
+
+        $events = $query->get();
 
         return view('pages.events_by_category', compact('category', 'events'));
     }

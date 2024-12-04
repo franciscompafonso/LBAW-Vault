@@ -88,39 +88,33 @@ class UserController extends Controller
 
 
     public function deleteAccount($id)
-{
-    try {
-        // Encontrar o usuário
-        $user = User::findOrFail($id);
+    {
+        try {
+            $user = User::findOrFail($id);
 
-        // Remover participações em eventos futuros
-        $upcomingEventIds = $user->notYetParticipatedEvents()
-            ->where('start_date', '>', Carbon::now()) // Usa Carbon para verificar datas futuras
-            ->pluck('event_id')
-            ->toArray();
-        $user->notYetParticipatedEvents()->detach($upcomingEventIds);
+            $upcomingEventIds = $user->notYetParticipatedEvents()
+                ->where('end_date', '>', Carbon::now())
+                ->pluck('event_id')
+                ->toArray();
+            $user->notYetParticipatedEvents()->detach($upcomingEventIds);
 
-        // Marcar o usuário como deletado (soft delete)
-        $user->isdeleted = true;
-        $user->save();
+            $user->isdeleted = true;
+            $user->save();
 
-        // Remover eventos futuros criados por este usuário
-        Event::where('creator_id', $id)
-            ->where('start_date', '>', Carbon::now()) // Verifica eventos com start_date no futuro
-            ->delete();
+            Event::where('creator_id', $id)
+                ->where('end_date', '>', Carbon::now())
+                ->delete();
 
-        // Fazer logout do usuário
-        Auth::logout();
+            Auth::logout();
 
-        // Redirecionar para a página inicial com uma mensagem de status
-        return redirect('/home')
-            ->with('status', 'Your account has been deleted successfully, and upcoming events have been removed.');
-    } catch (\Exception $e) {
-        // Redirecionar de volta com uma mensagem de erro em caso de exceção
-        return redirect()->back()
-            ->with('error', 'Error deleting account: ' . $e->getMessage());
+            return redirect('/home')
+                ->with('status', 'Your account has been deleted successfully, and upcoming events have been removed.');
+        } catch (\Exception $e) {
+            // Redirecionar de volta com uma mensagem de erro em caso de exceção
+            return redirect()->back()
+                ->with('error', 'Error deleting account: ' . $e->getMessage());
+        }
     }
-}
 
 
    

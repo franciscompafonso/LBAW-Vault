@@ -13,7 +13,9 @@
         <div class="flex-1 space-y-6">
             <h1 class="text-4xl font-bold text-ultraViolet font-montserrat">{{ $event->name }}</h1>   
             <p class="text-lg leading-relaxed text-darkSlateGrey font-montserrat">{{ $event->description }}</p>
-
+            @if (Auth::id() == $event->creator_id)
+                <p class="text-lg leading-relaxed text-darkSlateGrey font-montserrat">This is a {{ $event->visibility }} event.</p>
+            @endif
             <div class="mt-6 space-y-4">
                 <p class="text-lg text-darkSlateGrey font-montserrat">
                     <strong class="font-semibold">Start:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y') }} {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }}
@@ -42,7 +44,7 @@
                             Leave Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->start_date > now())
+                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->end_date > now())
                     <!-- Join Event Button -->
                     <form action="{{ route('events.join', $event->id) }}" method="POST">
                         @csrf
@@ -50,7 +52,7 @@
                             Join Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'request_only' && !Auth::user()->isblocked && $event->start_date > now())
+                @elseif ($event->visibility === 'request_only' && !Auth::user()->isblocked && $event->end_date > now())
                     @if ($event->creator_id === Auth::id())
                         <!-- Join Event Button -->
                         <form action="{{ route('events.join', $event->id) }}" method="POST">
