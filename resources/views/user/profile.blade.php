@@ -22,7 +22,7 @@
                     <p class="text-xl font-bold text-white">Deleted</p>
                 </div>
             @elseif ($user->profilepicture)
-                <img src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-darkSlateGrey">
+                <img src="{{ asset($user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-darkSlateGrey">
             @else
                 <div class="flex items-center justify-center w-32 h-32 bg-gray-300 rounded-full">
                     <i class="text-3xl text-white fa-solid fa-user"></i>

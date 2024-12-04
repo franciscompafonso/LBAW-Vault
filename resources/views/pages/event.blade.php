@@ -6,7 +6,7 @@
     <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Image Section (Left) -->
         <div class="flex-shrink-0 w-full lg:w-2/5">
-            <img src="{{ asset('images/banner/' . $event->banner) }}" alt="{{ $event->name }}" class="object-cover w-full transition-transform duration-300 transform rounded-lg shadow-md h-80 hover:scale-105">
+            <img src="{{ asset($event->banner) }}" alt="{{ $event->name }}" class="object-cover w-full transition-transform duration-300 transform rounded-lg shadow-md h-80 hover:scale-105">
         </div>
 
         <!-- Event Details Section (Right) -->
@@ -61,14 +61,14 @@
                         </form>
                     @elseif ($event->requests->where('join_request_by_id', Auth::id())->where('accepted', false)->isNotEmpty())
                         <!-- Disabled Request to Join Button -->
-                        <button disabled class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-gray-400 cursor-not-allowed">
+                        <button disabled class="px-6 py-2 font-bold text-white transition-all duration-200 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">
                             Request Sent
                         </button>
                     @else
                         <!-- Request to Join Button -->
                         <form action="{{ route('events.request', $event->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-yellow-500 hover:bg-cambridgeBlue hover:text-darkSlateGrey border-yellow-500 hover:border-cambridgeBlue">
+                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 bg-yellow-500 border-yellow-500 rounded-md font-montserrat hover:bg-cambridgeBlue hover:text-darkSlateGrey hover:border-cambridgeBlue">
                                 Request to Join
                             </button>
                         </form>

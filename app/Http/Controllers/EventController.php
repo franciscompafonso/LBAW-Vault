@@ -11,6 +11,7 @@ use App\Models\AnswerReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 
 class EventController extends Controller
@@ -98,7 +99,7 @@ class EventController extends Controller
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
             $filename = time() . '_' . $event->id;
-            $file->move(public_path('images/banner'), $filename);
+            Storage::put('banner/' . $filename, file_get_contents($file));
         }
 
         $event->banner = $filename;
@@ -134,7 +135,7 @@ class EventController extends Controller
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
             $filename = time() . '_' . $event->id;
-            $file->move(public_path('images/banner'), $filename);
+            Storage::put('banner/' . $filename, file_get_contents($file));
         }
 
         $event->banner = $filename;

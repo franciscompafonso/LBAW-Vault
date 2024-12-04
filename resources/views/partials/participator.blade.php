@@ -1,10 +1,10 @@
 <li data-id="{{ $participator->id }}">
-    <div class="grid grid-cols-3 items-center gap-4">
-        <div class="flex items-center space-x-2 col-span-2">
+    <div class="grid items-center grid-cols-3 gap-4">
+        <div class="flex items-center col-span-2 space-x-2">
             <img 
-                src="{{ asset('images/profile-pictures/' . $participator->profilepicture) }}" 
+                src="{{ asset($participator->profilepicture) }}" 
                 alt="{{ $participator->username }}" 
-                class="w-12 h-12 rounded-full object-cover"
+                class="object-cover w-12 h-12 rounded-full"
             >
             @if(!$participator->isdeleted)
                 <a href="{{ route('user.profile', ['id' => $participator->id]) }}" 
@@ -19,7 +19,7 @@
 
             <!-- Display "(Creator)" next to the name if the participator is the creator -->
             @if($participator->id === $creatorId)
-                <span class="text-green-600 text-sm font-semibold">(Creator)</span>
+                <span class="text-sm font-semibold text-green-600">(Creator)</span>
             @endif
         </div>
 
@@ -27,7 +27,7 @@
             <div class="flex items-center justify-end">
                 <form action="{{ route('events.participators.kick', ['event' => $event->id, 'user' => $participator->id]) }}" class="m-0" method="POST">
                     @csrf
-                    <button type="submit" class="text-red-200 font-montserrat hover:text-red-600 transition-colors duration-200 border-none hover:bg-transparent focus:outline-none">
+                    <button type="submit" class="text-red-200 transition-colors duration-200 border-none font-montserrat hover:text-red-600 hover:bg-transparent focus:outline-none">
                         X
                     </button>
                 </form>

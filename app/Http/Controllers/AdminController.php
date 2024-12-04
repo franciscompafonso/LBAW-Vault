@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Admin;
@@ -201,7 +201,7 @@ public function adminEdit(int $id, Request $request)
 
         $file = $request->file('profilepicture');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('images/profile-pictures/'), $filename);
+        Storage::put('profile-pictures/' . $filename, file_get_contents($photo));
         $user->profilepicture = $filename;
     }
 
