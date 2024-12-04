@@ -5,10 +5,10 @@
         <h3 class="text-2xl font-semibold font-montserrat text-ultraViolet">{{ $event->name }}</h3>
         <p class="mt-2 text-darkSlateGrey font-montserrat">{{ $event->description }}</p>
         <p class="mt-4 text-sm text-darkSlateGrey font-montserrat">
-            Date: {{ $event->start_date ? \Carbon\Carbon::parse($event->date)->format('d/m/Y') : 'Not available' }}
+            Start Date: {{ $event->start_date ? $event->start_date->format('d/m/Y H:i') : 'Not available' }}
         </p>
         <p class="mt-4 text-sm text-darkSlateGrey font-montserrat">
-            Start Time: {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }} 
+            End Date: {{ $event->end_date ? $event->end_date->format('d/m/Y H:i') : 'Not available' }}
         </p>
 
         <div class="flex flex-col items-center px-1 py-2 mt-auto">

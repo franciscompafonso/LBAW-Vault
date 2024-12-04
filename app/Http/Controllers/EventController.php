@@ -100,9 +100,8 @@ class EventController extends Controller
             $file = $request->file('banner');
             $filename = time() . '_' . $event->id;
             Storage::put('banner/' . $filename, file_get_contents($file));
+            $event->banner = $filename;
         }
-
-        $event->banner = $filename;
         $event->save();
 
         return redirect()->route('events.show', ['id' => $event->id])->with('success', 'Event created successfully!');
