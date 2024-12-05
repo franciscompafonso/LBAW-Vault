@@ -144,35 +144,75 @@ class EventController extends Controller
         
     }
 
-
     public function showByCategory(Request $request, $id)
     {
         $query = Event::query();
-
+    
+        $locations = Location::all();
+        $categories = Category::all();
+    
         if ($id !== 'all') {
             $category = Category::findOrFail($id);
             $query->where('category_id', $id);
         } else {
             $category = null;
         }
-
+    
         $query->where('visibility', '<>', 'private');
-
-        $status = $request->get('status'); // 'ended', 'ongoing', 'future'
-        if ($status === 'ended') {
-            $query->where('end_date', '<', now());
-        } elseif ($status === 'ongoing') {
-            $query->where('start_date', '<=', now())->where('end_date', '>=', now());
-        } elseif ($status === 'future') {
-            $query->where('start_date', '>', now());
+    
+        if ($request->filled('minParticipants')) {
+            $query->where('capacity', '>=', $request->minParticipants);
         }
-
+        if ($request->filled('maxParticipants')) {
+            $query->where('capacity', '<=', $request->maxParticipants);
+        }
+    
+        if ($request->filled('startDate')) {
+            $query->where('start_date', '>=', $request->startDate);
+        }
+        if ($request->filled('endDate')) {
+            $query->where('end_date', '<=', $request->endDate);
+        }
+    
+        if ($request->filled('visibility')) {
+            $query->where('visibility', $request->visibility);
+        }
+    
+        if ($request->filled('location')) {
+            $query->where('location_id', $request->location);
+        }
+    
+        if (Auth::check()) {
+            if ($request->userEvents === 'created') {
+                $query->where('creator_id', Auth::id());
+            } elseif ($request->userEvents === 'participated') {
+                $query->whereHas('participators', function ($q) {
+                    $q->where('participator_id', Auth::id());
+                });
+            }
+        }
+    
         $order = $request->get('order', 'asc');
         $query->orderBy('start_date', $order);
-
+    
         $events = $query->get();
-
-        return view('pages.events_by_category', compact('category', 'events'));
+    
+        // Calculate min and max capacities for slider
+        $minCapacity = $events->min('capacity') ?? 0;
+        $maxCapacity = $events->max('capacity') ?? 100;
+    
+        if ($request->ajax()) {
+            return view('partials.events_grid', compact('events'))->render();
+        }
+    
+        return view('pages.events_by_category', compact(
+            'category', 
+            'events', 
+            'locations', 
+            'categories', 
+            'minCapacity', 
+            'maxCapacity'
+        ));
     }
 
     /**
