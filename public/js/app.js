@@ -179,6 +179,8 @@ function createItem(item) {
   
 addEventListeners();
 
+Pusher.logToConsole = true;
+
 // Initialize Pusher
 const pusher = new Pusher(pusherAppKey, {
   cluster: pusherCluster,

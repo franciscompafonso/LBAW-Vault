@@ -238,24 +238,25 @@
             .then(data => {
                 // Check if the response contains a success message or notification
                 if (data.success) {
-                    // Show a success notification
-                    showNotification(data.message, 'success');
-
+                    // No notification, just log success message to console if needed
+                    console.log('Success:', data.message);
+                    
                     // Update the UI to reflect the changes (like updating the button text)
                     const button = this.querySelector('button');
                     button.textContent = "Joined!";
                     button.disabled = true; // Disable the button to prevent multiple clicks
                 } else {
-                    // Show error notification
-                    showNotification(data.message, 'error');
+                    // No error notification, just log error to console
+                    console.error('Error:', data.message);
                 }
             })
             .catch(error => {
-                // Handle errors (e.g., network issues)
-                showNotification('Something went wrong. Please try again later.', 'error');
+                // Log network or other errors to the console
+                console.error('Something went wrong. Please try again later.', error);
             });
         });
     });
+
 
     // Function to show notifications
     function showNotification(message, type) {

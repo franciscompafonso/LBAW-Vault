@@ -262,6 +262,7 @@ class EventController extends Controller
             'success' => true,
             'message' => 'You have successfully joined the event!',
         ]);
+        
     }
 
 

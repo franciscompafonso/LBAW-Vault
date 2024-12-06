@@ -23,7 +23,7 @@ class JoinEvent implements ShouldBroadcast
     public function __construct($event_name)
     {
         $this->event_name = $event_name;
-        $this->message = 'You joined the ' . $event_name . 'event';
+        $this->message = 'You joined the ' . $event_name . ' event';
     }
 
     /**
@@ -32,9 +32,8 @@ class JoinEvent implements ShouldBroadcast
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
     public function broadcastOn() {
-        return 'event-channel';
-    }
-
+        return new Channel('event-channel');
+    }    
 
 
     // You should specify the name of the generated notification.
