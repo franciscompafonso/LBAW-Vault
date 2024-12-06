@@ -21,46 +21,75 @@
     <div class="grid grid-cols-7 gap-6">
         <!-- Filters Section -->
         <form method="GET" id="filtersForm" class="flex flex-col gap-6">
-            <!-- Filters Label -->
-            <h2 class="text-2xl font-bold font-montserrat text-ultraViolet">Filters</h2>
+            <!-- Category as Hidden Input -->
+            <input type="hidden" name="category_id" value="{{ $category ? $category->id : '' }}">
 
-            <!-- Participant Range -->
-            <div>
-                <label for="minParticipants" class="block font-montserrat font-semibold">Min Participants</label>
-                <input type="range" name="minParticipants" id="minParticipants" min="0" max="500" value="{{ request('minParticipants', 0) }}" class="w-full mt-2">
-                <label for="maxParticipants" class="block font-montserrat font-semibold mt-4">Max Participants</label>
-                <input type="range" name="maxParticipants" id="maxParticipants" min="0" max="500" value="{{ request('maxParticipants', 500) }}" class="w-full mt-2">
-                <div class="flex justify-between text-sm font-montserrat mt-1">
-                    <span id="minParticipantsValue">{{ request('minParticipants', 0) }}</span>
-                    <span id="maxParticipantsValue">{{ request('maxParticipants', 500) }}</span>
-                </div>
-            </div>
+            <!-- Filters Label -->
+            <h2 class="text-4xl font-bold font-montserrat text-ultraViolet">Filters</h2>
 
             <!-- Date Range -->
             <div>
                 <label for="startDate" class="block font-montserrat font-semibold">Start Date</label>
-                <input type="date" name="startDate" id="startDate" class="p-2 border rounded mt-2" value="{{ request('startDate') }}">
+                <input 
+                    type="date" 
+                    name="startDate" 
+                    id="startDate" 
+                    class="p-2 border rounded mt-2" 
+                    value="{{ request('startDate') }}"
+                    max="" 
+                >
+                
                 <label for="endDate" class="block font-montserrat font-semibold mt-4">End Date</label>
-                <input type="date" name="endDate" id="endDate" class="p-2 border rounded mt-2" value="{{ request('endDate') }}">
+                <input 
+                    type="date" 
+                    name="endDate" 
+                    id="endDate" 
+                    class="p-2 border rounded mt-2" 
+                    value="{{ request('endDate') }}"
+                    min="" 
+                >
             </div>
 
             <!-- Visibility -->
             <div>
-                <label for="visibility" class="block font-montserrat font-semibold">Visibility</label>
-                <select name="visibility" id="visibility" class="p-2 border rounded mt-2">
-                    <option value="">All</option>
-                    <option value="public" {{ request('visibility') === 'public' ? 'selected' : '' }}>Public</option>
-                    <option value="private" {{ request('visibility') === 'private' ? 'selected' : '' }}>Private</option>
-                    <option value="request_only" {{ request('visibility') === 'request_only' ? 'selected' : '' }}>Request Only</option>
-                    <option value="canceled" {{ request('visibility') === 'canceled' ? 'selected' : '' }}>Canceled</option>
-                </select>
+                <label class="block font-montserrat font-semibold">Visibility</label>
+                <div class="mt-2">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="visibility[]" value="public" 
+                            {{ request('visibility') && in_array('public', request('visibility')) ? 'checked' : '' }} />
+                        <span>Public</span>
+                    </label>
+                    <label class="flex items-center space-x-2 mt-1">
+                        <input type="checkbox" name="visibility[]" value="request_only" 
+                            {{ request('visibility') && in_array('request_only', request('visibility')) ? 'checked' : '' }} />
+                        <span>Request Only</span>
+                    </label>
+                </div>
             </div>
+
+            <!-- Status -->
+            <div>
+                <label class="block font-montserrat font-semibold">Status</label>
+                <div class="mt-2">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="status[]" value="canceled" 
+                            {{ request('status') && in_array('canceled', request('status')) ? 'checked' : '' }} />
+                        <span>Canceled</span>
+                    </label>
+                    <label class="flex items-center space-x-2 mt-1">
+                        <input type="checkbox" name="status[]" value="full" 
+                            {{ request('status') && in_array('full', request('status')) ? 'checked' : '' }} />
+                        <span>Full Event</span>
+                    </label>
+                </div>
+            </div>
+
 
             <!-- Location -->
             <div>
                 <label for="location" class="block font-montserrat font-semibold">Location</label>
                 <select name="location" id="location" class="p-2 border rounded mt-2">
-                    <option value="">All Locations</option>
+                    <option value="">Any Location</option>
                     @foreach ($locations as $location)
                         <option value="{{ $location->id }}" {{ request('location') == $location->id ? 'selected' : '' }}>
                             {{ $location->name }}
@@ -70,12 +99,13 @@
             </div>
 
             <!-- Sort by -->
-            <h2 class="text-xl font-semibold font-montserrat text-ultraViolet mt-8">Sort by</h2>
             <div>
-                <label for="order" class="block font-montserrat font-semibold">Date</label>
+                <label for="order" class="block font-montserrat font-semibold">Sort by</label>
                 <select name="order" id="order" class="p-2 border rounded mt-2">
-                    <option value="asc" {{ request('order') === 'asc' ? 'selected' : '' }}>Ascending</option>
-                    <option value="desc" {{ request('order') === 'desc' ? 'selected' : '' }}>Descending</option>
+                    <option value="date_asc" {{ request('order') === 'date_asc' ? 'selected' : '' }}>Date Ascending</option>
+                    <option value="date_desc" {{ request('order') === 'date_desc' ? 'selected' : '' }}>Date Descending</option>
+                    <option value="occu_asc" {{ request('order') === 'occu_asc' ? 'selected' : '' }}>Occupation Ascending</option>
+                    <option value="occu_desc" {{ request('order') === 'occu_desc' ? 'selected' : '' }}>Occupation Descending</option>
                 </select>
             </div>
 
@@ -103,49 +133,41 @@
 
 <!-- Validation Script -->
 <script>
-    const minInput = document.getElementById('minParticipants');
-    const maxInput = document.getElementById('maxParticipants');
-    const minLabel = document.getElementById('minParticipantsValue');
-    const maxLabel = document.getElementById('maxParticipantsValue');
-
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
 
-    // Update Slider Labels
-    function updateLabels() {
-        minLabel.textContent = minInput.value;
-        maxLabel.textContent = maxInput.value;
+    // Function to update min/max dynamically
+    function updateConstraints() {
+        if (startDateInput.value) {
+            endDateInput.min = startDateInput.value; // Set min for endDate
+        } else {
+            endDateInput.min = ''; // Reset min if no startDate
+        }
+        
+        if (endDateInput.value) {
+            startDateInput.max = endDateInput.value; // Set max for startDate
+        } else {
+            startDateInput.max = ''; // Reset max if no endDate
+        }
     }
 
-    minInput.addEventListener('input', () => {
-        if (parseInt(minInput.value) > parseInt(maxInput.value)) {
-            maxInput.value = minInput.value; // Sync max to min
-        }
-        updateLabels();
-    });
-
-    maxInput.addEventListener('input', () => {
-        if (parseInt(maxInput.value) < parseInt(minInput.value)) {
-            minInput.value = maxInput.value; // Sync min to max
-        }
-        updateLabels();
-    });
-
-    // Date Validation
-    endDateInput.addEventListener('change', () => {
-        if (new Date(endDateInput.value) < new Date(startDateInput.value)) {
-            startDateInput.value = endDateInput.value; // Sync start to end
-        }
-    });
-
+    // Event listeners to handle date changes
     startDateInput.addEventListener('change', () => {
         if (new Date(startDateInput.value) > new Date(endDateInput.value)) {
-            endDateInput.value = startDateInput.value; // Sync end to start
+            endDateInput.value = startDateInput.value; // Sync end to start if invalid
         }
+        updateConstraints(); // Update constraints dynamically
+    });
+
+    endDateInput.addEventListener('change', () => {
+        if (new Date(endDateInput.value) < new Date(startDateInput.value)) {
+            startDateInput.value = endDateInput.value; // Sync start to end if invalid
+        }
+        updateConstraints(); // Update constraints dynamically
     });
 
     // Initial Update
-    updateLabels();
+    updateConstraints();
 </script>
 
 @endsection
