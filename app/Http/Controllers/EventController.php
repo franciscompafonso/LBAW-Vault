@@ -150,6 +150,19 @@ class EventController extends Controller
         $locations = Location::all();
         $categories = Category::all();
 
+        $searchQuery = $request->input('q');
+
+        // If a search query is provided, filter events using full-text search
+        if ($searchQuery) {
+            $searchResults = Event::query()
+                ->select('id')
+                ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$searchQuery])
+                ->pluck('id');
+
+            // Apply the search results as a base filter
+            $query->whereIn('id', $searchResults);
+        }
+
         // Filter by category if provided
         if ($request->filled('category_id')) {
             $category = Category::find($request->category_id);
@@ -358,6 +371,7 @@ class EventController extends Controller
             ->join('location', 'event.location_id', '=', 'location.id')
             ->join('category', 'event.category_id', '=', 'category.id')
             ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$query])
+            ->limit(5)
             ->get();
 
         return response()->json($events);

@@ -105,9 +105,11 @@
         <!-- Search Bar & Results -->
         <div id="searchBar" class="absolute top-0 z-10 hidden w-full max-w-4xl p-4 mt-16 transform -translate-x-1/2 bg-white rounded-lg shadow-lg left-1/2">
             <div class="relative w-full">
-                <input type="text" id="searchInput" 
-                    class="w-full p-4 pl-12 border border-gray-300 rounded-full search-input focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                    placeholder="Search events..." onkeyup="searchEvents()">
+            <input type="text" id="searchInput" 
+                class="w-full p-4 pl-12 border border-gray-300 rounded-full search-input focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                placeholder="Search events..." 
+                onkeyup="searchEvents(event)" 
+                onkeydown="searchEvents(event)">
             </div>
             
             <div id="searchResults" class="mt-4 overflow-y-auto max-h-80"></div>
@@ -129,6 +131,7 @@
 
         <script>
             const isAdmin = @json(Auth::guard('admin')->check());
+
             // Search
             function toggleSearchBar() {
                 const searchBar = document.getElementById('searchBar');
@@ -137,28 +140,35 @@
 
                 searchBar.classList.toggle('hidden');
 
-                if (searchBar.classList.contains('hidden')) {
+                if (!searchBar.classList.contains('hidden')) {
+                    searchInput.focus(); // Auto-focus the input field
+                } else {
                     searchInput.value = '';
                     searchResults.innerHTML = '';
                 }
             }
 
-            function searchEvents() {
+            function searchEvents(event) {
                 const query = document.getElementById('searchInput').value;
-                console.log("Searching for: " + query); // Add this line to debug the input
 
+                // Detect Enter Key
+                if (event.key === 'Enter' && query.length >= 3) {
+                    window.location.href = `/events/search?q=${encodeURIComponent(query)}`;
+                    return; // Stop further execution
+                }
+
+                // Fetch and display results for dropdown
                 if (query.length >= 3) {
                     fetch(`/api/search?q=${query}`)
                         .then(response => response.json())
                         .then(data => {
-                            console.log('Search results:', data); // Debug the response
                             displaySearchResults(data);
                         })
                         .catch(error => {
                             console.error('Error fetching search results:', error);
                         });
                 } else {
-                    document.getElementById('searchResults').innerHTML = ''; // Clear results if less than 3 characters
+                    document.getElementById('searchResults').innerHTML = '';
                 }
             }
 
@@ -170,31 +180,21 @@
                 if (events.length === 0) {
                     resultsContainer.innerHTML = '<p class="text-center text-gray-500">No events found.</p>';
                 } else {
-                    events.forEach(event => {
+                    events.slice(0, 4).forEach(event => { // Limit to 4 results here for the dropdown
                         const eventItem = document.createElement('div');
-                        eventItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
-                        
-                        
-                        const formattedDate = event.start_date 
-                            ? new Date(event.start_date).toLocaleString() 
-                            : 'Not available';
+                        eventItem.classList.add('p-2', 'hover:bg-gray-100', 'cursor-pointer', 'text-ultraViolet', 'font-montserrat');
 
                         const eventUrl = `/events/${event.id}`;
 
                         eventItem.innerHTML = `
-                            <div class="event-card">
-                                <h3 class="text-xl font-semibold text-gray-800">
-                                    <a href="${eventUrl}" class="font-semibold text-md font-montserrat text-ultraViolet hover:text-cambridgeBlue">${event.name}</a>
-                                </h3>
-                                <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${event.description || 'No description available'}</p>
-                                <p class="text-sm font-semibold font-montserrat text-darkSlateGrey">${formattedDate}</p>
-                            </div>
+                            <a href="${eventUrl}" class="font-semibold text-md font-montserrat text-ultraViolet hover:text-cambridgeBlue">${event.name}</a>
                         `;
 
                         resultsContainer.appendChild(eventItem);
                     });
                 }
             }
+
 
             // Notifications
 
