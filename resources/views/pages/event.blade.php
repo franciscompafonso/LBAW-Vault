@@ -132,7 +132,7 @@
                     <div class="flex justify-end mt-4">
                         <button 
                             type="submit" 
-                            class="px-6 py-2 text-white transition rounded-lg bg-burgundy hover:bg-opacity-90">
+                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                             Submit Comment
                         </button>
                     </div>
@@ -142,7 +142,7 @@
             @if (Auth::id() === $event->creator_id)
                 <div class="flex justify-end mt-4">
                     <button 
-                        class="px-6 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue""
                         onclick="togglePollForm()">
                         Create Poll
                     </button>
