@@ -53,7 +53,7 @@
                 </div>
                 <div class="w-full text-center md:w-1/5">
                     <a href="https://github.com/franciscoafonso04">
-                        <img src="https://avatars.githubusercontent.com/u/132215846?s=96&v=4" alt="Team Member 3" class="mx-auto mb-4 rounded-full w-60 h-60">
+                        <img src="https://avatars.githubusercontent.com/u/132215846?v=4" alt="Team Member 3" class="mx-auto mb-4 rounded-full w-60 h-60">
                     </a>
                     <h3 class="text-xl font-bold font-montserrat text-ultraViolet">Francisco Afonso</h3>
                     
