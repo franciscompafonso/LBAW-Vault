@@ -81,7 +81,7 @@ CREATE TABLE user_account (
     password VARCHAR(255) NOT NULL,
     isDeleted BOOLEAN DEFAULT FALSE,
     isBlocked BOOLEAN DEFAULT FALSE,
-    profilePicture VARCHAR(255) DEFAULT 'images/profile-pictures/default-avatar.png'
+    profilePicture VARCHAR(255) DEFAULT 'default-avatar.png'
 );
 
 CREATE TABLE location (
@@ -107,7 +107,7 @@ CREATE TABLE "event" (
     creator_id INT REFERENCES user_account(id) NOT NULL,
     location_id INT REFERENCES location(id) NOT NULL,
     category_id INT REFERENCES category(id) NOT NULL,
-    banner VARCHAR(255) DEFAULT 'images/banner/default-banner.png',
+    banner VARCHAR(255) DEFAULT 'default-banner.png',
     CONSTRAINT ck_start_end CHECK (start_date < end_date)
 );
 
@@ -668,10 +668,10 @@ CREATE TRIGGER trigger_block_notification
 -- INSERT ------------------------------------------------------------------------------------------------------------
 
 INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked, profilePicture) VALUES
-('Ana Silva', 'anasilva', 'ana.silva@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'images/profile-pictures/ana.png'),
-('João Pereira', 'joaopereira', 'joao.pereira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'images/profile-pictures/joao.png'),
-('Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE, 'images/profile-pictures/maria.png'),
-('Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 'images/profile-pictures/pedro.png');
+('Ana Silva', 'anasilva', 'ana.silva@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'ana.png'),
+('João Pereira', 'joaopereira', 'joao.pereira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 'joao.png'),
+('Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE, 'maria.png'),
+('Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 'pedro.png');
 
 INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked) VALUES
 ('Carlos Santos', 'carlossantos', 'carlos.santos@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE),

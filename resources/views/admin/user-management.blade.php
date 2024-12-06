@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('Title', 'Contact us')
+@section('Title', 'User Management')
 @section('content')
     <div class="container p-8 mx-auto">
         <h1 class="mb-6 text-5xl font-bold font-montserrat">User Management</h1>

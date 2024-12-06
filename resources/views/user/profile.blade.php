@@ -22,7 +22,7 @@
                     <p class="text-xl font-bold text-white">Deleted</p>
                 </div>
             @elseif ($user->profilepicture)
-                <img src="{{ asset($user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-darkSlateGrey">
+                <img src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-darkSlateGrey">
             @else
                 <div class="flex items-center justify-center w-32 h-32 bg-gray-300 rounded-full">
                     <i class="text-3xl text-white fa-solid fa-user"></i>
@@ -55,13 +55,19 @@
         </div>
 
         <!-- Edit Profile Link -->
-        @if((Auth::id() === $user->id && !$user->isdeleted) || auth()->guard('admin')->check())
+        @if((Auth::id() === $user->id && !$user->isdeleted && !$user->isblocked) || auth()->guard('admin')->check())
             <div class="flex flex-col items-center px-4 py-8 space-y-6">
                 <a href="{{ auth()->guard('admin')->check() ? route('admin.edit.form', ['id' => $user->id]) : route('user.edit.form', ['id' => $user->id]) }}" 
                 class="w-full max-w-md py-3 text-2xl font-bold text-center transition-all duration-200 rounded-lg shadow-md bg-ultraViolet hover:bg-cambridgeBlue text-whiteSmoke hover:text-darkSlateGrey font-montserrat">
                     Edit Profile
                 </a>
             </div>
+            <div class="flex flex-col items-center">
+                <a href="{{ route('user.invites.sent', ['id' => $user->id]) }}" 
+                class="w-full max-w-md py-3 text-2xl font-bold text-center transition-all duration-200 rounded-lg shadow-md bg-ultraViolet hover:bg-cambridgeBlue text-whiteSmoke hover:text-darkSlateGrey font-montserrat">
+                    Invitations Sent
+                </a>
+            </div>            
         @endif
 
         <!-- My Events -->

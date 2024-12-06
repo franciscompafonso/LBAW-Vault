@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
@@ -76,7 +75,7 @@ class UserController extends Controller
     
             $file = $request->file('profilepicture');
             $filename = time() . '_' . $user->username; // Ensure a unique filename
-            Storage::put('profile-pictures/' . $filename, file_get_contents($file));
+            $file->move(public_path('images/profile-pictures'), $filename);
         
             // Save only the filename in the database
             $user->profilepicture = $filename;

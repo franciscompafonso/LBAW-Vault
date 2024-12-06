@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\JoinRequest;
 use App\Models\QuestionReview;
 use App\Models\AnswerReview;
+use App\Models\User;
+use App\Events\JoinEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -45,10 +47,9 @@ class EventController extends Controller
     {
         if (!Auth::check()) {
             return redirect('/login');
-
         } 
 
-            $user = Auth::user();
+            $user = User::findOrFail(Auth::id());
 
             $createdEvents = $user->myEvents()->orderBy('id')->get();
             
@@ -99,7 +100,7 @@ class EventController extends Controller
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
             $filename = time() . '_' . $event->id;
-            Storage::put('banner/' . $filename, file_get_contents($file));
+            $file->move(public_path('images/banner'), $filename);
             $event->banner = $filename;
         }
         $event->save();
@@ -134,7 +135,7 @@ class EventController extends Controller
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
             $filename = time() . '_' . $event->id;
-            Storage::put('banner/' . $filename, file_get_contents($file));
+            $file->move(public_path('images/banner'), $filename);
         }
 
         $event->banner = $filename;
@@ -315,17 +316,39 @@ class EventController extends Controller
         $event = Event::findOrFail($eventId);
 
         if ($event->participators()->where('id', Auth::id())->exists()) {
-            return back()->with('message', 'You are already participating in this event.');
+            return response()->json([
+                'success' => false,
+                'message' => 'You are already participating in this event.',
+            ]);
         }
 
-        else if ($event->start_date < now()) {
-            return back()->with('message', 'You cannot join an event that has already started.');
+        if ($event->end_date < now()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You cannot join an event that has already ended.',
+            ]);
         }
 
+        if ($event->participators()->count() >= $event->capacity) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This event is already at full capacity.',
+            ]);
+        }
+
+        // Attach user to event
         $event->participators()->attach(Auth::id());
 
-        return back()->with('message', 'You have successfully joined the event!');
+        // Broadcast event (for real-time notification)
+        event(new JoinEvent($event->name));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'You have successfully joined the event!',
+        ]);
+        
     }
+
 
     /**
      * Leave an event.

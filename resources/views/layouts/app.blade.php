@@ -15,6 +15,13 @@
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
 
+        <!-- Pusher -->
+        <script>
+        const pusherAppKey = "{{ env('PUSHER_APP_KEY') }}";
+        const pusherCluster = "{{ env('PUSHER_APP_CLUSTER') }}";
+        </script>
+        <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
+
         <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
         @vite('resources/css/app.css')
     </head>
@@ -87,7 +94,7 @@
                     </div>
                     <!-- Profile Icon for regular user -->
                     <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}">
-                        <img src="{{ asset(Auth::user()->profilepicture) }}" 
+                        <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                              alt="User Profile Picture" 
                              class="object-cover w-16 h-16 border-2 rounded-full border-whiteSmoke hover:border-darkSlateGrey">
                     </a>
@@ -122,6 +129,7 @@
                 {{ Request::is('events/*/survey/stats') && isset($hasResponses) && $hasResponses ? 'padding-top: 1000px;' : '' }}
             ">
             @yield('content')
+            <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
         </main>
 
         <!-- Footer Section -->

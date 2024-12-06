@@ -11,7 +11,7 @@
   <!-- Form Container -->
   <form method="POST" action="{{ route('events.update', $event->id) }}" class="space-y-8" enctype="multipart/form-data">
     @csrf
-    @method('PUT') <!-- Indicate the update method -->
+    @method('PUT')
 
     <!-- Banner Input -->
     <div class="flex items-center mb-4 space-x-4">
