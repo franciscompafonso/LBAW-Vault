@@ -6,7 +6,7 @@
     <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Image Section (Left) -->
         <div class="flex-shrink-0 w-full lg:w-2/5">
-            <img src="{{ asset($event->banner) }}" alt="{{ $event->name }}" class="object-cover w-full transition-transform duration-300 transform rounded-lg shadow-md h-80 hover:scale-105">
+            <img src="{{ asset('images/banner/' . $event->banner) }}" alt="{{ $event->name }}" class="object-cover w-full transition-transform duration-300 transform rounded-lg shadow-md h-80 hover:scale-105">
         </div>
 
         <!-- Event Details Section (Right) -->

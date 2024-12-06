@@ -99,7 +99,7 @@ class EventController extends Controller
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
             $filename = time() . '_' . $event->id;
-            Storage::put('banner/' . $filename, file_get_contents($file));
+            $file->move(public_path('images/banner'), $filename);
             $event->banner = $filename;
         }
         $event->save();
@@ -134,7 +134,7 @@ class EventController extends Controller
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
             $filename = time() . '_' . $event->id;
-            Storage::put('banner/' . $filename, file_get_contents($file));
+            $file->move(public_path('images/banner'), $filename);
         }
 
         $event->banner = $filename;

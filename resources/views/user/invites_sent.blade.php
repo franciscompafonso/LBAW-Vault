@@ -9,7 +9,7 @@
     
         <!-- Profile Picture Section -->
         <div class="flex justify-center mb-6">
-            <img src="{{ asset($user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-darkSlateGrey">
+            <img src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-darkSlateGrey">
         </div>
 
         <!-- User Info Section -->
