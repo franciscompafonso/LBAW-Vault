@@ -44,12 +44,6 @@ Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('ev
 Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
 Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
 
-// API
-Route::get('/api/search', [EventController::class, 'search'])->name('search');
-
-// Route::put('/api/events', [EventController::class, 'create']);
-// Route::delete('/api/events/{event_id}', [EventController::class, 'delete']);
-
 Route::post('/invites/{invitesId}/decline', [InviteController::class, 'declineInvite'])->name('invites.decline');
 Route::post('/invites/{invitesId}/accept', [InviteController::class, 'acceptInvite'])->name('invites.accept');
 Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->name('events.invite');
@@ -102,6 +96,8 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/{id}/change_password', 'changePassword')->name('user.change_password.action');
     Route::post('/user/{id}/block_user', 'block')->where('id', '[0-9]+')->name('user.block');
     Route::post('/user/{id}/unblock_user', 'unblock')->where('id', '[0-9]+')->name('user.unblock');
+    Route::get('/user/{id}/invites', [InviteController::class, 'showUserInvites'])->name('user.invites.sent');
+    Route::delete('/invite/{id}', [InviteController::class, 'deleteInvite'])->name('invite.delete');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -115,6 +111,7 @@ Route::middleware(['auth'])->group(function () {
     // API
     Route::get('/api/notifications', [NotificationController::class, 'index']);
 });
+Route::get('/api/search', [EventController::class, 'search'])->name('search');
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/user-management', [AdminController::class, 'listUsers'])->name('admin.user-management');

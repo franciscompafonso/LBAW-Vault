@@ -11,24 +11,32 @@ use Illuminate\Support\Facades\Auth;
 
 class InviteController extends Controller
 {
+    public function showUserInvites($id)
+    {
+        $user = User::findOrFail($id);
+        $invites = Invite::where('invite_by_id', $id)->with(['invitee', 'event'])->get();
+
+        return view('user.invites_sent', [
+            'user' => $user,
+            'invites' => $invites,
+        ]);
+    }
+
     /**
      * Invite a user to the event.
      */
     public function sendInvite(Request $request, $eventId)
     {
-        // Validate the input username
         $request->validate([
             'username' => 'required|string|max:255',
             'description' => 'nullable|string|max:255'
         ]);
 
-        // Find the event
         $event = Event::findOrFail($eventId);
 
         // Check if the user is authorized to invite
         $this->authorize('invite', $event);
 
-        // Find the invitee by username
         $invitee = User::where('username', $request->username)->first();
 
         if (!$invitee) {
@@ -42,7 +50,6 @@ class InviteController extends Controller
                                 ->where('title', $event->name)
                                 ->exists();
 
-        // Handle edge cases
         if ($isParticipator) {
             return back()->with('message', 'User is already a participator in this event.');
         }
@@ -51,7 +58,6 @@ class InviteController extends Controller
             return back()->with('message', 'User has already been invited to this event.');
         }
 
-        // Prepare invite data
         $inviteData = [
             'invite_by_id' => Auth::id(),
             'invite_to_id' => $invitee->id,
@@ -86,21 +92,19 @@ class InviteController extends Controller
         return back()->with('success', 'You have successfully joined the event and accepted the invite!');
     }
 
-    public function declineInvite(Request $request, $inviteId)
+    public function deleteInvite($id)
     {
-        $invite = Invite::findOrFail($inviteId);
+        $invite = Invite::findOrFail($id);
+
+        // Optional: Check if the user has permission to delete the invite
+        if (Auth::id() !== $invite->invite_by_id) {
+            return back()->with('error', 'You do not have permission to delete this invite.');
+        }
 
         $invite->delete();
 
-        $notificationId = $request->notification_id;
-        $notification = Notification::find($notificationId);
-
-        if ($notification) {
-            $notification->viewed = true;
-            $notification->save();
-        }
-
-        return back()->with('success', 'You have successfully declined the invite and dismissed the notification.');
+        return back()->with('success', 'Invite deleted successfully.');
     }
+
 }
 
