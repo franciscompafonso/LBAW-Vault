@@ -162,7 +162,9 @@ class EventController extends Controller
 
         // Visibility and Status Filters
         if ($request->filled('visibility')) {
-            $query->whereIn('visibility', $request->visibility); // Public or Request Only
+            $query->whereIn('visibility', $request->visibility); // Use the provided visibility values
+        } else {
+            $query->whereIn('visibility', ['public', 'request_only']); // Default to public and request_only if none specified
         }
         if ($request->filled('status')) {
             $query->where(function ($q) use ($request) {
@@ -170,7 +172,11 @@ class EventController extends Controller
                     $q->orWhere('visibility', 'canceled'); // Assuming 'canceled' is stored in visibility
                 }
                 if (in_array('full', $request->status)) {
-                    $q->orWhereColumn('capacity', '<=', 'participants_count'); // Full capacity condition
+                    $q->orWhere(function ($subQuery) {
+                        $subQuery->whereRaw(
+                            '(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) >= event.capacity'
+                        );
+                    });
                 }
             });
         }
@@ -208,11 +214,11 @@ class EventController extends Controller
             case 'date_desc':
                 $query->orderBy('start_date', 'desc');
                 break;
-            case 'occu_asc':
-                $query->orderByRaw('participants_count / capacity asc'); // Calculate occupation rate ascending
+            case 'part_asc':
+                $query->orderByRaw('(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) asc');
                 break;
-            case 'occu_desc':
-                $query->orderByRaw('participants_count / capacity desc'); // Calculate occupation rate descending
+            case 'part_desc':
+                $query->orderByRaw('(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) desc');
                 break;
             default:
                 $query->orderBy('start_date', 'asc'); // Default fallback
@@ -230,14 +236,15 @@ class EventController extends Controller
         }
 
         return view('pages.events_by_category', compact(
-            'category', 
-            'events', 
-            'locations', 
-            'categories', 
-            'minCapacity', 
+            'category',
+            'events',
+            'locations',
+            'categories',
+            'minCapacity',
             'maxCapacity'
         ));
     }
+
 
     /**
      * Delete an event.

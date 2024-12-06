@@ -1,5 +1,5 @@
 <article class="mx-5 my-5 overflow-hidden transition-transform duration-300 bg-white rounded-lg shadow-md event hover:scale-105">
-    <img src="https://picsum.photos/200" alt="{{ $event->name }}" class="object-cover w-full h-40">
+    <img src="https://picsum.photos/300?random={{ $event->id }}" alt="{{ $event->name }}" class="object-cover w-full h-40">
 
     <div class="p-3">
         <h3 class="text-2xl font-semibold font-montserrat text-ultraViolet">{{ $event->name }}</h3>
