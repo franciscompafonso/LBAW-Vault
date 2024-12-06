@@ -180,7 +180,7 @@
                 if (events.length === 0) {
                     resultsContainer.innerHTML = '<p class="text-center text-gray-500">No events found.</p>';
                 } else {
-                    events.slice(0, 4).forEach(event => { // Limit to 4 results here for the dropdown
+                    events.slice(0, 5).forEach(event => { // Limit to 4 results here for the dropdown
                         const eventItem = document.createElement('div');
                         eventItem.classList.add('p-2', 'hover:bg-gray-100', 'cursor-pointer', 'text-ultraViolet', 'font-montserrat');
 

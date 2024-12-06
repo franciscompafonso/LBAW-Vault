@@ -4,6 +4,15 @@
     <!-- Filters Label -->
     <h2 class="text-4xl font-bold font-montserrat text-ultraViolet">Filters</h2>
 
+    <!-- Display Search Context -->
+    @if(request('q'))
+        <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
+            Searching for: <span class="text-ultraViolet">{{ request('q') }}</span>
+        </p>
+        <!-- Hidden Input to Preserve Search Query -->
+        <input type="hidden" name="q" value="{{ request('q') }}">
+    @endif
+
     <!-- Date Range -->
     <div>
         <label for="startDate" class="block font-montserrat font-semibold">Start Date</label>
@@ -66,9 +75,9 @@
         <label for="category" class="block font-montserrat font-semibold">Category</label>
         <select name="category_id" id="category" class="p-2 border rounded mt-2">
             <option value="">All Categories</option>
-            @foreach ($categories as $cat)
-                <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                    {{ $cat->name }}
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
                 </option>
             @endforeach
         </select>
@@ -98,9 +107,18 @@
         </select>
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit" 
-            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
-        Apply Filters
-    </button>
+    <!-- Buttons -->
+    <div class="flex space-x-4">
+        <!-- Submit Button -->
+        <button type="submit" 
+                class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+            Apply Filters
+        </button>
+        
+        <!-- Reset Button -->
+        <a href="{{ url()->current() }}" 
+           class="px-6 py-2 font-bold text-darkSlateGrey transition-all duration-200 rounded-md font-montserrat bg-gray-200 hover:bg-gray-300 border-gray-300 hover:border-gray-400">
+            Reset Filters
+        </a>
+    </div>
 </form>
