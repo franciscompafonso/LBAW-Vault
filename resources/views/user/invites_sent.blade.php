@@ -48,27 +48,35 @@
                         <div class="grid grid-cols-6 gap-4 p-4 mb-4 text-sm font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
                             <div class="text-center">Recipient</div>
                             <div class="text-center">Event</div>
-                            <div class="text-center">Description</div>
+                            <div class="text-center">Message</div>
                             <div class="text-center">Date</div>
                             <div class="text-center">Status</div>
-                            <div class="text-center">Actions</div>
+                            <div class="text-center">Delete</div>
                         </div>
 
                         @foreach($invites as $invite)
                             <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                                <!-- Recipient Column -->
-                                <div class="text-center font-montserrat">{{ $invite->invitee->username }}</div>
-                                
-                                <!-- Event Column -->
-                                <div class="text-center font-montserrat">{{ $invite->event->name }}</div>
+                                <!-- Recipient -->
+                                <div class="text-center font-montserrat">
+                                    <a href="{{ route('user.profile', ['id' => $invite->invitee->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                        {{ $invite->invitee->username }}
+                                    </a>
+                                </div>
+                                                                                                
+                                <!-- Event -->
+                                <div class="text-center font-montserrat">
+                                    <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                        {{ $invite->event->name }}
+                                    </a>
+                                </div>                                
                     
-                                <!-- Description Column -->
+                                <!-- Message -->
                                 <div class="text-center font-montserrat">{{ $invite->description ?? 'N/A' }}</div>
                     
-                                <!-- Date Column -->
+                                <!-- Date -->
                                 <div class="text-center font-montserrat">{{ $invite->date->format('F j, Y') }}</div>
                     
-                                <!-- Status Column -->
+                                <!-- Status -->
                                 <div class="text-center font-montserrat">
                                     @if($invite->accepted)
                                         <span class="font-semibold text-green-500">Accepted</span>
@@ -77,7 +85,7 @@
                                     @endif
                                 </div>
                     
-                                <!-- Actions Column -->
+                                <!-- Delete -->
                                 <div class="flex items-center justify-center">
                                     <form action="{{ route('invite.delete', ['id' => $invite->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this invite?');">
                                         @csrf
