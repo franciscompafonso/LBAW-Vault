@@ -29,7 +29,7 @@
             </div>
             <div class="flex flex-wrap gap-4 mt-6">
             @if (Auth::guard('web')->check())
-                @if ($event->end_date < now() && $event->creator_id != Auth::id()) 
+                @if ($event->end_date < now() && $event->creator_id != Auth::id())
                     <a href="{{ route('events.survey', $event->id) }}" class="block mt-4 text-center">
                         <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
                             Take Survey
@@ -44,9 +44,9 @@
                             Leave Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->end_date > now() && $event->participators()->count() <$event->capacity)
+                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->end_date > now() && $event->participators()->count() < $event->capacity)
                     <!-- Join Event Button -->
-                    <form action="{{ route('events.join', $event->id) }}" method="POST">
+                    <form id="joinEventForm" action="{{ route('events.join', $event->id) }}" method="POST" data-event-id="{{ $event->id }}">
                         @csrf
                         <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                             Join Event
@@ -55,12 +55,13 @@
                 @elseif ($event->visibility === 'request_only' && !Auth::user()->isblocked && $event->end_date > now())
                     @if ($event->creator_id === Auth::id())
                         <!-- Join Event Button -->
-                        <form action="{{ route('events.join', $event->id) }}" method="POST">
+                        <form id="joinEventForm" action="{{ route('events.join', $event->id) }}" method="POST" data-event-id="{{ $event->id }}">
                             @csrf
                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                                 Join Event
                             </button>
                         </form>
+
                     @elseif ($event->requests->where('join_request_by_id', Auth::id())->where('accepted', false)->isNotEmpty())
                         <!-- Disabled Request to Join Button -->
                         <button disabled class="px-6 py-2 font-bold text-white transition-all duration-200 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">
@@ -90,10 +91,7 @@
                     <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-500 hover:text-darkSlateGrey hover:border-red-500">
                         Delete Event
                     </button>
-
                 </form>
-
-                
             @endif
             </div>
         </div>
@@ -222,5 +220,56 @@
             photosInput.value = ''; // Clear the file input
         }
     }
+
+    // Select all the Join Event forms on the page
+    document.querySelectorAll('form#joinEventForm').forEach(form => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission (page reload)
+
+            const formData = new FormData(this); // Get the form data
+            const eventId = this.getAttribute('data-event-id'); // Get event ID from the data attribute
+
+            // Send AJAX request using fetch API
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json()) // Assuming the server responds with JSON
+            .then(data => {
+                // Check if the response contains a success message or notification
+                if (data.success) {
+                    // Show a success notification
+                    showNotification(data.message, 'success');
+
+                    // Update the UI to reflect the changes (like updating the button text)
+                    const button = this.querySelector('button');
+                    button.textContent = "Joined!";
+                    button.disabled = true; // Disable the button to prevent multiple clicks
+                } else {
+                    // Show error notification
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                // Handle errors (e.g., network issues)
+                showNotification('Something went wrong. Please try again later.', 'error');
+            });
+        });
+    });
+
+    // Function to show notifications
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `px-4 py-3 rounded-lg shadow-lg mb-4 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
+        notification.textContent = message;
+        
+        // Append notification to container
+        const container = document.getElementById('notification-container');
+        container.appendChild(notification);
+
+        // Remove notification after 5 seconds
+        setTimeout(() => notification.remove(), 5000);
+    }
+
 </script>
 @endsection

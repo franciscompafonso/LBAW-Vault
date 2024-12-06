@@ -15,6 +15,13 @@
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
 
+        <!-- Pusher -->
+        <script>
+        const pusherAppKey = "{{ env('PUSHER_APP_KEY') }}";
+        const pusherCluster = "{{ env('PUSHER_APP_CLUSTER') }}";
+        </script>
+        <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
+
         <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
         @vite('resources/css/app.css')
     </head>
@@ -120,6 +127,7 @@
                 {{ Request::is('events/*/survey/stats') && isset($hasResponses) && $hasResponses ? 'padding-top: 1000px;' : '' }}
             ">
             @yield('content')
+            <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
         </main>
 
         <!-- Footer Section -->
