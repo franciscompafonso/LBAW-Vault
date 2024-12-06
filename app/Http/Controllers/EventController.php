@@ -235,7 +235,7 @@ class EventController extends Controller
             return view('partials.events_grid', compact('events'))->render();
         }
 
-        return view('pages.events_by_category', compact(
+        return view('pages.search', compact(
             'category',
             'events',
             'locations',

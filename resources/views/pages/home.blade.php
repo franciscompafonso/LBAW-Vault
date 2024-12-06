@@ -33,21 +33,18 @@
     <section class="px-4 py-8">
         <div class="flex flex-col space-y-6">
         @foreach ($categories as $category)
-            <div class="flex items-center space-x-4 group">
+            <a href="{{ route('events.search', ['category_id' => $category->id]) }}" class="flex items-center space-x-4 group">
                 <!-- Category Name with Link -->
                 <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
-                    <a href="{{ url('events/category=' . $category->id) }}" 
-                    class="group-hover:text-eerieBlack group-hover:font-bold text-eerieBlack">
-                        {{ $category->name }}
-                    </a>
+                    {{ $category->name }}
                 </h2>
 
                 <!-- "Explore all >" Link -->
-                <a href="{{ url('events/category=' . $category->id) }}" 
-                class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
-                    Explore all >
-                </a>
-            </div>
+                <p class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
+                    Explore all
+                </p>
+            </a>
+
 
             <!-- Events Grid -->
             <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -65,14 +62,14 @@
 
         <div class="flex items-center space-x-4 group">
             <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
-                <a href="{{ url('events/category=all') }}" 
+                <a href="{{ url('events/search') }}" 
                 class="group-hover:text-eerieBlack group-hover:font-bold text-eerieBlack">
                     All Categories
                 </a>
             </h2>
 
             <!-- "Explore all" Link -->
-            <a href="{{ url('events/category=all') }}" 
+            <a href="{{ url('events/search') }}" 
             class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
                 Explore all >
             </a>

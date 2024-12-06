@@ -28,7 +28,7 @@ Route::get('/faqs', function () {return view('pages.faqs'); })->name('faqs');
 
 Route::get('/home', [HomeController::class, 'index'])->name('pages.home');
 
-Route::get('/events/category={id}', [EventController::class, 'searchFiltered'])->name('events.filtered');
+Route::get('/events/search', [EventController::class, 'searchFiltered'])->name('events.search');
 Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
 Route::post('/events', [EventController::class, 'store'])->name('events.store');
 Route::get('/events', [EventController::class, 'index'])->name('v');
