@@ -76,7 +76,7 @@ class UserController extends Controller
     
             $file = $request->file('profilepicture');
             $filename = time() . '_' . $user->username; // Ensure a unique filename
-            Storage::put('profile-pictures/' . $filename, file_get_contents($file));
+            $file->move(public_path('images/profile-pictures'), $filename);
         
             // Save only the filename in the database
             $user->profilepicture = $filename;

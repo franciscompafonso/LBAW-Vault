@@ -87,7 +87,7 @@
                     </div>
                     <!-- Profile Icon for regular user -->
                     <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}">
-                        <img src="{{ asset(Auth::user()->profilepicture) }}" 
+                        <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                              alt="User Profile Picture" 
                              class="object-cover w-16 h-16 border-2 rounded-full border-whiteSmoke hover:border-darkSlateGrey">
                     </a>
