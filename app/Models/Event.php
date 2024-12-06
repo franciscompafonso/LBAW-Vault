@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Event extends Model
 {
@@ -17,6 +18,8 @@ class Event extends Model
 
     // Specify the table name
     protected $table = 'event';
+
+    const DEFAULT_BANNER = 'default-banner.png';
 
     /**
      * The attributes that are mass assignable.
@@ -35,25 +38,21 @@ class Event extends Model
         'end_date' => 'datetime',
     ];
 
-
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creator_id');
     }
 
-    
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_id');
     }
 
-    
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    
     public function participators(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'participator', 'event_id', 'participator_id');
@@ -64,38 +63,32 @@ class Event extends Model
         return $this->hasMany(Invite::class, 'event_id');
     }
 
-    
     public function polls(): HasMany
     {
         return $this->hasMany(Poll::class, 'event_id');
     }
 
-    
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'event_id')
-                    ->whereNull('reply_to');
+            ->whereNull('reply_to');
     }
 
-    
     public function reviews(): HasMany
     {
         return $this->hasMany(AnswerReview::class, 'about_event_id');
     }
 
-    
     public function eventUpdateNotifications(): HasMany
     {
         return $this->hasMany(NotificationSubtypes\EventUpdateNotification::class, 'event_id');
     }
 
-    
     public function eventReminders(): HasMany
     {
         return $this->hasMany(NotificationSubtypes\EventReminder::class, 'event_id');
     }
 
-    
     public function eventCancelations(): HasMany
     {
         return $this->hasMany(NotificationSubtypes\EventCancelation::class, 'event_id');
@@ -111,4 +104,8 @@ class Event extends Model
         return $this->hasMany(JoinRequest::class, 'event_id');
     }
 
+    public function banner(): MorphToMany
+    {
+        return $this->morphToMany(File::class, 'entity', 'file_pivot');
+    }
 }

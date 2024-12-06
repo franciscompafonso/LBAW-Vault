@@ -15,13 +15,7 @@
             <!-- Profile Picture Input -->
             <div class="flex items-center mb-4 space-x-4">
                 <div class="flex-shrink-0">
-                @if ($user->profilepicture)
-                    <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-ultraViolet">
-                @else
-                    <div id="profile-picture-preview" class="flex items-center justify-center w-32 h-32 bg-gray-300 rounded-full">
-                        <i class="text-3xl text-white fa-solid fa-user"></i>
-                    </div>
-                @endif
+                    <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/'. ($user->picture->first()->path ?? App\Models\User::DEFAULT_PIC)) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-ultraViolet">
                 </div>
                 <div>
                     <label for="profilepicture" class="block text-lg font-semibold font-montserrat">Upload Image</label>

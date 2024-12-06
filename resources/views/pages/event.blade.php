@@ -6,7 +6,7 @@
     <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Image Section (Left) -->
         <div class="flex-shrink-0 w-full lg:w-2/5">
-            <img src="{{ asset('images/banner/' . $event->banner) }}" alt="{{ $event->name }}" class="object-cover w-full transition-transform duration-300 transform rounded-lg shadow-md h-80 hover:scale-105">
+            <img src="{{ asset('images/banner/'. ($event->banner->first()->path ?? App\Models\Event::DEFAULT_BANNER)) }}" alt="{{ $event->name }}" class="object-cover w-full transition-transform duration-300 transform rounded-lg shadow-md h-80 hover:scale-105">
         </div>
 
         <!-- Event Details Section (Right) -->
@@ -90,10 +90,7 @@
                     <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-500 hover:text-darkSlateGrey hover:border-red-500">
                         Delete Event
                     </button>
-
-                </form>
-
-                
+                </form> 
             @endif
             </div>
         </div>
@@ -106,7 +103,7 @@
             <h2 class="pb-4 mb-6 text-3xl font-bold border-b-2 font-montserrat text-burgundy border-babyPowder">Comments</h2>
             <!-- Make Comment -->
             @if (Auth::id())
-                <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
+                <form action="{{ route('comments.store', ['eventId' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
                     @csrf
                     <textarea 
                         name="content" 

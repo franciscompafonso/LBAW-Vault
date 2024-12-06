@@ -2,7 +2,7 @@
     <div class="grid items-center grid-cols-3 gap-4">
         <div class="flex items-center col-span-2 space-x-2">
             <img 
-                src="{{ asset($participator->profilepicture) }}" 
+                src="{{ asset('images/profile-pictures/' . ($participator->profilepicture ?? App\Models\User::DEFAULT_PIC)) }}" 
                 alt="{{ $participator->username }}" 
                 class="object-cover w-12 h-12 rounded-full"
             >

@@ -5,37 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Comment extends Model
 {
     use HasFactory;
 
     // Don't add create and update timestamps in database.
-    public $timestamps  = false;
+    public $timestamps = false;
 
     // Specify the table name
     protected $table = 'comment';
 
-    protected $fillable = [
-        'comment_by_id',
-        'event_id',
-        'text',
-        'is_pinned',
-        'score',
-        'edited',
-        'date',
-    ];
+    protected $guarded = [];
 
     /**
      * Show the comment details by comment ID.
-     * 
-     * @param int $commentId
+     *
+     * @param  int  $commentId
      * @return array
      */
     public function show()
     {
         // Check if the current instance has an ID
-        if (!$this->id) {
+        if (! $this->id) {
             return ['error' => 'Comment not found'];
         }
 
@@ -70,9 +63,9 @@ class Comment extends Model
     /**
      * Get the photos for the comment.
      */
-    public function photos()
+    public function photos(): MorphToMany
     {
-        return $this->hasMany(Photo::class, 'comment_id');
+        return $this->morphToMany(File::class, 'entity', 'file_pivot');
     }
 
     /**
@@ -82,8 +75,8 @@ class Comment extends Model
     {
         // This will return the feedback value, or null if no feedback exists for this user
         return $this->hasMany(CommentFeedback::class, 'comment_id')
-                    ->where('user_id', $user_id)
-                    ->value('feedback');
+            ->where('user_id', $user_id)
+            ->value('feedback');
     }
 
     /**
@@ -92,6 +85,6 @@ class Comment extends Model
     public function replies()
     {
         return $this->hasMany(Comment::class, 'reply_to')
-                    ->where('event_id', $this->event_id);
+            ->where('event_id', $this->event_id);
     }
 }

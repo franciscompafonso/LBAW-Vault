@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Event;
+use App\Models\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CommentController extends Controller
 {
@@ -15,13 +17,20 @@ class CommentController extends Controller
      */
     public function delete($id)
     {
-        // Find the comment.
         $comment = Comment::find($id);
-
-        // Check if the current user is authorized to delete this comment.
         $this->authorize('delete', $comment);
 
-        // Delete the comment and return it as JSON.
+        $photos = $comment->photos;
+
+        foreach($photos as $photo) {
+            $attachedId = $photo->id;
+            $attachedPath = $photo->path;
+
+            File::find($attachedId)->delete();
+            Storage::disk('others')->delete($attachedPath);
+        }
+        $comment->photos()->detach();
+
         $comment->delete();
         return back()->with('message', 'successfully deleted the comment!');
     }
@@ -34,16 +43,17 @@ class CommentController extends Controller
         return view('event.show', compact('comments'));
     }
 
-    public function store(Event $event)
+    public function store(Request $request)
     {
-        // Validate incoming request
-        $data = request()->validate([
+        
+        $data = $request->validate([
             'content' => 'required|string|max:1000',
             'photos' => 'nullable|array|max:15', // Allow up to 15 photos
-            'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048', // Validate each photo
+            'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-        // Store the comment
+        $event = Event::find($request->eventId);
+
         $comment = $event->comments()->create([
             'comment_by_id' => Auth::id(),
             'text' => $data['content'],
@@ -53,8 +63,12 @@ class CommentController extends Controller
             'date' => now(),
         ]);
 
-        if (isset($data['photos'])) {
-            PhotoController::storePhotos($comment, $data['photos']);
+        if ($request->photos) {
+            foreach ($request->photos as $photo) {
+                if ($id = FileController::store($request, 'others', $photo)) {
+                    $comment->photos()->attach($id);
+                }
+            }
         }
 
         return redirect()->back()->with('success', 'Comentário adicionado com sucesso!');

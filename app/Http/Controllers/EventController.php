@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use App\Models\Location;
-use App\Models\Category;
-use App\Models\JoinRequest;
-use App\Models\QuestionReview;
 use App\Models\AnswerReview;
+use App\Models\Category;
+use App\Models\Event;
+use App\Models\File;
+use App\Models\JoinRequest;
+use App\Models\Location;
+use App\Models\QuestionReview;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\View\View;
 
 class EventController extends Controller
 {
@@ -20,6 +22,7 @@ class EventController extends Controller
     {
         $locations = Location::all();
         $categories = Category::all();
+
         return view('event.create', compact('locations', 'categories'));
     }
 
@@ -30,7 +33,7 @@ class EventController extends Controller
     {
         $event = Event::with(['polls.responses'])->findOrFail($id);
 
-        $this->authorize('show', $event);  
+        $this->authorize('show', $event);
 
         return view('pages.event', [
             'event' => $event,
@@ -43,35 +46,35 @@ class EventController extends Controller
      */
     public function index()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect('/login');
 
-        } 
+        }
 
-            $user = Auth::user();
+        $user = Auth::user();
 
-            $createdEvents = $user->myEvents()->orderBy('id')->get();
-            
-            $participatedEvents = $user->participatedEvents()->orderBy('start_date')->get();
+        $createdEvents = $user->myEvents()->orderBy('id')->get();
 
-            $notYetParticipatedEvents = $user->notYetParticipatedEvents()->orderBy('start_date')->get();
+        $participatedEvents = $user->participatedEvents()->orderBy('start_date')->get();
 
-            $ongoingEvents = $user->ongoingEvents()->orderBy('start_date')->get();
+        $notYetParticipatedEvents = $user->notYetParticipatedEvents()->orderBy('start_date')->get();
 
-            $this->authorize('index', Event::class);
+        $ongoingEvents = $user->ongoingEvents()->orderBy('start_date')->get();
 
+        $this->authorize('index', Event::class);
 
-            return view('pages.events', [
-                'createdEvents' => $createdEvents,
-                'participatedEvents' => $participatedEvents,
-                'notYetParticipatedEvents' => $notYetParticipatedEvents,
-                'ongoingEvents' => $ongoingEvents,
-            ]);
-        
+        return view('pages.events', [
+            'createdEvents' => $createdEvents,
+            'participatedEvents' => $participatedEvents,
+            'notYetParticipatedEvents' => $notYetParticipatedEvents,
+            'ongoingEvents' => $ongoingEvents,
+        ]);
+
     }
 
     public function store(Request $request)
     {
+        // dd($request->all(), Storage::disk("banner"));
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -98,11 +101,10 @@ class EventController extends Controller
 
         if ($request->hasFile('banner')) {
             $file = $request->file('banner');
-            $filename = time() . '_' . $event->id;
-            $file->move(public_path('images/banner'), $filename);
-            $event->banner = $filename;
+            if ($id = FileController::store($request, 'banner', $file)) {
+                $event->banner()->attach($id);
+            }
         }
-        $event->save();
 
         return redirect()->route('events.show', ['id' => $event->id])->with('success', 'Event created successfully!');
     }
@@ -112,38 +114,45 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
         $locations = Location::all();
         $categories = Category::all();
+
         return view('event.edit', compact('event', 'locations', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
-        $event = Event::findOrFail($id);
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'start_date' => 'required|date|after:now',
-            'end_date' => 'required|date|after:start_date',
-            'visibility' => 'required|in:public,private',
-            'capacity' => 'required|integer|min:1',
-            'location_id' => 'required|integer',
-            'category_id' => 'required|integer',
-            'banner' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-        ]);
-        $event->update($validated);
+        try {
+            DB::beginTransaction();
+            $event = Event::findOrFail($id);
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'start_date' => 'required|date|after:now',
+                'end_date' => 'required|date|after:start_date',
+                'visibility' => 'required|in:public,private',
+                'capacity' => 'required|integer|min:1',
+                'location_id' => 'required|integer',
+                'category_id' => 'required|integer',
+                'banner' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            ]);
+            $event->update($validated);
 
-        if ($request->hasFile('banner')) {
-            $file = $request->file('banner');
-            $filename = time() . '_' . $event->id;
-            $file->move(public_path('images/banner'), $filename);
+            if ($request->hasFile('banner')) {
+                $file = $request->file('banner');
+                if ($id = FileController::store($request, 'banner', $file)) {
+                    $this->deleteBanner($event);
+                    $event->banner()->attach($id);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
-
-        $event->banner = $filename;
-        $event->save();
-        
-        return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
-        
     }
-
 
     public function showByCategory(Request $request, $id)
     {
@@ -175,6 +184,14 @@ class EventController extends Controller
         return view('pages.events_by_category', compact('category', 'events'));
     }
 
+    private function deleteBanner($event) {
+        $attachedId = $event->banner->first()->id;
+        $attachedPath = $event->banner->first()->path;
+        $event->banner()->detach();
+        File::find($attachedId)->delete();
+        Storage::disk('banner')->delete($attachedPath);
+    }
+
     /**
      * Delete an event.
      */
@@ -185,15 +202,16 @@ class EventController extends Controller
         $isAdmin = auth()->guard('admin')->check();
         $isEventCreator = auth()->check() && auth()->user()->id === $event->creator_id;
 
-        if (!$isAdmin && !$isEventCreator) {
+        if (! $isAdmin && ! $isEventCreator) {
             abort(403, 'Unauthorized action.');
         }
+
+        $this->deleteBanner($event);
 
         $event->delete();
 
         return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
     }
-
 
     public function requestToJoin(Event $event)
     {
@@ -222,31 +240,29 @@ class EventController extends Controller
         return redirect()->back()->with('message', 'Your request to join has been sent.');
     }
 
-
     /**
      * Join an event.
      */
     public function joinEvent($eventId)
-{
-    $event = Event::findOrFail($eventId);
+    {
+        $event = Event::findOrFail($eventId);
 
-    if ($event->participators()->where('id', Auth::id())->exists()) {
-        return back()->with('message', 'You are already participating in this event.');
+        if ($event->participators()->where('id', Auth::id())->exists()) {
+            return back()->with('message', 'You are already participating in this event.');
+        }
+
+        if ($event->end_date < now()) {
+            return back()->with('message', 'You cannot join an event that has already ended.');
+        }
+
+        if ($event->participators()->count() >= $event->capacity) {
+            return back()->with('message', 'This event is already at full capacity.');
+        }
+
+        $event->participators()->attach(Auth::id());
+
+        return back()->with('message', 'You have successfully joined the event!');
     }
-
-    if ($event->end_date < now()) {
-        return back()->with('message', 'You cannot join an event that has already ended.');
-    }
-
-    if ($event->participators()->count() >= $event->capacity) {
-        return back()->with('message', 'This event is already at full capacity.');
-    }
-
-    $event->participators()->attach(Auth::id());
-
-    return back()->with('message', 'You have successfully joined the event!');
-}
-
 
     /**
      * Leave an event.
@@ -255,7 +271,7 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        if (!$event->participators()->where('id', Auth::id())->exists()) {
+        if (! $event->participators()->where('id', Auth::id())->exists()) {
             return back()->with('message', 'You are not participating in this event.');
         }
 
@@ -271,7 +287,7 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        if (!$event->participators()->where('id', $userId)->exists()) {
+        if (! $event->participators()->where('id', $userId)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');
         }
 
@@ -302,8 +318,9 @@ class EventController extends Controller
         $event = Event::findOrFail($eventId);
         $questions = QuestionReview::all();
         $hasSubmitted = AnswerReview::where('answered_by_id', auth()->id())
-                                    ->where('about_event_id', $eventId)
-                                    ->exists();
+            ->where('about_event_id', $eventId)
+            ->exists();
+
         return view('partials.survey', compact('event', 'questions', 'hasSubmitted'));
     }
 
@@ -335,9 +352,9 @@ class EventController extends Controller
         }
 
         $answers = AnswerReview::where('about_event_id', $eventId)
-                                ->join('question_review', 'answer_review.question_id', '=', 'question_review.id')
-                                ->select('question_review.id as question_id', 'question_review.question_text', 'answer_review.rating')
-                                ->get();
+            ->join('question_review', 'answer_review.question_id', '=', 'question_review.id')
+            ->select('question_review.id as question_id', 'question_review.question_text', 'answer_review.rating')
+            ->get();
 
         $chartData = [];
 
@@ -348,11 +365,10 @@ class EventController extends Controller
             }
             $chartData[] = [
                 'question_text' => $responses->first()->question_text,
-                'ratings' => $ratings
+                'ratings' => $ratings,
             ];
         }
 
         return view('partials.survey_stats', compact('event', 'chartData'));
     }
-
 }

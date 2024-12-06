@@ -55,27 +55,27 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
-        
+
         'others' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/others'),
-            'url' => env('APP_URL'),
+            'root' => public_path('images/others'),
+            'url' => env('APP_URL').'/images/others',
             'visibility' => 'public',
             'throw' => false,
         ],
 
         'banner' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/banner'),
-            'url' => env('APP_URL'),
+            'root' => public_path('images/banner'),
+            'url' => env('APP_URL').'/images/banner',
             'visibility' => 'public',
             'throw' => false,
         ],
 
         'profile-pictures' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/profile-pictures'),
-            'url' => env('APP_URL'),
+            'root' => public_path('images/profile-pictures'),
+            'url' => env('APP_URL').'/images/profile-pictures',
             'visibility' => 'public',
             'throw' => false,
         ],
