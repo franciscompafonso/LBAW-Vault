@@ -117,7 +117,7 @@
         
         <!-- Reset Button -->
         <a href="{{ url()->current() }}" 
-           class="px-6 py-2 font-bold text-darkSlateGrey transition-all duration-200 rounded-md font-montserrat bg-gray-200 hover:bg-gray-300 border-gray-300 hover:border-gray-400">
+            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
             Reset Filters
         </a>
     </div>
