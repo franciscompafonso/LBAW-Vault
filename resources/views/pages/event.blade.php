@@ -27,7 +27,7 @@
                     <strong class="font-semibold">Location:</strong> {{ $event->location->name ?? 'No location specified' }}
                 </p>
             </div>
-
+            <div class="flex flex-wrap gap-4 mt-6">
             @if (Auth::guard('web')->check())
                 @if ($event->end_date < now() && $event->creator_id != Auth::id()) 
                     <a href="{{ route('events.survey', $event->id) }}" class="block mt-4 text-center">
@@ -44,7 +44,7 @@
                             Leave Event
                         </button>
                     </form>
-                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->end_date > now())
+                @elseif ($event->visibility === 'public' && !Auth::user()->isblocked && $event->end_date > now() && $event->participators()->count() <$event->capacity)
                     <!-- Join Event Button -->
                     <form action="{{ route('events.join', $event->id) }}" method="POST">
                         @csrf
@@ -77,9 +77,13 @@
                     @endif
                 @endif
             @endif
-
             <!-- Event Actions for Admins and Event Creators -->
-            @if (Auth::guard('admin')->check() || $event->creator_id === Auth::id())
+            @if (Auth::guard(name: 'admin')->check() || $event->creator_id === Auth::id())
+                <a href="{{ route('events.edit', $event->id) }}" class="inline-block">
+                    <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                        Edit Event
+                    </button>
+                </a>
                 <form action="{{ route('events.delete', $event->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
@@ -89,12 +93,9 @@
 
                 </form>
 
-                <a href="{{ route('events.edit', $event->id) }}" class="inline-block">
-                    <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
-                        Edit Event
-                    </button>
-                </a>
+                
             @endif
+            </div>
         </div>
     </div>
 
@@ -133,7 +134,7 @@
                         <button 
                             type="submit" 
                             class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
-                            Submit Comment
+                            Comment
                         </button>
                     </div>
                 </form>

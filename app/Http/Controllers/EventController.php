@@ -227,21 +227,26 @@ class EventController extends Controller
      * Join an event.
      */
     public function joinEvent($eventId)
-    {
-        $event = Event::findOrFail($eventId);
+{
+    $event = Event::findOrFail($eventId);
 
-        if ($event->participators()->where('id', Auth::id())->exists()) {
-            return back()->with('message', 'You are already participating in this event.');
-        }
-
-        else if ($event->start_date < now()) {
-            return back()->with('message', 'You cannot join an event that has already started.');
-        }
-
-        $event->participators()->attach(Auth::id());
-
-        return back()->with('message', 'You have successfully joined the event!');
+    if ($event->participators()->where('id', Auth::id())->exists()) {
+        return back()->with('message', 'You are already participating in this event.');
     }
+
+    if ($event->end_date < now()) {
+        return back()->with('message', 'You cannot join an event that has already ended.');
+    }
+
+    if ($event->participators()->count() >= $event->capacity) {
+        return back()->with('message', 'This event is already at full capacity.');
+    }
+
+    $event->participators()->attach(Auth::id());
+
+    return back()->with('message', 'You have successfully joined the event!');
+}
+
 
     /**
      * Leave an event.
