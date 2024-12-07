@@ -10,12 +10,12 @@
             <!-- Text Section -->
             <div class="w-full mb-8 text-left lg:w-1/2 lg:mb-0">
                 
-                @if ( Auth::guard('admin')->check() )
+                @if (Auth::guard('admin')->check())
                     <h2 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack"> Shaping Communities, One Decision at a Time.</h2>
                     <p class="mb-6 text-2xl font-montserrat text-deepNavy">Welcome back, Admin!</p>
                 @elseif (Auth::guard('web')->check())
                     <h2 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack"> Empowering Communities, One Event at a Time.</h2>
-                    <p class="mb-6 text-2xl font-montserrat text-deepNavy">Welcome back, {{Auth::user()->displayName}}!</p>
+                    <p class="mb-6 text-2xl font-montserrat text-deepNavy">Welcome back, {{Auth::user()->name}}!</p>
                 @else
                     <h2 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack"> Empowering Communities, One Event at a Time.</h2>
                     <p class="mb-6 text-2xl font-montserrat text-deepNavy">Join us now!</p>  
@@ -33,7 +33,7 @@
     <section class="px-4 py-8">
         <div class="flex flex-col space-y-6">
             @foreach ($categories as $category)
-                @if ($category->events->isNotEmpty())
+                @if ($category->events->count() >= 4)
                     <a href="{{ route('events.search', ['category_id' => $category->id]) }}" class="flex items-center space-x-4 group">
                         <!-- Category Name with Link -->
                         <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
@@ -54,14 +54,11 @@
                             </div>
                         @endforeach
                     </div>
-
-                    <!-- Separator between categories -->
-                    <hr class="my-6 border-t-2 border-lightGrey">
                 @endif
             @endforeach
 
             <!-- "All Categories" Section -->
-            @if ($categories->pluck('events')->flatten()->isNotEmpty())
+            @if ($categories->pluck('events')->flatten()->count() >= 4)
                 <div class="flex items-center space-x-4 group">
                     <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
                         <a href="{{ url('events/search') }}" 
@@ -87,5 +84,6 @@
             @endif
         </div>
     </section>
+
 </div>
 @endsection

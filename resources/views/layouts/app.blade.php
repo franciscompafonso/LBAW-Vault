@@ -27,15 +27,10 @@
     </head>
     <body class="flex flex-col min-h-screen bg-white">
         <!-- Top Bar -->
-            @include('partials.topbar')
+        @include('partials.topbar')
 
         <!-- Main Content -->
-        <main id="main" 
-            class="flex items-center justify-center flex-1 p-8 overflow-auto" 
-            style="
-                {{ Request::is('faqs') ? 'padding-top: 250px;' : '' }}
-                {{ Request::is('events/*/survey/stats') && isset($hasResponses) && $hasResponses ? 'padding-top: 1000px;' : '' }}
-            ">
+        <main id="main" class="flex flex-col justify-start flex-1 p-8 overflow-auto" >
             <div class="max-w-[75%] w-full mx-auto">
                 @yield('content')
             </div>
