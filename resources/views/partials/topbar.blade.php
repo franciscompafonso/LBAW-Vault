@@ -44,7 +44,7 @@
                     <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                         alt="User Profile Picture" 
                         class="object-cover w-16 h-16 border-2 rounded-full hover:border-darkSlateGrey 
-                        {{ Auth::guard('admin')->check() ? 'border-wisteria' : 'border-ultraViolet' }}">
+                        {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
                 </a>
 
                 <!-- Profile Dropdown -->
@@ -56,7 +56,7 @@
                             <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                                 alt="User Profile Picture" 
                                 class="object-cover w-12 h-12 border-2 rounded-full 
-                                {{ Auth::guard('admin')->check() ? 'border-wisteria' : 'border-ultraViolet' }}">
+                                {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
                             <div>
                                 <p class="font-semibold text-gray-800">{{ Auth::user()->name }}</p>
                                 <p class="text-sm text-gray-500">{{ Auth::user()->username }}</p>

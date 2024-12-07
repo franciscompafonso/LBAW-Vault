@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <!-- Categories Section -->
+   <!-- Categories Section -->
     <section class="px-4 py-8">
         <div class="flex flex-col space-y-6">
             @foreach ($categories as $category)
@@ -46,10 +46,12 @@
                         </p>
                     </a>
 
-                    <!-- Events Grid -->
-                    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    <!-- Events Grid with max-width possible for 4 items -->
+                    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                         @foreach ($category->events->take(4) as $event)
-                            @include('partials.event', ['event' => $event])
+                            <div class="w-full">
+                                @include('partials.event', ['event' => $event])
+                            </div>
                         @endforeach
                     </div>
 
@@ -75,14 +77,15 @@
                     </a>
                 </div>
 
-                <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                     @foreach ($categories->pluck('events')->flatten()->take(4) as $event)
-                        @include('partials.event', ['event' => $event])
+                        <div class="w-full">
+                            @include('partials.event', ['event' => $event])
+                        </div>
                     @endforeach
                 </div>
             @endif
         </div>
     </section>
-
 </div>
 @endsection

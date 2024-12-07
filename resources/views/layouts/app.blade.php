@@ -36,7 +36,7 @@
                 {{ Request::is('faqs') ? 'padding-top: 250px;' : '' }}
                 {{ Request::is('events/*/survey/stats') && isset($hasResponses) && $hasResponses ? 'padding-top: 1000px;' : '' }}
             ">
-            <div class="max-w-[70%] w-full mx-auto">
+            <div class="max-w-[75%] w-full mx-auto">
                 @yield('content')
             </div>
             <div id="notification-container" class="fixed bottom-5 right-5 z-50"></div>
