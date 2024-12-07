@@ -1,39 +1,31 @@
 <!-- Header Section -->
-<header class="flex justify-between items-center p-4 {{ Auth::guard('admin')->check() ? 'bg-ultraViolet' : 'bg-wisteria' }} shadow-lg relative">
+<header class="flex justify-between items-center p-12 relative">
     <!-- Logo/Title -->
-    <h1 class="text-3xl font-bold text-whiteSmoke">
-        <a href="{{ url(path: '/home') }}" class="text-5xl hover:text-darkSlateGrey font-montserrat">Lend-A-Hand</a>
+    <h1 class="text-3xl font-bold">
+        <a href="{{ url(path: '/home') }}" 
+           class="text-5xl font-montserrat hover:text-darkSlateGrey 
+                  {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
+            Lend-A-Hand
+        </a>
     </h1>
 
+    @include('partials.search_bar')
+    
     <!-- Navigation Icons -->
     <div class="flex items-center space-x-6">
-
-        <!-- Search Icon -->
-        @if (!Request::is('login') && !Request::is('register'))
-            <a href="javascript:void(0)" onclick="toggleSearchBar()" class="text-whiteSmoke hover:text-darkSlateGrey" title="Events">
-                <i class="text-3xl fa-solid fa-magnifying-glass"></i>
-            </a>
-        @endif
-
-        @if (Auth::guard('admin')->check())
-        <a href="{{ url('/admin/user-management') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Users">
-            <i class="text-3xl fa-solid fa-users-gear"></i>
-        </a>
-        <a href="{{ url('/admin/create') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Admins">
-            <i class="text-3xl fa-solid fa-user-tie"></i>
-        </a>
-        @endif
-
         @if (Auth::guard('web')->check())
             <!-- Create Event -->
-            <a href="{{ url('/event/create') }}" title="Create Event" class="text-whiteSmoke hover:text-darkSlateGrey">
+            <a href="{{ url('/event/create') }}" 
+               title="Create Event" 
+               class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
                 <i class="text-3xl fa-solid fa-plus"></i>
             </a>
 
             <div class="relative">
                 <!-- Bell Icon with Notification Count -->
                 <a id="notifications-button" onclick="toggleNotificationsDropdown()" class="relative cursor-pointer">
-                    <i class="text-4xl text-whiteSmoke hover:text-darkSlateGrey fa-solid fa-bell"></i>
+                    <i class="text-4xl hover:text-darkSlateGrey 
+                        {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} fa-solid fa-bell"></i>
                     <div id="noti-number" class="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 text-xs font-bold text-white translate-x-2 translate-y-1 bg-red-500 rounded-full">
                         0
                     </div>
@@ -42,8 +34,7 @@
                 <!-- Notifications Dropdown -->
                 <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-4 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-100">
                     <p id="no-notifications" class="text-center text-gray-500">There are no notifications.</p>
-                    <div id="notifications-list">
-                    </div>
+                    <div id="notifications-list"></div>
                 </div>
             </div>
             
@@ -52,7 +43,8 @@
                 <a id="profile-button" onclick="toggleProfileDropdown()" class="cursor-pointer">
                     <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                         alt="User Profile Picture" 
-                        class="object-cover w-16 h-16 border-2 rounded-full border-whiteSmoke hover:border-darkSlateGrey">
+                        class="object-cover w-16 h-16 border-2 rounded-full hover:border-darkSlateGrey 
+                        {{ Auth::guard('admin')->check() ? 'border-wisteria' : 'border-ultraViolet' }}">
                 </a>
 
                 <!-- Profile Dropdown -->
@@ -63,7 +55,8 @@
                         <div class="grid grid-cols-[auto_1fr] gap-4 items-center">
                             <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                                 alt="User Profile Picture" 
-                                class="object-cover w-12 h-12 border-2 rounded-full border-whiteSmoke">
+                                class="object-cover w-12 h-12 border-2 rounded-full 
+                                {{ Auth::guard('admin')->check() ? 'border-wisteria' : 'border-ultraViolet' }}">
                             <div>
                                 <p class="font-semibold text-gray-800">{{ Auth::user()->name }}</p>
                                 <p class="text-sm text-gray-500">{{ Auth::user()->username }}</p>
@@ -72,7 +65,8 @@
                     </a>
                     <!-- Logout Option -->
                     <a href="{{ url('/logout') }}" 
-                    class="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-100">
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 
+                        {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
                         <i class="text-xl fa-solid fa-right-from-bracket"></i>
                         <span class="font-medium">Logout</span>
                     </a>
@@ -80,20 +74,35 @@
             </div>
         @endif
 
-        @if (Auth::guard('admin')->check() )
-            <a href="{{ url('/logout') }}" title="Logout" class="text-whiteSmoke hover:text-darkSlateGrey">
+        @if (Auth::guard('admin')->check())
+            <a href="{{ url('/admin/user-management') }}" 
+               class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
+               title="Users">
+                <i class="text-3xl fa-solid fa-users-gear"></i>
+            </a>
+            <a href="{{ url('/admin/create') }}" 
+               class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
+               title="Admins">
+                <i class="text-3xl fa-solid fa-user-tie"></i>
+            </a>
+            <a href="{{ url('/logout') }}" 
+               title="Logout" 
+               class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
                 <i class="text-3xl fa-solid fa-right-from-bracket"></i>
             </a>
         @endif
 
         @if (Auth::guest() && !Request::is('login') && (!Auth::guard('admin')->check()))
             <!-- Login Icon -->
-            <a href="{{ url('/login') }}" title="Login" class="text-whiteSmoke hover:text-darkSlateGrey">
+            <a href="{{ url('/login') }}" 
+               title="Login" 
+               class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
                 <i class="text-3xl fa-solid fa-right-to-bracket"></i>
             </a>
         @endif
     </div>
 </header>
+
 
 <script>
     //Notifications 

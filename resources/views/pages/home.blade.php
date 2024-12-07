@@ -32,57 +32,57 @@
     <!-- Categories Section -->
     <section class="px-4 py-8">
         <div class="flex flex-col space-y-6">
-        @foreach ($categories as $category)
-            <a href="{{ route('events.search', ['category_id' => $category->id]) }}" class="flex items-center space-x-4 group">
-                <!-- Category Name with Link -->
-                <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
-                    {{ $category->name }}
-                </h2>
+            @foreach ($categories as $category)
+                @if ($category->events->isNotEmpty())
+                    <a href="{{ route('events.search', ['category_id' => $category->id]) }}" class="flex items-center space-x-4 group">
+                        <!-- Category Name with Link -->
+                        <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
+                            {{ $category->name }}
+                        </h2>
 
-                <!-- "Explore all >" Link -->
-                <p class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
-                    Explore all
-                </p>
-            </a>
+                        <!-- "Explore all >" Link -->
+                        <p class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
+                            Explore all
+                        </p>
+                    </a>
 
+                    <!-- Events Grid -->
+                    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                        @foreach ($category->events->take(4) as $event)
+                            @include('partials.event', ['event' => $event])
+                        @endforeach
+                    </div>
 
-            <!-- Events Grid -->
-            <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                @forelse ($category->events->take(5) as $event)
-                    @include('partials.event', ['event' => $event])
-                @empty
-                    <p class="text-eerieBlack col-span-full font-montserrat">No events available at the moment.</p>
-                @endforelse
-            </div>
-            
+                    <!-- Separator between categories -->
+                    <hr class="my-6 border-t-2 border-lightGrey">
+                @endif
+            @endforeach
 
-            <!-- Separator between categories -->
-            <hr class="my-6 border-t-2 border-lightGrey">
-        @endforeach
+            <!-- "All Categories" Section -->
+            @if ($categories->pluck('events')->flatten()->isNotEmpty())
+                <div class="flex items-center space-x-4 group">
+                    <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
+                        <a href="{{ url('events/search') }}" 
+                        class="group-hover:text-eerieBlack group-hover:font-bold text-eerieBlack">
+                            All Categories
+                        </a>
+                    </h2>
 
-        <div class="flex items-center space-x-4 group">
-            <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
-                <a href="{{ url('events/search') }}" 
-                class="group-hover:text-eerieBlack group-hover:font-bold text-eerieBlack">
-                    All Categories
-                </a>
-            </h2>
+                    <!-- "Explore all" Link -->
+                    <a href="{{ url('events/search') }}" 
+                    class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
+                        Explore all >
+                    </a>
+                </div>
 
-            <!-- "Explore all" Link -->
-            <a href="{{ url('events/search') }}" 
-            class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
-                Explore all >
-            </a>
+                <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    @foreach ($categories->pluck('events')->flatten()->take(4) as $event)
+                        @include('partials.event', ['event' => $event])
+                    @endforeach
+                </div>
+            @endif
         </div>
-
-        <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            @forelse ($category->events->take(5) as $event)
-                @include('partials.event', ['event' => $event])
-            @empty
-                <p class="text-eerieBlack col-span-full font-montserrat">No events available at the moment.</p>
-            @endforelse
-        </div>
-
     </section>
+
 </div>
 @endsection
