@@ -7,6 +7,7 @@
 
     <!-- Navigation Icons -->
     <div class="flex items-center space-x-6">
+
         <!-- Search Icon -->
         @if (!Request::is('login') && !Request::is('register'))
             <a href="javascript:void(0)" onclick="toggleSearchBar()" class="text-whiteSmoke hover:text-darkSlateGrey" title="Events">
@@ -23,31 +24,12 @@
         </a>
         @endif
 
-        <!-- Create Event -->
         @if (Auth::guard('web')->check())
-        <a href="{{ url('/event/create') }}" title="Create Event" class="text-whiteSmoke hover:text-darkSlateGrey">
-            <i class="text-3xl fa-solid fa-plus"></i>
-        </a>
-        @endif
-
-        <!-- Info Icon -->
-        <a href="{{ url('/about') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="Info">
-            <i class="text-3xl fa-solid fa-circle-info"></i>
-        </a>
-
-        <!-- Help Icon -->
-        <a href="{{ url('/faqs') }}" class="text-whiteSmoke hover:text-darkSlateGrey" title="FAQs">
-            <i class="text-3xl fa-solid fa-question"></i>
-        </a>
-
-        @if (Auth::guest() && !Request::is('login') && (!Auth::guard('admin')->check()))
-            <!-- Login Icon -->
-            <a href="{{ url('/login') }}" title="Login" class="text-whiteSmoke hover:text-darkSlateGrey">
-                <i class="text-3xl fa-solid fa-right-to-bracket"></i>
+            <!-- Create Event -->
+            <a href="{{ url('/event/create') }}" title="Create Event" class="text-whiteSmoke hover:text-darkSlateGrey">
+                <i class="text-3xl fa-solid fa-plus"></i>
             </a>
-        @endif
 
-        @if (Auth::guard('web')->check())
             <div class="relative">
                 <!-- Bell Icon with Notification Count -->
                 <a id="notifications-button" onclick="toggleNotificationsDropdown()" class="relative cursor-pointer">
@@ -65,24 +47,57 @@
                 </div>
             </div>
             
-            <!-- Profile Icon for regular user -->
-            <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}">
-                <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
+            <!-- Profile Icon -->
+            <div class="relative">
+                <a id="profile-button" onclick="toggleProfileDropdown()" class="cursor-pointer">
+                    <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                         alt="User Profile Picture" 
                         class="object-cover w-16 h-16 border-2 rounded-full border-whiteSmoke hover:border-darkSlateGrey">
-            </a>
-            
+                </a>
+
+                <!-- Profile Dropdown -->
+                <div id="profile-dropdown" class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-56">
+                    <!-- Profile Info Card -->
+                    <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" 
+                    class="block p-4 hover:bg-gray-100">
+                        <div class="grid grid-cols-[auto_1fr] gap-4 items-center">
+                            <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
+                                alt="User Profile Picture" 
+                                class="object-cover w-12 h-12 border-2 rounded-full border-whiteSmoke">
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ Auth::user()->name }}</p>
+                                <p class="text-sm text-gray-500">{{ Auth::user()->username }}</p>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- Logout Option -->
+                    <a href="{{ url('/logout') }}" 
+                    class="flex items-center gap-3 px-4 py-2 text-gray-800 hover:bg-gray-100">
+                        <i class="text-xl fa-solid fa-right-from-bracket"></i>
+                        <span class="font-medium">Logout</span>
+                    </a>
+                </div>
+            </div>
         @endif
 
-        @if (Auth::guard('web')->check() || Auth::guard('admin')->check() )
+        @if (Auth::guard('admin')->check() )
             <a href="{{ url('/logout') }}" title="Logout" class="text-whiteSmoke hover:text-darkSlateGrey">
                 <i class="text-3xl fa-solid fa-right-from-bracket"></i>
+            </a>
+        @endif
+
+        @if (Auth::guest() && !Request::is('login') && (!Auth::guard('admin')->check()))
+            <!-- Login Icon -->
+            <a href="{{ url('/login') }}" title="Login" class="text-whiteSmoke hover:text-darkSlateGrey">
+                <i class="text-3xl fa-solid fa-right-to-bracket"></i>
             </a>
         @endif
     </div>
 </header>
 
 <script>
+    //Notifications 
+
     function toggleNotificationsDropdown() {
         const notificationsDropdown = document.getElementById('notifications-dropdown');
 
@@ -373,4 +388,28 @@
     // Call this function when the page is ready or at the appropriate time
     startNotificationUpdates();
 
+    // Profile dropdown
+
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profile-dropdown');
+        dropdown.classList.toggle('hidden');
+    }
+
+    function toggleNotificationsDropdown() {
+        const dropdown = document.getElementById('notifications-dropdown');
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Optional: Close dropdowns when clicking outside
+    document.addEventListener('click', (event) => {
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
+
+        if (!event.target.closest('#profile-button') && !event.target.closest('#profile-dropdown')) {
+            profileDropdown.classList.add('hidden');
+        }
+        if (!event.target.closest('#notifications-button') && !event.target.closest('#notifications-dropdown')) {
+            notificationsDropdown.classList.add('hidden');
+        }
+    });
 </script>
