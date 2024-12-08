@@ -5,7 +5,7 @@
         <div class="relative w-full">
             <!-- Search Input Field -->
             <input type="text" id="searchInput" 
-                class="w-full p-6 pl-6 pr-12 border-2 border-ultraViolet rounded-full search-input focus:ring-2 focus:ring-wisteria focus:border-wisteria focus:outline-none text-lg" 
+                class="w-full p-6 pl-6 pr-12 border-2 border-ultraViolet rounded-full search-input focus:ring-2 focus:ring-wisteria focus:border-wisteria focus:outline-none text-3xl text-black placeholder:text-3xl placeholder:text-black" 
                 placeholder="Search events..." 
                 autocomplete="off"
                 onkeyup="searchEvents(event)" 
