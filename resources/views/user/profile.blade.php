@@ -9,60 +9,64 @@
             </p>
         </div>
     @endif
-    <!-- Profile Picture Section -->
-    <div class="flex justify-center mb-6">
-        @if ($user->isdeleted)
-            <!-- Show a "Deleted" placeholder picture if the user is deleted -->
-            <div class="flex items-center justify-center w-32 h-32 bg-gray-300 rounded-full">
-                <p class="text-xl font-bold text-white">Deleted</p>
+    <!-- Profile Section Container -->
+    <div class="flex flex-col items-center justify-center p-6">
+        <div class="grid grid-cols-3 gap-4 w-full max-w-4xl">
+            <!-- Profile Picture Section (larger, ensure circle) -->
+            <div class="flex justify-center items-center">
+                @if ($user->isdeleted)
+                    <!-- Show a "Deleted" placeholder picture if the user is deleted -->
+                    <div class="w-80 bg-gray-300 rounded-full flex items-center justify-center">
+                        <p class="text-2xl font-bold text-white">Deleted</p>
+                    </div>
+                @elseif ($user->profilepicture)
+                    <img src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-80 rounded-full object-cover border-4 border-darkSlateGrey">
+                @else
+                    <div class="w-80 bg-gray-300 rounded-full flex items-center justify-center">
+                        <i class="text-6xl text-white fa-solid fa-user"></i>
+                    </div>
+                @endif
             </div>
-        @elseif ($user->profilepicture)
-            <img src="{{ asset('images/profile-pictures/' . $user->profilepicture) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-darkSlateGrey">
-        @else
-            <div class="flex items-center justify-center w-32 h-32 bg-gray-300 rounded-full">
-                <i class="text-3xl text-white fa-solid fa-user"></i>
-            </div>
-        @endif
-    </div>
 
-    <!-- User Info Section -->
-    <div class="text-center">
-        @if ($user->isdeleted)
-            <!-- Display only a placeholder username if the user is deleted -->
-            <div class="flex items-center justify-center space-x-2">
-                <p class="text-2xl font-montserrat">{{ $user->displayName }}</p>
-            </div>
-        @else
-            <!-- Display user info if not deleted -->
-            <div class="flex items-center justify-center space-x-2">
-                <p class="text-6xl font-montserrat">{{ $user->name }}</p>
-            </div>
-            <div class="flex items-center justify-center space-x-2">
-                <p class="text-3xl font-montserrat">@ {{ $user->displayName }}</p>
-            </div>
-        @endif
-    </div>
 
-    <!-- Edit Profile Link -->
-    @if((Auth::id() === $user->id && !$user->isdeleted && !$user->isblocked) || auth()->guard('admin')->check())
-        <div class="flex flex-col items-center px-4 py-8 space-y-6">
-            <a href="{{ auth()->guard('admin')->check() ? route('admin.edit.form', ['id' => $user->id]) : route('user.edit.form', ['id' => $user->id]) }}" 
-            class="w-full max-w-md py-3 text-2xl font-bold text-center transition-all duration-200 rounded-lg shadow-md bg-ultraViolet hover:bg-cambridgeBlue text-whiteSmoke hover:text-darkSlateGrey font-montserrat">
-                Edit Profile
-            </a>
+            <!-- User Info Section (left-aligned, closer) -->
+            <div class="col-span-2 flex flex-col justify-center space-y-4 p-4">
+                @if ($user->isdeleted)
+                    <!-- Display only a placeholder username if the user is deleted -->
+                    <p class="text-2xl font-montserrat">{{ $user->displayName }}</p>
+                @else
+                    <!-- Display user info if not deleted -->
+                    <div>
+                        <p class="text-8xl font-montserrat leading-tight text-darkSlateGrey whitespace-nowrap">{{ $user->name }}</p>
+                        <p class="text-4xl leading-tight">{{ '@' . $user->displayName }}</p>
+                    </div>
+                @endif
+
+                <!-- Edit Profile and Invitations Sent Icons -->
+                @if((Auth::id() === $user->id && !$user->isdeleted && !$user->isblocked) || auth()->guard('admin')->check())
+                    <div class="flex space-x-4">
+                        <!-- Edit Profile Button with Icon -->
+                        <a href="{{ auth()->guard('admin')->check() ? route('admin.edit.form', ['id' => $user->id]) : route('user.edit.form', ['id' => $user->id]) }}" 
+                        class="w-20 h-20 flex items-center justify-center text-2xl font-bold transition-all duration-200 rounded-lg shadow-md bg-ultraViolet hover:bg-cambridgeBlue text-whiteSmoke hover:text-darkSlateGrey font-montserrat">
+                            <i class="fa-solid fa-user-edit text-3xl"></i>
+                        </a>
+                        <!-- Invitations Sent Button with Icon -->
+                        <a href="{{ route('user.invites.sent', ['id' => $user->id]) }}" 
+                        class="w-20 h-20 flex items-center justify-center text-2xl font-bold transition-all duration-200 rounded-lg shadow-md bg-ultraViolet hover:bg-cambridgeBlue text-whiteSmoke hover:text-darkSlateGrey font-montserrat">
+                            <i class="fa-solid fa-envelope text-3xl"></i>
+                        </a>
+                    </div>
+                @endif
+            </div>
         </div>
-        <div class="flex flex-col items-center">
-            <a href="{{ route('user.invites.sent', ['id' => $user->id]) }}" 
-            class="w-full max-w-md py-3 text-2xl font-bold text-center transition-all duration-200 rounded-lg shadow-md bg-ultraViolet hover:bg-cambridgeBlue text-whiteSmoke hover:text-darkSlateGrey font-montserrat">
-                Invitations Sent
-            </a>
-        </div>            
-    @endif
+    </div>
+
+
 
     <!-- My Events -->
     <div class="mt-8">
         @if (!$user->isdeleted)
-            <h3 class="mb-4 text-5xl font-bold text-ultraViolet">My Events</h3>
+            <h3 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold mb-4">My Events</h3>
             @if ($myEvents->isEmpty())
                 <p class="text-gray-500"> User hasn't created any events yet.</p>
             @elseif (Auth::id() == $user->id)
@@ -87,7 +91,7 @@
 
     <!-- Ongoing Events Section -->
     <div class="mt-8">
-        <h3 class="mb-4 text-5xl font-bold text-ultraViolet"> Ongoing Events </h3>
+        <h3 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold mb-4"> Ongoing Events </h3>
         @if ($ongoingEvents->isEmpty())
             <p class="text-gray-500"> User doesn't have any ongoing events. </p>
         @elseif (Auth::id() == $user->id)
@@ -112,7 +116,7 @@
 
     <!-- Participated Events Section -->
     <div class="mt-8">
-        <h3 class="mb-4 text-5xl font-bold text-ultraViolet"> Past Events </h3>
+        <h3 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold mb-4"> Past Events </h3>
         @if ($participatedEvents->isEmpty())
             <p class="text-gray-500"> User hasn't participated in any events. </p>
         @elseif (Auth::id() == $user->id)
@@ -136,7 +140,7 @@
 
     <!-- Not Yet Participated Events Section -->
     <div class="mt-8">
-        <h3 class="mb-4 text-5xl font-bold text-ultraViolet"> Upcoming Events </h3>
+        <h3 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold mb-4"> Upcoming Events </h3>
         @if ($notYetParticipatedEvents->isEmpty())
             <p class="text-gray-500"> User doesn't have any upcoming events. </p>
         @elseif (Auth::id() == $user->id)

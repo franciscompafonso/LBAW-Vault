@@ -24,8 +24,7 @@
             <div class="relative">
                 <!-- Bell Icon with Notification Count -->
                 <a id="notifications-button" onclick="toggleNotificationsDropdown()" class="relative cursor-pointer">
-                    <i class="text-4xl hover:text-darkSlateGrey 
-                        {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} fa-solid fa-bell"></i>
+                    <i class="text-4xl hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} fa-solid fa-bell"></i>
                     <div id="noti-number" class="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 text-xs font-bold text-white translate-x-2 translate-y-1 bg-red-500 rounded-full">
                         0
                     </div>
@@ -48,28 +47,33 @@
                 </a>
 
                 <!-- Profile Dropdown -->
-                <div id="profile-dropdown" class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-72">
+                <div id="profile-dropdown" class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-auto min-w-[200px]">
                     <!-- Profile Info Card -->
                     <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" 
                     class="block p-6 hover:bg-gray-100">
-                        <div class="grid grid-cols-[auto_1fr] gap-6 items-center">
+                        <div class="flex items-center gap-6">
+                            <!-- Profile Image -->
                             <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                                 alt="User Profile Picture" 
                                 class="object-cover w-16 h-16 border-2 rounded-full 
                                 {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
+                            
+                            <!-- User Info -->
                             <div>
-                                <p class="font-semibold text-xl text-gray-800">{{ Auth::user()->name }}</p>
-                                <p class="text-sm text-gray-500">{{ Auth::user()->username }}</p>
+                                <p class="text-3xl font-semibold text-gray-800 whitespace-nowrap">{{ Auth::user()->name }}</p>
+                                <p class="text-2xl text-gray-500 whitespace-nowrap">{{ Auth::user()->username }}</p>
                             </div>
                         </div>
                     </a>
+
                     <!-- Logout Option -->
                     <a href="{{ url('/logout') }}" 
-                    class="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 text-lg">
-                        <i class="text-2xl fa-solid fa-right-from-bracket"></i>
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100">
+                        <i class="text-xl fa-solid fa-right-from-bracket"></i>
                         <span class="font-medium">Sign out</span>
                     </a>
                 </div>
+
             </div>
         @endif
 
