@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
@@ -56,15 +57,29 @@ class UserController extends Controller
             'profilepicture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',  
         ]);
 
+        // Check if the current password is provided for changing password
+        if ($request->filled('current_password') && $request->filled('new_password')) {
+            // Validate the current password
+            $request->validate([
+                'current_password' => ['required', function ($attribute, $value, $fail) {
+                    if (!Hash::check($value, Auth::user()->password)) {
+                        return $fail(__('The current password does not match.'));
+                    }
+                }],
+                'new_password' => 'required|string|min:8|different:current_password', // Ensure the new password is different from the old one
+                'new_password_confirmation' => 'required|same:new_password', // Confirm new password must match
+            ]);
+
+            // Hash and update the new password
+            $user->password = Hash::make($request->new_password);  // Save the new password after hashing
+        }
+
         // Update the user's details
         $user->name = $validatedData['name'];
         $user->username = $validatedData['username'];
         $user->email = $validatedData['email'];
 
-        if ($request->filled('password')) {
-            $user->password = bcrypt($validatedData['password']);
-        }
-
+        // Handle profile picture update
         if ($request->hasFile('profilepicture')) {
             if ($user->profilepicture) {
                 $oldPath = 'profile-images/' . $user->profilepicture;
@@ -72,7 +87,7 @@ class UserController extends Controller
                     unlink($oldPath);
                 }
             }
-    
+
             $file = $request->file('profilepicture');
             $filename = time() . '_' . $user->username; // Ensure a unique filename
             $file->move(public_path('images/profile-pictures'), $filename);
@@ -81,9 +96,12 @@ class UserController extends Controller
             $user->profilepicture = $filename;
         }
 
+        // Save updated user details
         $user->save();
+
         return redirect()->route('user.profile', ['id' => $user->id]);
     }
+
 
 
     public function deleteAccount($id)

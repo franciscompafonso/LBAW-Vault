@@ -59,26 +59,55 @@
                 @enderror
             </div>
 
-            <!-- Password -->
+            <!-- Current Password -->
             <div class="mb-4">
-                <label for="password" class="block text-lg font-semibold font-montserrat">New Password</label>
-                <input type="password" id="password" name="password" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
-                @error('password')
+                <label for="current_password" class="block text-lg font-semibold font-montserrat">Current Password</label>
+                <input 
+                    type="password" 
+                    id="current_password" 
+                    name="current_password" 
+                    class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 
+                    placeholder="Enter current password"
+                >
+                @error('current_password')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
             </div>
 
-            <!-- Confirm Password -->
+            <!-- New Password -->
             <div class="mb-4">
-                <label for="password_confirmation" class="block text-lg font-semibold font-montserrat">Confirm New Password</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">
-                @error('password_confirmation')
+                <label for="new_password" class="block text-lg font-semibold font-montserrat">New Password</label>
+                <input 
+                    type="password" 
+                    id="new_password" 
+                    name="new_password" 
+                    class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 
+                    placeholder="Enter new password"
+                >
+                @error('new_password')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
             </div>
+
+            <!-- Confirm New Password -->
+            <div class="mb-4">
+                <label for="new_password_confirmation" class="block text-lg font-semibold font-montserrat">Confirm New Password</label>
+                <input 
+                    type="password" 
+                    id="new_password_confirmation" 
+                    name="new_password_confirmation" 
+                    class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 
+                    placeholder="Confirm new password"
+                >
+                @error('new_password_confirmation')
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                @enderror
+            </div>
+
             <div class="mt-6 text-center">
                 <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">Save Changes</button>
             </div>
+
         </form>
 
         <!-- Delete Account Form -->

@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 
-use Carbon\Carbon;
-
 class ResetPasswordController extends Controller
 {
     public function showLinkRequestForm()
@@ -19,24 +17,16 @@ class ResetPasswordController extends Controller
 
     public function showResetForm(Request $request, $token = null)
     {
-        // Validate if the token exists
         if ($token === null) {
-            return view('auth.invalidtoken'); // Render invalid token view
+            return view('auth.invalidtoken');
         }
-
-        // Check token expiration
-        $passwordReset = DB::table('password_reset_tokens')->where('token', $token)->first();
-        if (!$passwordReset) {
-            return view('auth.invalidtoken'); // Render invalid token view
+        $user = User::where('remember_token', $token)->first();
+        if (!$user) {
+            return view('auth.invalidtoken'); 
         }
-       
-        // Get email from the password_reset_tokens table
-        $email = $passwordReset->email;
-
-        // Pass the token and email to the resetpassword view
         return view('auth.resetpassword')->with([
             'token' => $token,
-            'email' => $email,
+            'email' => $user->email,
         ]);
     }
 
@@ -48,24 +38,13 @@ class ResetPasswordController extends Controller
         ]);
         
         $token = $request->token;
-        $passwordReset = DB::table('password_reset_tokens')->where('token', $token)->first();
-
-        if (!$passwordReset) {
+        $user = User::where('remember_token', $token)->first();
+        if (!$user) {
             return view('auth.invalidtoken');
         }
-
-        $user = User::where('email', $passwordReset->email)->first();
-        if (!$user) {
-            return view('auth.invalidtoken'); // Return invalid token view if no user found
-        }
-
-        // Update the user's password
         $user->password = Hash::make($request->password);
+        $user->remember_token = null;
         $user->save();
-
-        // Delete the token from the table
-        DB::table('password_reset_tokens')->where('token', $token)->delete();
-
         Session::flash('success', 'Password reset successfully! You can now log in.');
         return view('auth.login');
     }
