@@ -27,8 +27,10 @@
     </head>
     <body class="flex flex-col min-h-screen bg-white">
         <!-- Top Bar -->
-        @include('partials.topbar')
-
+        <div class="max-w-[75%] w-full mx-auto">
+            @include('partials.topbar')
+        </div>
+        
         <!-- Main Content -->
         <main id="main" class="flex flex-col justify-start flex-1 p-8 overflow-auto" >
             <div class="max-w-[75%] w-full mx-auto">
@@ -38,7 +40,7 @@
         </main>
 
         <!-- Footer -->
-            @include('partials.footer')
+        @include('partials.footer')
     </body>
 
 </html>

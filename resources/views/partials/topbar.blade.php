@@ -1,7 +1,7 @@
 <!-- Header Section -->
 <header class="flex justify-between items-center p-12 relative">
     <!-- Logo/Title -->
-    <h1 class="text-3xl font-bold">
+    <h1 class="font-bold">
         <a href="{{ url(path: '/home') }}" 
            class="text-5xl font-montserrat hover:text-darkSlateGrey 
                   {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
@@ -18,7 +18,7 @@
             <a href="{{ url('/event/create') }}" 
                title="Create Event" 
                class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
-                <i class="text-3xl fa-solid fa-plus"></i>
+                <i class="text-4xl fa-solid fa-plus"></i>
             </a>
 
             <div class="relative">
@@ -32,8 +32,8 @@
                 </a>
 
                 <!-- Notifications Dropdown -->
-                <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-4 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-100">
-                    <p id="no-notifications" class="text-center text-gray-500">There are no notifications.</p>
+                <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-6 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-80">
+                    <p id="no-notifications" class="text-center text-xl text-gray-500">There are no notifications.</p>
                     <div id="notifications-list"></div>
                 </div>
             </div>
@@ -48,27 +48,26 @@
                 </a>
 
                 <!-- Profile Dropdown -->
-                <div id="profile-dropdown" class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-56">
+                <div id="profile-dropdown" class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-72">
                     <!-- Profile Info Card -->
                     <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" 
-                    class="block p-4 hover:bg-gray-100">
-                        <div class="grid grid-cols-[auto_1fr] gap-4 items-center">
+                    class="block p-6 hover:bg-gray-100">
+                        <div class="grid grid-cols-[auto_1fr] gap-6 items-center">
                             <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
                                 alt="User Profile Picture" 
-                                class="object-cover w-12 h-12 border-2 rounded-full 
+                                class="object-cover w-16 h-16 border-2 rounded-full 
                                 {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
                             <div>
-                                <p class="font-semibold text-gray-800">{{ Auth::user()->name }}</p>
+                                <p class="font-semibold text-xl text-gray-800">{{ Auth::user()->name }}</p>
                                 <p class="text-sm text-gray-500">{{ Auth::user()->username }}</p>
                             </div>
                         </div>
                     </a>
                     <!-- Logout Option -->
                     <a href="{{ url('/logout') }}" 
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 
-                        {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
-                        <i class="text-xl fa-solid fa-right-from-bracket"></i>
-                        <span class="font-medium">Logout</span>
+                    class="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 text-lg">
+                        <i class="text-2xl fa-solid fa-right-from-bracket"></i>
+                        <span class="font-medium">Sign out</span>
                     </a>
                 </div>
             </div>
@@ -78,17 +77,17 @@
             <a href="{{ url('/admin/user-management') }}" 
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
                title="Users">
-                <i class="text-3xl fa-solid fa-users-gear"></i>
+                <i class="text-4xl fa-solid fa-users-gear"></i>
             </a>
             <a href="{{ url('/admin/create') }}" 
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
                title="Admins">
-                <i class="text-3xl fa-solid fa-user-tie"></i>
+                <i class="text-4xl fa-solid fa-user-tie"></i>
             </a>
             <a href="{{ url('/logout') }}" 
                title="Logout" 
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
-                <i class="text-3xl fa-solid fa-right-from-bracket"></i>
+                <i class="text-4xl fa-solid fa-right-from-bracket"></i>
             </a>
         @endif
 
@@ -97,7 +96,7 @@
             <a href="{{ url('/login') }}" 
                title="Login" 
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
-                <i class="text-3xl fa-solid fa-right-to-bracket"></i>
+                <i class="text-4xl fa-solid fa-right-to-bracket"></i>
             </a>
         @endif
     </div>

@@ -135,15 +135,16 @@
         </form>
 
         <!-- Events Grid -->
-            <div class="col-span-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
-                @forelse ($events as $event)
-                    <div class="w-full">
-                        @include('partials.event', ['event' => $event])
-                    </div>
-                @empty
-                    <p class="text-eerieBlack font-montserrat col-span-full">No events available in this category.</p>
-                @endforelse
-            </div>
+        <div class="col-span-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 auto-rows-min">
+            @forelse ($events as $event)
+                <div class="w-full">
+                    @include('partials.event', ['event' => $event])
+                </div>
+            @empty
+                <p class="text-eerieBlack font-montserrat col-span-full">No events available in this category.</p>
+            @endforelse
+        </div>
+
     </div>
 </section>
 
