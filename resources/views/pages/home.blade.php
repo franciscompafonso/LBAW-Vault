@@ -6,28 +6,30 @@
 <div class="w-full">
     <!-- Banner Section -->
     <section class="w-full py-16 shadow-md bg-whiteSmoke">
-        <div class="flex flex-col items-center max-w-6xl px-6 mx-auto lg:flex-row">
+        <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-evenly lg:items-center">
             <!-- Text Section -->
-            <div class="w-full mb-8 text-left lg:w-1/2 lg:mb-0">
-                
+            <div class="text-left flex flex-col justify-between h-full">
                 @if (Auth::guard('admin')->check())
-                    <h2 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack"> Shaping Communities, One Decision at a Time.</h2>
-                    <p class="mb-6 text-2xl font-montserrat text-deepNavy">Welcome back, Admin!</p>
+                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Shaping Communities,<br> One Decision at a Time.</h2>
+                    <p class="text-4xl font-montserrat text-deepNavy">Welcome back, Admin!</p>
                 @elseif (Auth::guard('web')->check())
-                    <h2 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack"> Empowering Communities, One Event at a Time.</h2>
-                    <p class="mb-6 text-2xl font-montserrat text-deepNavy">Welcome back, {{Auth::user()->name}}!</p>
+                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Empowering Communities,<br> One Event at a Time.</h2>
+                    <p class="text-4xl font-montserrat text-deepNavy">Welcome back, {{Auth::user()->name}}!</p>
                 @else
-                    <h2 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack"> Empowering Communities, One Event at a Time.</h2>
-                    <p class="mb-6 text-2xl font-montserrat text-deepNavy">Join us now!</p>  
+                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Empowering Communities,<br> One Event at a Time.</h2>
+                    <p class="text-4xl font-montserrat text-deepNavy">Join us now!</p>  
                 @endif
             </div>
 
+
             <!-- Image Section -->
-            <div class="flex justify-center w-full lg:w-1/2 lg:justify-end">
+            <div class="flex justify-center lg:justify-center">
                 <img src="{{ asset('images/others/main-pic.png') }}" alt="Main Picture" class="object-cover w-64 h-64 transition-transform duration-300 transform bg-white rounded-full shadow-lg hover:scale-105">
             </div>
         </div>
     </section>
+
+
 
    <!-- Categories Section -->
     <section class="px-4 py-8">
