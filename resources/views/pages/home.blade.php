@@ -38,9 +38,10 @@
                 @if ($category->events->count() >= 4)
                     <a href="{{ route('events.search', ['category_id' => $category->id]) }}" class="flex items-center space-x-4 group">
                         <!-- Category Name with Link -->
-                        <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
+                        <h2 class="inline-block text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
                             {{ $category->name }}
                         </h2>
+
 
                         <!-- "Explore all >" Link -->
                         <p class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
