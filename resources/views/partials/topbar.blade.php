@@ -1,5 +1,5 @@
 <!-- Header Section -->
-<header class="flex items-center justify-between p-6 relative flex-wrap">
+<header class="relative flex flex-wrap items-center justify-between p-6">
     <!-- Logo -->
     <h1 class="font-bold">
         <a href="{{ url(path: '/home') }}" 
@@ -40,7 +40,7 @@
 
                 <!-- Notifications Dropdown -->
                 <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-6 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-80">
-                    <p id="no-notifications" class="text-center text-xl text-gray-500">There are no notifications.</p>
+                    <p id="no-notifications" class="text-xl text-center text-gray-500">There are no notifications.</p>
                     <div id="notifications-list"></div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
             <!-- Profile Icon -->
             <div class="relative">
                 <a id="profile-button" onclick="toggleProfileDropdown()" class="cursor-pointer">
-                    <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
+                    <img src="{{ asset('images/profile-pictures/' . (Auth::user()->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
                         alt="User Profile Picture" 
                         class="object-cover w-16 h-16 border-2 rounded-full hover:border-darkSlateGrey 
                         {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
@@ -61,7 +61,7 @@
                     class="block p-6 hover:bg-gray-100">
                         <div class="flex items-center gap-6">
                             <!-- Profile Image -->
-                            <img src="{{ asset('images/profile-pictures/' . Auth::user()->profilepicture) }}" 
+                            <img src="{{ asset('images/profile-pictures/' . (Auth::user()->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
                                 alt="User Profile Picture" 
                                 class="object-cover w-16 h-16 border-2 rounded-full 
                                 {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
