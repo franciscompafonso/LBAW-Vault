@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
 class UnblockRequest extends Model
 {
     use HasFactory;
+
+    
 
     protected $table = 'unblock_request';
 
@@ -39,22 +42,37 @@ class UnblockRequest extends Model
     }
 
     public function approve(int $adminId, string $decision = 'Approved'): bool
-    {
-        $this->decision_by_id = $adminId;
-        $this->status = 'approved';
-        $this->decision = $decision;
-        $this->processed_at = now();
-        return $this->save();
+{
+    if (!$this->isPending()) {
+        return false; 
     }
 
-    public function reject(int $adminId, string $decision = 'Rejected'): bool
-    {
-        $this->decision_by_id = $adminId;
-        $this->status = 'rejected';
-        $this->decision = $decision;
-        $this->processed_at = now();
-        return $this->save();
+    $this->update([
+        'decision_by_id' => $adminId,
+        'status' => 'approved',
+        'decision' => $decision,
+        'processed_at' => now(),
+    ]);
+
+    return true;
+}
+
+public function reject(int $adminId, string $decision = 'Rejected'): bool
+{
+    if (!$this->isPending()) {
+        return false; 
     }
+
+    $this->update([
+        'decision_by_id' => $adminId,
+        'status' => 'rejected',
+        'decision' => $decision,
+        'processed_at' => now(),
+    ]);
+
+    return true;
+}
+
 
     public function isPending(): bool
     {
