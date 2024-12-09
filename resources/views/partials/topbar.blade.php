@@ -96,6 +96,11 @@
                title="Admins">
                 <i class="text-4xl fa-solid fa-user-tie"></i>
             </a>
+            <a href="{{ url('/admin/unblock-requests') }}" 
+                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
+                title="Unblock Requests">
+                    <i class="text-4xl fa-solid fa-lock"></i>
+            </a>
             <a href="{{ url('/logout') }}" 
                title="Logout" 
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">

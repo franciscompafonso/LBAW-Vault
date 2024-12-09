@@ -111,6 +111,9 @@ Route::middleware(['auth'])->group(function () {
 
     // API
     Route::get('/api/notifications', [NotificationController::class, 'index']);
+
+    Route::get('/unblock-request', [UnblockRequestController::class, 'create'])->name('unblock.request.create');
+    Route::post('/unblock-request', [UnblockRequestController::class, 'store'])->name('unblock.request.store');
 });
 Route::get('/api/search', [EventController::class, 'search'])->name('search');
 
