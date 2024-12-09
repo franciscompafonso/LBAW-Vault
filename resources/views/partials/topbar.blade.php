@@ -13,13 +13,21 @@
     
     <!-- Navigation Icons -->
     <div class="flex items-center space-x-6">
-        @if (Auth::guard('web')->check())
-            <!-- Create Event -->
-            <a href="{{ url('/event/create') }}" 
-               title="Create Event" 
-               class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
-                <i class="text-4xl fa-solid fa-plus"></i>
-            </a>
+        @if (Auth::guard('web')->check() )
+            @if (Auth::user()->isblocked)
+                <a href="{{ url('/unblock-request') }}" 
+                title="Unblock Request" 
+                class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
+                    <i class="text-4xl fa-solid fa-lock-open"></i>
+                </a>
+                @else
+                <a href="{{ url('/event/create') }}" 
+                title="Create Event" 
+                class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
+                    <i class="text-4xl fa-solid fa-plus"></i>
+                </a>
+            @endif
+
 
             <div class="relative">
                 <!-- Bell Icon with Notification Count -->
