@@ -17,8 +17,8 @@
         </div>
 
         <!-- Floating Results -->
-        <div id="searchResults" 
-             class="absolute w-full mt-2 bg-white rounded-lg shadow-lg max-h-80 overflow-y-auto z-40">
+        <div id="searchResults" class="absolute mt-2 bg-white rounded-lg shadow-lg max-h-80 overflow-y-auto z-40 w-full lg:w-[30%]">
+            <!-- Dynamically populated search results will go here -->
         </div>
     </div>
 
