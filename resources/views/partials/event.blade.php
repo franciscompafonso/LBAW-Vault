@@ -7,9 +7,9 @@
     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 group-hover:to-black/70 transition-all duration-700 ease-in-out pointer-events-none"></div>
   
     <!-- Text Wrapper -->
-    <div class="absolute bottom-0 left-0 right-0 p-4 text-white transition-all duration-700 group-hover:translate-y-[-10%] group-hover:transition-transform ease-in-out">
+    <div class="absolute bottom-0 left-0 right-0 p-4 text-white transition-all">
         <!-- Title -->
-        <h2 class="text-[2.5rem] font-semibold transition-colors duration-700 group-hover:text-wisteria">
+        <h2 class="text-[2.3rem] font-semibold transition-colors duration-700 group-hover:text-wisteria">
             {{ $event->name }}
         </h2>
         <!-- Date -->
