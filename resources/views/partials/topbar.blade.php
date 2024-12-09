@@ -172,7 +172,7 @@
                             </a> 
                             has invited you to 
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
-                                ${notification.data.event_name ? notification.data.event_name . ' event.' : 'an event'}
+                                ${notification.data.event_name ? notification.data.event_name + ' event.' : 'an event'}
                             </a><br>
                             ${notification.data.description ? notification.data.description : ''}
                         </p>
