@@ -104,7 +104,7 @@
             <h2 class="pb-4 mb-6 text-3xl font-bold border-b-2 font-montserrat text-burgundy border-babyPowder">Comments</h2>
             <!-- Make Comment -->
             @if (Auth::id())
-                <form action="{{ route('comments.store', ['eventId' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
+                <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
                     @csrf
                     <textarea 
                         name="content" 
