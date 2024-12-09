@@ -3,32 +3,54 @@
 @section('Title', 'Reset Password')
 
 @section('content')
-    <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
-        <h2 class="text-2xl font-semibold text-center mb-4">Reset Password</h2>
-        <p class="text-center text-gray-700 mb-6">You can now enter a new password for your account.</p>
+    <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg mt-12">
+        <h2 class="text-3xl font-bold text-center mb-4 font-montserrat">Reset Password</h2>
+        <p class="text-center text-gray-600 mb-6">Enter a new password to secure your account.</p>
         
-        <form method="POST" action="{{ route('password.update') }}" class="space-y-4">
+        <form method="POST" action="{{ route('password.update') }}" class="space-y-6">
             @csrf
             <input type="hidden" name="token" value="{{ $token }}">
 
             <!-- New Password Input -->
             <div>
-                <label for="password" class="block text-gray-700">New Password</label>
-                <input id="password" type="password" name="password" required class="w-full p-2 mt-2 border border-gray-300 rounded-md" minlength="8" placeholder="Enter new password">
-                <span id="password-error" class="text-red-500"></span>
+                <label for="password" class="block text-lg font-semibold font-montserrat text-gray-700">New Password</label>
+                <input 
+                    id="password" 
+                    type="password" 
+                    name="password" 
+                    required 
+                    class="w-full p-3 mt-2 border border-gray-300 rounded-md font-montserrat focus:ring-ultraViolet focus:border-ultraViolet" 
+                    minlength="8" 
+                    placeholder="Enter new password"
+                >
+                @error('password')
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                @enderror
             </div>
 
             <!-- Confirm Password Input -->
             <div>
-                <label for="password-confirm" class="block text-gray-700">Confirm Password</label>
-                <input id="password-confirm" type="password" name="password_confirmation" required class="w-full p-2 mt-2 border border-gray-300 rounded-md" placeholder="Confirm your password">
-                <span id="password-confirm-error" class="text-red-500"></span>
+                <label for="password_confirmation" class="block text-lg font-semibold font-montserrat text-gray-700">Confirm Password</label>
+                <input 
+                    id="password_confirmation" 
+                    type="password" 
+                    name="password_confirmation" 
+                    required 
+                    class="w-full p-3 mt-2 border border-gray-300 rounded-md font-montserrat focus:ring-ultraViolet focus:border-ultraViolet" 
+                    placeholder="Confirm your password"
+                >
+                @error('password_confirmation')
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                @enderror
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" id="submit-button" class="w-full bg-wisteria text-white p-2 rounded-md hover:bg-ultraViolet transition duration-200">
-                Reset Password
-            </button>
+            <div class="mt-6">
+                <button type="submit" class="w-full px-6 py-3 text-white font-bold transition-all duration-200 bg-ultraViolet rounded-md hover:bg-cambridgeBlue hover:text-darkSlateGrey font-montserrat">
+                    Reset Password
+                </button>
+            </div>
         </form>
     </div>
 @endsection
+

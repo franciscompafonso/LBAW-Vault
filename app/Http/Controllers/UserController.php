@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -62,6 +63,31 @@ class UserController extends Controller
                 'password' => 'nullable|string|min:8|confirmed',
                 'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
             ]);
+        // Validate the incoming data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:user_account,username,' . $user->id, 
+            'email' => 'required|email|max:255|unique:user_account,email,' . $user->id,  
+            'password' => 'nullable|string|min:8|confirmed',  
+            'profilepicture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',  
+        ]);
+
+        // Check if the current password is provided for changing password
+        if ($request->filled('current_password') && $request->filled('new_password')) {
+            // Validate the current password
+            $request->validate([
+                'current_password' => ['required', function ($attribute, $value, $fail) {
+                    if (!Hash::check($value, Auth::user()->password)) {
+                        return $fail(__('The current password does not match.'));
+                    }
+                }],
+                'new_password' => 'required|string|min:8|different:current_password', // Ensure the new password is different from the old one
+                'new_password_confirmation' => 'required|same:new_password', // Confirm new password must match
+            ]);
+
+            // Hash and update the new password
+            $user->password = Hash::make($request->new_password);  // Save the new password after hashing
+        }
 
             $user->name = $validatedData['name'];
             $user->username = $validatedData['username'];

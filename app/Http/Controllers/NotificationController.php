@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Notification;
 use App\Models\Comment;
+use App\Models\Event;
 use App\Models\Invite;
 use App\Models\JoinRequest;
 use App\Models\Poll;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -78,8 +80,10 @@ class NotificationController extends Controller
                         $comment = Comment::find($notification->comment_id);
                         
                         if ($comment) {
-                            $result = $comment->show();
-                            return ['type' => $type, 'data' => $result];
+                            $comment['event_name'] = Event::find($comment->event_id)->name;
+                            $comment['user_name'] = User::find($comment->comment_by_id)->name;
+                            $comment['user_photo'] = User::find($comment->comment_by_id)->profilepicture;
+                            return ['type' => $type, 'data' => $comment];
                         } else {
                             return ['type' => $type, 'data' => 'Comment not found'];
                         }
@@ -87,8 +91,11 @@ class NotificationController extends Controller
                         $invite = Invite::find($notification->invite_id);
                         
                         if ($invite) {
-                            $result = $invite->show();
-                            return ['type' => $type, 'data' => $result];
+                            $invite['event_name'] = Event::find($invite->event_id)->name;
+                            $invite['invited_name'] = User::find($invite->invited_by_id)->name;
+                            $invite['invited_photo'] = User::find($invite->invited_by_id)->profilepicture;
+                            $invite['invitee_name'] = User::find($invite->invite_to_id)->name;
+                            return ['type' => $type, 'data' => $invite];
                         } else {
                             return ['type' => $type, 'data' => 'Invite not found'];
                         }
@@ -96,8 +103,11 @@ class NotificationController extends Controller
                         $invite = Invite::find($notification->invite_id);
                         
                         if ($invite) {
-                            $result = $invite->show();
-                            return ['type' => $type, 'data' => $result];
+                            $invite['event_name'] = Event::find($invite->event_id)->name;
+                            $invite['invited_name'] = User::find($invite->invited_by_id)->name;
+                            $invite['invited_photo'] = User::find($invite->invited_by_id)->profilepicture;
+                            $invite['invitee_name'] = User::find($invite->invite_to_id)->name;
+                            return ['type' => $type, 'data' => $invite];
                         } else {
                             return ['type' => $type, 'data' => 'Invite not found'];
                         }
@@ -105,16 +115,22 @@ class NotificationController extends Controller
                         $join_request = JoinRequest::find($notification->join_request_id);
                         
                         if ($join_request) {
-                            $result = $join_request->show();
-                            return ['type' => $type, 'data' => $result];
+                            $join_request['event_name'] = Event::find($join_request->event_id)->name;
+                            $join_request['event_creator'] = User::find(Event::find($join_request->event_id)->creator)->name;
+                            $join_request['user_name'] = User::find($join_request->join_request_by_id)->name;
+                            $join_request['user_photo'] = User::find($join_request->join_request_by_id)->profilepicture;
+                            return ['type' => $type, 'data' => $join_request];
                         } else {
                             return ['type' => $type, 'data' => 'Join request not found'];
                         }
                     } elseif ($type == 'join_request_notification') {
                         $join_request = JoinRequest::find($notification->join_request_id);
                         if ($join_request) {
-                            $result = $join_request->show();
-                            return ['type' => $type, 'data' => $result];
+                            $join_request['event_name'] = Event::find($join_request->event_id)->name;
+                            $join_request['event_creator'] = User::find(Event::find($join_request->event_id)->creator)->name;
+                            $join_request['user_name'] = User::find($join_request->join_request_by_id)->name;
+                            $join_request['user_photo'] = User::find($join_request->join_request_by_id)->profilepicture;
+                            return ['type' => $type, 'data' => $join_request];
                         } else {
                             return ['type' => $type, 'data' => 'Join request not found'];
                         }
@@ -122,8 +138,10 @@ class NotificationController extends Controller
                         $poll = Poll::find($notification->poll_id);
                         
                         if ($poll) {
-                            $result = $poll->show();
-                            return ['type' => $type, 'data' => $result];
+                            $poll['event_name'] = Event::find($poll->event_id)->name;
+                            $poll['user_name'] = User::find($poll->comment_by_id)->name;
+                            $poll['user_photo'] = User::find($poll->comment_by_id)->profilepicture;
+                            return ['type' => $type, 'data' => $poll];
                         } else {
                             return ['type' => $type, 'data' => 'Poll not found'];
                         }

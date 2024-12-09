@@ -9,7 +9,9 @@ use App\Models\File;
 use App\Models\JoinRequest;
 use App\Models\Location;
 use App\Models\QuestionReview;
-use Exception;
+use App\Models\AnswerReview;
+use App\Models\User;
+use App\Events\JoinEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -157,34 +159,118 @@ class EventController extends Controller
         }
     }
 
-    public function showByCategory(Request $request, $id)
+    public function searchFiltered(Request $request)
     {
         $query = Event::query();
+        $locations = Location::all();
+        $categories = Category::all();
 
-        if ($id !== 'all') {
-            $category = Category::findOrFail($id);
-            $query->where('category_id', $id);
+        $searchQuery = $request->input('q');
+
+        // If a search query is provided, filter events using full-text search
+        if ($searchQuery) {
+            $searchResults = Event::query()
+                ->select('id')
+                ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$searchQuery])
+                ->pluck('id');
+
+            // Apply the search results as a base filter
+            $query->whereIn('id', $searchResults);
+        }
+
+        // Filter by category if provided
+        if ($request->filled('category_id')) {
+            $category = Category::find($request->category_id);
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
         } else {
             $category = null;
         }
 
-        $query->where('visibility', '<>', 'private');
-
-        $status = $request->get('status'); // 'ended', 'ongoing', 'future'
-        if ($status === 'ended') {
-            $query->where('end_date', '<', now());
-        } elseif ($status === 'ongoing') {
-            $query->where('start_date', '<=', now())->where('end_date', '>=', now());
-        } elseif ($status === 'future') {
-            $query->where('start_date', '>', now());
+        // Visibility and Status Filters
+        if ($request->filled('visibility')) {
+            $query->whereIn('visibility', $request->visibility); // Use the provided visibility values
+        } else {
+            $query->whereIn('visibility', ['public', 'request_only']); // Default to public and request_only if none specified
+        }
+        if ($request->filled('status')) {
+            $query->where(function ($q) use ($request) {
+                if (in_array('canceled', $request->status)) {
+                    $q->orWhere('visibility', 'canceled'); // Assuming 'canceled' is stored in visibility
+                }
+                if (in_array('full', $request->status)) {
+                    $q->orWhere(function ($subQuery) {
+                        $subQuery->whereRaw(
+                            '(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) >= event.capacity'
+                        );
+                    });
+                }
+            });
         }
 
+        // Date Filters
+        if ($request->filled('startDate')) {
+            $query->where('start_date', '>=', $request->startDate);
+        }
+        if ($request->filled('endDate')) {
+            $query->where('end_date', '<=', $request->endDate);
+        }
+
+        // Location Filter
+        if ($request->filled('location')) {
+            $query->where('location_id', $request->location);
+        }
+
+        // User-specific Filters
+        if (Auth::check()) {
+            if ($request->userEvents === 'created') {
+                $query->where('creator_id', Auth::id());
+            } elseif ($request->userEvents === 'participated') {
+                $query->whereHas('participators', function ($q) {
+                    $q->where('participator_id', Auth::id());
+                });
+            }
+        }
+
+        // Sorting Algorithms
         $order = $request->get('order', 'asc');
-        $query->orderBy('start_date', $order);
+        switch ($order) {
+            case 'date_asc':
+                $query->orderBy('start_date', 'asc');
+                break;
+            case 'date_desc':
+                $query->orderBy('start_date', 'desc');
+                break;
+            case 'part_asc':
+                $query->orderByRaw('(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) asc');
+                break;
+            case 'part_desc':
+                $query->orderByRaw('(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) desc');
+                break;
+            default:
+                $query->orderBy('start_date', 'asc'); // Default fallback
+                break;
+        }
 
         $events = $query->get();
 
-        return view('pages.events_by_category', compact('category', 'events'));
+        // Calculate min and max capacities for slider
+        $minCapacity = $events->min('capacity') ?? 0;
+        $maxCapacity = $events->max('capacity') ?? 100;
+
+        if ($request->ajax()) {
+            return view('partials.events_grid', compact('events'))->render();
+        }
+
+        return view('pages.search', compact(
+            'category',
+            'events',
+            'locations',
+            'categories',
+            'minCapacity',
+            'maxCapacity'
+        ));
     }
 
     private function deleteBanner($bannerId) {
@@ -251,21 +337,39 @@ class EventController extends Controller
         $event = Event::findOrFail($eventId);
 
         if ($event->participators()->where('id', Auth::id())->exists()) {
-            return back()->with('message', 'You are already participating in this event.');
+            return response()->json([
+                'success' => false,
+                'message' => 'You are already participating in this event.',
+            ]);
         }
 
         if ($event->end_date < now()) {
-            return back()->with('message', 'You cannot join an event that has already ended.');
+            return response()->json([
+                'success' => false,
+                'message' => 'You cannot join an event that has already ended.',
+            ]);
         }
 
         if ($event->participators()->count() >= $event->capacity) {
-            return back()->with('message', 'This event is already at full capacity.');
+            return response()->json([
+                'success' => false,
+                'message' => 'This event is already at full capacity.',
+            ]);
         }
 
+        // Attach user to event
         $event->participators()->attach(Auth::id());
 
-        return back()->with('message', 'You have successfully joined the event!');
+        // Broadcast event (for real-time notification)
+        event(new JoinEvent($event->name));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'You have successfully joined the event!',
+        ]);
+        
     }
+
 
     /**
      * Leave an event.
@@ -311,6 +415,7 @@ class EventController extends Controller
             ->join('location', 'event.location_id', '=', 'location.id')
             ->join('category', 'event.category_id', '=', 'category.id')
             ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$query])
+            ->limit(5)
             ->get();
 
         return response()->json($events);

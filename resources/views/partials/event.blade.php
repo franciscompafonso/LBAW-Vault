@@ -1,29 +1,28 @@
-<article class="mx-5 my-5 overflow-hidden transition-transform duration-300 bg-white rounded-lg shadow-md event hover:scale-105">
-    <img src="{{ asset('images/banner/'. ($event->banner->path ?? App\Models\Event::DEFAULT_BANNER)) }}" alt="{{ $event->name }}" class="object-cover w-full h-40">
+<div class="news-card relative overflow-hidden rounded-lg shadow-lg w-full aspect-[16/9] transition-transform duration-300 group">
+    <!-- Background Image -->
+    <img src="{{ asset('images/banner/'. ($event->banner->path ?? App\Models\Event::DEFAULT_BANNER)) }}" alt="{{ $event->name }}"
+         class="absolute inset-0 object-cover w-full h-full transition-transform duration-700 transform group-hover:scale-110">
 
-    <div class="p-3">
-        <h3 class="text-2xl font-semibold font-montserrat text-ultraViolet">{{ $event->name }}</h3>
-        <p class="mt-2 text-darkSlateGrey font-montserrat">{{ $event->description }}</p>
-        <p class="mt-4 text-sm text-darkSlateGrey font-montserrat">
-            Start Date: {{ $event->start_date ? $event->start_date->format('d/m/Y H:i') : 'Not available' }}
-        </p>
-        <p class="mt-4 text-sm text-darkSlateGrey font-montserrat">
-            End Date: {{ $event->end_date ? $event->end_date->format('d/m/Y H:i') : 'Not available' }}
-        </p>
-
-        <div class="flex flex-col items-center px-1 py-2 mt-auto">
-            <a href="{{ route('events.show', $event->id) }}"
-                class="w-full max-w-md py-3 text-2xl font-bold text-center transition-all duration-200 rounded-lg text-cambridgeBlue hover:text-darkSlateGrey font-montserrat">
-                View Details
-            </a>
+    <!-- Gradient Overlay for Default (Non-hovered state) -->
+    <div class="absolute inset-0 transition-all duration-700 ease-in-out pointer-events-none bg-gradient-to-b from-transparent to-black/50 group-hover:to-black/70"></div>
+  
+    <!-- Text Wrapper -->
+    <div class="absolute bottom-0 left-0 right-0 p-4 text-white transition-all">
+        <!-- Title -->
+        <h2 class="text-[2.3rem] font-semibold transition-colors duration-700 group-hover:text-wisteria">
+            {{ $event->name }}
+        </h2>
+        <!-- Date -->
+        <div class="text-2xl">
+            {{ $event->start_date->format('d/m/Y') . ' - ' . $event->end_date->format('d/m/Y') }}
         </div>
-        @if ($event->creator_id === Auth::id() || auth()->guard('admin')->check()) 
-            <div class="flex flex-col items-center px-1 py-2 mt-auto">
-                <a href="{{ route('events.edit', $event->id) }}"
-                    class="w-full max-w-md py-3 text-2xl font-bold text-center transition-all duration-200 rounded-lg text-cambridgeBlue hover:text-darkSlateGrey font-montserrat">
-                    Edit Event
-                </a>
-            </div>
-        @endif
+        
+        <!-- Description (Hidden by default, appears with sliding effect on hover) -->
+        <div class="overflow-hidden text-3xl transition-all duration-700 transform description max-h-0 group-hover:max-h-40">
+            {{ $event->description }}
+        </div>
     </div>
-</article>
+  
+    <!-- Clickable Link -->
+    <a href="{{ route('events.show', $event->id) }}" class="absolute inset-0 z-10"></a>
+</div>
