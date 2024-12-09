@@ -34,7 +34,6 @@ DROP TABLE IF EXISTS event CASCADE;
 DROP TABLE IF EXISTS user_account CASCADE;
 DROP TABLE IF EXISTS photo CASCADE;
 DROP TABLE IF EXISTS comment_feedback CASCADE;
-DROP TABLE IF EXISTS password_reset_tokens CASCADE;
 
 -- drop indexes
 DROP INDEX IF EXISTS idx_user_username;
@@ -81,7 +80,8 @@ CREATE TABLE user_account (
     password VARCHAR(255) NOT NULL,
     isDeleted BOOLEAN DEFAULT FALSE,
     isBlocked BOOLEAN DEFAULT FALSE,
-    profilePicture VARCHAR(255) DEFAULT 'default-avatar.png'
+    profilePicture VARCHAR(255) DEFAULT 'default-avatar.png',
+    remember_token VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE location (
@@ -279,13 +279,6 @@ CREATE TABLE comment_feedback (
     comment_id INT REFERENCES comment(id),
     feedback INT NOT NULL,
     PRIMARY KEY (user_id, comment_id)
-);
-
-CREATE TABLE password_reset_tokens (
-    email VARCHAR(255) NOT NULL,
-    token VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (email) REFERENCES user_account(email) ON DELETE CASCADE
 );
 
 -- Indexes

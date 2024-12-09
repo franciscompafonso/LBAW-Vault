@@ -28,7 +28,7 @@
     </section>
 
 
-    <!-- Sign-In Section -->
+    <!-- Recore password Section -->
     <section class="flex items-center justify-center">
       <div class="w-2/3">
         <!-- Title -->
@@ -50,7 +50,7 @@
                 @enderror
             </div>
 
-            <!-- Sign In Button -->
+            <!-- Rset Link Button -->
             <div class="mt-6 text-center">
                 <button type="submit" 
                     class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">
