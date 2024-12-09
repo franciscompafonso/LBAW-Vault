@@ -9,6 +9,7 @@ use App\Http\Controllers\JoinRequestController;
 use App\Http\Controllers\PollController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\UnblockRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,11 +107,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification']);
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications']);
     Route::get('/notifications/count', [NotificationController::class, 'unreadCount']);
-    Route::post('/events/{eventId}/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::post('/comments/{comment}/photos', [FileController::class, 'store'])->name('photos.store');
+    Route::post('/events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');
 
     // API
     Route::get('/api/notifications', [NotificationController::class, 'index']);
+
+    Route::get('/unblock-request', [UnblockRequestController::class, 'create'])->name('unblock.request.create');
+    Route::post('/unblock-request', [UnblockRequestController::class, 'store'])->name('unblock.request.store');
 });
 Route::get('/api/search', [EventController::class, 'search'])->name('search');
 
@@ -125,4 +128,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/store', [AdminController::class, 'storeAdmin'])->name('admin.admins.store');
     Route::get('admin/user/{id}/edit', [AdminController::class, 'adminEditForm'])->name('admin.edit.form');
     Route::post('admin/user/{id}/edit', [AdminController::class, 'adminEdit'])->name('admin.edit.action');
+    Route::get('/admin/unblock-requests', [UnblockRequestController::class, 'index'])->name('admin.unblock.requests');
+    Route::post('/admin/unblock-requests/{id}/approve', [UnblockRequestController::class, 'approve'])->name('admin.unblock.requests.approve');
+    Route::post('/admin/unblock-requests/{id}/reject', [UnblockRequestController::class, 'reject'])->name('admin.unblock.requests.reject');
 });
+
+
