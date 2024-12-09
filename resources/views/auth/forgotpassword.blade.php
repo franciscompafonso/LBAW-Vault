@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('Title', 'Forgot Password')
+@section('Title', 'Recover Password')
 
 @section('content')
 <div class="flex items-center justify-center">
@@ -40,14 +40,14 @@
 
             <!-- Email Field -->
             <div>
-              <label for="email" class="block text-3xl font-medium text-darkSlateGrey">Email address</label>
+              <label for="email" class="block text-2xl font-medium text-darkSlateGrey">Enter your email address to receive a password reset link.</label>
               <div class="mt-1">
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" 
+                <input id="email" type="email" name="email" required autofocus autocomplete="email" 
                   class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">
               </div>
-              @if ($errors->has('email'))
-                <p class="mt-1 text-lg text-red-500">{{ $errors->first('email') }}</p>
-              @endif
+                @error('email')
+                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                @enderror
             </div>
 
             <!-- Sign In Button -->
@@ -60,11 +60,15 @@
           </form>
 
             @if(session('status'))
-                <p class="text-green-500 mt-4 text-center">{{ session('status') }}</p>
+                <div class="mt-4 text-sm text-center text-green-600 font-montserrat">
+                    {{ session('status') }}
+                </div>
             @endif
 
             @if(session('error'))
-                <p class="text-red-500 mt-4 text-center">{{ session('error') }}</p>
+                <div class="mt-4 text-sm text-center text-red-600 font-montserrat">
+                    {{ session('error') }}
+                </div>
             @endif
       </div>
     </section>
