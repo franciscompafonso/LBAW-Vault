@@ -52,9 +52,7 @@
                     <!-- Events Grid with max-width possible for 4 items -->
                     <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                         @foreach ($category->events->take(4) as $event)
-                            <div class="w-full">
                                 @include('partials.event', ['event' => $event])
-                            </div>
                         @endforeach
                     </div>
                 @endif
@@ -79,9 +77,7 @@
 
                 <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                     @foreach ($categories->pluck('events')->flatten()->take(4) as $event)
-                        <div class="w-full">
                             @include('partials.event', ['event' => $event])
-                        </div>
                     @endforeach
                 </div>
             @endif

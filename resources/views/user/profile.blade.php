@@ -72,17 +72,13 @@
             @elseif (Auth::id() == $user->id)
                 <section id="events" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                     @foreach ($myEvents as $event)
-                        <div class="w-full">
-                            @include('partials.event', ['event' => $event])
-                        </div>
+                        @include('partials.event', ['event' => $event])
                     @endforeach
                 </section>
             @else
                 <section id="events" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                     @foreach ($myEvents->filter(fn($event) => $event->visibility !== 'private') as $event)
-                        <div class="w-full">
-                            @include('partials.event', ['event' => $event])
-                        </div>
+                        @include('partials.event', ['event' => $event])
                     @endforeach
                 </section>
             @endif
@@ -97,17 +93,13 @@
         @elseif (Auth::id() == $user->id)
             <section id="events" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                 @foreach ($ongoingEvents as $event)
-                    <div class="w-full">
-                        @include('partials.event', ['event' => $event])
-                    </div>
+                    @include('partials.event', ['event' => $event])
                 @endforeach
             </section>
         @else
             <section id="events" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                 @foreach ($ongoingEvents->filter(fn($event) => $event->visibility !== 'private') as $event)
-                    <div class="w-full">
-                        @include('partials.event', ['event' => $event])
-                    </div>
+                    @include('partials.event', ['event' => $event])
                 @endforeach
             </section>
         @endif
@@ -122,17 +114,13 @@
         @elseif (Auth::id() == $user->id)
             <section id="events" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                 @foreach ($participatedEvents as $event)
-                    <div class="w-full">
-                        @include('partials.event', ['event' => $event])
-                    </div>
+                    @include('partials.event', ['event' => $event])
                 @endforeach
             </section>
         @else
             <section id="events" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                 @foreach ($participatedEvents->filter(fn($event) => $event->visibility !== 'private') as $event)
-                    <div class="w-full">
-                        @include('partials.event', ['event' => $event])
-                    </div>
+                    @include('partials.event', ['event' => $event])
                 @endforeach
             </section>
         @endif
@@ -146,17 +134,13 @@
         @elseif (Auth::id() == $user->id)
             <section id="events" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                 @foreach ($notYetParticipatedEvents as $event)
-                    <div class="w-full">
-                        @include('partials.event', ['event' => $event])
-                    </div>
+                    @include('partials.event', ['event' => $event])
                 @endforeach
             </section>
         @else
             <section id="events" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
                 @foreach ($notYetParticipatedEvents->filter(fn($event) => $event->visibility !== 'private') as $event)
-                    <div class="w-full">
-                        @include('partials.event', ['event' => $event])
-                    </div>
+                    @include('partials.event', ['event' => $event])
                 @endforeach
             </section>
         @endif

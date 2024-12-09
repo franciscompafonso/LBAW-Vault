@@ -1,6 +1,6 @@
 <!-- Header Section -->
-<header class="flex justify-between items-center p-12 relative">
-    <!-- Logo/Title -->
+<header class="flex items-center justify-between p-6 relative flex-wrap">
+    <!-- Logo -->
     <h1 class="font-bold">
         <a href="{{ url(path: '/home') }}" 
            class="text-5xl font-montserrat hover:text-darkSlateGrey 

@@ -1,4 +1,4 @@
-<div class="news-card relative m-4 overflow-hidden rounded-lg shadow-lg w-full aspect-[16/9] transition-transform duration-300 group">
+<div class="news-card relative overflow-hidden rounded-lg shadow-lg w-full aspect-[16/9] transition-transform duration-300 group">
     <!-- Background Image -->
     <img src="https://picsum.photos/300?random={{ $event->id }}" alt="{{ $event->name }}"
          class="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110">

@@ -1,28 +1,24 @@
 @if (!Request::is('login') && !Request::is('register') && !Request::is('password/reset'))
-    <!-- Search Bar & Results -->
-    <div id="searchBar" 
-        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl z-50">
-        <div class="relative w-full">
-            <!-- Search Input Field -->
+    <!-- Search Bar -->
+    <div id="searchBar" class="w-full lg:w-[30%] lg:order-none order-last mt-6 lg:mt-0">
+        <div class="relative w-full mx-auto">
             <input type="text" id="searchInput" 
-                class="w-full p-6 pl-6 pr-12 border-2 border-ultraViolet rounded-full search-input focus:ring-2 focus:ring-wisteria focus:border-wisteria focus:outline-none text-3xl text-black placeholder:text-3xl placeholder:text-black" 
-                placeholder="Search events..." 
-                autocomplete="off"
-                onkeyup="searchEvents(event)" 
-                onkeydown="searchEvents(event)"
-                onfocus="showSearchResults()" 
-                onblur="hideSearchResults()">
+                   class="w-full p-6 pl-6 pr-12 border-2 border-ultraViolet rounded-full search-input focus:ring-2 focus:ring-wisteria focus:border-wisteria focus:outline-none text-3xl text-black placeholder:text-3xl placeholder:text-black" 
+                   placeholder="Search events..." 
+                   autocomplete="off"
+                   onkeyup="searchEvents(event)" 
+                   onkeydown="searchEvents(event)"
+                   onfocus="showSearchResults()" 
+                   onblur="hideSearchResults()">
 
-            
-            <!-- Search Icon (inside the input field) -->
             <i class="absolute right-4 top-1/2 transform -translate-y-1/2 text-4xl fa-solid fa-search {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} cursor-pointer" 
-                onclick="performSearch()">
+               onclick="performSearch()">
             </i>
         </div>
 
         <!-- Floating Results -->
         <div id="searchResults" 
-            class="absolute w-full mt-2 bg-white rounded-lg shadow-lg max-h-80 overflow-y-auto z-40">
+             class="absolute w-full mt-2 bg-white rounded-lg shadow-lg max-h-80 overflow-y-auto z-40">
         </div>
     </div>
 
