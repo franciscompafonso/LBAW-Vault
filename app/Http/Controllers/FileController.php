@@ -11,17 +11,14 @@ class FileController extends Controller
     /**
      * Store photos.
      */
-    public static function store(Request $request, $diskname, $file)
+    public static function store(Request $request, $diskname, $file = null, $commentId = null)
     {
-        $filename = $file->hashName();
-        // dd($file, $path, $filename);
-        $type = $request->type;
 
-        // dd($storedFile);
+        $file = $file ?? $request->file;
+        $filename = $file->hashName();
+
         if (Storage::disk($diskname)->put($filename, $file->getContent())) {
-            $addedFile = File::create([
-                'path' => $filename,
-            ]);
+            $addedFile = File::create([ 'path' => $filename, 'comment_id' => $commentId]);
 
             return $addedFile->id;
         }

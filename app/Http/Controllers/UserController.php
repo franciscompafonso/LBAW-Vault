@@ -48,23 +48,21 @@ class UserController extends Controller
     {
         try {
             DB::beginTransaction();
+            
             $user = User::find($id);
 
-            // Check if the authenticated user is the owner or an admin
             if (Auth::user()->cannot('edit_profile', $user) && ! auth()->guard('admin')->check()) {
                 abort(403, 'Unauthorized action.');
             }
 
-            // Validate the incoming data
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'username' => 'required|string|max:255|unique:user_account,username,'.$user->id,
                 'email' => 'required|email|max:255|unique:user_account,email,'.$user->id,
                 'password' => 'nullable|string|min:8|confirmed',
-                'profilepicture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+                'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
             ]);
 
-            // Update the user's details
             $user->name = $validatedData['name'];
             $user->username = $validatedData['username'];
             $user->email = $validatedData['email'];
@@ -73,15 +71,21 @@ class UserController extends Controller
                 $user->password = bcrypt($validatedData['password']);
             }
 
-            if ($request->hasFile('profilepicture')) {
-                $file = $request->file('profilepicture');
-                if ($id = FileController::store($request, 'profile-pictures', $file)) {
-                    $this->deletePicture($user);
-                    $user->picture()->attach($id);
+            if ($request->hasFile('file')) { 
+                $fileId = FileController::store($request, 'profile-pictures');
+
+                if ($fileId) {
+                    $pictureId = $user->file_id;
+                    $user->file_id = $fileId;
+                    $user->save();
+                    $this->deletePicture($pictureId);
                 }
             }
+            else {
+                $user->save();
+            }
 
-            $user->save();
+            
             DB::commit();
 
             return redirect()->route('user.profile', ['id' => $user->id]);
@@ -92,12 +96,12 @@ class UserController extends Controller
         }
     }
 
-    private function deletePicture($user) {
-        $attachedId = $user->picture->first()->id;
-        $attachedPath = $user->picture->first()->path;
-        $user->picture()->detach();
-        File::find($attachedId)->delete();
-        Storage::disk('profile-pictures')->delete($attachedPath);
+    private function deletePicture($pictureId)
+    {
+        $file = File::find($pictureId);
+        $path = $file->path;
+        $file->delete();
+        Storage::disk('profile-pictures')->delete($path);
     }
 
     public function deleteAccount($id)
@@ -112,9 +116,11 @@ class UserController extends Controller
             $user->notYetParticipatedEvents()->detach($upcomingEventIds);
 
             $user->isdeleted = true;
+            $pictureId = $user->file_id;
+            $user->file_id = null;
             $user->save();
 
-            $this->deletePicture($user);
+            $this->deletePicture($pictureId);
 
             Event::where('creator_id', $id)
                 ->where('end_date', '>', Carbon::now())

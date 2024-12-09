@@ -19,17 +19,14 @@ class CommentController extends Controller
     {
         $comment = Comment::find($id);
         $this->authorize('delete', $comment);
-
         $photos = $comment->photos;
-
         foreach($photos as $photo) {
-            $attachedId = $photo->id;
-            $attachedPath = $photo->path;
+            $photoId = $photo->id;
+            $photoPath = $photo->path;
 
-            File::find($attachedId)->delete();
-            Storage::disk('others')->delete($attachedPath);
+            File::find($photoId)->delete();
+            Storage::disk('others')->delete($photoPath);
         }
-        $comment->photos()->detach();
 
         $comment->delete();
         return back()->with('message', 'successfully deleted the comment!');
@@ -65,9 +62,7 @@ class CommentController extends Controller
 
         if ($request->photos) {
             foreach ($request->photos as $photo) {
-                if ($id = FileController::store($request, 'others', $photo)) {
-                    $comment->photos()->attach($id);
-                }
+                FileController::store($request, 'others', $photo, $comment->id);
             }
         }
 

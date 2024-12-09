@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Event extends Model
 {
@@ -104,8 +103,8 @@ class Event extends Model
         return $this->hasMany(JoinRequest::class, 'event_id');
     }
 
-    public function banner(): MorphToMany
+    public function banner()
     {
-        return $this->morphToMany(File::class, 'entity', 'file_pivot');
+        return $this->belongsTo(File::class, 'file_id');
     }
 }

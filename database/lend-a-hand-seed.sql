@@ -80,7 +80,8 @@ CREATE TABLE user_account (
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     isDeleted BOOLEAN DEFAULT FALSE,
-    isBlocked BOOLEAN DEFAULT FALSE
+    isBlocked BOOLEAN DEFAULT FALSE,
+    file_id INT
 );
 
 CREATE TABLE location (
@@ -106,6 +107,7 @@ CREATE TABLE "event" (
     creator_id INT REFERENCES user_account(id) NOT NULL,
     location_id INT REFERENCES location(id) NOT NULL,
     category_id INT REFERENCES category(id) NOT NULL,
+    file_id INT,
     CONSTRAINT ck_start_end CHECK (start_date < end_date)
 );
 
@@ -268,13 +270,8 @@ CREATE TABLE unblock_notification (
 
 CREATE TABLE file (
     id SERIAL PRIMARY KEY,
+    comment_id INT,
     path VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE file_pivot (
-    file_id INT REFERENCES file(id) ON DELETE CASCADE,
-    entity_id INT,
-    entity_type VARCHAR(255)
 );
 
 CREATE TABLE comment_feedback (
@@ -290,6 +287,16 @@ CREATE TABLE password_reset_tokens (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (email) REFERENCES user_account(email) ON DELETE CASCADE
 );
+
+ALTER TABLE "event"
+	ADD CONSTRAINT "FK_event_file" FOREIGN KEY ("file_id") REFERENCES "file" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
+
+ALTER TABLE "user_account"
+	ADD CONSTRAINT "FK_user_account_file" FOREIGN KEY ("file_id") REFERENCES "file" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
+
+ALTER TABLE "file"
+	ADD CONSTRAINT "FK_file_comment" FOREIGN KEY ("comment_id") REFERENCES "comment" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION;
+
 
 -- Indexes
 
@@ -670,11 +677,18 @@ CREATE TRIGGER trigger_block_notification
 
 -- INSERT ------------------------------------------------------------------------------------------------------------
 
+INSERT INTO file (path) VALUES
+('ana.png'),
+('joao.png'),
+('maria.png'),
+('pedro.png');
+
+INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked, file_id) VALUES
+('Ana Silva', 'anasilva', 'ana.silva@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 1),
+('João Pereira', 'joaopereira', 'joao.pereira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 2),
+('Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE, 3),
+('Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE, 4);
 INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked) VALUES
-('Ana Silva', 'anasilva', 'ana.silva@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE),
-('João Pereira', 'joaopereira', 'joao.pereira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE),
-('Maria Costa', 'mariacosta', 'maria.costa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, TRUE),
-('Pedro Sousa', 'pedrosousa', 'pedro.sousa@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', TRUE, FALSE),
 ('Carlos Santos', 'carlossantos', 'carlos.santos@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE),
 ('Sofia Oliveira', 'sofiaoliveira', 'sofia.oliveira@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE),
 ('Ricardo Lima', 'ricardolima', 'ricardo.lima@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE),
@@ -1239,41 +1253,20 @@ INSERT INTO comment (comment_by_id, event_id, text, is_pinned, score, edited, da
 (39, 15, 'Is there a detailed agenda?', FALSE, 28, TRUE, '2023-11-29 12:00:00'),
 (53, 15, 'Just registered!', FALSE, 32, FALSE, '2023-11-29 12:45:00');
 
+INSERT INTO file (comment_id, path) VALUES
+(1, 'comment_pic_1.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG'),
+(1, 'comment_pic_2.JPG');
+
 INSERT INTO comment (reply_to, comment_by_id, event_id, text, is_pinned, score, edited, date) VALUES
 (3, 22, 1, 'Yes!', FALSE, 8, FALSE, '2023-11-15 10:32:00');
 
-INSERT INTO file (path) VALUES
-('comment_pic_1.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('comment_pic_2.JPG'),
-('ana.png'),
-('joao.png'),
-('maria.png'),
-('pedro.png');
-
-INSERT INTO file_pivot (file_id, entity_id, entity_type) VALUES
-(1, 1, 'App\Models\Event'),
-(2, 1, 'App\Models\Event'),
-(3, 1, 'App\Models\Event'),
-(4, 1, 'App\Models\Event'),
-(5, 1, 'App\Models\Event'),
-(6, 1, 'App\Models\Event'),
-(7, 1, 'App\Models\Event'),
-(8, 1, 'App\Models\Event'),
-(9, 1, 'App\Models\Event'),
-(10, 1, 'App\Models\Event'),
-(11, 1, 'App\Models\Event'),
-(12, 1, 'App\Models\Event'),
-(13, 1, 'App\Models\User'), 
-(14, 2, 'App\Models\User'), 
-(15, 3, 'App\Models\User'), 
-(16, 4, 'App\Models\User');

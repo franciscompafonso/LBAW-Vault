@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Comment extends Model
@@ -63,9 +64,9 @@ class Comment extends Model
     /**
      * Get the photos for the comment.
      */
-    public function photos(): MorphToMany
+    public function photos(): HasMany
     {
-        return $this->morphToMany(File::class, 'entity', 'file_pivot');
+        return $this->hasMany(File::class, 'comment_id');
     }
 
     /**

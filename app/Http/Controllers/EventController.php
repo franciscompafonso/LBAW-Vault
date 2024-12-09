@@ -84,8 +84,12 @@ class EventController extends Controller
             'capacity' => 'required|integer|min:1',
             'location_id' => 'required|integer',
             'category_id' => 'required|integer',
-            'banner' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
+
+        if ($request->hasFile('file')) {
+            $fileId = FileController::store($request, 'banner');
+        }
 
         $event = Event::create([
             'name' => $validated['name'],
@@ -97,14 +101,8 @@ class EventController extends Controller
             'creator_id' => Auth::id(),
             'location_id' => $validated['location_id'],
             'category_id' => $validated['category_id'],
+            'file_id' => $fileId ?? null
         ]);
-
-        if ($request->hasFile('banner')) {
-            $file = $request->file('banner');
-            if ($id = FileController::store($request, 'banner', $file)) {
-                $event->banner()->attach($id);
-            }
-        }
 
         return redirect()->route('events.show', ['id' => $event->id])->with('success', 'Event created successfully!');
     }
@@ -120,29 +118,34 @@ class EventController extends Controller
 
     public function update(Request $request, $id)
     {
+     
         try {
             DB::beginTransaction();
             $event = Event::findOrFail($id);
-            $validated = $request->validate([
+            $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'required|string',
                 'start_date' => 'required|date|after:now',
                 'end_date' => 'required|date|after:start_date',
-                'visibility' => 'required|in:public,private',
+                'visibility' => 'required|in:public,private,request_only',
                 'capacity' => 'required|integer|min:1',
                 'location_id' => 'required|integer',
                 'category_id' => 'required|integer',
-                'banner' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+                'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
             ]);
-            $event->update($validated);
 
-            if ($request->hasFile('banner')) {
-                $file = $request->file('banner');
-                if ($id = FileController::store($request, 'banner', $file)) {
-                    $this->deleteBanner($event);
-                    $event->banner()->attach($id);
+            $data = $request->except(['_token', '_method', 'file']);
+
+            if ($request->hasFile('file')) {
+                $fileId = FileController::store($request, 'banner');
+                if ($fileId) {
+                    $pictureId = $event->file_id;
+                    $data['file_id'] = $fileId;
+                    if ($pictureId) $this->deleteBanner($pictureId);
                 }
             }
+
+            $event->update($data);
 
             DB::commit();
 
@@ -184,12 +187,11 @@ class EventController extends Controller
         return view('pages.events_by_category', compact('category', 'events'));
     }
 
-    private function deleteBanner($event) {
-        $attachedId = $event->banner->first()->id;
-        $attachedPath = $event->banner->first()->path;
-        $event->banner()->detach();
-        File::find($attachedId)->delete();
-        Storage::disk('banner')->delete($attachedPath);
+    private function deleteBanner($bannerId) {
+        $file = File::find($bannerId);
+        $path = $file->path;
+        $file->delete();
+        Storage::disk('banner')->delete($path);
     }
 
     /**
@@ -206,9 +208,10 @@ class EventController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $this->deleteBanner($event);
-
+        $pictureId = $event->file_id;
         $event->delete();
+
+        $this->deleteBanner($pictureId);
 
         return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
     }

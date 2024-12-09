@@ -5,7 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 // Added to define Eloquent relationships.
 use Illuminate\Notifications\Notifiable;
@@ -101,8 +100,8 @@ class User extends Authenticatable
         return $this->username;
     }
 
-    public function picture(): MorphToMany
+    public function picture()
     {
-        return $this->morphToMany(File::class, 'entity', 'file_pivot');
+        return $this->belongsTo(File::class, 'file_id');
     }
 }
