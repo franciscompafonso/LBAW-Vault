@@ -49,7 +49,7 @@ class CommentController extends Controller
             'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-        $event = Event::find($request->eventId);
+        $event = Event::find($request->event);
 
         $comment = $event->comments()->create([
             'comment_by_id' => Auth::id(),
