@@ -9,11 +9,11 @@
     <!-- Text Wrapper -->
     <div class="absolute bottom-0 left-0 right-0 p-4 text-white transition-all">
         <!-- Title -->
-        <h2 class="text-[2.3rem] font-semibold transition-colors duration-700 group-hover:text-wisteria">
+        <h2 class="text-[2.3rem] font-semibold transition-colors duration-700 group-hover:text-wisteria truncate overflow-hidden whitespace-nowrap">
             {{ $event->name }}
         </h2>
         <!-- Date -->
-        <div class="text-2xl">
+        <div class="text-xl">
             {{ $event->start_date->format('d/m/Y') . ' - ' . $event->end_date->format('d/m/Y') }}
         </div>
         

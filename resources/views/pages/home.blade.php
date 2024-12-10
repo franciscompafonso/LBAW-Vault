@@ -5,7 +5,7 @@
 <!-- Wrapper to ensure sections stack vertically -->
 <div class="w-full">
     <!-- Banner Section -->
-    <div class="w-full py-16 shadow-md bg-gradient-to-r from-whiteSmoke to-pink-300 bg-opacity-75 text-center text-white">
+    <div class="w-full py-16 shadow-md bg-gradient-to-r from-whiteSmoke to-wisteria bg-opacity-75 text-center text-white rounded-lg">
     <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-evenly lg:items-center">
         <!-- Text Section -->
         <div class="text-left flex flex-col justify-between h-full">
@@ -84,7 +84,7 @@
 
 
    <!-- Categories Section -->
-    <section class="px-4 py-8">
+    <section class="py-8">
         <div class="flex flex-col space-y-6">
             @foreach ($categories as $category)
                 @if ($category->events->count() >= 4)
