@@ -10,7 +10,7 @@
         <!-- Text Section -->
         <div class="text-left flex flex-col justify-between h-full">
             <h2 id="quote" class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">
-                Shaping Communities, One Decision at a Time.
+                Empowering Communities, One Event at a Time.
             </h2>
             @if (Auth::guard('admin')->check())
                 <p class="text-4xl font-montserrat text-eerieBlack">Welcome back, Admin!</p>
@@ -31,10 +31,13 @@
 <script>
     // Quotes Array
     const quotes = [
-    "Shaping Communities, One Decision at a Time.",
     "Empowering Communities, One Event at a Time.",
     "Building Stronger Bonds, One Step at a Time.",
-    "Transforming Lives,  One Kind Act at a Time."
+    "Transforming Lives,  One Kind Act at a Time.",
+    "Inspiring Change, One Small Action at a Time.",
+    "Spreading Warmth, One Smile Given at a Time.",
+    "Uplifting Spirits, One Act of Care at a Time."
+
     ];
 
 
