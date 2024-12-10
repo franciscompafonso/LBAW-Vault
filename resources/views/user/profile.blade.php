@@ -19,12 +19,8 @@
                     <div class="flex items-center justify-center bg-gray-300 rounded-full w-80">
                         <p class="text-2xl font-bold text-white">Deleted</p>
                     </div>
-                @elseif ($user->profilepicture)
-                    <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/'. ($user->picture->first()->path ?? App\Models\User::DEFAULT_PIC)) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-ultraViolet">
                 @else
-                    <div class="flex items-center justify-center bg-gray-300 rounded-full w-80">
-                        <i class="text-6xl text-white fa-solid fa-user"></i>
-                    </div>
+                    <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/'. (Auth::user()->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" alt="Profile Picture" class="h-auto border-2 rounded-full w-80 border-ultraViolet">
                 @endif
             </div>
 
