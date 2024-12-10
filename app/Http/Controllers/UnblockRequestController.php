@@ -8,15 +8,27 @@ use Illuminate\Support\Facades\Log;
 class UnblockRequestController extends Controller
 {
     public function create()
-    {
-        return view('unblock_requests.create');
+{
+    if (!auth()->user()->isblocked) {
+        return redirect('home')->with('error', 'You are not allowed to access this page.');
     }
+
+    return view('unblock_requests.create');
+}
 
     public function store(Request $request)
     {
         $request->validate([
             'reason' => 'required|string|max:255',
         ]);
+
+        $existingRequest = UnblockRequest::where('requested_by_id', auth()->id())
+            ->where('status', 'pending')
+            ->first();
+
+        if ($existingRequest) {
+            return redirect()->back()->withErrors('You already have a pending unblock request. Please wait for it to be processed.');
+        }
 
         UnblockRequest::create([
             'requested_by_id' => auth()->id(),
@@ -27,6 +39,7 @@ class UnblockRequestController extends Controller
 
         return redirect()->route('pages.home')->with('success', 'Your unblock request has been submitted.');
     }
+
 
     public function index()
     {

@@ -179,7 +179,7 @@ CREATE TABLE unblock_request (
     requested_by_id INT REFERENCES user_account(id),
     status VARCHAR(50) NOT NULL CHECK (status IN ('pending', 'approved', 'rejected')),
     requested_at TIMESTAMP NOT NULL CHECK (requested_at <= CURRENT_TIMESTAMP),
-    processed_at TIMESTAMP NOT NULL CHECK (processed_at >= requested_at),
+    processed_at TIMESTAMP DEFAULT NULL CHECK (processed_at >= requested_at),
     decision VARCHAR(255) NOT NULL
 );
 
