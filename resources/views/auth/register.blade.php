@@ -19,7 +19,7 @@
         <!-- Text Section with spacing between image and text -->
         <div class="mt-6 text-center">
           <h2 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Empowering Communities, <br> One Event at a Time.</h2>
-          <p class="text-2xl font-montserrat text-deepNavy">Welcome!</p>
+          <p class="text-2xl font-montserrat text-eerieBlack">Welcome!</p>
         </div>
         
       </div>

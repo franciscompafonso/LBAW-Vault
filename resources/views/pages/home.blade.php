@@ -5,29 +5,78 @@
 <!-- Wrapper to ensure sections stack vertically -->
 <div class="w-full">
     <!-- Banner Section -->
-    <section class="w-full py-16 shadow-md bg-whiteSmoke">
-        <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-evenly lg:items-center">
-            <!-- Text Section -->
-            <div class="text-left flex flex-col justify-between h-full">
-                @if (Auth::guard('admin')->check())
-                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Shaping Communities,<br> One Decision at a Time.</h2>
-                    <p class="text-4xl font-montserrat text-deepNavy">Welcome back, Admin!</p>
-                @elseif (Auth::guard('web')->check())
-                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Empowering Communities,<br> One Event at a Time.</h2>
-                    <p class="text-4xl font-montserrat text-deepNavy">Welcome back, {{Auth::user()->name}}!</p>
-                @else
-                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Empowering Communities,<br> One Event at a Time.</h2>
-                    <p class="text-4xl font-montserrat text-deepNavy">Join us now!</p>  
-                @endif
-            </div>
-
-
-            <!-- Image Section -->
-            <div class="flex justify-center lg:justify-center">
-                <img src="{{ asset('images/others/main-pic.png') }}" alt="Main Picture" class="object-cover w-64 h-64 transition-transform duration-300 transform bg-white rounded-full shadow-lg hover:scale-105">
-            </div>
+    <div class="w-full py-16 shadow-md bg-gradient-to-r from-whiteSmoke to-pink-300 bg-opacity-75 text-center text-white">
+    <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-evenly lg:items-center">
+        <!-- Text Section -->
+        <div class="text-left flex flex-col justify-between h-full">
+            <h2 id="quote" class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">
+                Shaping Communities, One Decision at a Time.
+            </h2>
+            @if (Auth::guard('admin')->check())
+                <p class="text-4xl font-montserrat text-eerieBlack">Welcome back, Admin!</p>
+            @elseif (Auth::guard('web')->check())
+                <p class="text-4xl font-montserrat text-eerieBlack">Welcome back, {{ Auth::user()->name }}!</p>
+            @else
+                <p class="text-4xl font-montserrat text-eerieBlack">Join us now!</p>
+            @endif
         </div>
-    </section>
+
+        <!-- Image Section -->
+        <div class="flex justify-center lg:justify-center">
+            <img src="{{ asset('images/others/main-pic.png') }}" alt="Main Picture" class="object-cover w-64 h-64 transition-transform duration-300 transform bg-white rounded-full shadow-lg hover:scale-105">
+        </div>
+    </div>
+</div>
+
+<script>
+    // Quotes Array
+    const quotes = [
+    "Shaping Communities, One Decision at a Time.",
+    "Empowering Communities, One Event at a Time.",
+    "Building Stronger Bonds, One Step at a Time.",
+    "Transforming Lives,  One Kind Act at a Time."
+    ];
+
+
+    const quoteElement = document.getElementById('quote');
+    let currentIndex = 0;
+
+    // Function to update the quote with a transition
+    function updateQuote() {
+        // Add fade-out class
+        quoteElement.classList.add('fade-out');
+        setTimeout(() => {
+            // Change the quote text after fade-out
+            currentIndex = (currentIndex + 1) % quotes.length;
+            quoteElement.textContent = quotes[currentIndex];
+
+            // Add fade-in class after changing text
+            quoteElement.classList.remove('fade-out');
+            quoteElement.classList.add('fade-in');
+        }, 500); // Match fade-out duration
+
+        // Remove fade-in class after animation completes
+        setTimeout(() => {
+            quoteElement.classList.remove('fade-in');
+        }, 500); // Total animation duration
+    }
+
+    // Change quote every 5 seconds
+    setInterval(updateQuote, 5000);
+</script>
+
+<style>
+    /* Transition Styles */
+    .fade-out {
+        opacity: 0;
+        transition: opacity 0.5s ease-out;
+    }
+
+    .fade-in {
+        opacity: 1;
+        transition: opacity 0.5s ease-in;
+    }
+</style>
 
 
 
