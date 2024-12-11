@@ -25,7 +25,7 @@
         <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
         @vite('resources/css/app.css')
     </head>
-    <body class="flex flex-col min-h-screen bg-white">
+    <body class="flex flex-col min-h-screen">
         <!-- Top Bar -->
         <div class="max-w-[75%] w-full mx-auto">
             @include('partials.topbar')

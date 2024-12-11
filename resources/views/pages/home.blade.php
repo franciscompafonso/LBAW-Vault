@@ -5,27 +5,20 @@
 <!-- Wrapper to ensure sections stack vertically -->
 <div class="w-full">
     <!-- Banner Section -->
-    <section class="w-full py-16 shadow-md bg-whiteSmoke">
-        <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-evenly lg:items-center">
-            <!-- Text Section -->
-            <div class="text-left flex flex-col justify-between h-full">
-                @if (Auth::guard('admin')->check())
-                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Shaping Communities,<br> One Decision at a Time.</h2>
-                    <p class="text-4xl font-montserrat text-deepNavy">Welcome back, Admin!</p>
-                @elseif (Auth::guard('web')->check())
-                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Empowering Communities,<br> One Event at a Time.</h2>
-                    <p class="text-4xl font-montserrat text-deepNavy">Welcome back, {{Auth::user()->name}}!</p>
-                @else
-                    <h2 class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">Empowering Communities,<br> One Event at a Time.</h2>
-                    <p class="text-4xl font-montserrat text-deepNavy">Join us now!</p>  
-                @endif
-            </div>
-
-
-            <!-- Image Section -->
-            <div class="flex justify-center lg:justify-center">
-                <img src="{{ asset('images/others/main-pic.png') }}" alt="Main Picture" class="object-cover w-64 h-64 transition-transform duration-300 transform bg-white rounded-full shadow-lg hover:scale-105">
-            </div>
+    <div class="w-full py-16 shadow-md bg-gradient-to-r from-whiteSmoke {{ Auth::guard('admin')->check() ? 'to-ultraViolet' : 'to-wisteria' }} bg-opacity-15 text-center text-white rounded-lg">
+    <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-evenly lg:items-center">
+        <!-- Text Section -->
+        <div class="text-left flex flex-col justify-between h-full">
+            <h2 id="quote" class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">
+                Empowering Communities, One Event at a Time.
+            </h2>
+            @if (Auth::guard('admin')->check())
+                <p class="text-4xl font-montserrat text-eerieBlack">Welcome back, Admin!</p>
+            @elseif (Auth::guard('web')->check())
+                <p class="text-4xl font-montserrat text-eerieBlack">Welcome back, {{ Auth::user()->name }}!</p>
+            @else
+                <p class="text-4xl font-montserrat text-eerieBlack">Join us now!</p>
+            @endif
         </div>
     </section>
 
@@ -38,7 +31,7 @@
                 @if ($category->events->count() >= 4)
                     <a href="{{ route('events.search', ['category_id' => $category->id]) }}" class="flex items-center space-x-4 group">
                         <!-- Category Name with Link -->
-                        <h2 class="inline-block text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+                        <h2 class="mt-8 inline-block text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
                             {{ $category->name }}
                         </h2>
 

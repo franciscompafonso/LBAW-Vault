@@ -1,8 +1,8 @@
 <div class="news-card relative m-4 overflow-hidden rounded-lg shadow-lg w-full aspect-[16/9] transition-transform duration-300 group">
     <!-- Background Image -->
     <img src="https://picsum.photos/300?random={{ $event->id }}" alt="{{ $event->name }}"
-         class="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110">
-    
+         class="absolute inset-0 object-cover w-full h-full transition-transform duration-700 transform group-hover:scale-110">
+
     <!-- Gradient Overlay for Default (Non-hovered state) -->
     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 group-hover:to-black/70 transition-all duration-700 ease-in-out pointer-events-none"></div>
   

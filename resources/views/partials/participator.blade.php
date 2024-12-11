@@ -8,7 +8,7 @@
             >
             @if(!$participator->isdeleted)
                 <a href="{{ route('user.profile', ['id' => $participator->id]) }}" 
-                class="text-lg font-semibold text-gray-900 font-montserrat">
+                class="text-2xl text-black font-semibold font-montserrat">
                 {{ $participator->displayName }}
                 </a>
             @else
