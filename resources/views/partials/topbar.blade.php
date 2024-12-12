@@ -33,16 +33,24 @@
                 <!-- Bell Icon with Notification Count -->
                 <a id="notifications-button" onclick="toggleNotificationsDropdown()" class="relative cursor-pointer">
                     <i class="text-4xl hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} fa-solid fa-bell"></i>
-                    <div id="noti-number" class="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 text-xs font-bold text-white translate-x-2 translate-y-1 bg-red-500 rounded-full">
-                        0
+                    
+                    <!-- Notification Count Circle -->
+                    <div id="noti-number" class="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 font-bold text-white translate-x-2 translate-y-1 bg-red-500 rounded-full text-2xs">
                     </div>
                 </a>
 
                 <!-- Notifications Dropdown -->
-                <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-6 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-80">
-                    <p id="no-notifications" class="text-xl text-center text-gray-500">There are no notifications.</p>
+                <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-6 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-[32rem] max-h-[750px] overflow-y-auto">
+                    <div class="flex items-center justify-between mb-4">
+                        <p id="no-notifications" class="text-xl text-center text-gray-500">There are no notifications.</p>
+                        <!-- Dismiss All Button -->
+                        <button id="dismiss-all-btn" onclick="dismissAllNotifications()" class="hidden border-transparent focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
+                            <i class="text-4xl fa-solid fa-broom"></i>
+                        </button>
+                    </div>
                     <div id="notifications-list"></div>
                 </div>
+                
             </div>
             
             <!-- Profile Icon -->
@@ -133,36 +141,58 @@
         }
     }
 
+    let lastNotificationId = null;
+
     function fetchNotifications() {
         fetch('/api/notifications')
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
             .then(data => {
-                console.log('Notifications:', data);
-                displayNotificationResults(data);
+                console.log('Fetched notifications data:', data);
+
+                // Check if there are new notifications
+                if (data.length > 0 && (!lastNotificationId || data[0].id !== lastNotificationId)) {
+                    lastNotificationId = data[0].id;
+                    displayNotificationResults(data);
+                }
             })
             .catch(error => {
                 console.error('Error fetching notifications:', error);
             });
     }
 
+    // Start polling every 30 seconds
+    function startNotificationPolling() {
+        setInterval(fetchNotifications, 30000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchNotifications();
+        startNotificationPolling();
+    });
+
     const csrfToken = "{{ csrf_token() }}";
 
     function displayNotificationResults(notifications) {
-        const notificationsButton = document.getElementById('notifications-button');
-        const notificationsDropdown = document.getElementById('notifications-dropdown');
         const notificationsList = document.getElementById('notifications-list');
         const noNotificationsText = document.getElementById('no-notifications');
-        const notiNumber = document.getElementById('noti-number');
+        const dismissAllBtn = document.getElementById('dismiss-all-btn');
         
         notificationsList.innerHTML = '';
 
-        if (notifications.length === 0) {
+        if (notifications && notifications.length === 0) {
             noNotificationsText.classList.remove('hidden');
+            dismissAllBtn.classList.add('hidden');
         } else {
             noNotificationsText.classList.add('hidden');
+            dismissAllBtn.classList.remove('hidden');
             notifications.forEach(notification => {
                 const notificationItem = document.createElement('div');
                 notificationItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
+
+                notificationItem.setAttribute('data-notification-id', notification.id);
 
                 const formattedDate = new Date(notification.date).toLocaleString('en-GB', {
                     day: '2-digit',
@@ -286,7 +316,7 @@
                     `;
                 } else if (notification.type === 'comment_notification') {
                     notificationContent += `
-                        <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">New Comment!</a>
+                        <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">New Comment!</a><br>
                         <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">${notification.data.user_name} has post a comment in ${notification.data.event_name} event.</a>
                     `;
                 } else if (notification.type === 'poll_reminder') {
@@ -345,86 +375,42 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        window.dismissNotification = function (notificationId) {
-            fetch('/notifications/dismiss', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({ notification_id: notificationId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    fetchNotifications();
-                }
-            })
-            .catch(error => console.error('Error dismissing notification:', error));
-        };
-
-        window.dismissAll = function () {
-            fetch('/notifications/dismiss-all', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    fetchNotifications();
-                }
-            })
-            .catch(error => console.error('Error dismissing all notifications:', error));
-        };
-    });
-
+    // This function will be used to update the notification count
     function updateNotificationCount() {
         const notiNumber = document.getElementById('noti-number');
-        
+
         fetch('/notifications/count')
             .then(response => response.json())
             .then(data => {
                 if (data.unreadCount !== undefined) {
-                    notiNumber.textContent = data.unreadCount;
-                    notiNumber.classList.toggle('hidden', data.unreadCount === 0);
+                    if (data.unreadCount > 0) {
+                        notiNumber.classList.remove('hidden');
+                    } else {
+                        notiNumber.classList.add('hidden');
+                    }
                 }
             })
             .catch(error => console.error('Error fetching notification count:', error));
     }
 
+    document.addEventListener('DOMContentLoaded', function() {
+        updateNotificationCount();
+    });
+
     window.userIsAuthenticated = @json(Auth::check());
-    // Update the count every 30 seconds, but only if the user is authenticated
-    function startNotificationUpdates() {
-        if (window.userIsAuthenticated) {
-            // Update the notification count every 30 seconds
-            setInterval(updateNotificationCount, 30000);
-
-            // Update the notification count when the page loads
-            document.addEventListener('DOMContentLoaded', () => {
-                updateNotificationCount();
-            });
-        }
-    }
-
-    // Call this function when the page is ready or at the appropriate time
-    startNotificationUpdates();
 
     // Profile dropdown
-
     function toggleProfileDropdown() {
         const dropdown = document.getElementById('profile-dropdown');
         dropdown.classList.toggle('hidden');
     }
 
+    // Notifications dropdown
     function toggleNotificationsDropdown() {
         const dropdown = document.getElementById('notifications-dropdown');
         dropdown.classList.toggle('hidden');
     }
 
-    // Optional: Close dropdowns when clicking outside
     document.addEventListener('click', (event) => {
         const profileDropdown = document.getElementById('profile-dropdown');
         const notificationsDropdown = document.getElementById('notifications-dropdown');
@@ -436,4 +422,94 @@
             notificationsDropdown.classList.add('hidden');
         }
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    window.dismissAllNotifications = function () {
+        fetch('/notifications/dismiss-all', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                reloadNotificationsDropdown();
+                updateNotificationCount();
+                alert("All notifications dismissed successfully!");
+            } else {
+                alert("Failed to dismiss all notifications.");
+            }
+        })
+        .catch(error => {
+            console.error('Error dismissing all notifications:', error);
+            alert("There was an error dismissing all notifications.");
+        });
+    };
+
+    function reloadNotificationsDropdown() {
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
+        const notificationsList = document.getElementById('notifications-list');
+        const noNotificationsText = document.getElementById('no-notifications');
+        
+        notificationsList.innerHTML = '';
+        
+        fetch('/api/notifications')
+            .then(response => response.json())
+            .then(data => {
+                displayNotificationResults(data.notifications);
+            })
+            .catch(error => console.error('Error fetching notifications:', error));
+    }
+
+    function displayNotificationResults(notifications) {
+        const notificationsList = document.getElementById('notifications-list');
+        const noNotificationsText = document.getElementById('no-notifications');
+        const dismissAllBtn = document.getElementById('dismiss-all-btn');
+        
+        notificationsList.innerHTML = '';
+        
+        if (notifications.length === 0) {
+            noNotificationsText.classList.remove('hidden');
+            dismissAllBtn.classList.add('hidden');
+        } else {
+            noNotificationsText.classList.add('hidden');
+            dismissAllBtn.classList.remove('hidden');
+            
+            notifications.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
+                notificationItem.innerHTML = `
+                    <div class="notification-card">
+                        <p class="text-sm font-semibold text-gray-600">${notification.date}</p>
+                        <p class="font-semibold text-indigo-600 text-md">${notification.message}</p>
+                        <!-- Include other notification content as needed -->
+                    </div>
+                `;
+                notificationsList.appendChild(notificationItem);
+            });
+        }
+    }
+
+    // Update the notification count in the icon
+    function updateNotificationCount() {
+        const notificationCount = document.getElementById('noti-number');
+        
+        fetch('/notifications/count')
+            .then(response => response.json())
+            .then(data => {
+                const unreadCount = data.unreadCount;
+                if (unreadCount > 0) {
+                    notificationCount.textContent = unreadCount;
+                    notificationCount.classList.remove('hidden');
+                } else {
+                    notificationCount.textContent = '0';
+                    notificationCount.classList.add('hidden');
+                }
+            })
+            .catch(error => console.error('Error fetching notification count:', error));
+    }
+});
+
 </script>
