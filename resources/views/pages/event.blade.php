@@ -23,11 +23,14 @@
 
         <!-- Options Icon -->
         <div class="absolute top-0 right-0">
-            <button 
-                class=" w-12 h-12 rounded-full border-0 m-0 text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet"
-                onclick="toggleMenu(event)" id="icon">
-                <i class=" text-4xl fa-solid fa-ellipsis"></i>
-            </button>
+            <!-- Show the icon only if there's at least one option in the menu -->
+            @if (Auth::guard('admin')->check() || $event->creator_id === Auth::id() || $event->end_date < now())
+                <button 
+                    class="w-12 h-12 rounded-full border-0 m-0 text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
+                    onclick="toggleMenu(event)" id="icon">
+                    <i class="text-4xl fa-solid fa-ellipsis"></i>
+                </button>
+            @endif
             <div id="menu" class="absolute top-0 right-0 hidden mt-2 bg-white rounded-lg shadow-lg w-64">
                 <!-- Additional Buttons (Hidden by Default) -->
                 <div class="space-y-2">
@@ -65,8 +68,6 @@
                     @endif
                 </div>
             </div>
-
-
         </div>
 
         <!-- Primary Buttons Section -->
