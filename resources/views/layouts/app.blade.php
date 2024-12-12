@@ -25,15 +25,15 @@
         <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
         @vite('resources/css/app.css')
     </head>
-    <body class="flex flex-col min-h-screen bg-white">
+    <body class="flex flex-col min-h-screen">
         <!-- Top Bar -->
-        <div class="max-w-full lg:max-w-[75%] w-full mx-auto">
+        <div class="lg:max-w-[75%] w-full mx-auto">
             @include('partials.topbar')
         </div>
 
         <!-- Main Content -->
         <main id="main" class="flex flex-col justify-start flex-1 p-8 overflow-auto">
-            <div class="max-w-full lg:max-w-[75%] w-full mx-auto">
+            <div class="lg:max-w-[75%] w-full mx-auto">
                 @yield('content')
             </div>
             <div id="notification-container" class="fixed z-50 bottom-5 right-5"></div>

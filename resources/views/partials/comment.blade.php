@@ -111,22 +111,7 @@
             </div>
         </div>
 
-        <!-- Display Photos if they exist -->
-        @if ($comment->photos->isNotEmpty())
-        <div class="grid grid-cols-3 gap-4 mt-4">
-            @foreach ($comment->photos as $photo)
-                <div class="w-full h-32 overflow-hidden bg-gray-100 rounded-lg">
-                    <a href="{{ route('photos.show', $photo->id) }}">
-                        <img 
-                                src="{{ asset('images/others/' . $photo->path) }}" 
-                                alt="Comment Photo"
-                                class="object-cover w-full h-full cursor-pointer"
-                        >
-                   </a>
-                </div>
-            @endforeach
-        </div>
-        @endif
+        
     
         <!-- Reply Button -->
         @if (Auth::check())
