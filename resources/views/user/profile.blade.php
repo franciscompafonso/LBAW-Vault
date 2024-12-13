@@ -10,7 +10,7 @@
         </div>
     @endif
     <!-- Profile Section Container -->
-    <div class="relative bg-gradient-to-r from-wisteria to-whiteSmoke p-10 rounded-lg shadow-lg flex items-center justify-between">
+    <div class="relative bg-gradient-to-r from-whiteSmoke to-wisteria p-16 rounded-lg shadow-lg flex items-center justify-between">
     <!-- Left: Profile Picture and Info -->
     <div class="flex items-center space-x-6">
         <!-- Profile Picture -->
@@ -44,82 +44,96 @@
     @endif
 </div>
 </div>
-
-
-
-
-
     <!-- My Events -->
-    <div class="mt-8">
-        <h3 class="inline-block mb-4 text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">My Events</h3>
-        @if ($myEvents->isEmpty())
-            <p class="text-gray-500">User hasn't created any events yet.</p>
-        @else
-            <section id="events" class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-                @foreach ($myEvents as $event)
-                    @include('partials.event', ['event' => $event])
-                @endforeach
-            </section>
-            <!-- Pagination Links -->
-            <div class="mt-6">
-                {{ $myEvents->links() }}
-            </div>
-        @endif
+    <div class="mt-8" id="my_events-container">
+    <h3 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">My Events</h3>
+    @include('partials.event_section', [
+        'events' => $myEvents,
+        'sectionId' => 'my_events',
+    ])
     </div>
 
+
     <!-- ongoingEvents Section -->
-    <div class="mt-8">
-        <h3 class="inline-block mb-4 text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">Ongoing Events</h3>
-        @if ($ongoingEvents->isEmpty())
-            <p class="text-gray-500">User does not have ongoing events.</p>
-        @else
-            <section id="events" class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-                @foreach ($ongoingEvents as $event)
-                    @include('partials.event', ['event' => $event])
-                @endforeach
-            </section>
-            <!-- Pagination Links -->
-            <div class="mt-6">
-                {{ $ongoingEvents->links() }}
-            </div>
-        @endif
+    <div class="mt-8" id="ongoing_events-container">
+    <h3 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Ongoing Events</h3>
+    @include('partials.event_section', [
+        'events' => $ongoingEvents,
+        'sectionId' => 'ongoing_events',
+    ])
     </div>
 
 
     <!-- participatedEvents Section -->
-    <div class="mt-8">
-        <h3 class="inline-block mb-4 text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">Past Events</h3>
-        @if ($participatedEvents->isEmpty())
-            <p class="text-gray-500">User has not participated in events yet.</p>
-        @else
-            <section id="events" class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-                @foreach ($participatedEvents as $event)
-                    @include('partials.event', ['event' => $event])
-                @endforeach
-            </section>
-            <!-- Pagination Links -->
-            <div class="mt-6">
-                {{ $participatedEvents->links() }}
-            </div>
-        @endif
+    <div class="mt-8" id="participated_events-container">
+    <h3 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Past Events</h3>
+    @include('partials.event_section', [
+        'events' => $participatedEvents,
+        'sectionId' => 'participated_events',
+    ])
     </div>
 
     <!-- Not Yet Participated Events Section -->
-    <div class="mt-8">
-        <h3 class="inline-block mb-4 text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">Future Events</h3>
-        @if ($notYetParticipatedEvents->isEmpty())
-            <p class="text-gray-500">User does not have upcoming events yet.</p>
-        @else
-            <section id="events" class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-                @foreach ($notYetParticipatedEvents as $event)
-                    @include('partials.event', ['event' => $event])
-                @endforeach
-            </section>
-            <!-- Pagination Links -->
-            <div class="mt-6">
-                {{ $notYetParticipatedEvents->links() }}
-            </div>
-        @endif
+    <div class="mt-8" id="not_yet_participated_events-container">
+    <h3 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Future Events</h3>
+    @include('partials.event_section', [
+        'events' => $notYetParticipatedEvents,
+        'sectionId' => 'not_yet_participated_events',
+    ])
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const handlePagination = (event) => {
+        event.preventDefault();
+
+        const url = event.target.closest('a').href; // Get the pagination URL
+        const section = event.target.closest('div[id$="-container"]').id.replace('-container', ''); // Extract section ID
+
+        console.log(`Fetching URL: ${url} for section: ${section}`); // Debugging
+
+        fetch(`${url}&section=${section}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then((html) => {
+                const container = document.getElementById(`${section}-container`);
+                if (container) {
+                    console.log(`Updating content for section: ${section}`);
+                    container.innerHTML = html; // Replace HTML content
+                    attachPaginationHandlers(); // Reattach pagination handlers
+                } else {
+                    console.error(`Container not found for section: ${section}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching pagination:', error);
+            });
+    };
+
+    const attachPaginationHandlers = () => {
+        document.querySelectorAll('.pagination a').forEach((link) => {
+            link.addEventListener('click', handlePagination);
+        });
+    };
+
+    attachPaginationHandlers(); // Initial setup
+});
+
+
+</script>
+
 @endsection
+
+
+
+
+
 

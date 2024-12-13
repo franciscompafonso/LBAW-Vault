@@ -29,8 +29,5 @@ class AppServiceProvider extends ServiceProvider
             $schema = explode(':', $app_url)[0];
             URL::forceScheme($schema);
         }
-
-        Paginator::defaultView('pagination::default');
-        Paginator::defaultSimpleView('pagination::simple-default');
     }
 }

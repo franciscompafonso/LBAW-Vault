@@ -30,27 +30,27 @@ class UserController extends Controller
 
         if ($request->ajax()) {
             $section = $request->get('section');
-    
+            \Log::info("Requested section: {$section}");
             switch ($section) {
                 case 'my_events':
                     return view('partials.event_section', [
                         'events' => $myEvents,
-                        'sectionId' => 'my-events',
+                        'sectionId' => 'my_events',
                     ]);
                 case 'participated_events':
                     return view('partials.event_section', [
                         'events' => $participatedEvents,
-                        'sectionId' => 'participated-events',
+                        'sectionId' => 'participated_events',
                     ]);
                 case 'not_yet_participated_events':
                     return view('partials.event_section', [
                         'events' => $notYetParticipatedEvents,
-                        'sectionId' => 'not-yet-participated-events',
+                        'sectionId' => 'not_yet_participated_events',
                     ]);
                 case 'ongoing_events':
                     return view('partials.event_section', [
                         'events' => $ongoingEvents,
-                        'sectionId' => 'ongoing-events',
+                        'sectionId' => 'ongoing_events',
                     ]);
                 default:
                     return response()->json(['error' => 'Invalid section'], 400);
