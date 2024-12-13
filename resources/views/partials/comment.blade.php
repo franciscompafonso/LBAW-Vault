@@ -5,7 +5,7 @@
             <div class="flex items-center col-span-2 space-x-2">
                 <img 
                     src="{{ asset('images/profile-pictures/' . ($comment->user->profilepicture?? App\Models\User::DEFAULT_PIC)) }}" 
-                    alt="{{ $comment->user->username }}" 
+                    alt="{{ $comment->user->displayName ? $comment->user->displayName . ' profile picture' : 'Default profile picture' }}" 
                     class="object-cover w-12 h-12 rounded-full"
                 >
                 @if(!$comment->user->isdeleted)
@@ -146,7 +146,7 @@
                         <div class="flex items-center space-x-2">
                             <img 
                                 src="{{ asset('images/profile-pictures/' . ($reply->user->profilepicture ?? App\Models\User::DEFAULT_PIC)) }}" 
-                                alt="{{ $reply->user->username }}" 
+                                alt="{{ $reply->user->username ? $reply->user->username . ' profile picture' : 'Default profile picture' }}" 
                                 class="object-cover w-12 h-12 rounded-full"
                             >
                             <a href="{{ route('user.profile', ['id' => $reply->user->id]) }}" 

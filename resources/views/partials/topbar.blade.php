@@ -57,7 +57,7 @@
             <div class="relative">
                 <a id="profile-button" onclick="toggleProfileDropdown()" class="cursor-pointer">
                     <img src="{{ asset('images/profile-pictures/' . (Auth::user()->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
-                        alt="User Profile Picture" 
+                        alt="{{ Auth::user()->name ? Auth::user()->name . ' profile picture' : 'Default profile picture' }}" 
                         class="object-cover w-16 h-16 border-2 rounded-full hover:border-darkSlateGrey 
                         {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
                 </a>
@@ -70,7 +70,7 @@
                         <div class="flex items-center gap-6">
                             <!-- Profile Image -->
                             <img src="{{ asset('images/profile-pictures/' . (Auth::user()->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
-                                alt="User Profile Picture" 
+                                alt="{{ Auth::user()->name ? Auth::user()->name . ' profile picture' : 'Default profile picture' }}" 
                                 class="object-cover w-16 h-16 border-2 rounded-full 
                                 {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
                             

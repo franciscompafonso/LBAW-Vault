@@ -3,7 +3,7 @@
         <div class="flex items-center col-span-2 space-x-2">
             <img 
                 src="{{ asset('images/profile-pictures/' . ($participator->profilepicture ?? App\Models\User::DEFAULT_PIC)) }}" 
-                alt="{{ $participator->username }}" 
+                alt="{{ $participator->username ? $participator->username . ' profile picture' : 'Default profile picture' }}" 
                 class="object-cover w-12 h-12 rounded-full"
             >
             @if($participator->isdeleted)
