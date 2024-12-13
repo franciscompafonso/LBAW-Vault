@@ -19,6 +19,9 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(): View
     {
+        if (auth()->check()) {
+            return redirect('/home');
+        }
         return view('auth.register');
     }
 

@@ -57,7 +57,6 @@ Route::controller(ResetPasswordController::class)->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-
     Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/events', [EventController::class, 'index'])->name('v');

@@ -13,6 +13,9 @@ class LoginController extends Controller
     // Display the login form
     public function showLoginForm()
     {
+        if (auth()->check()) {
+            return redirect('/home');
+        }
         return view('auth.login');
     }
 
