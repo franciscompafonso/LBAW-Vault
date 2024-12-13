@@ -35,7 +35,7 @@
                     <i class="text-4xl hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} fa-solid fa-bell"></i>
                     
                     <!-- Notification Count Circle -->
-                    <div id="noti-number" class="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 font-bold text-white translate-x-2 translate-y-1 bg-red-500 rounded-full text-2xs">
+                    <div id="noti-indicator" class="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 font-bold text-white translate-x-2 translate-y-1 bg-red-500 rounded-full text-2xs">
                     </div>
                 </a>
 
@@ -138,24 +138,23 @@
         }
     }
 
-    function fetchNotifications() {
-        fetch('/api/notifications')
-            .then(response => response.json())
-            .then(data => {
-                displayNotificationResults(data);
-
-                const notiNumber = document.getElementById('noti-number');
-                if (data && data.length > 0) {
+    fetch('/api/notifications', {
+        headers: { 'Accept': 'application/json' },
+    })
+        .then(response => response.json())
+        .then(data => {
+            displayNotificationResults(data);
+            const notiNumber = document.getElementById('noti-indicator');
+            if (notiNumber) {
+                if (data.length > 0) {
                     notiNumber.textContent = data.length;
                     notiNumber.classList.remove('hidden');
                 } else {
                     notiNumber.classList.add('hidden');
                 }
-            })
-            .catch(error => {
-                console.error('Erro ao buscar notificações:', error);
-            });
-    }
+            }
+        })
+        .catch(error => console.error('Error fetching notifications:', error));
 
     function displayNotificationResults(notifications) {
         const notificationsList = document.getElementById('notifications-list');
@@ -379,14 +378,14 @@
                     .then(data => {
                         if (data.success) {
                             fetchNotifications();
-                            alert("Todas as notificações foram descartadas com sucesso!");
+                            alert("All notifications were dismissed with success!");
                         } else {
-                            alert("Falha ao descartar todas as notificações.");
+                            alert("Error dismissing notifications.");
                         }
                     })
                     .catch(error => {
-                        console.error('Erro ao descartar notificações:', error);
-                        alert("Houve um erro ao descartar notificações.");
+                        console.error('Error dismissing notifications:', error);
+                        alert("Error dismissing notifications.");
                     });
             });
         }
