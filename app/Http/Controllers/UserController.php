@@ -15,18 +15,47 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function show(int $id)
+    public function show(int $id, Request $request)
     {
         $user = User::find($id);
 
         if (! $user | $user->isdeleted) {
             abort(404, 'User not found');
         }
-        $myEvents = $user->myEvents()->get();
+        $myEvents = $user->myEvents()->paginate(4, ['*'], 'myEventsPage');
 
-        $participatedEvents = $user->participatedEvents()->get();
-        $notYetParticipatedEvents = $user->notYetParticipatedEvents()->get();
-        $ongoingEvents = $user->ongoingEvents()->get();
+        $participatedEvents = $user->participatedEvents()->paginate(4, ['*'], 'participatedPage');
+        $notYetParticipatedEvents = $user->notYetParticipatedEvents()->paginate(4, ['*'], 'notYetParticipatedPage');
+        $ongoingEvents = $user->ongoingEvents()->paginate(4, ['*'], 'ongoingPage');
+
+        if ($request->ajax()) {
+            $section = $request->get('section');
+    
+            switch ($section) {
+                case 'my_events':
+                    return view('partials.event_section', [
+                        'events' => $myEvents,
+                        'sectionId' => 'my-events',
+                    ]);
+                case 'participated_events':
+                    return view('partials.event_section', [
+                        'events' => $participatedEvents,
+                        'sectionId' => 'participated-events',
+                    ]);
+                case 'not_yet_participated_events':
+                    return view('partials.event_section', [
+                        'events' => $notYetParticipatedEvents,
+                        'sectionId' => 'not-yet-participated-events',
+                    ]);
+                case 'ongoing_events':
+                    return view('partials.event_section', [
+                        'events' => $ongoingEvents,
+                        'sectionId' => 'ongoing-events',
+                    ]);
+                default:
+                    return response()->json(['error' => 'Invalid section'], 400);
+            }
+        }
 
         return view('user.profile', [
             'user' => $user,
