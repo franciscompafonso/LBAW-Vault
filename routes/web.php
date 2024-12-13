@@ -57,6 +57,7 @@ Route::controller(ResetPasswordController::class)->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+
     Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/events', [EventController::class, 'index'])->name('v');
@@ -106,7 +107,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification']);
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications']);
-    Route::get('/notifications/count', [NotificationController::class, 'unreadCount']);
     Route::post('/events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');
 
     // API

@@ -44,8 +44,8 @@
                     <div class="flex items-center justify-between mb-4">
                         <p id="no-notifications" class="text-xl text-center text-gray-500">There are no notifications.</p>
                         <!-- Dismiss All Button -->
-                        <button id="dismiss-all-btn" onclick="dismissAllNotifications()" class="hidden border-transparent focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
-                            <i class="text-4xl fa-solid fa-broom"></i>
+                        <button id="dismiss-all-btn" onclick="dismissAllNotifications()" class="hidden font-bold border-transparent focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
+                            Dismiss all
                         </button>
                     </div>
                     <div id="notifications-list"></div>
@@ -129,65 +129,48 @@
 
 
 <script>
-    //Notifications 
-
     function toggleNotificationsDropdown() {
         const notificationsDropdown = document.getElementById('notifications-dropdown');
-
-        notificationsDropdown.classList.toggle('hidden'); 
+        notificationsDropdown.classList.toggle('hidden');
 
         if (!notificationsDropdown.classList.contains('hidden')) {
             fetchNotifications();
         }
     }
 
-    let lastNotificationId = null;
-
     function fetchNotifications() {
         fetch('/api/notifications')
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('Fetched notifications data:', data);
+                displayNotificationResults(data);
 
-                // Check if there are new notifications
-                if (data.length > 0 && (!lastNotificationId || data[0].id !== lastNotificationId)) {
-                    lastNotificationId = data[0].id;
-                    displayNotificationResults(data);
+                const notiNumber = document.getElementById('noti-number');
+                if (data && data.length > 0) {
+                    notiNumber.textContent = data.length;
+                    notiNumber.classList.remove('hidden');
+                } else {
+                    notiNumber.classList.add('hidden');
                 }
             })
             .catch(error => {
-                console.error('Error fetching notifications:', error);
+                console.error('Erro ao buscar notificações:', error);
             });
     }
-
-    // Start polling every 30 seconds
-    function startNotificationPolling() {
-        setInterval(fetchNotifications, 30000);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchNotifications();
-        startNotificationPolling();
-    });
-
-    const csrfToken = "{{ csrf_token() }}";
 
     function displayNotificationResults(notifications) {
         const notificationsList = document.getElementById('notifications-list');
         const noNotificationsText = document.getElementById('no-notifications');
         const dismissAllBtn = document.getElementById('dismiss-all-btn');
-        
+
         notificationsList.innerHTML = '';
 
-        if (notifications && notifications.length === 0) {
+        if (!notifications || notifications.length === 0) {
             noNotificationsText.classList.remove('hidden');
             dismissAllBtn.classList.add('hidden');
         } else {
             noNotificationsText.classList.add('hidden');
             dismissAllBtn.classList.remove('hidden');
+
             notifications.forEach(notification => {
                 const notificationItem = document.createElement('div');
                 notificationItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
@@ -322,7 +305,6 @@
                 } else if (notification.type === 'poll_reminder') {
                     const eventEndTime = new Date(notification.data.end_time);
 
-                    // Format the date and time
                     const formattedDate = eventEndTime.toLocaleDateString('en-GB', {
                         day: '2-digit',
                         month: '2-digit',
@@ -374,142 +356,47 @@
             });
         }
     }
-
-    // This function will be used to update the notification count
-    function updateNotificationCount() {
-        const notiNumber = document.getElementById('noti-number');
-
-        fetch('/notifications/count')
-            .then(response => response.json())
-            .then(data => {
-                if (data.unreadCount !== undefined) {
-                    if (data.unreadCount > 0) {
-                        notiNumber.classList.remove('hidden');
-                    } else {
-                        notiNumber.classList.add('hidden');
-                    }
-                }
-            })
-            .catch(error => console.error('Error fetching notification count:', error));
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        updateNotificationCount();
-    });
-
-    window.userIsAuthenticated = @json(Auth::check());
-
-    // Profile dropdown
+    
     function toggleProfileDropdown() {
         const dropdown = document.getElementById('profile-dropdown');
         dropdown.classList.toggle('hidden');
     }
 
-    // Notifications dropdown
-    function toggleNotificationsDropdown() {
-        const dropdown = document.getElementById('notifications-dropdown');
-        dropdown.classList.toggle('hidden');
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchNotifications();
+
+        const dismissAllBtn = document.getElementById('dismiss-all-btn');
+        if (dismissAllBtn) {
+            dismissAllBtn.addEventListener('click', () => {
+                fetch('/notifications/dismiss-all', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            fetchNotifications();
+                            alert("Todas as notificações foram descartadas com sucesso!");
+                        } else {
+                            alert("Falha ao descartar todas as notificações.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao descartar notificações:', error);
+                        alert("Houve um erro ao descartar notificações.");
+                    });
+            });
+        }
+    });
 
     document.addEventListener('click', (event) => {
-        const profileDropdown = document.getElementById('profile-dropdown');
         const notificationsDropdown = document.getElementById('notifications-dropdown');
 
-        if (!event.target.closest('#profile-button') && !event.target.closest('#profile-dropdown')) {
-            profileDropdown.classList.add('hidden');
-        }
         if (!event.target.closest('#notifications-button') && !event.target.closest('#notifications-dropdown')) {
             notificationsDropdown.classList.add('hidden');
         }
     });
-
-    document.addEventListener('DOMContentLoaded', () => {
-    window.dismissAllNotifications = function () {
-        fetch('/notifications/dismiss-all', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                reloadNotificationsDropdown();
-                updateNotificationCount();
-                alert("All notifications dismissed successfully!");
-            } else {
-                alert("Failed to dismiss all notifications.");
-            }
-        })
-        .catch(error => {
-            console.error('Error dismissing all notifications:', error);
-            alert("There was an error dismissing all notifications.");
-        });
-    };
-
-    function reloadNotificationsDropdown() {
-        const notificationsDropdown = document.getElementById('notifications-dropdown');
-        const notificationsList = document.getElementById('notifications-list');
-        const noNotificationsText = document.getElementById('no-notifications');
-        
-        notificationsList.innerHTML = '';
-        
-        fetch('/api/notifications')
-            .then(response => response.json())
-            .then(data => {
-                displayNotificationResults(data.notifications);
-            })
-            .catch(error => console.error('Error fetching notifications:', error));
-    }
-
-    function displayNotificationResults(notifications) {
-        const notificationsList = document.getElementById('notifications-list');
-        const noNotificationsText = document.getElementById('no-notifications');
-        const dismissAllBtn = document.getElementById('dismiss-all-btn');
-        
-        notificationsList.innerHTML = '';
-        
-        if (notifications.length === 0) {
-            noNotificationsText.classList.remove('hidden');
-            dismissAllBtn.classList.add('hidden');
-        } else {
-            noNotificationsText.classList.add('hidden');
-            dismissAllBtn.classList.remove('hidden');
-            
-            notifications.forEach(notification => {
-                const notificationItem = document.createElement('div');
-                notificationItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4', 'border', 'border-gray-200');
-                notificationItem.innerHTML = `
-                    <div class="notification-card">
-                        <p class="text-sm font-semibold text-gray-600">${notification.date}</p>
-                        <p class="font-semibold text-indigo-600 text-md">${notification.message}</p>
-                        <!-- Include other notification content as needed -->
-                    </div>
-                `;
-                notificationsList.appendChild(notificationItem);
-            });
-        }
-    }
-
-    // Update the notification count in the icon
-    function updateNotificationCount() {
-        const notificationCount = document.getElementById('noti-number');
-        
-        fetch('/notifications/count')
-            .then(response => response.json())
-            .then(data => {
-                const unreadCount = data.unreadCount;
-                if (unreadCount > 0) {
-                    notificationCount.textContent = unreadCount;
-                    notificationCount.classList.remove('hidden');
-                } else {
-                    notificationCount.textContent = '0';
-                    notificationCount.classList.add('hidden');
-                }
-            })
-            .catch(error => console.error('Error fetching notification count:', error));
-    }
-});
-
 </script>
