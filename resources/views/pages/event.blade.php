@@ -12,7 +12,7 @@
             class="w-full lg:w-1/2 aspect-[16/9] object-cover rounded-lg shadow-lg transform transition-transform duration-300">
 
         <!-- Event Details -->
-        <div class="flex flex-col justify-between flex-1 relative">
+        <div class="flex flex-col px-4 justify-between flex-1 relative">
             <!-- Event Title -->
             <h1 class="text-6xl py-5 font-bold text-ultraViolet font-montserrat">{{ $event->name }}</h1>
             <!-- Event Description -->
