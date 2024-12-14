@@ -31,7 +31,7 @@
     <section class="flex items-center justify-center px-8 py-12 bg-babyPowder">
       <div class="w-2/3">
         <!-- Title -->
-        <h2 class="mb-6 text-7xl font-extrabold font-montserrat text-ultraViolet">Sign in</h2>
+        <h2 class="mb-6 py-4 text-7xl font-extrabold font-montserrat text-ultraViolet">Sign in</h2>
         
         <!-- Form Container -->
           <form method="POST" action="{{ route('login') }}" class="space-y-6">
@@ -63,14 +63,6 @@
                 <p class="mt-1 text-lg text-red-500 font-montserrat">{{ $errors->first('password') }}</p>
               @endif
             </div>
-
-            <!-- Remember Me Checkbox -->
-            <div class="flex items-center">
-              <input id="remember" name="remember" type="checkbox" 
-                class="w-6 h-6 rounded text-ultraViolet font-montserrat border-darkSlateGrey focus:ring-ultraViolet">
-              <label for="remember" class="ml-2 text-2xl font-medium text-darkSlateGrey">Remember Me</label>
-            </div>
-
 
             <!-- Sign In Button -->
             <div class="mt-6 text-center">

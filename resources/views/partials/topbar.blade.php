@@ -76,9 +76,14 @@
                             
                             <!-- User Info -->
                             <div>
-                                <p class="text-3xl font-semibold text-gray-800 whitespace-nowrap">{{ Auth::user()->name }}</p>
-                                <p class="text-2xl text-gray-500 whitespace-nowrap">{{ Auth::user()->username }}</p>
-                            </div>
+                            <p class="text-gray-800 font-semibold overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px] text-dynamic-xl">
+                                {{ Auth::user()->name }}
+                            </p>
+                            <p class="text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px] text-dynamic-lg">
+                                {{ Auth::user()->username }}
+                            </p>
+                        </div>
+
                         </div>
                     </a>
 

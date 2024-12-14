@@ -46,7 +46,7 @@
 </div>
     <!-- My Events -->
     <div class="mt-8" id="my_events-container">
-    <h3 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">My Events</h3>
+    <h3 class="mb-4 py-6 text-4xl font-semibold font-montserrat text-eerieBlack">My Events</h3>
     @include('partials.event_section', [
         'events' => $myEvents,
         'sectionId' => 'my_events',
@@ -56,7 +56,7 @@
 
     <!-- ongoingEvents Section -->
     <div class="mt-8" id="ongoing_events-container">
-    <h3 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Ongoing Events</h3>
+    <h3 class="mb-4 py-6 text-4xl font-semibold font-montserrat text-eerieBlack">Ongoing Events</h3>
     @include('partials.event_section', [
         'events' => $ongoingEvents,
         'sectionId' => 'ongoing_events',
@@ -66,7 +66,7 @@
 
     <!-- participatedEvents Section -->
     <div class="mt-8" id="participated_events-container">
-    <h3 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Past Events</h3>
+    <h3 class="mb-4 py-6 text-4xl font-semibold font-montserrat text-eerieBlack">Past Events</h3>
     @include('partials.event_section', [
         'events' => $participatedEvents,
         'sectionId' => 'participated_events',
@@ -75,7 +75,7 @@
 
     <!-- Not Yet Participated Events Section -->
     <div class="mt-8" id="not_yet_participated_events-container">
-    <h3 class="mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Future Events</h3>
+    <h3 class="mb-4 py-6 text-4xl font-semibold font-montserrat text-eerieBlack">Future Events</h3>
     @include('partials.event_section', [
         'events' => $notYetParticipatedEvents,
         'sectionId' => 'not_yet_participated_events',

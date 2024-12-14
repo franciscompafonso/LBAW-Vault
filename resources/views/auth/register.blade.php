@@ -29,7 +29,7 @@
     <section class="flex items-center justify-center px-8 py-12 bg-babyPowder">
       <div class="w-2/3">
         <!-- Title -->
-        <h2 class="mb-6 text-7xl font-extrabold font-montserrat text-ultraViolet">Sign up</h2>
+        <h2 class="mb-6 text-7xl py-4 font-extrabold font-montserrat text-ultraViolet">Sign up</h2>
         
         <!-- Form Container -->
         <form method="POST" action="{{ route('register') }}" class="space-y-6">
