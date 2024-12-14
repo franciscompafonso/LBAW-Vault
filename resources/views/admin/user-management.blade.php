@@ -3,7 +3,7 @@
 @section('Title', 'User Management')
 @section('content')
     <div class="container p-8 mx-auto">
-        <h1 class="mb-6 text-5xl font-bold font-montserrat">User Management</h1>
+        <h1 class="mb-6 text-5xl text-ultraViolet font-bold font-montserrat">User Management</h1>
 
         <!-- Search Form -->
         <form action="{{ route('admin.search.user') }}" method="GET" class="mb-6">

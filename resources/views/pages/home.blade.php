@@ -90,7 +90,7 @@
                 @if ($category->events->count() >= 4)
                     <a href="{{ route('events.search', ['category_id' => $category->id]) }}" class="flex items-center space-x-4 group">
                         <!-- Category Name with Link -->
-                        <h2 class="text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+                        <h2 class="text-4xl font-semibold py-6 transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
                             {{ $category->name }}
                         </h2>
 
@@ -112,7 +112,7 @@
             <!-- "All Categories" Section -->
             @if ($categories->pluck('events')->flatten()->count() >= 4)
                 <div class="flex items-center space-x-4 group">
-                    <h2 class="inline-block text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
+                    <h2 class="inline-block py-6 text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
                         <a href="{{ url('events/search') }}" 
                         class="group-hover:text-eerieBlack group-hover:font-bold text-eerieBlack">
                             All Categories
