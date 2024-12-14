@@ -120,6 +120,11 @@
                 <h2 class="text-4xl font-bold mb-6 text-ultraViolet font-montserrat border-babyPowder">
                     Details
                 </h2>
+                @if (Auth::id() == $event->creator_id)
+                    <p class="text-3xl text-darkSlateGrey font-montserrat">
+                        <strong class="font-semibold">Visibility:</strong> {{ $event->visibility }}
+                    </p>
+                @endif
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
                     <strong class="font-semibold">Start:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y H:i') }}
                 </p>

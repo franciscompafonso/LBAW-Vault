@@ -63,7 +63,8 @@
                 </a>
 
                 <!-- Profile Dropdown -->
-                <div id="profile-dropdown" class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-auto min-w-[200px]">
+                <div id="profile-dropdown" 
+                    class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-auto max-w-[90vw]">
                     <!-- Profile Info Card -->
                     <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" 
                     class="block p-6 hover:bg-gray-100">
@@ -72,18 +73,17 @@
                             <img src="{{ asset('images/profile-pictures/' . (Auth::user()->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
                                 alt="{{ Auth::user()->name ? Auth::user()->name . ' profile picture' : 'Default profile picture' }}" 
                                 class="object-cover w-16 h-16 border-2 rounded-full 
-                                {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
+                                        {{ Auth::guard('admin')->check() ? 'border-ultraViolet' : 'border-wisteria' }}">
                             
                             <!-- User Info -->
-                            <div>
-                            <p class="text-gray-800 font-semibold overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px] text-dynamic-xl">
-                                {{ Auth::user()->name }}
-                            </p>
-                            <p class="text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px] text-dynamic-lg">
-                                {{ Auth::user()->username }}
-                            </p>
-                        </div>
-
+                            <div class="min-w-0">
+                                <p class="text-gray-800 font-semibold whitespace-nowrap text-dynamic-xl mr-16">
+                                    {{ Auth::user()->name }}
+                                </p>
+                                <p class="text-gray-500 whitespace-nowrap text-dynamic-lg mr-16">
+                                    {{ Auth::user()->username }}
+                                </p>
+                            </div>
                         </div>
                     </a>
 
@@ -94,7 +94,6 @@
                         <span class="font-medium">Sign out</span>
                     </a>
                 </div>
-
             </div>
         @endif
 
@@ -360,11 +359,6 @@
             });
         }
     }
-    
-    function toggleProfileDropdown() {
-        const dropdown = document.getElementById('profile-dropdown');
-        dropdown.classList.toggle('hidden');
-    }
 
     document.addEventListener('DOMContentLoaded', () => {
         fetchNotifications();
@@ -403,4 +397,11 @@
             notificationsDropdown.classList.add('hidden');
         }
     });
+
+
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profile-dropdown');
+        dropdown.classList.toggle('hidden');
+    }
+
 </script>
