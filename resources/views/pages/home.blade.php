@@ -132,7 +132,7 @@
 
                 <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
                     @foreach ($categories->pluck('events')->flatten()->take(4) as $event)
-                            @include('partials.event', ['event' => $event])
+                        @include('partials.event', ['event' => $event])
                     @endforeach
                 </div>
             @endif
