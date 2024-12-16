@@ -86,6 +86,14 @@ class NotificationController extends Controller
                         } else {
                             return ['type' => $type, 'data' => 'Comment not found'];
                         }
+                    } elseif ($type == 'event_update_notification') {
+                        $event = Event::find($notification->event_id);
+
+                        return ['type' => $type, 'data' => $event];
+                    } elseif ($type == 'event_cancelation') {
+                        $event = Event::find($notification->event_id);
+
+                        return ['type' => $type, 'data' => $event];
                     } elseif ($type == 'accepted_invite_notification') {
                         $invite = Invite::find($notification->invite_id);
 
