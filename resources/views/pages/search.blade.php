@@ -12,10 +12,14 @@
         <!-- Filters Section -->
         <form method="GET" id="filtersForm" class="flex flex-col gap-6">
 
+            <p class="text-md font-montserrat font-semibold text-darkSlateGrey mb-4">
+                Number of events: <span class="text-ultraViolet">{{ request('count') }}</span>
+            </p>
+
             <!-- Display Search Context -->
             @if(request('q'))
                 <p class="text-md font-montserrat font-semibold text-darkSlateGrey mb-4">
-                    Showing results for: <span class="text-ultraViolet">{{ request('q') }}</span>
+                    Showing events for: <span class="text-ultraViolet">{{ request('q') }}</span>
                 </p>
                 <!-- Hidden Input to Preserve Search Query -->
                 <input type="hidden" name="q" value="{{ request('q') }}">
@@ -35,7 +39,7 @@
             <!-- Results per page -->
             <div class="flex items-center">
                 <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
-                    Results per page: 
+                    Events per page: 
                 </p>
                 <select name="results" id="results" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[4em]">
                     <option value="21"  {{ request('results') === '21'  ? 'selected' : '' }}>21</option>
@@ -72,9 +76,10 @@
             </div>
 
             <!-- Visibility -->
-            <div class="collapsible-container">
-                <label class="block font-montserrat font-semibold cursor-pointer" onclick="toggleSectionVisibility('visibility')">
-                    Visibility
+            <div>
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('visibility')">
+                    <span>Visibility</span>
+                    <i id="visibility-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
                 </label>
                 <div class="mt-2 hidden" id="visibility">
                     <label class="flex items-center space-x-2 mt-1">
@@ -91,9 +96,10 @@
             </div>
 
             <!-- Category -->
-            <div class="collapsible-container">
-                <label class="block font-montserrat font-semibold cursor-pointer" onclick="toggleSectionVisibility('category')">
-                    Category
+            <div>
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('category')">
+                    <span>Category</span>
+                    <i id="category-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
                 </label>
                 <div class="mt-2 hidden" id="category">
                     @foreach ($categories as $category)
@@ -107,9 +113,10 @@
             </div>
 
             <!-- Location -->
-            <div class="collapsible-container">
-                <label class="block font-montserrat font-semibold cursor-pointer" onclick="toggleSectionVisibility('location')">
-                    Location
+            <div>
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('location')">
+                    <span>Location</span>
+                    <i id="location-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
                 </label>
                 <div class="mt-2 hidden" id="location">
                     @foreach ($locations as $location)
@@ -123,9 +130,10 @@
             </div>
 
             <!-- Status -->
-            <div class="collapsible-container">
-                <label class="block font-montserrat font-semibold cursor-pointer" onclick="toggleSectionVisibility('status')">
-                    Status
+            <div>
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('status')">
+                    <span>Status</span>
+                    <i id="status-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
                 </label>
                 <div class="mt-2 hidden" id="status">
                     <label class="flex items-center space-x-2 mt-1">
@@ -157,18 +165,19 @@
             </div>
 
             <!-- Buttons -->
-            <div class="flex space-x-4">
+            <div class="flex space-x-4 w-full">
                 <!-- Submit Button -->
                 <button type="submit" 
-                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                    class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Apply
                 </button>
                 
-                <!-- Reset Button -->
-                <a href="{{ url()->current() }}" 
-                    class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+               <!-- Reset Button -->
+                <button type="button" 
+                        onclick="window.location.href = '{{ url()->current() }}';"
+                        class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Reset
-                </a>
+                </button>
             </div>
         </form>
 
@@ -187,13 +196,21 @@
 <script>
     function toggleSectionVisibility(id) {
         const content = document.getElementById(id);
-        // Toggle visibility by switching between 'hidden' and 'block'
+        const arrow = document.getElementById(id + '-arrow');
+        
+        // Toggle visibility of the content
         if (content.classList.contains('hidden')) {
             content.classList.remove('hidden');
             content.classList.add('block');
+            // Rotate the arrow down (90 degrees)
+            arrow.classList.remove('rotate-0');
+            arrow.classList.add('rotate-90');
         } else {
             content.classList.remove('block');
             content.classList.add('hidden');
+            // Rotate the arrow right (0 degrees)
+            arrow.classList.remove('rotate-90');
+            arrow.classList.add('rotate-0');
         }
     }
 </script>
