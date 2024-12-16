@@ -12,9 +12,9 @@
             class="w-full lg:w-1/2 aspect-[16/9] object-cover rounded-lg shadow-lg transform transition-transform duration-300">
 
         <!-- Event Details -->
-        <div class="flex flex-col px-4 justify-between flex-1 relative">
+        <div class="relative flex flex-col justify-between flex-1 px-4">
             <!-- Event Title -->
-            <h1 class="text-6xl py-5 font-bold text-ultraViolet font-montserrat">{{ $event->name }}</h1>
+            <h1 class="py-5 text-6xl font-bold text-ultraViolet font-montserrat">{{ $event->name }}</h1>
             <!-- Event Description -->
             <p class="text-4xl w-[90%] leading-relaxed text-darkSlateGrey">{{ $event->description }}</p>
 
@@ -22,25 +22,25 @@
             <div class="absolute top-0 right-0">
                 @if (Auth::guard('admin')->check() || $event->creator_id === Auth::id() || $event->end_date < now())
                     <button 
-                        class="w-12 h-12 rounded-full border-0 text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
+                        class="w-12 h-12 border-0 rounded-full text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
                         onclick="toggleMenu(event)" id="icon">
                         <i class="text-4xl fa-solid fa-ellipsis"></i>
                     </button>
                 @endif
                 <!-- Options Menu -->
-                <div id="menu" class="absolute top-0 right-0 hidden mt-2 bg-white rounded-lg shadow-lg w-64">
+                <div id="menu" class="absolute top-0 right-0 hidden w-64 mt-2 bg-white rounded-lg shadow-lg">
                     <div class="space-y-2">
                         @if (Auth::guard(name: 'admin')->check() || $event->creator_id === Auth::id())
                             <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
                             <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="block border-0 w-full px-6 py-4 text-left text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
+                                <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
                             </form>
                         @endif
                         @if (Auth::id() === $event->creator_id)
                             <button 
-                                class="block w-full px-6 py-4 border-0 text-left text-xl text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100"
+                                class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100"
                                 onclick="togglePollForm()">
                                 Create Poll
                             </button>
@@ -50,7 +50,7 @@
                                 <button 
                                     disabled 
                                     title="Survey results are available after the event ends."
-                                    class="block w-full px-6 py-4 text-left hover:text-darkSlateGrey text-xl text-gray-500 cursor-not-allowed">
+                                    class="block w-full px-6 py-4 text-xl text-left text-gray-500 cursor-not-allowed hover:text-darkSlateGrey">
                                     Survey Results Not Available
                                 </button>
                             @endif
@@ -89,23 +89,41 @@
     <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Comments Section -->
         <div class="flex-1 p-6">
-            <h2 class="text-4xl font-bold mb-6 text-ultraViolet font-montserrat border-babyPowder">
+            <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Comments
             </h2>
             @if (Auth::id())
-                <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="space-y-4">
-                @csrf
-                <textarea 
-                    name="content" 
-                    rows="4" 
-                    class="w-full p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ultraViolet"
-                    placeholder="Add your comment here..."
-                    required></textarea>
-                <button 
-                    type="submit" 
-                    class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet">
-                    Comment
-                </button>
+                <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
+                    @csrf
+                    <textarea 
+                        name="content" 
+                        rows="4" 
+                        class="w-full p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-burgundy"
+                        placeholder="Add your comment here..."
+                        required></textarea>
+
+                    <!-- Photo Upload for Participators -->
+                    @if ($event->participators->contains('id', Auth::id()))
+                        <div class="mt-4">
+                            <input 
+                                type="file" 
+                                name="photos[]" 
+                                id="photos" 
+                                multiple 
+                                accept="image/*"
+                                class="w-full p-2 mt-2 border border-gray-300 rounded-lg" 
+                                onchange="validatePhotos()" />
+                            <small class="text-gray-500">You can upload up to 15 photos.</small>
+                        </div>
+                    @endif
+
+                    <div class="flex justify-end mt-4">
+                        <button 
+                            type="submit" 
+                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                            Comment
+                        </button>
+                    </div>
                 </form>
             @endif
             <div class="mt-6 space-y-6">
@@ -116,8 +134,8 @@
         <!-- Details and Participants Section -->
         <div class="flex flex-col gap-6 lg:w-1/5">
             <!-- Event Details -->
-            <div class="p-6  space-y-8">
-                <h2 class="text-4xl font-bold mb-6 text-ultraViolet font-montserrat border-babyPowder">
+            <div class="p-6 space-y-8">
+                <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                     Details
                 </h2>
                 @if (Auth::id() == $event->creator_id)
@@ -138,7 +156,7 @@
 
             <!-- Participants -->
             <div class="p-6">
-                <h2 class="text-4xl font-bold mb-6 text-ultraViolet font-montserrat border-babyPowder">
+                <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Participants
                 </h2>
                 <ul class="space-y-4">

@@ -8,7 +8,7 @@
     <div class="w-full py-16 shadow-md bg-gradient-to-r from-whiteSmoke {{ Auth::guard('admin')->check() ? 'to-ultraViolet' : 'to-wisteria' }} bg-opacity-75 text-center text-white rounded-lg">
     <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-evenly lg:items-center">
         <!-- Text Section -->
-        <div class="text-left flex flex-col justify-between h-full">
+        <div class="flex flex-col justify-between h-full text-left">
             <h2 id="quote" class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">
                 Empowering Communities, One Event at a Time.
             </h2>
@@ -23,8 +23,15 @@
 
         <!-- Image Section -->
         <div class="flex justify-center lg:justify-center">
-            <img src="{{ asset('images/others/main-pic.png') }}" alt="Main Picture" class="object-cover w-64 h-64 transition-transform duration-300 transform bg-white rounded-full shadow-lg hover:scale-105">
+            <div class="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-64 lg:h-64">
+                <img 
+                    src="{{ asset('images/others/main-pic.png') }}" 
+                    alt="Main Picture" 
+                    class="object-cover w-full h-full transition-transform duration-300 transform bg-white rounded-full shadow-lg hover:scale-105"
+                >
+            </div>
         </div>
+        
     </div>
 </div>
 
@@ -90,18 +97,18 @@
                 @if ($category->events->count() >= 4)
                     <a href="{{ route('events.search', ['category_id' => $category->id]) }}" class="flex items-center space-x-4 group">
                         <!-- Category Name with Link -->
-                        <h2 class="text-4xl font-semibold py-6 transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+                        <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
                             {{ $category->name }}
                         </h2>
 
                         <!-- "Explore all >" Link -->
                         <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
-                            <i class="ml-2 text-3xl fa-solid fa-angle-right"></i>
+                            <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
                         </p>
                     </a>
 
                     <!-- Events Grid with max-width possible for 4 items -->
-                    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
+                    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
                         @foreach ($category->events->take(4) as $event)
                                 @include('partials.event', ['event' => $event])
                         @endforeach
@@ -112,21 +119,18 @@
             <!-- "All Categories" Section -->
             @if ($categories->pluck('events')->flatten()->count() >= 4)
                 <div class="flex items-center space-x-4 group">
-                    <h2 class="inline-block py-6 text-4xl font-semibold transition-all font-montserrat text-eerieBlack group-hover:font-bold">
-                        <a href="{{ url('events/search') }}" 
-                        class="group-hover:text-eerieBlack group-hover:font-bold text-eerieBlack">
-                            All Categories
-                        </a>
+                    <!-- Category Name with Link -->
+                    <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+                        All categories
                     </h2>
 
-                    <!-- "Explore all" Link -->
-                    <a href="{{ url('events/search') }}" 
-                    class="opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 my-auto text-cambridgeBlue text-xl font-bold hover:text-darkSlateGrey transition-all duration-300 ease-in-out font-montserrat transform">
-                        Explore all >
-                    </a>
+                    <!-- "Explore all >" Link -->
+                    <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
+                        <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
+                    </p>
                 </div>
 
-                <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 w-full">
+                <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
                     @foreach ($categories->pluck('events')->flatten()->take(4) as $event)
                             @include('partials.event', ['event' => $event])
                     @endforeach

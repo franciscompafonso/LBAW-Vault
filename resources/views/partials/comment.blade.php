@@ -5,7 +5,7 @@
             <div class="flex items-center col-span-2 space-x-2">
                 <img 
                     src="{{ asset('images/profile-pictures/' . ($comment->user->profilepicture?? App\Models\User::DEFAULT_PIC)) }}" 
-                    alt="{{ $comment->user->displayName ? $comment->user->displayName . ' profile picture' : 'Default profile picture' }}" 
+                    alt="{{ $comment->user->username }}" 
                     class="object-cover w-12 h-12 rounded-full"
                 >
                 @if(!$comment->user->isdeleted)
@@ -111,7 +111,22 @@
             </div>
         </div>
 
-        
+        <!-- Display Photos if they exist -->
+        @if ($comment->photos->isNotEmpty())
+        <div class="grid grid-cols-3 gap-4 mt-4">
+            @foreach ($comment->photos as $photo)
+                <div class="w-full h-32 overflow-hidden bg-gray-100 rounded-lg">
+                    <a href="{{ route('photos.show', $photo->id) }}">
+                        <img 
+                                src="{{ asset('images/others/' . $photo->path) }}" 
+                                alt="Comment Photo"
+                                class="object-cover w-full h-full cursor-pointer"
+                        >
+                   </a>
+                </div>
+            @endforeach
+        </div>
+        @endif
     
         <!-- Reply Button -->
         @if (Auth::check())
@@ -146,7 +161,7 @@
                         <div class="flex items-center space-x-2">
                             <img 
                                 src="{{ asset('images/profile-pictures/' . ($reply->user->profilepicture ?? App\Models\User::DEFAULT_PIC)) }}" 
-                                alt="{{ $reply->user->username ? $reply->user->username . ' profile picture' : 'Default profile picture' }}" 
+                                alt="{{ $reply->user->username }}" 
                                 class="object-cover w-12 h-12 rounded-full"
                             >
                             <a href="{{ route('user.profile', ['id' => $reply->user->id]) }}" 
