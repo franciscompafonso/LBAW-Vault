@@ -9,13 +9,13 @@ use Carbon\Carbon;
 class HomeController extends Controller
 {
     public function index()
-{
-    $categories = Category::with(['events' => function ($query) {
-        $query->where('end_date', '>', Carbon::now())->where('visibility', '<>', 'private');
-    }])->get();
+    {
+        $categories = Category::with(['events' => function ($query) {
+            $query->where('end_date', '>', Carbon::now())->where('visibility', '<>', 'private');
+        }])->get();
 
-    return view('pages.home', compact('categories')); // Pass them to the view
-}
+        return view('pages.home', compact('categories'));
+    }
 
     public function home()
     {
