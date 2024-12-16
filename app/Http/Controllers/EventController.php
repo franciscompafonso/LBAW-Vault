@@ -173,40 +173,23 @@ class EventController extends Controller
                 ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$searchQuery])
                 ->pluck('id');
 
-            // Apply the search results as a base filter
             $query->whereIn('id', $searchResults);
         }
 
-        // Filter by category if provided
-        if ($request->filled('category_id')) {
-            $category = Category::find($request->category_id);
-            if ($category) {
-                $query->where('category_id', $category->id);
-            }
-        } else {
-            $category = null;
+        // Sorting Algorithms
+        $order = $request->get('order', 'date_asc');
+        switch ($order) {
+            case 'date_asc':
+                $query->orderBy('start_date', 'asc');
+                break;
+            case 'date_desc':
+                $query->orderBy('start_date', 'desc');
+                break;
         }
 
-        // Visibility and Status Filters
-        if ($request->filled('visibility')) {
-            $query->whereIn('visibility', $request->visibility); // Use the provided visibility values
-        } else {
-            $query->whereIn('visibility', ['public', 'request_only']); // Default to public and request_only if none specified
-        }
-        if ($request->filled('status')) {
-            $query->where(function ($q) use ($request) {
-                if (in_array('canceled', $request->status)) {
-                    $q->orWhere('visibility', 'canceled'); // Assuming 'canceled' is stored in visibility
-                }
-                if (in_array('full', $request->status)) {
-                    $q->orWhere(function ($subQuery) {
-                        $subQuery->whereRaw(
-                            '(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) >= event.capacity'
-                        );
-                    });
-                }
-            });
-        }
+        // Pagination (results per page)
+        $resultsPerPage = $request->get('results', 21);
+        $query->paginate($resultsPerPage);
 
         // Date Filters
         if ($request->filled('startDate')) {
@@ -216,61 +199,59 @@ class EventController extends Controller
             $query->where('end_date', '<=', $request->endDate);
         }
 
+        // Visibility Filter
+        if ($request->filled('visibility')) {
+            $query->whereIn('visibility', $request->input('visibility')); // Matches form input name
+        }
+
+        // Category Filter
+        if ($request->filled('category')) {
+            $query->whereIn('category_id', $request->input('category')); // Matches form input name
+        }
+
         // Location Filter
         if ($request->filled('location')) {
-            $query->where('location_id', $request->location);
+            $query->whereIn('location_id', $request->input('location')); // Matches form input name
         }
 
-        // User-specific Filters
-        if (Auth::check()) {
-            if ($request->userEvents === 'created') {
-                $query->where('creator_id', Auth::id());
-            } elseif ($request->userEvents === 'participated') {
-                $query->whereHas('participators', function ($q) {
-                    $q->where('participator_id', Auth::id());
-                });
-            }
+        // Status Filter
+        if ($request->filled('status_finished') || $request->filled('status_upcoming') || $request->filled('status_ongoing') || $request->filled('status_full_capacity')) {
+            $query->where(function ($q) use ($request) {
+                if ($request->filled('status_finished')) {
+                    $q->orWhere('end_date', '<', now());
+                }
+                if ($request->filled('status_upcoming')) {
+                    $q->orWhere('start_date', '>', now());
+                }
+                if ($request->filled('status_ongoing')) {
+                    $q->orWhere(function ($subQuery) {
+                        $subQuery->where('start_date', '<=', now())
+                            ->where('end_date', '>=', now());
+                    });
+                }
+                if ($request->filled('status_full_capacity')) {
+                    $q->orWhereRaw(
+                        '(SELECT COUNT(*) FROM participator WHERE participator.event_id = events.id) >= events.capacity'
+                    );
+                }
+            });
         }
 
-        // Sorting Algorithms
-        $order = $request->get('order', 'asc');
-        switch ($order) {
-            case 'date_asc':
-                $query->orderBy('start_date', 'asc');
-                break;
-            case 'date_desc':
-                $query->orderBy('start_date', 'desc');
-                break;
-            case 'part_asc':
-                $query->orderByRaw('(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) asc');
-                break;
-            case 'part_desc':
-                $query->orderByRaw('(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) desc');
-                break;
-            default:
-                $query->orderBy('start_date', 'asc'); // Default fallback
-                break;
-        }
+        // Count the total filtered events
+        $eventsCount = $query->count();
 
-        $events = $query->get();
-
-        // Calculate min and max capacities for slider
-        $minCapacity = $events->min('capacity') ?? 0;
-        $maxCapacity = $events->max('capacity') ?? 100;
-
-        if ($request->ajax()) {
-            return view('partials.events_grid', compact('events'))->render();
-        }
+        // Return the filtered results (with pagination)
+        $events = $query->paginate($resultsPerPage);
 
         return view('pages.search', compact(
-            'category',
             'events',
             'locations',
             'categories',
-            'minCapacity',
-            'maxCapacity'
+            'eventsCount'
         ));
     }
+
+
 
     private function deleteBanner($bannerId) {
         $file = File::find($bannerId);

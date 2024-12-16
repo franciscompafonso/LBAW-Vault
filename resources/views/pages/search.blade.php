@@ -13,7 +13,7 @@
         <form method="GET" id="filtersForm" class="flex flex-col gap-6">
 
             <p class="text-md font-montserrat font-semibold text-darkSlateGrey mb-4">
-                Number of events: <span class="text-ultraViolet">{{ request('count') }}</span>
+                Number of events: <span class="text-ultraViolet">{{ $eventsCount }}</span>
             </p>
 
             <!-- Display Search Context -->
@@ -48,7 +48,6 @@
                 </select>
             </div>
 
-
             <!-- Filters Label -->
             <h2 class="text-4xl font-bold font-montserrat text-ultraViolet">Filter</h2>
 
@@ -61,9 +60,9 @@
                     id="startDate" 
                     class="p-2 border rounded mt-2" 
                     value="{{ request('startDate') }}"
-                    max="" 
+                    min="" 
                 >
-            
+
                 <label for="endDate" class="block font-montserrat font-semibold mt-4">End Date</label>
                 <input 
                     type="date" 
@@ -81,15 +80,15 @@
                     <span>Visibility</span>
                     <i id="visibility-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2 hidden" id="visibility">
+                <div class="mt-2" id="visibility">
                     <label class="flex items-center space-x-2 mt-1">
-                        <input type="checkbox" name="status[]" value="public" 
-                            {{ request('visibility') === 'public' ? 'checked' : '' }} />
+                        <input type="checkbox" name="visibility[]" value="public" 
+                            {{ request('visibility') && in_array('public', request('visibility')) ? 'checked' : '' }} />
                         <span>Public</span>
                     </label>
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="status[]" value="request_only" 
-                            {{ request('visibility') === 'request_only' ? 'checked' : '' }} />
+                        <input type="checkbox" name="visibility[]" value="request_only" 
+                            {{ request('visibility') && in_array('request_only', request('visibility')) ? 'checked' : '' }} />
                         <span>Request Only</span>
                     </label>
                 </div>
@@ -101,14 +100,15 @@
                     <span>Category</span>
                     <i id="category-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2 hidden" id="category">
+                <div class="mt-2" id="category">
                     @foreach ($categories as $category)
                         <label class="flex items-center space-x-2 mt-1">
-                            <input type="checkbox" name="category_id[]" value="{{ $category->id }}" 
-                                {{ request('category_id') && in_array($category->id, request('category_id')) ? 'checked' : '' }} />
+                            <input type="checkbox" name="category[]" value="{{ $category->id }}" 
+                                {{ request('category') && in_array($category->id, request('category')) ? 'checked' : '' }} />
                             <span>{{ $category->name }}</span>
                         </label>
                     @endforeach
+
                 </div>
             </div>
 
@@ -118,7 +118,7 @@
                     <span>Location</span>
                     <i id="location-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2 hidden" id="location">
+                <div class="mt-2" id="location">
                     @foreach ($locations as $location)
                         <label class="flex items-center space-x-2 mt-1">
                             <input type="checkbox" name="location[]" value="{{ $location->id }}" 
@@ -129,36 +129,31 @@
                 </div>
             </div>
 
-            <!-- Status -->
+            <!-- Status Section -->
             <div>
                 <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('status')">
                     <span>Status</span>
                     <i id="status-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2 hidden" id="status">
+                <div class="mt-2" id="status">
                     <label class="flex items-center space-x-2 mt-1">
-                        <input type="checkbox" name="status[]" value="full" 
-                            {{ request('status') && in_array('full', request('status')) ? 'checked' : '' }} />
+                        <input type="checkbox" name="status_finished" value="1" 
+                            {{ request('status_finished') ? 'checked' : '' }} />
                         <span>Finished</span>
                     </label>
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="status[]" value="canceled" 
-                            {{ request('status') && in_array('canceled', request('status')) ? 'checked' : '' }} />
-                        <span>On going</span>
-                    </label>
-                    <label class="flex items-center space-x-2 mt-1">
-                        <input type="checkbox" name="status[]" value="upcoming" 
-                            {{ request('status') && in_array('upcoming', request('status')) ? 'checked' : '' }} />
+                        <input type="checkbox" name="status_upcoming" value="1" 
+                            {{ request('status_upcoming') ? 'checked' : '' }} />
                         <span>Upcoming</span>
                     </label>
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="status[]" value="canceled" 
-                            {{ request('status') && in_array('canceled', request('status')) ? 'checked' : '' }} />
-                        <span>Canceled</span>
+                        <input type="checkbox" name="status_ongoing" value="1" 
+                            {{ request('status_ongoing') ? 'checked' : '' }} />
+                        <span>Ongoing</span>
                     </label>
-                    <label class="flex items-center space-x-2 mt-1">
-                        <input type="checkbox" name="status[]" value="full_capacity" 
-                            {{ request('status') && in_array('full_capacity', request('status')) ? 'checked' : '' }} />
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="status_full_capacity" value="1" 
+                            {{ request('status_full_capacity') ? 'checked' : '' }} />
                         <span>At full capacity</span>
                     </label>
                 </div>
@@ -172,7 +167,7 @@
                     Apply
                 </button>
                 
-               <!-- Reset Button -->
+            <!-- Reset Button -->
                 <button type="button" 
                         onclick="window.location.href = '{{ url()->current() }}';"
                         class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
@@ -194,25 +189,59 @@
 </section>
 
 <script>
-    function toggleSectionVisibility(id) {
-        const content = document.getElementById(id);
-        const arrow = document.getElementById(id + '-arrow');
-        
-        // Toggle visibility of the content
-        if (content.classList.contains('hidden')) {
-            content.classList.remove('hidden');
-            content.classList.add('block');
-            // Rotate the arrow down (90 degrees)
-            arrow.classList.remove('rotate-0');
-            arrow.classList.add('rotate-90');
-        } else {
-            content.classList.remove('block');
-            content.classList.add('hidden');
-            // Rotate the arrow right (0 degrees)
-            arrow.classList.remove('rotate-90');
-            arrow.classList.add('rotate-0');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Uncollapse sections based on localStorage state
+        const collapsedSections = JSON.parse(localStorage.getItem('collapsedSections')) || {};
+
+        // Restore section visibility
+        Object.keys(collapsedSections).forEach(function (sectionId) {
+            const section = document.getElementById(sectionId);
+            const icon = document.getElementById(sectionId + '-arrow');
+            if (collapsedSections[sectionId] === 'collapsed') {
+                section.classList.add('hidden');
+                icon.classList.add('transform', 'rotate-90');
+            } else {
+                section.classList.remove('hidden');
+                icon.classList.remove('transform', 'rotate-90');
+            }
+        });
+
+        // Toggle sections visibility and save state to localStorage
+        window.toggleSectionVisibility = function (id) {
+            const section = document.getElementById(id);
+            const icon = document.getElementById(id + '-arrow');
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                icon.classList.remove('transform', 'rotate-90');
+                collapsedSections[id] = 'expanded';
+            } else {
+                section.classList.add('hidden');
+                icon.classList.add('transform', 'rotate-90');
+                collapsedSections[id] = 'collapsed';
+            }
+            localStorage.setItem('collapsedSections', JSON.stringify(collapsedSections));
+        };
+
+        // Set min and max for date inputs
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+
+        startDate.addEventListener('change', function () {
+            endDate.setAttribute('min', startDate.value);
+        });
+
+        endDate.addEventListener('change', function () {
+            startDate.setAttribute('max', endDate.value);
+        });
+
+        // Set initial min and max dates if values are already filled
+        if (startDate.value) {
+            endDate.setAttribute('min', startDate.value);
         }
-    }
+        if (endDate.value) {
+            startDate.setAttribute('max', endDate.value);
+        }
+    });
 </script>
 
 @endsection
