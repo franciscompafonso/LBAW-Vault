@@ -7,22 +7,49 @@
 <section class="w-full px-6 py-16">
 
     <!-- Main Grid Layout -->
-    <div class="grid grid-cols-7 gap-6">
+    <div class="grid grid-cols-5 gap-6">
         
         <!-- Filters Section -->
         <form method="GET" id="filtersForm" class="flex flex-col gap-6">
 
-            <!-- Filters Label -->
-            <h2 class="text-4xl font-bold font-montserrat text-ultraViolet">Filters</h2>
+            <p class="text-md font-montserrat font-semibold text-darkSlateGrey mb-4">
+                Number of events: <span class="text-ultraViolet">{{ $eventsCount }}</span>
+            </p>
 
             <!-- Display Search Context -->
             @if(request('q'))
-                <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
-                    Searching for: <span class="text-ultraViolet">{{ request('q') }}</span>
+                <p class="text-md font-montserrat font-semibold text-darkSlateGrey mb-4">
+                    Showing events for: <span class="text-ultraViolet">{{ request('q') }}</span>
                 </p>
                 <!-- Hidden Input to Preserve Search Query -->
                 <input type="hidden" name="q" value="{{ request('q') }}">
             @endif
+
+            <!-- Sort by date -->
+            <div class="flex items-center">
+                <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
+                    Sort by date: 
+                </p>
+                <select name="order" id="order" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[9em]">
+                    <option value="date_asc"  {{ request('order') === 'date_asc'  ? 'selected' : '' }}>Ascending</option>
+                    <option value="date_desc" {{ request('order') === 'date_desc' ? 'selected' : '' }}>Descending</option>
+                </select>
+            </div>
+
+            <!-- Results per page -->
+            <div class="flex items-center">
+                <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
+                    Events per page: 
+                </p>
+                <select name="results" id="results" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[4em]">
+                    <option value="21"  {{ request('results') === '21'  ? 'selected' : '' }}>21</option>
+                    <option value="30"  {{ request('results') === '30'  ? 'selected' : '' }}>30</option>
+                    <option value="45"  {{ request('results') === '45'  ? 'selected' : '' }}>45</option>
+                </select>
+            </div>
+
+            <!-- Filters Label -->
+            <h2 class="text-4xl font-bold font-montserrat text-ultraViolet">Filter</h2>
 
             <!-- Date Range -->
             <div>
@@ -33,9 +60,9 @@
                     id="startDate" 
                     class="p-2 border rounded mt-2" 
                     value="{{ request('startDate') }}"
-                    max="" 
+                    min="" 
                 >
-                
+
                 <label for="endDate" class="block font-montserrat font-semibold mt-4">End Date</label>
                 <input 
                     type="date" 
@@ -49,14 +76,17 @@
 
             <!-- Visibility -->
             <div>
-                <label class="block font-montserrat font-semibold">Visibility</label>
-                <div class="mt-2">
-                    <label class="flex items-center space-x-2">
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('visibility')">
+                    <span>Visibility</span>
+                    <i id="visibility-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
+                </label>
+                <div class="mt-2" id="visibility">
+                    <label class="flex items-center space-x-2 mt-1">
                         <input type="checkbox" name="visibility[]" value="public" 
                             {{ request('visibility') && in_array('public', request('visibility')) ? 'checked' : '' }} />
                         <span>Public</span>
                     </label>
-                    <label class="flex items-center space-x-2 mt-1">
+                    <label class="flex items-center space-x-2">
                         <input type="checkbox" name="visibility[]" value="request_only" 
                             {{ request('visibility') && in_array('request_only', request('visibility')) ? 'checked' : '' }} />
                         <span>Request Only</span>
@@ -64,78 +94,90 @@
                 </div>
             </div>
 
-            <!-- Status -->
-            <div>
-                <label class="block font-montserrat font-semibold">Status</label>
-                <div class="mt-2">
-                    <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="status[]" value="canceled" 
-                            {{ request('status') && in_array('canceled', request('status')) ? 'checked' : '' }} />
-                        <span>Canceled</span>
-                    </label>
-                    <label class="flex items-center space-x-2 mt-1">
-                        <input type="checkbox" name="status[]" value="full" 
-                            {{ request('status') && in_array('full', request('status')) ? 'checked' : '' }} />
-                        <span>Full Event</span>
-                    </label>
-                </div>
-            </div>
-
             <!-- Category -->
             <div>
-                <label for="category" class="block font-montserrat font-semibold">Category</label>
-                <select name="category_id" id="category" class="p-2 border rounded mt-2">
-                    <option value="">All Categories</option>
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('category')">
+                    <span>Category</span>
+                    <i id="category-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
+                </label>
+                <div class="mt-2" id="category">
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
+                        <label class="flex items-center space-x-2 mt-1">
+                            <input type="checkbox" name="category[]" value="{{ $category->id }}" 
+                                {{ request('category') && in_array($category->id, request('category')) ? 'checked' : '' }} />
+                            <span>{{ $category->name }}</span>
+                        </label>
                     @endforeach
-                </select>
+
+                </div>
             </div>
 
             <!-- Location -->
             <div>
-                <label for="location" class="block font-montserrat font-semibold">Location</label>
-                <select name="location" id="location" class="p-2 border rounded mt-2">
-                    <option value="">Any Location</option>
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('location')">
+                    <span>Location</span>
+                    <i id="location-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
+                </label>
+                <div class="mt-2" id="location">
                     @foreach ($locations as $location)
-                        <option value="{{ $location->id }}" {{ request('location') == $location->id ? 'selected' : '' }}>
-                            {{ $location->name }}
-                        </option>
+                        <label class="flex items-center space-x-2 mt-1">
+                            <input type="checkbox" name="location[]" value="{{ $location->id }}" 
+                                {{ request('location') && in_array($location->id, request('location')) ? 'checked' : '' }} />
+                            <span>{{ $location->name }}</span>
+                        </label>
                     @endforeach
-                </select>
+                </div>
             </div>
 
-            <!-- Sort by -->
+            <!-- Status Section -->
             <div>
-                <label for="order" class="block font-montserrat font-semibold">Sort by</label>
-                <select name="order" id="order" class="p-2 border rounded mt-2">
-                    <option value="date_asc"  {{ request('order') === 'date_asc'  ? 'selected' : '' }}>Date Ascending</option>
-                    <option value="date_desc" {{ request('order') === 'date_desc' ? 'selected' : '' }}>Date Descending</option>
-                    <option value="part_asc"  {{ request('order') === 'part_asc'  ? 'selected' : '' }}>Participants Ascending</option>
-                    <option value="part_desc" {{ request('order') === 'part_desc' ? 'selected' : '' }}>Participants Descending</option>
-                </select>
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('status')">
+                    <span>Status</span>
+                    <i id="status-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
+                </label>
+                <div class="mt-2" id="status">
+                    <label class="flex items-center space-x-2 mt-1">
+                        <input type="checkbox" name="status_finished" value="1" 
+                            {{ request('status_finished') ? 'checked' : '' }} />
+                        <span>Finished</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="status_upcoming" value="1" 
+                            {{ request('status_upcoming') ? 'checked' : '' }} />
+                        <span>Upcoming</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="status_ongoing" value="1" 
+                            {{ request('status_ongoing') ? 'checked' : '' }} />
+                        <span>Ongoing</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="status_full_capacity" value="1" 
+                            {{ request('status_full_capacity') ? 'checked' : '' }} />
+                        <span>At full capacity</span>
+                    </label>
+                </div>
             </div>
 
             <!-- Buttons -->
-            <div class="flex space-x-4">
+            <div class="flex space-x-4 w-full">
                 <!-- Submit Button -->
                 <button type="submit" 
-                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                    class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Apply
                 </button>
                 
-                <!-- Reset Button -->
-                <a href="{{ url()->current() }}" 
-                    class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+            <!-- Reset Button -->
+                <button type="button" 
+                        onclick="window.location.href = '{{ url()->current() }}';"
+                        class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Reset
-                </a>
+                </button>
             </div>
         </form>
 
         <!-- Events Grid -->
-        <div class="col-span-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 auto-rows-min">
+        <div class="col-span-4 grid gap-6 sm:grid-cols-2 md:grid-cols-3 auto-rows-min">
             @forelse ($events as $event)
                 @include('partials.event', ['event' => $event])
             @empty
@@ -145,6 +187,62 @@
 
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Uncollapse sections based on localStorage state
+        const collapsedSections = JSON.parse(localStorage.getItem('collapsedSections')) || {};
+
+        // Restore section visibility
+        Object.keys(collapsedSections).forEach(function (sectionId) {
+            const section = document.getElementById(sectionId);
+            const icon = document.getElementById(sectionId + '-arrow');
+            if (collapsedSections[sectionId] === 'collapsed') {
+                section.classList.add('hidden');
+                icon.classList.add('transform', 'rotate-90');
+            } else {
+                section.classList.remove('hidden');
+                icon.classList.remove('transform', 'rotate-90');
+            }
+        });
+
+        // Toggle sections visibility and save state to localStorage
+        window.toggleSectionVisibility = function (id) {
+            const section = document.getElementById(id);
+            const icon = document.getElementById(id + '-arrow');
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                icon.classList.remove('transform', 'rotate-90');
+                collapsedSections[id] = 'expanded';
+            } else {
+                section.classList.add('hidden');
+                icon.classList.add('transform', 'rotate-90');
+                collapsedSections[id] = 'collapsed';
+            }
+            localStorage.setItem('collapsedSections', JSON.stringify(collapsedSections));
+        };
+
+        // Set min and max for date inputs
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+
+        startDate.addEventListener('change', function () {
+            endDate.setAttribute('min', startDate.value);
+        });
+
+        endDate.addEventListener('change', function () {
+            startDate.setAttribute('max', endDate.value);
+        });
+
+        // Set initial min and max dates if values are already filled
+        if (startDate.value) {
+            endDate.setAttribute('min', startDate.value);
+        }
+        if (endDate.value) {
+            startDate.setAttribute('max', endDate.value);
+        }
+    });
+</script>
 
 @endsection
 
