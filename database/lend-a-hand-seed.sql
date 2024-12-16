@@ -55,6 +55,7 @@ DROP TRIGGER IF EXISTS trigger_poll_reminder ON poll;
 DROP TRIGGER IF EXISTS trigger_event_reminder_notification ON event;
 DROP TRIGGER IF EXISTS trigger_unblock_notification ON unblock_request;
 DROP TRIGGER IF EXISTS trigger_block_notification ON user_account;
+DROP TRIGGER IF EXISTS check_orphaned_notifications ON comment_notification;
 
 -- drop functions
 DROP FUNCTION IF EXISTS event_search_update();
@@ -70,6 +71,7 @@ DROP FUNCTION IF EXISTS create_poll_reminder();
 DROP FUNCTION IF EXISTS create_event_reminder_notification();
 DROP FUNCTION IF EXISTS create_unblock_notification();
 DROP FUNCTION IF EXISTS create_block_notification();
+DROP FUNCTION IF EXISTS delete_orphaned_notifications();
 
 -- create tables
 CREATE TABLE user_account (
@@ -233,7 +235,7 @@ CREATE TABLE event_update_notification (
 );
 
 CREATE TABLE comment_notification (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     comment_id INT REFERENCES comment(id) ON DELETE CASCADE,
     PRIMARY KEY (id, comment_id)
 );
@@ -640,6 +642,26 @@ CREATE TRIGGER trigger_unblock_notification
     FOR EACH ROW
     WHEN (NEW.status IN ('approved', 'denied') AND OLD.status IS DISTINCT FROM NEW.status)
     EXECUTE FUNCTION create_unblock_notification();
+
+CREATE FUNCTION delete_orphaned_notifications() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM comment_notification
+        WHERE id = OLD.id
+    ) THEN
+        DELETE FROM notification WHERE id = OLD.id;
+    END IF;
+    RETURN OLD;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER check_orphaned_notifications
+AFTER DELETE ON comment_notification
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
 
 /*
 CREATE FUNCTION create_block_notification(admin_id INT) RETURNS TRIGGER AS
