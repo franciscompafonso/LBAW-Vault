@@ -9,16 +9,16 @@
     <!-- Text Wrapper -->
     <div class="absolute bottom-0 left-0 right-0 p-4 text-white transition-all">
         <!-- Title -->
-        <h2 class="text-[2.3rem] font-semibold transition-colors duration-700 group-hover:text-wisteria truncate overflow-hidden whitespace-nowrap">
+        <h2 class="text-[2.3rem] font-montserrat font-semibold transition-colors duration-700 group-hover:text-wisteria truncate overflow-hidden whitespace-nowrap">
             {{ $event->name }}
         </h2>
         <!-- Date -->
-        <div class="text-xl">
+        <div class="text-xl font-montserrat">
             {{ $event->start_date->format('d/m/Y') . ' - ' . $event->end_date->format('d/m/Y') }}
         </div>
         
         <!-- Description (Hidden by default, appears with sliding effect on hover) -->
-        <div class="overflow-hidden text-3xl transition-all duration-700 transform description max-h-0 group-hover:max-h-40">
+        <div class="overflow-hidden font-montserrat text-3xl transition-all duration-700 transform description max-h-0 group-hover:max-h-40">
             {{ $event->description }}
         </div>
     </div>

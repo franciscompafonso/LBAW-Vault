@@ -16,7 +16,7 @@
             <!-- Event Title -->
             <h1 class="py-5 text-6xl font-bold text-ultraViolet font-montserrat">{{ $event->name }}</h1>
             <!-- Event Description -->
-            <p class="text-4xl w-[90%] leading-relaxed text-darkSlateGrey">{{ $event->description }}</p>
+            <p class="text-4xl w-[90%] font-montserrat leading-relaxed text-darkSlateGrey">{{ $event->description }}</p>
 
             <!-- Options Icon -->
             <div class="absolute top-0 right-0">
