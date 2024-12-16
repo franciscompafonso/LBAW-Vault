@@ -118,7 +118,7 @@
 
             <!-- "All Categories" Section -->
             @if ($categories->pluck('events')->flatten()->count() >= 4)
-                <div class="flex items-center space-x-4 group">
+                <a href="{{ route('events.search') }}" class="flex items-center space-x-4 group">
                     <!-- Category Name with Link -->
                     <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
                         All categories
@@ -128,7 +128,7 @@
                     <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
                         <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
                     </p>
-                </div>
+                </a>
 
                 <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
                     @foreach ($categories->pluck('events')->flatten()->take(4) as $event)
