@@ -490,14 +490,18 @@ DECLARE
     participant RECORD;
 BEGIN
     FOR participant IN
-        SELECT participator_id FROM participator WHERE event_id = (SELECT event_id FROM comment WHERE id = NEW.id)
+        SELECT participator_id 
+        FROM participator 
+        WHERE event_id = (SELECT event_id FROM comment WHERE id = NEW.id)
     LOOP
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.comment_by_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
-        RETURNING id INTO notification_id;
+        IF NEW.comment_by_id != participant.participator_id THEN
+            INSERT INTO notification (emitted_by, emitted_to, date, viewed)
+            VALUES (NEW.comment_by_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
+            RETURNING id INTO notification_id;
 
-        INSERT INTO comment_notification (id, comment_id)
-        VALUES (notification_id, NEW.id);
+            INSERT INTO comment_notification (id, comment_id)
+            VALUES (notification_id, NEW.id);
+        END IF;
     END LOOP;
 
     RETURN NEW;

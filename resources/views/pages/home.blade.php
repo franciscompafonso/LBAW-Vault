@@ -53,22 +53,18 @@
 
     // Function to update the quote with a transition
     function updateQuote() {
-        // Add fade-out class
         quoteElement.classList.add('fade-out');
         setTimeout(() => {
-            // Change the quote text after fade-out
             currentIndex = (currentIndex + 1) % quotes.length;
             quoteElement.textContent = quotes[currentIndex];
 
-            // Add fade-in class after changing text
             quoteElement.classList.remove('fade-out');
             quoteElement.classList.add('fade-in');
-        }, 500); // Match fade-out duration
+        }, 500);
 
-        // Remove fade-in class after animation completes
         setTimeout(() => {
             quoteElement.classList.remove('fade-in');
-        }, 500); // Total animation duration
+        }, 500);
     }
 
     // Change quote every 5 seconds
