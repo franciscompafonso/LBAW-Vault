@@ -769,7 +769,51 @@ INSERT INTO file (path) VALUES
 ('20190710_122204-1.jpg'),
 ('2015-06-22_EF-Group1_CMYK_0578_0.jpg'),
 ('What-is-Involved-in-Becoming-an-Emergency-Medical-Technician-EMT.jpg'),
-('Digital-Accessibility-medium.png');
+('Digital-Accessibility-medium.png'),
+('safety_sunsource_cropped.png'),
+('TopBanner2.jpg'),
+('Health-Education-Seminars-and-Webinars-for-Wellness.jpg'),
+('180130_MM_blood002.jpg'),
+('Read-to-Succeed_RGB-200x149.png'),
+('SchoolDrive.jpg'),
+('iStock-172427597-index.jpg'),
+('Women-Tutoring-two-Kids-smartlearningctrs-1.jpg'),
+('IMG_0062-scaled-e1658227387836.jpg'),
+('large_Docent_Gianie_Kim_leads_a_tour_in_the_Grant_Wood_show_2018.jpg'),
+('painting-workshop.jpg'),
+('cep-logo.png'),
+('reasons-upgrade-dt-classrooms.png'),
+('Coding-Projects-for-Kids-Make-Programming-Fun.jpg'),
+('1672120589118.png'),
+('64e35c0f3408ab47bd28254f_The-Kenwood-Senior-Living-01r.jpg'),
+('Mental-Health.jpg'),
+('Peer support changes lives_ (3)(2).png'),
+('self-care.jpg'),
+('child-counselling-e1607674508557.jpg'),
+('Clean-Local-Parks.jpg'),
+('Plant-a-Tree.jpg'),
+('workshop-na-ulusofona-descomplica-a-reciclagem-e-promove-consciencia-ambiental_600.jpg'),
+('honeypreet_insan_1200x768.jpg'),
+('950ec0_ec531002b0c443d582c98176291e3878~mv2.jpg'),
+('66f6d3943dd432232b056589_65816b55a045a6e103efb999_626156b31d84dd5cd7dfa308_Mentorship_2520_25202.png'),
+('clothing-donations.jpg'),
+('senior-assistance-program.jpg'),
+('haklar-projesi.png.jpg'),
+('58_legal-aid.jpg'),
+('653b95fc28783203cf7de3b5_Screenshot-2023-10-27-at-11.49.52.png'),
+('042_Voicesstand_hp.jpg'),
+('Horizontal-photo-500-×-300-px-31.png'),
+('1140x655-home-health-aide.jpg'),
+('Memory-Care-Activities-for-Seniors-with-Dementia-1024x683.jpg'),
+('bigstock-Help-And-Support-Asian-Senior-346130380.jpg'),
+('SBM-Disaster-Preparedness-Workshop.JPG'),
+('201808190242575876_Model-Citizen-Collecting-relief-items-for-floodaffected_SECVPF.jpg'),
+('IMG_4461.jpg'),
+('mass-care-distribution-e1627683833518.png'),
+('how-to-adopt-a-stray-dog-an-easy-step-by-step-guide-552644.jpg'),
+('hq720.jpg'),
+('VIER PFOTEN_2020-03-30_077-1349x935.jpg'),
+('eubeachcleanup_-_angola.jpg');
 
 INSERT INTO user_account (name, username, email, password, isDeleted, isBlocked, file_id) VALUES
 ('Ana Silva', 'anasilva', 'ana.silva@example.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', FALSE, FALSE, 1),
@@ -831,6 +875,7 @@ INSERT INTO admin (email, password) VALUES
 ('admin1@example.com', '$2y$10$ii5KNGv4MCXCh20tghqKg./7AzxujQjCGIvcRe5CO1iXYIUK59CoS'),
 ('admin2@example.com', '$2y$10$IEkOO9H2AQe1WSf6qYZ5MeWBLzcvcOzh3koKw93wfQiuJBOvN9LmG');
 
+-- Insert Locations (Ensures compatibility and adds any necessary new locations)
 INSERT INTO location (name) VALUES
 ('Central City Park'),
 ('Community Center Downtown'),
@@ -851,7 +896,13 @@ INSERT INTO location (name) VALUES
 ('Cultural Heritage Museum'),
 ('Neighborhood Community Hall'),
 ('Mental Health Institute'),
-('Disaster Response Training Ground');
+('Disaster Response Training Ground'),
+('Downtown Fitness Studio'),
+('Regional Blood Bank'),
+('Local Conference Center'),
+('Community Arts Pavilion'),
+('Animal Rescue Facility'),
+('Beachfront Cleanup Area');
 
 INSERT INTO category (name) VALUES
 ('Health and Wellness'),
@@ -863,7 +914,8 @@ INSERT INTO category (name) VALUES
 ('Community Support'),
 ('Social Justice'),
 ('Senior Care'),
-('Disaster Relief');
+('Disaster Relief'),
+('Animal Welfare and Conservation');
 
 -- Past events
 INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id, file_id) VALUES
@@ -926,7 +978,7 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Cultural Heritage Preservation', 'Ongoing documentation and protection of local traditions', '2024-05-01 10:00', '2024-09-30 17:00', 'request_only', 30, 17, 17, 3, 58),
 ('Community Garden Education Program', 'Continuous gardening and nutrition workshops', '2024-03-15 09:00', '2024-11-15 16:00', 'public', 45, 18, 14, 6, 59),
 ('Emergency Response Training Corps', 'Ongoing volunteer first responder skill development', '2024-02-10 08:30', '2024-12-10 17:30', 'request_only', 40, 19, 20, 10, 60),
-('Animal Shelter Support Program', 'Continuous care and support for shelter animals', '2024-01-01 07:00', '2024-12-31 18:00', 'public', 60, 20, 13, 3, 61);
+('Animal Shelter Support Program', 'Continuous care and support for shelter animals', '2024-01-01 07:00', '2024-12-31 18:00', 'public', 60, 20, 13, 11, 61);
 
 -- Future Events
 INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id, file_id) VALUES
@@ -959,7 +1011,7 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Social Justice Advocacy Training', 'Volunteer training for community rights support', '2024-11-20 10:00', '2024-11-22 16:00', 'request_only', 35, 7, 18, 8, 88),
 ('Community Sports Day', 'Organize inclusive sports events for all ages', '2024-07-20 09:00', '2024-07-21 17:00', 'public', 100, 8, 7, 7, 89),
 ('Digital Literacy for Immigrants', 'Volunteer technology teachers for new community members', '2024-10-05 08:00', '2024-11-30 16:30', 'public', 50, 9, 11, 4, 90),
-('Animal Shelter Support', 'Volunteers needed for animal care and facility maintenance', '2024-08-15 07:30', '2024-12-31 18:00', 'public', 60, 10, 13, 3, 91),
+('Animal Shelter Support', 'Volunteers needed for animal care and facility maintenance', '2024-08-15 07:30', '2024-12-31 18:00', 'public', 60, 10, 13, 11, 91),
 ('Community Health Education', 'Volunteer health educators for local workshops', '2024-09-25 09:00', '2024-10-25 16:30', 'public', 45, 11, 15, 1, 92),
 ('Urban Gardening Workshop', 'Teach sustainable gardening techniques to community', '2024-07-05 08:00', '2024-07-07 17:00', 'public', 40, 12, 14, 6, 93),
 ('Cultural Exchange Program', 'Volunteers facilitate international community understanding', '2024-10-20 10:00', '2024-11-20 16:00', 'public', 35, 13, 17, 3, 94),
@@ -968,6 +1020,53 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Senior Fitness Program', 'Volunteer fitness instructors for elderly community', '2024-10-01 08:30', '2024-11-30 16:30', 'public', 40, 16, 5, 9, 97),
 ('Emergency Medical Training', 'Community first aid and response volunteer program', '2024-11-05 08:00', '2024-11-07 16:00', 'request_only', 50, 17, 20, 10, 98),
 ('Digital Accessibility Project', 'Help make technology more accessible for disabled community members', '2024-08-25 09:00', '2024-09-25 16:30', 'public', 35, 18, 11, 4, 99);
+
+-- Updated Events with Corrected location_id
+INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id, file_id) VALUES
+('Community Health Check-up', 'A volunteer-driven event to assist in health screenings for underserved communities.', '2024-01-20 09:00', '2024-01-20 12:00', 'public', 50, 1, 1, 1, 100),
+('Fitness for All', 'Help organize and lead fitness sessions for community members.', '2024-03-01 08:00', '2024-03-30 10:00', 'public', 30, 2, 2, 1, 101),
+('Health Education Seminar', 'Provide guidance on healthy living, nutrition, and lifestyle choices.', '2024-04-05 10:00', '2024-04-05 13:00', 'request_only', 40, 3, 1, 1, 102),
+('Blood Donation Drive', 'Assist in organizing a blood drive event to promote life-saving donations.', '2024-05-10 09:00', '2024-05-10 15:00', 'public', 50, 4, 1, 1, 103),
+('Read to Succeed', 'Volunteer to read books and conduct storytelling sessions for young children.', '2024-02-01 10:00', '2024-02-28 12:00', 'public', 20, 5, 5, 2, 104),
+('School Supplies Drive', 'Collect and distribute educational supplies for kids in need.', '2024-04-10 09:00', '2024-04-15 16:00', 'request_only', 40, 6, 6, 2, 105),
+('Parenting Support Group', 'Provide parenting tips and guidance to new parents in underserved areas.', '2024-03-01 11:00', '2024-03-01 13:00', 'private', 15, 6, 6, 2, 106),
+('Tutoring for Kids', 'Support children with extra tutoring sessions to improve their education.', '2024-02-15 10:00', '2024-02-25 15:00', 'public', 25, 8, 6, 2, 107),
+('Community Art Festival', 'Support the organization of an inclusive local art festival.', '2024-01-25 09:00', '2024-01-28 18:00', 'public', 100, 9, 7, 3, 108),
+('Museum Docent Training', 'Volunteer as a tour guide at the local museum.', '2024-02-15 14:00', '2024-02-20 17:00', 'private', 15, 7, 7, 3, 109),
+('Youth Art Workshop', 'Volunteer to guide children and teens in various art activities.', '2024-03-10 09:00', '2024-03-12 16:00', 'public', 30, 11, 7, 3, 110),
+('Cultural Exchange Program', 'Help organize a cultural exchange event to showcase diverse cultures.', '2024-04-05 08:00', '2024-04-10 18:00', 'request_only', 50, 7, 7, 3, 111),
+('Tech Basics Workshop', 'Teach basic computer skills to seniors and underserved individuals.', '2024-01-15 10:00', '2024-01-31 16:00', 'request_only', 25, 8, 8, 4, 112),
+('Code for Kids', 'Mentor kids in an introductory coding bootcamp.', '2024-03-05 10:00', '2024-03-10 15:00', 'public', 20, 9, 8, 4, 113),
+('Digital Literacy Campaign', 'Assist in spreading awareness about online safety and skills in remote areas.', '2024-02-10 09:00', '2024-02-15 12:00', 'private', 50, 9, 8, 4, 114),
+('Elderly Tech Education', 'Guide senior citizens in learning how to use smartphones and computers.', '2024-03-20 09:30', '2024-03-30 14:30', 'request_only', 20, 9, 8, 4, 115),
+('Mental Health Awareness Talk', 'Help set up and run an awareness seminar on mental health.', '2024-02-01 11:00', '2024-02-01 13:00', 'public', 80, 10, 10, 5, 116),
+('Peer Support Training', 'Volunteer to receive training to support others emotionally.', '2024-04-01 09:00', '2024-04-07 17:00', 'private', 30, 10, 10, 5, 117),
+('Self-Care Workshop', 'Educate community members about mental wellness and self-care practices.', '2024-03-05 09:30', '2024-03-06 15:00', 'public', 40, 10, 10, 5, 118),
+('Counseling Session for Kids', 'Provide psychological support and guidance to children in need.', '2024-04-15 10:00', '2024-04-18 14:00', 'request_only', 20, 10, 10, 5, 119),
+('Park Cleanup Drive', 'Join a community effort to clean up and beautify the local park.', '2024-01-10 09:00', '2024-01-10 12:00', 'public', 50, 11, 12, 6, 120),
+('Tree Planting Day', 'Plant trees to improve the urban landscape.', '2024-03-20 09:00', '2024-03-20 14:00', 'request_only', 100, 11, 12, 6, 121),
+('Recycling Awareness Workshop', 'Help educate the community about proper recycling and waste management.', '2024-02-12 10:00', '2024-02-12 13:00', 'private', 30, 11, 12, 6, 122),
+('Nature Conservation Day', 'Participate in a clean-up and nature conservation activity to promote sustainability.', '2024-04-01 08:00', '2024-04-01 12:00', 'public', 80, 11, 12, 6, 123),
+('Soup Kitchen Volunteering', 'Assist in preparing and serving meals to those in need.', '2024-01-05 09:00', '2024-01-05 14:00', 'public', 25, 12, 13, 7, 124),
+('Community Mentorship Program', 'Provide mentorship to underserved youth.', '2024-04-01 08:00', '2024-06-30 17:00', 'private', 10, 12, 13, 7, 125),
+('Clothing Drive', 'Organize and assist in a clothing collection event for low-income families.', '2024-02-25 10:00', '2024-02-28 16:00', 'request_only', 50, 12, 13, 7, 126),
+('Senior Assistance Program', 'Provide physical help and companionship for elderly individuals in need.', '2024-03-10 10:00', '2024-03-20 17:00', 'public', 20, 12, 13, 7, 127),
+('Equal Rights Advocacy Workshop', 'Join a volunteer group to promote equal rights.', '2024-02-20 10:00', '2024-02-20 12:00', 'public', 75, 13, 14, 8, 128),
+('Legal Aid Awareness Camp', 'Help in organizing a camp for free legal aid.', '2024-03-15 09:00', '2024-03-16 12:00', 'request_only', 30, 13, 14, 8, 129),
+('Voter Registration Campaign', 'Assist in educating citizens on the importance of voting and registering them.', '2024-04-01 09:00', '2024-04-10 18:00', 'private', 100, 13, 14, 8, 130),
+('Anti-Discrimination Rally', 'Help organize a rally for anti-discrimination and equal rights.', '2024-05-01 10:00', '2024-05-03 16:00', 'public', 200, 13, 14, 8, 131),
+('Senior Companionship Program', 'Volunteer to spend time with senior citizens.', '2024-01-12 10:00', '2024-03-12 16:00', 'public', 15, 14, 15, 9, 132),
+('Health Aid for Seniors', 'Assist with organizing health aid for the elderly.', '2024-02-15 08:00', '2024-02-28 12:00', 'request_only', 20, 14, 15, 9, 133),
+('Memory Care Activities', 'Participate in organizing activities to help seniors with dementia.', '2024-03-05 09:00', '2024-03-12 15:00', 'private', 10, 14, 15, 9, 134),
+('Senior Transportation Assistance', 'Help provide transportation to senior citizens for medical or social needs.', '2024-04-15 10:00', '2024-04-20 14:00', 'request_only', 25, 14, 15, 9, 135),
+('Disaster Preparedness Workshop', 'Educate the community on disaster preparedness.', '2024-11-23 10:00', '2024-11-23 13:00', 'public', 100, 15, 16, 10, 136),
+('Flood Relief Collection', 'Help collect and distribute items for flood victims.', '2024-04-05 09:00', '2024-04-15 15:00', 'private', 50, 15, 16, 10, 137),
+('Emergency Response Training', 'Provide training for volunteers in emergency response efforts.', '2024-03-01 09:00', '2024-03-05 15:00', 'public', 80, 15, 16, 10, 138),
+('Disaster Relief Supply Distribution', 'Distribute relief supplies in communities affected by natural disasters.', '2024-05-15 09:30', '2024-05-20 17:00', 'request_only', 60, 15, 16, 10, 139),
+('Pet Adoption Drive', 'Volunteer to help pets find their forever homes.', '2024-02-25 09:00', '2024-02-26 13:00', 'public', 20, 16, 17, 11, 140),
+('Wildlife Sanctuary Support', 'Assist in caring for rescued wildlife.', '2024-03-10 10:00', '2024-03-30 14:00', 'request_only', 15, 16, 17, 11, 141),
+('Stray Animal Rescue', 'Help rescue and find homes for stray animals in need.', '2024-04-10 09:00', '2024-04-15 18:00', 'public', 30, 16, 17, 11, 142),
+('Beach Cleanup for Marine Life', 'Volunteer for a beach cleanup to protect ocean ecosystems.', '2024-05-01 08:00', '2024-05-01 13:00', 'request_only', 50, 16, 17, 11, 143);
 
 INSERT INTO participator (participator_id, event_id) VALUES
 -- Events 1-20
