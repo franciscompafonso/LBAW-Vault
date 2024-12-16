@@ -39,7 +39,7 @@
 
             <!-- Email Field -->
             <div>
-              <label for="email" class="block text-3xl font-medium text-darkSlateGrey">Email address</label>
+              <label for="email" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Email address</label>
               <div class="mt-1">
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" 
                   class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">
@@ -52,7 +52,7 @@
             <!-- Password Field -->
             <div>
               <div class="flex justify-between">
-                <label for="password" class="block text-3xl font-medium text-darkSlateGrey">Password</label>
+                <label for="password" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Password</label>
                 <a href="{{ route('password.request') }}" class="block text-2xl font-medium text-darkSlateGrey hover:text-cambrigdeBlue">Forgot password?</a>
               </div>
               <div class="mt-1">
@@ -73,7 +73,7 @@
           </form>
 
           <!-- Registration Link -->
-          <p class="mt-6 text-3xl text-center text-gray-600 font-montserrat">
+          <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">
             Not a member? 
             <a href="{{ route('register') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue">Sign up</a>
           </p>

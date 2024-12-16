@@ -11,8 +11,8 @@
                 <input 
                     type="text" 
                     name="username" 
-                    class="w-full p-3 border rounded-l-lg focus:outline-none"
-                    placeholder="Search by username" 
+                    class="w-full p-3 border font-montserrat rounded-l-lg focus:outline-none"
+                    placeholder="Search by the exact username" 
                     value="{{ old('username', $search ?? '') }}">
                 <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Search
@@ -27,10 +27,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Block</th>
+                        <th class="font-montserrat font-bold">Username</th>
+                        <th class="font-montserrat font-bold">Email</th>
+                        <th class="font-montserrat font-bold">Status</th>
+                        <th class="font-montserrat font-bold">Block</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,7 +38,7 @@
                         <tr>
                             <td>
                                 <a href="{{ route('user.profile', ['id' => $user->id]) }}" 
-                                class="font-bold">
+                                class="font-semibold">
                                     {{ $user->username }}
                                 </a>
                             </td>

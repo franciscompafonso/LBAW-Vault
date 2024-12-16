@@ -37,7 +37,7 @@
 
           <!-- Name Field -->
           <div>
-            <label for="name" class="block text-3xl font-medium text-darkSlateGrey">Name</label>   
+            <label for="name" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Name</label>   
             <div class="mt-1">
               <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
               @if ($errors->has('name'))
@@ -50,7 +50,7 @@
 
           <!-- Username Field -->
           <div>
-            <label for="username" class="block text-3xl font-medium text-darkSlateGrey">Username</label>   
+            <label for="username" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Username</label>   
             <div class="mt-1">
               <input id="username" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
               @if ($errors->has('username'))
@@ -63,7 +63,7 @@
 
           <!-- Email Field -->
           <div>
-            <label for="email" class="block text-3xl font-medium text-darkSlateGrey">E-Mail Address</label>   
+            <label for="email" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Email Address</label>   
             <div class="mt-1">
               <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
               @if ($errors->has('email'))
@@ -76,7 +76,7 @@
 
           <!-- Password Field -->
           <div>
-            <label for="password" class="block text-3xl font-medium text-darkSlateGrey">Password</label>   
+            <label for="password" class="block font-montserrat text-3xl font-medium text-darkSlateGrey">Password</label>   
             <div class="mt-1">
               <input id="password" type="password" name="password" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
               @if ($errors->has('password'))
@@ -89,7 +89,7 @@
 
           <!-- Confirm Password Field -->
           <div>
-            <label for="password-confirm" class="block text-3xl font-medium text-darkSlateGrey">Confirm Password</label>   
+            <label for="password-confirm" class="block font-montserrat text-3xl font-medium text-darkSlateGrey">Confirm Password</label>   
             <div class="mt-1">
               <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
             </div>
@@ -102,7 +102,7 @@
         </form>
 
         <!-- Registration Link -->
-        <p class="mt-6 text-3xl text-center text-gray-600 font-montserrat">   
+        <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">   
           Have an account?
           <a href="{{ route('login') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue">Sign in</a>   
         </p>
