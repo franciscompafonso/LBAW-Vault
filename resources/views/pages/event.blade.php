@@ -81,7 +81,7 @@
                     @endif
                     <div class="relative">
                         <!-- Share Button -->
-                        <button id="share-button" onclick="togglePopup()" class="flex items-center justify-center px-4 py-2 font-bold transition-all duration-300 border-transparent focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
+                        <button id="share-button" onclick="togglePopup()" class="flex items-center justify-center px-4 py-2 font-bold transition-all duration-300 border-transparent focus:text-wisteria focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
                             <i class="mr-2 fa-solid fa-share"></i>
                         </button>
                     
