@@ -79,6 +79,26 @@
                             </form>
                         @endif
                     @endif
+                    <div class="relative">
+                        <!-- Share Button -->
+                        <button id="share-button" onclick="togglePopup()" class="flex items-center justify-center px-4 py-2 font-bold transition-all duration-300 border-transparent focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
+                            <i class="mr-2 fa-solid fa-share"></i>
+                        </button>
+                    
+                        <!-- Popup (initially hidden) -->
+                        <div id="share-popup" class="absolute left-0 hidden w-[350px] p-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+                            <!-- Popup Text -->
+                            <p class="text-darkSlateGray text-md font-montserrat">Copy the text below to share the event:</p>
+                            
+                            <!-- Input Field for Link with Copy Button -->
+                            <div class="flex items-center h-auto p-2 mt-2 bg-gray-100 rounded-lg">
+                                <input id="share-link" type="text" value="" readonly class="w-full h-auto bg-transparent text-md font-montserrat focus:outline-none text-darkSlateGray"/>
+                                <button onclick="copyToClipboard()" class="ml-2 font-bold border-transparent text-md font-montserrat hover:text-wisteria text-ultraViolet focus:border-transparent hover:border-transparent hover:bg-transparent">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
@@ -259,6 +279,33 @@
         icon.classList.toggle('hidden');
     }
 
+    // Set the input value to the current page URL dynamically
+    const shareInput = document.getElementById('share-link');
+    shareInput.value = `Hello! Look at this event I just found! Link: ${window.location.href}`;
 
+    // Toggles the popup visibility when the share button is clicked
+    function togglePopup() {
+        const popup = document.getElementById('share-popup');
+        popup.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', (event) => {
+        const sharePopup = document.getElementById('share-popup');
+        const shareButton = document.getElementById('share-button');
+
+        // Check if the click is outside the popup and the button
+        if (!event.target.closest('#share-button') && !event.target.closest('#share-popup')) {
+            sharePopup.classList.add('hidden'); // Hide the popup
+        }
+    });
+
+    // Copies the text inside the input field to the clipboard
+    function copyToClipboard() {
+        const link = document.getElementById('share-link');
+        link.select();
+        link.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        alert('Link copied to clipboard!');
+    }
 </script>
 @endsection
