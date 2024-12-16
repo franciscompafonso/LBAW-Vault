@@ -40,11 +40,11 @@
                 </a>
 
                 <!-- Notifications Dropdown -->
-                <div id="notifications-dropdown" class="absolute right-0 z-10 hidden p-6 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-[32rem] max-h-[750px] overflow-y-auto">
+                <div id="notifications-dropdown" class="absolute right-0 z-10 font-montserrat hidden p-6 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-[32rem] max-h-[750px] overflow-y-auto">
                     <div class="flex items-center justify-between mb-4">
                         <p id="no-notifications" class="text-xl text-center text-gray-500">There are no notifications.</p>
                         <!-- Dismiss All Button -->
-                        <button id="dismiss-all-btn" onclick="dismissAllNotifications()" class="hidden font-bold border-transparent focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
+                        <button id="dismiss-all-btn" onclick="dismissAllNotifications()" class="hidden font-bold font-montserrat border-transparent focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
                             Dismiss all
                         </button>
                     </div>
@@ -77,10 +77,10 @@
                             
                             <!-- User Info -->
                             <div class="min-w-0">
-                                <p class="text-gray-800 font-semibold whitespace-nowrap text-dynamic-xl mr-16">
+                                <p class="text-gray-800 font-montserrat font-semibold whitespace-nowrap text-dynamic-xl mr-16">
                                     {{ Auth::user()->name }}
                                 </p>
-                                <p class="text-gray-500 whitespace-nowrap text-dynamic-lg mr-16">
+                                <p class="text-gray-500 font-montserrat whitespace-nowrap text-dynamic-lg mr-16">
                                     {{ Auth::user()->username }}
                                 </p>
                             </div>
@@ -91,7 +91,7 @@
                     <a href="{{ url('/logout') }}" 
                     class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100">
                         <i class="text-xl fa-solid fa-right-from-bracket"></i>
-                        <span class="font-medium">Sign out</span>
+                        <span class="font-medium font-montserrat">Sign out</span>
                     </a>
                 </div>
             </div>
@@ -194,7 +194,7 @@
                 `;
                 if (notification.type === 'invite_notification') {
                     notificationContent += `
-                        <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">You have received an invite!</a>
+                        <a class="font-semibold text-ultraViolet text-md" href="/events/${notification.data.event_id}">You have received an invite!</a>
                         <p class="text-sm text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.invite_by_id}">
                                 ${notification.data.invitee_name ? notification.data.invitee_name : ''}
@@ -234,7 +234,7 @@
                     `;
                 } else if (notification.type === 'accepted_invite_notification') {
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">Your invite was accepted!</p>
+                        <p class="font-semibold text-ultraViolet text-md">Your invite was accepted!</p>
                         <p class="text-sm text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.invite_to_id}">
                                 ${notification.data.invited_name ? notification.data.invited_name : 'Someone'}
@@ -247,7 +247,7 @@
                     `;
                 } else if (notification.type === 'join_request_notification') {
                     notificationContent += `
-                        <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
+                        <a class="font-semibold text-ultraViolet text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
                         <p class="text-sm text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.join_request_by_id}">
                                 ${notification.data.join_request_by_name ? notification.data.join_request_by_name : ''}
@@ -284,7 +284,7 @@
                     `;
                 } else if (notification.type === 'accepted_join_request_notification') {
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">Join request was accepted!</p>
+                        <p class="font-semibold text-ultraViolet text-md">Join request was accepted!</p>
                         <p class="text-sm text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.event_creator_id}">
                                 ${notification.data.event_creator_name ? notification.data.event_creator_name : 'The event creator'}
@@ -297,12 +297,12 @@
                     `;
                 } else if (notification.type === 'event_update_notification') {
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">'Event was updated'}</p>
+                        <p class="font-semibold text-ultraViolet text-md">'Event was updated'}</p>
                         <p class="text-sm text-gray-600">Event ${notification.data.event_name} has been updated.</p>
                     `;
                 } else if (notification.type === 'comment_notification') {
                     notificationContent += `
-                        <a class="font-semibold text-indigo-600 text-md" href="/events/${notification.data.event_id}">New Comment!</a><br>
+                        <a class="font-semibold text-ultraViolet text-md" href="/events/${notification.data.event_id}">New Comment!</a><br>
                         <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">${notification.data.user_name} has post a comment in ${notification.data.event_name} event.</a>
                     `;
                 } else if (notification.type === 'poll_reminder') {
@@ -319,34 +319,34 @@
                     });
 
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
+                        <p class="font-semibold text-ultraViolet text-md">${notification.type ? notification.type : 'No type available'}</p>
                         <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">
                             You have up until ${formattedDate} ${formattedTime} to answer to the ${notification.data.name} poll.
                         </a>
                     `;
                 } else if (notification.type === 'event_cancelation') {
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
+                        <p class="font-semibold text-ultraViolet text-md">${notification.type ? notification.type : 'No type available'}</p>
                         <p class="text-sm text-gray-600">The event with ID: ${notification.event_id} has been canceled.</p>
                     `;
                 } else if (notification.type === 'event_reminder') {
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
+                        <p class="font-semibold text-ultraViolet text-md">${notification.type ? notification.type : 'No type available'}</p>
                         <p class="text-sm text-gray-600">Reminder: Event with ID: ${notification.event_id} is coming soon!</p>
                     `;
                 } else if (notification.type === 'admin_action') {
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
+                        <p class="font-semibold text-ultraViolet text-md">${notification.type ? notification.type : 'No type available'}</p>
                         <p class="text-sm text-gray-600">An administrative action has been performed.</p>
                     `;
                 } else if (notification.type === 'unblock_notification') {
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
+                        <p class="font-semibold text-ultraViolet text-md">${notification.type ? notification.type : 'No type available'}</p>
                         <p class="text-sm text-gray-600">You have been unblocked.</p>
                     `;
                 } else {
                     notificationContent += `
-                        <p class="font-semibold text-indigo-600 text-md">${notification.type ? notification.type : 'No type available'}</p>
+                        <p class="font-semibold text-ultraViolet text-md">${notification.type ? notification.type : 'No type available'}</p>
                         <p class="text-sm text-gray-600">No specific details available for this notification type.</p>
                     `;
                 }

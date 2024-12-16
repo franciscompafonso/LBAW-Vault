@@ -3,7 +3,7 @@
     <div id="searchBar" class="w-full lg:w-[30%] lg:order-none order-last mt-6 lg:mt-0">
         <div class="relative w-full mx-auto">
             <input type="text" id="searchInput" 
-                   class="w-full p-6 pl-6 pr-12 border-2 border-ultraViolet rounded-full search-input focus:ring-2 focus:ring-wisteria focus:border-wisteria focus:outline-none text-3xl text-black placeholder:text-3xl placeholder:text-black" 
+                   class="w-full p-6 pl-6 pr-12 border-2 border-ultraViolet font-montserrat rounded-full search-input focus:ring-2 focus:ring-wisteria focus:border-wisteria focus:outline-none text-3xl text-black placeholder:text-3xl placeholder:text-black" 
                    placeholder="Search events..." 
                    autocomplete="off"
                    onkeyup="searchEvents(event)" 
