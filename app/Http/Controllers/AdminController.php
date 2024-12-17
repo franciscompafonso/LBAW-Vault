@@ -15,12 +15,14 @@ class AdminController extends Controller
 {
     public function showCreateAdminForm()
     {
+        $this->authorize('create', Admin::class);
         $admins = Admin::paginate(5); // Fetch users, paginate them if you have many
         return view('admin.create-admin', compact('admins'));
     }
 
     public function storeAdmin(Request $request)
     {
+        $this->authorize('create', Admin::class);
         // Validate the input
         $validated = $request->validate([
             'email' => 'required|email|unique:admin,email',
@@ -39,6 +41,7 @@ class AdminController extends Controller
 
     public function search(Request $request)
     {
+        $this->authorize('manageUsers', Admin::class);
         // Validate the search input
         $request->validate([
             'username' => 'nullable|string|max:255',  // Only validate username if it's provided
@@ -56,6 +59,7 @@ class AdminController extends Controller
 
     public function listUsers()
     {
+        $this->authorize('manageUsers', Admin::class);
         // Retrieve all users
         $users = User::orderBy('id','asc')->paginate(5);
 
@@ -65,6 +69,7 @@ class AdminController extends Controller
 
     public function deleteUser($id)
     {
+        $this->authorize('manageUsers', Admin::class);
         try {
             $user = User::findOrFail($id);
 
@@ -91,6 +96,7 @@ class AdminController extends Controller
 
     public function blockUser($userId)
     {
+        $this->authorize('manageUsers', Admin::class);
         try {
             // Find the user
             $user = User::findOrFail($userId);
@@ -113,6 +119,7 @@ class AdminController extends Controller
 
     public function unblockUser($id)
     {
+        $this->authorize('manageUsers', Admin::class);
         try {
             // Find the user
             $user = User::findOrFail($id);
@@ -129,13 +136,9 @@ class AdminController extends Controller
 
     public function deleteComment($id)
     {
+        $this->authorize('deleteComment', Admin::class);
         // Find the comment.
         $comment = Comment::find($id);
-
-        if (!auth()->guard('admin')->check()) {
-            abort(403, 'Unauthorized action.');
-        }
-
         // Delete the comment and return it as JSON.
         $comment->delete();
         return back()->with('message', 'successfully deleted the comment!');
@@ -143,10 +146,7 @@ class AdminController extends Controller
 
     public function adminEditForm(int $id)
     {
-        // Make sure the authenticated user is an admin
-        if (!auth()->guard('admin')->check()) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorize('manageUsers', Admin::class);
 
         $user = User::find($id);
 
@@ -155,10 +155,7 @@ class AdminController extends Controller
 
     public function adminEdit(int $id, Request $request)
     {
-        // Make sure the authenticated user is an admin
-        if (!auth()->guard('admin')->check()) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorize('manageUsers', Admin::class);
 
         $user = User::find($id);
 

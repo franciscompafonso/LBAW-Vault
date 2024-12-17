@@ -124,5 +124,4 @@ class EventPolicy
             && $event->end_date < now();
     }
 
-    
 }

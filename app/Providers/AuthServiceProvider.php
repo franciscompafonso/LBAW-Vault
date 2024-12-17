@@ -6,6 +6,8 @@ use App\Policies\UserPolicy;
 
 use App\Models\Event;
 use App\Policies\EventPolicy;
+use App\Models\Admin;
+use App\Policies\AdminPolicy;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -18,7 +20,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        Event::class => EventPolicy::class
+        Event::class => EventPolicy::class,
+        Admin::class => AdminPolicy::class,
     ];
 
     /**
