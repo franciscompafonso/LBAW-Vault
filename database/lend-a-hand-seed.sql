@@ -547,7 +547,7 @@ CREATE TRIGGER trigger_event_cancellation
     EXECUTE FUNCTION notify_event_cancellation();
 
 
--- create poll remider notification
+-- create poll reminder notification
 CREATE FUNCTION create_poll_reminder() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -1114,7 +1114,7 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Community Kitchen Support', 'Volunteers prepare and serve meals for vulnerable populations', '2024-08-01 10:00', '2024-12-31 16:00', 'public', 70, 18, 2, 7, 79),
 ('Tech Support for Seniors', 'Help elderly community members with technology challenges', '2024-10-01 08:30', '2024-11-15 16:30', 'public', 40, 19, 5, 4, 80),
 ('Environmental Education Camp', 'Volunteers needed to run youth ecological awareness programs', '2024-07-15 09:00', '2024-07-26 17:30', 'public', 50, 20, 9, 6, 81),
-('Community Art Restoration', 'Volunteers help restore local historical art pieces', '2024-09-15 10:00', '2024-10-15 16:30', 'request_only', 25, 1, 17, 3, 82),
+('Community Art Restoration', 'Volunteers help restore local historical art pieces', '2024-09-15 10:00', '2024-10-15 16:30', 'private', 25, 1, 17, 3, 82),
 ('Disaster Relief Supply Sorting', 'Organize and prepare emergency relief packages', '2024-11-10 09:00', '2024-11-17 16:00', 'public', 60, 2, 20, 10, 83),
 ('Children''s Literacy Program', 'Volunteer reading mentors for local schools', '2024-08-25 10:00', '2024-12-15 15:30', 'public', 45, 3, 16, 2, 84),
 ('Community Clean-Up Campaign', 'City-wide cleaning and beautification effort', '2024-09-07 08:00', '2024-09-09 18:00', 'public', 200, 4, 1, 6, 85),
