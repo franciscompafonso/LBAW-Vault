@@ -21,10 +21,4 @@ class AdminPolicy
         return $isAdmin;
     }
 
-    public function deleteComment(Admin $admin)
-    {
-        $isAdmin = auth()->guard('admin')->check();
-        return $isAdmin;
-    }
-
 }
