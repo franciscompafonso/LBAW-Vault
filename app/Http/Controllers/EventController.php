@@ -205,8 +205,14 @@ class EventController extends Controller
 
         // Category Filter
         if ($request->filled('category')) {
-            $query->whereIn('category_id', $request->input('category')); // Matches form input name
+            $categoryIds = $request->input('category');
+            // Ensure categoryIds is always an array
+            if (!is_array($categoryIds)) {
+                $categoryIds = [$categoryIds]; // Convert to an array if it's a single value
+            }
+            $query->whereIn('category_id', $categoryIds);
         }
+        
 
         // Location Filter
         if ($request->filled('location')) {
