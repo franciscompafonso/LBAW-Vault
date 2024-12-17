@@ -85,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/comment/dislike', [CommentFeedbackController::class, 'dislike'])->name('comment.dislike');
 
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
-    Route::post('/comments/{comment}/delete', [CommentController::class, 'delete'])->name('comments.delete');
+    Route::delete('/comments/{id}', [CommentController::class, 'delete'])->name('comments.delete');
 
     Route::post('/events/{event}/polls', [PollController::class, 'store'])->name('polls.store');
     Route::post('/polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
@@ -125,7 +125,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::delete('/admin/user-management/delete-user/{user}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
     Route::post('/admin/user-management/block-user/{user}', [AdminController::class, 'blockUser'])->name('admin.block.user');
     Route::patch('/admin/user-management/unblock-user/{user}', [AdminController::class, 'unblockUser'])->name('admin.unblock.user');
-    Route::post('/admin/comments/delete/{comment}', [AdminController::class, 'deleteComment'])->name('admin.comment.delete');
     Route::get('/admin/create', [AdminController::class, 'showCreateAdminForm'])->name('admin.admins.create');
     Route::post('/admin/store', [AdminController::class, 'storeAdmin'])->name('admin.admins.store');
     Route::get('admin/user/{id}/edit', [AdminController::class, 'adminEditForm'])->name('admin.edit.form');

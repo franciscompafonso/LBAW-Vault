@@ -134,16 +134,6 @@ class AdminController extends Controller
         }
     }
 
-    public function deleteComment($id)
-    {
-        $this->authorize('deleteComment', Admin::class);
-        // Find the comment.
-        $comment = Comment::find($id);
-        // Delete the comment and return it as JSON.
-        $comment->delete();
-        return back()->with('message', 'successfully deleted the comment!');
-    }   
-
     public function adminEditForm(int $id)
     {
         $this->authorize('manageUsers', Admin::class);

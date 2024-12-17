@@ -311,14 +311,12 @@
     <!-- Message Popup -->
     <div id="popup" class="fixed bottom-0 right-0 z-50 p-4 mb-4 mr-4 transition-transform duration-500 ease-in-out transform translate-x-full bg-white rounded-lg shadow-lg opacity-0 text-darkSlateGrey">
         <div class="flex items-start justify-between">
-            <!-- Mensagem -->
             <div class="pr-4">
                 <h3 id="popup-title" class="text-2xl font-semibold font-montserrat"></h3>
                 <p id="popup-message" class="mt-1 text-md"></p>
             </div>
 
-            <!-- Botão de fechar -->
-            <button id="popup-close" class="bg-transparent border-transparent text-darkSlateGrey hover:text-red-500">
+            <button id="popup-close" class="bg-transparent border-transparent hover:border-transparent focus:border-transparent hover:bg-transparent focus:bg-transparent focus:text-red-500 text-darkSlateGrey hover:text-red-500">
                 <i class="text-4xl fa-solid fa-times"></i>
             </button>
         </div>
@@ -331,12 +329,12 @@
                 const popupMessage = document.getElementById('popup-message');
                 const closeBtn = document.getElementById('popup-close');
 
-                const status = '{{ session('status') }}';
+                const success = '{{ session('success') }}';
                 const message = '{{ session('message') }}';
 
                 popupMessage.textContent = message;
 
-                if (status === 'success') {
+                if (success) {
                     popupTitle.textContent = 'Success';
                     popupTitle.classList.add('text-green-500');
                 } else {

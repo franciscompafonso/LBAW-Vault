@@ -7,7 +7,6 @@ use App\Models\Invite;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\User;
-use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 
 class InviteController extends Controller
@@ -36,13 +35,9 @@ class InviteController extends Controller
         $invitee = User::where('username', $request->username)->first();
 
         if (!$invitee) {
-            $message = "The user with the specified username '{$request->username}' does not exist.";
-            // Enviando evento Pusher com mensagem
-            event(new InviteSent($eventId, $message));
-
             return back()->with([
-                'message' => $message,
-                'status' => 'error'
+                'message' => "The user with the specified username does not exist.",
+                'success' => false
             ]);
         }
 
@@ -53,20 +48,16 @@ class InviteController extends Controller
                                 ->exists();
 
         if ($isParticipator) {
-            $message = 'User is already a participator in this event.';
-            event(new InviteSent($eventId, $message)); // Envia a mensagem do Pusher
             return back()->with([
-                'message' => $message,
-                'status' => 'error'
+                'message' => 'User is already a participator in this event.',
+                'success' => false
             ]);
         }
 
         if ($isAlreadyInvited) {
-            $message = 'User has already been invited to this event.';
-            event(new InviteSent($eventId, $message)); // Envia a mensagem do Pusher
             return back()->with([
-                'message' => $message,
-                'status' => 'error'
+                'message' => 'User has already been invited to this event.',
+                'success' => false
             ]);
         }
 
@@ -82,13 +73,11 @@ class InviteController extends Controller
 
         Invite::create($inviteData);
 
-        // Envia a mensagem do Pusher ao sucesso
-        $message = 'Invitation sent successfully!';
-        event(new InviteSent($eventId, $message)); 
-
+        
+        event(new InviteSent($invitee->id, $eventId, User::find(Auth::id())->name . " has invited you to " . $event->name));
         return back()->with([
-            'message' => $message,
-            'status' => 'success'
+            'message' => 'Invitation sent successfully!',
+            'success' => true
         ]);
     }
 
@@ -96,15 +85,12 @@ class InviteController extends Controller
     {
         $invite = Invite::findOrFail($inviteId);
 
-        // Mark the invite as accepted
         $invite->accepted = true;
         $invite->save();
 
-        // Join the event using EventController's logic
         $eventController = app(EventController::class);
         $eventController->joinEvent($invite->event_id);
 
-        // Dismiss the notification
         $notificationController = app(NotificationController::class);
         $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
 
@@ -115,7 +101,6 @@ class InviteController extends Controller
     {
         $invite = Invite::findOrFail($id);
 
-        // Optional: Check if the user has permission to delete the invite
         if (Auth::id() !== $invite->invite_by_id) {
             return back()->with('error', 'You do not have permission to delete this invite.');
         }

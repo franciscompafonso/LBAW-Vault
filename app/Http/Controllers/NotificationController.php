@@ -80,7 +80,6 @@ class NotificationController extends Controller
                         if ($comment) {
                             $comment['event_name'] = Event::find($comment->event_id)->name;
                             $comment['user_name'] = User::find($comment->comment_by_id)->name;
-                            $comment['user_photo'] = User::find($comment->comment_by_id)->profilepicture;
 
                             return ['type' => $type, 'data' => $comment];
                         } else {
@@ -99,8 +98,6 @@ class NotificationController extends Controller
 
                         if ($invite) {
                             $invite['event_name'] = Event::find($invite->event_id)->name;
-                            $invite['invited_name'] = User::find($invite->invited_by_id)->name;
-                            $invite['invited_photo'] = User::find($invite->invited_by_id)->profilepicture;
                             $invite['invitee_name'] = User::find($invite->invite_to_id)->name;
 
                             return ['type' => $type, 'data' => $invite];
@@ -112,8 +109,7 @@ class NotificationController extends Controller
 
                         if ($invite) {
                             $invite['event_name'] = Event::find($invite->event_id)->name;
-                            $invite['invited_name'] = User::find($invite->invited_by_id)->name;
-                            $invite['invited_photo'] = User::find($invite->invited_by_id)->profilepicture;
+                            $invite['invited_name'] = User::find($invite->invite_to_id)->name;
                             $invite['invitee_name'] = User::find($invite->invite_to_id)->name;
 
                             return ['type' => $type, 'data' => $invite];
@@ -127,7 +123,6 @@ class NotificationController extends Controller
                             $join_request['event_name'] = Event::find($join_request->event_id)->name;
                             $join_request['event_creator'] = User::find(Event::find($join_request->event_id)->creator)->name;
                             $join_request['user_name'] = User::find($join_request->join_request_by_id)->name;
-                            $join_request['user_photo'] = User::find($join_request->join_request_by_id)->profilepicture;
 
                             return ['type' => $type, 'data' => $join_request];
                         } else {
@@ -139,7 +134,6 @@ class NotificationController extends Controller
                             $join_request['event_name'] = Event::find($join_request->event_id)->name;
                             $join_request['event_creator'] = User::find(Event::find($join_request->event_id)->creator)->name;
                             $join_request['user_name'] = User::find($join_request->join_request_by_id)->name;
-                            $join_request['user_photo'] = User::find($join_request->join_request_by_id)->profilepicture;
 
                             return ['type' => $type, 'data' => $join_request];
                         } else {
@@ -151,7 +145,6 @@ class NotificationController extends Controller
                         if ($poll) {
                             $poll['event_name'] = Event::find($poll->event_id)->name;
                             $poll['user_name'] = User::find($poll->comment_by_id)->name;
-                            $poll['user_photo'] = User::find($poll->comment_by_id)->profilepicture;
 
                             return ['type' => $type, 'data' => $poll];
                         } else {

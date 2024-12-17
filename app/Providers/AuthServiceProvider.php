@@ -8,6 +8,9 @@ use App\Models\Event;
 use App\Policies\EventPolicy;
 use App\Models\Admin;
 use App\Policies\AdminPolicy;
+use App\Models\Comment;
+use App\Policies\CommentPolicy;
+
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -23,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         Event::class => EventPolicy::class,
         Admin::class => AdminPolicy::class,
         User::class => UserPolicy::class,
+        Comment::class => CommentPolicy::class,
     ];
 
     /**
