@@ -36,7 +36,7 @@
             <div class="lg:max-w-[75%] w-full mx-auto">
                 @yield('content')
             </div>
-            <div id="notification-container" class="fixed z-50 bottom-5 right-5"></div>
+            <div id="notification-container" class="fixed z-50 bottom-5 right-5" aria-live="polite"></div>
         </main>
 
 

@@ -22,9 +22,10 @@
                     class="w-full p-3 mt-2 border border-gray-300 rounded-md font-montserrat focus:ring-ultraViolet focus:border-ultraViolet" 
                     minlength="8" 
                     placeholder="Enter new password"
+                    aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
                 >
                 @error('password')
-                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                    <div id="password" class="mt-2 text-sm text-red-600" aria-live="polite">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -40,13 +41,13 @@
                     placeholder="Confirm your password"
                 >
                 @error('password_confirmation')
-                    <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
+                    <div id="confirmPassword" class="mt-2 text-sm text-red-600" aria-live="polite">{{ $message }}</div>
                 @enderror
             </div>
 
             <!-- Submit Button -->
             <div class="mt-6">
-                <button type="submit" class="w-full px-6 py-3 text-white font-bold transition-all duration-200 bg-ultraViolet rounded-md hover:bg-cambridgeBlue hover:text-darkSlateGrey font-montserrat">
+                <button type="submit" class="w-full px-6 py-3 text-white font-bold transition-all duration-200 bg-ultraViolet rounded-md hover:bg-cambridgeBlue hover:text-darkSlateGrey font-montserrat" aria-label="Submit new password to reset your account">
                     Reset Password
                 </button>
             </div>

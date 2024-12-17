@@ -13,11 +13,11 @@
                 Empowering Communities, One Event at a Time.
             </h2>
             @if (Auth::guard('admin')->check())
-                <p class="text-4xl font-montserrat text-eerieBlack">Welcome back, Admin!</p>
+                <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Welcome back message for admin">Welcome back, Admin!</p>
             @elseif (Auth::guard('web')->check())
-                <p class="text-4xl font-montserrat text-eerieBlack">Welcome back, {{ Auth::user()->name }}!</p>
+                <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Welcome back message for user">Welcome back, {{ Auth::user()->name }}!</p>
             @else
-                <p class="text-4xl font-montserrat text-eerieBlack">Join us now!</p>
+                <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Invitation to join the platform">Join us now!</p>
             @endif
         </div>
 
@@ -87,11 +87,11 @@
 
 
    <!-- Categories Section -->
-    <section class="py-8">
+    <section class="py-8" aria-label="Categories section">
         <div class="flex flex-col space-y-6">
             @foreach ($categories as $category)
                 @if ($category->events->count() >= 4)
-                    <a href="{{ route('events.search', ['category[]' => $category->id]) }}" class="flex items-center space-x-4 group">
+                    <a href="{{ route('events.search', ['category[]' => $category->id]) }}" class="flex items-center space-x-4 group" aria-label="Explore events in {{ $category->name }}">
                         <!-- Category Name with Link -->
                         <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
                             {{ $category->name }}
@@ -104,7 +104,7 @@
                     </a>
 
                     <!-- Events Grid with max-width possible for 4 items -->
-                    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+                    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4" aria-label="Events list for {{ $category->name }}">
                         @foreach ($category->events->take(4) as $event)
                                 @include('partials.event', ['event' => $event])
                         @endforeach
@@ -114,7 +114,7 @@
 
             <!-- "All Categories" Section -->
             @if ($categories->pluck('events')->flatten()->count() >= 4)
-                <a href="{{ route('events.search') }}" class="flex items-center space-x-4 group">
+                <a href="{{ route('events.search') }}" class="flex items-center space-x-4 group" aria-label="Explore all categories of events">
                     <!-- Category Name with Link -->
                     <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
                         All categories
@@ -126,7 +126,7 @@
                     </p>
                 </a>
 
-                <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+                <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4" aria-label="Events list for all categories">
                     @foreach ($categories->pluck('events')->flatten()->take(4) as $event)
                         @include('partials.event', ['event' => $event])
                     @endforeach

@@ -121,6 +121,7 @@
                         rows="4" 
                         class="w-full p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-burgundy"
                         placeholder="Add your comment here..."
+                        aria-labelledby="comments-heading"
                         required></textarea>
 
                     <!-- Photo Upload for Participators -->
@@ -133,6 +134,7 @@
                                 multiple 
                                 accept="image/*"
                                 class="w-full p-2 mt-2 border border-gray-300 rounded-lg" 
+                                aria-describedby="photo-help"
                                 onchange="validatePhotos()" />
                             <small class="text-gray-500">You can upload up to 15 photos.</small>
                         </div>
@@ -141,13 +143,14 @@
                     <div class="flex justify-end mt-4">
                         <button 
                             type="submit" 
-                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue"
+                            aria-label="Submit your comment">
                             Comment
                         </button>
                     </div>
                 </form>
             @endif
-            <div class="mt-6 space-y-6">
+            <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
         </div>
@@ -190,11 +193,11 @@
             </div>
 
             <!-- Participants -->
-            <div class="p-6">
+            <div class="p-6" aria-labelledby="participants-heading">
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Participants
                 </h2>
-                <ul class="space-y-4">
+                <ul class="space-y-4" aria-label="List of event participants">
                 @foreach ($event->participators()->orderBy('id')->get() as $participator)
                     @include('partials.participator', [
                     'participator' => $participator,

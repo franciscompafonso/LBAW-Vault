@@ -133,6 +133,7 @@
         <div class="mt-2 text-left">
             <button 
                 class="text-blue-500 transition-colors duration-200 border-none font-montserrat hover:text-blue-800 hover:bg-transparent focus:bg-transparent focus:outline-none"
+                aria-label="Respond to comment"
                 onclick="toggleReplyForm({{ $comment->id }})">
                 Reply
             </button>

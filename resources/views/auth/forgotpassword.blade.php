@@ -43,7 +43,8 @@
               <label for="email" class="block text-2xl font-medium text-darkSlateGrey">Enter your email address to receive a password reset link.</label>
               <div class="mt-1">
                 <input id="email" type="email" name="email" required autofocus autocomplete="email" 
-                  class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">
+                  class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet"
+                  aria-label="Email address">
               </div>
                 @error('email')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
@@ -53,20 +54,21 @@
             <!-- Rset Link Button -->
             <div class="mt-6 text-center">
                 <button type="submit" 
-                    class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">
+                    class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat"
+                    aria-label="Send password reset link">
                     Send Reset Link
                 </button>
             </div>
           </form>
 
             @if(session('status'))
-                <div class="mt-4 text-sm text-center text-green-600 font-montserrat">
+                <div role="alert" class="mt-4 text-sm text-center text-green-600 font-montserrat" aria-live="assertive">
                     {{ session('status') }}
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="mt-4 text-sm text-center text-red-600 font-montserrat">
+                <div role="alert" class="mt-4 text-sm text-center text-red-600 font-montserrat" aria-live="assertive">
                     {{ session('error') }}
                 </div>
             @endif

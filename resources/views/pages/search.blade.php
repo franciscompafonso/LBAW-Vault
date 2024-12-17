@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Events by Category Section -->
-<section class="w-full px-6 py-16">
+<section class="w-full px-6 py-16" role="region" aria-label="Events search and filters section">
 
     <!-- Main Grid Layout -->
     <div class="grid grid-cols-5 gap-6">
@@ -30,7 +30,7 @@
                 <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
                     Sort by date: 
                 </p>
-                <select name="order" id="order" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[9em]">
+                <select name="order" id="order" aria-label="Sort events by date" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[9em]">
                     <option value="date_asc"  {{ request('order') === 'date_asc'  ? 'selected' : '' }}>Ascending</option>
                     <option value="date_desc" {{ request('order') === 'date_desc' ? 'selected' : '' }}>Descending</option>
                 </select>
@@ -41,7 +41,7 @@
                 <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
                     Events per page: 
                 </p>
-                <select name="results" id="results" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[4em]">
+                <select name="results" id="results" aria-label="Number of events per page" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[4em]">
                     <option value="21"  {{ request('results') === '21'  ? 'selected' : '' }}>21</option>
                     <option value="30"  {{ request('results') === '30'  ? 'selected' : '' }}>30</option>
                     <option value="45"  {{ request('results') === '45'  ? 'selected' : '' }}>45</option>
@@ -60,6 +60,7 @@
                     id="startDate" 
                     class="p-2 border rounded mt-2" 
                     value="{{ request('startDate') }}"
+                    aria-label="Select start date for events"
                     min="" 
                 >
 
@@ -70,6 +71,7 @@
                     id="endDate" 
                     class="p-2 border rounded mt-2" 
                     value="{{ request('endDate') }}"
+                    aria-label="Select end date for events"
                     min="" 
                 >
             </div>
@@ -173,13 +175,13 @@
             <!-- Buttons -->
             <div class="flex space-x-4 w-full">
                 <!-- Submit Button -->
-                <button type="submit" 
+                <button type="submit" aria-label="Apply filters" 
                     class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Apply
                 </button>
                 
             <!-- Reset Button -->
-                <button type="button" 
+                <button type="button" aria-label="Reset filters"
                         onclick="window.location.href = '{{ url()->current() }}';"
                         class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Reset
@@ -188,15 +190,15 @@
         </form>
 
         <!-- Events Grid -->
-        <div class="col-span-4 grid gap-6 sm:grid-cols-2 md:grid-cols-3 auto-rows-min">
+        <div class="col-span-4 grid gap-6 sm:grid-cols-2 md:grid-cols-3 auto-rows-min" aria-label="Events grid">
             @forelse ($events as $event)
                 @include('partials.event', ['event' => $event])
             @empty
-                <p class="text-eerieBlack font-montserrat col-span-full">No events available in this category.</p>
+                <p class="text-eerieBlack font-montserrat col-span-full" aria-live="polite">No events available in this category.</p>
             @endforelse
 
             <!-- Pagination Links -->
-            <div class="col-span-full mt-6 flex justify-center">
+            <div class="col-span-full mt-6 flex justify-center" aria-label="Pagination navigation">
                 {{ $events->appends(request()->query())->links() }}
             </div>
         </div>

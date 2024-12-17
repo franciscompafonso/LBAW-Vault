@@ -13,7 +13,8 @@
                     name="username" 
                     class="w-full p-3 border font-montserrat rounded-l-lg focus:outline-none"
                     placeholder="Search by the exact username" 
-                    value="{{ old('username', $search ?? '') }}">
+                    value="{{ old('username', $search ?? '') }}"
+                    aria-label="Search by username">
                 <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Search
                 </button>
@@ -24,7 +25,7 @@
         </form>
 
         @if($users->count())
-            <table>
+            <table aria-label="User Table">
                 <thead>
                     <tr>
                         <th class="font-montserrat font-bold">Username</th>
@@ -38,7 +39,8 @@
                         <tr>
                             <td>
                                 <a href="{{ route('user.profile', ['id' => $user->id]) }}" 
-                                class="font-semibold">
+                                class="font-semibold"
+                                aria-label="View profile of {{ $user->username }}">
                                     {{ $user->username }}
                                 </a>
                             </td>
@@ -51,7 +53,7 @@
                                     </button>
                                 @else
                                     <!-- Delete Button -->
-                                    <form action="{{ route('admin.delete.user', $user->id) }}" method="POST">
+                                    <form action="{{ route('admin.delete.user', $user->id) }}" method="POST" aria-label="Delete user {{ $user->username }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md delete-btn font-montserrat bg-ultraViolet hover:bg-red-600 hover:text-white border-ultraViolet hover:border-red-600">
@@ -62,7 +64,7 @@
                             </td>
                             <td>
                                 @if($user->isblocked)
-                                    <form action="{{ route('admin.unblock.user', $user->id) }}" method="POST">
+                                    <form action="{{ route('admin.unblock.user', $user->id) }}" method="POST" aria-label="Unblock user {{ $user->username }}">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md unblock-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
@@ -72,7 +74,7 @@
                                 @else
                                     <form action="{{ route('admin.block.user', $user->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md block-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">Block</button>
+                                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md block-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" aria-label="Block user {{ $user->username }}">Block</button>
                                     </form>
                                 @endif
                             </td>
@@ -82,7 +84,7 @@
             </table>
 
             <!-- Pagination links -->
-            <div class="mt-4 pagination">
+            <div class="mt-4 pagination" role="navigation" aria-label="Pagination">
                 {{ $users->links() }}
             </div>
         @else

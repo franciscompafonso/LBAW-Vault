@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" aria-label="Create New Admin">
                             Create Admin
                         </button>
                     </div>
@@ -73,7 +73,7 @@
                     </table>
 
                     <!-- Pagination links -->
-                    <div class="mt-4 pagination">
+                    <div class="mt-4 pagination" role="navigation" aria-label="Pagination">
                         {{ $admins->links() }}
                     </div>
                 @else

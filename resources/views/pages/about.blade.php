@@ -31,28 +31,28 @@
             <h2 class="text-2xl font-bold font-montserrat text-ultraViolet">Our Team</h2>
             <div class="flex flex-wrap gap-8 mt-4">
                 <div class="w-full text-center md:w-1/5">
-                <a href="https://github.com/progr-amador">
+                <a href="https://github.com/progr-amador" aria-label="Alexandre Ramos GitHub Profile">
                     <img src="https://avatars.githubusercontent.com/u/132162311?v=4" alt="Alexandre Ramos Profile Picture" class="mx-auto mb-4 rounded-full w-60 h-60">
                 </a>
                     <h3 class="text-xl font-bold font-montserrat text-ultraViolet">Alexandre Ramos</h3>
                     
                 </div>
                 <div class="w-full text-center md:w-1/5">
-                    <a href="https://github.com/g3raldes">
+                    <a href="https://github.com/g3raldes" aria-label="Filipa Geraldes GitHub Profile">
                         <img src="https://avatars.githubusercontent.com/u/116494634?v=4" alt="FIlipa Geraldes Profile Picture" class="mx-auto mb-4 rounded-full w-60 h-60">
                     </a>
                     <h3 class="text-xl font-bold font-montserrat text-ultraViolet">Filipa Geraldes</h3>
                     
                 </div>
                 <div class="w-full text-center md:w-1/5">
-                    <a href="https://github.com/apilifogladif">
+                    <a href="https://github.com/apilifogladif" aria-label="Filipa Fidalgo GitHub Profile">
                         <img src="https://avatars.githubusercontent.com/u/109923498?v=4" alt="Filipa Fidalgo Profile Picture" class="mx-auto mb-4 rounded-full w-60 h-60">
                     </a>
                     <h3 class="text-xl font-bold font-montserrat text-ultraViolet">Filipa Fidalgo</h3>
                     
                 </div>
                 <div class="w-full text-center md:w-1/5">
-                    <a href="https://github.com/franciscoafonso04">
+                    <a href="https://github.com/franciscoafonso04" aria-label="Francisco Afonso GitHub Profile">
                         <img src="https://avatars.githubusercontent.com/u/132215846?v=4" alt="Francisco Afonso Profile Picture" class="mx-auto mb-4 rounded-full w-60 h-60">
                     </a>
                     <h3 class="text-xl font-bold font-montserrat text-ultraViolet">Francisco Afonso</h3>

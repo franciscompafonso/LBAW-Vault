@@ -11,8 +11,8 @@
         </p>
     </div>
     <!-- General Questions -->
-    <section class="mb-10">
-        <h2 class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">General Questions</h2>
+    <section class="mb-10" aria-labelledby="general-questions">
+        <h2 id="general-questions" class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">General Questions</h2>
         <div class="space-y-4">
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
@@ -40,8 +40,8 @@
     </section>
 
     <!-- Using the Platform -->
-    <section class="mb-10">
-        <h2 class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Using the Platform</h2>
+    <section class="mb-10" aria-labelledby="platform-questions">
+        <h2 id="platform-questions" class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Using the Platform</h2>
         <div class="space-y-4">
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
@@ -91,8 +91,8 @@
     </section>
 
     <!-- Event Roles and Responsibilities -->
-    <section class="mb-10">
-        <h2 class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Event Roles and Responsibilities</h2>
+    <section class="mb-10" aria-labelledby="roles-questions">
+        <h2 id="roles-questions" class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Event Roles and Responsibilities</h2>
         <div class="space-y-4">
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
@@ -130,8 +130,8 @@
     </section>
 
     <!-- Technical Support -->
-    <section class="mb-10">
-        <h2 class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Technical Support</h2>
+    <section class="mb-10" aria-labelledby="technical-questions">
+        <h2 id="technical-questions" class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Technical Support</h2>
         <div class="space-y-4">
             <div class="border border-gray-200 rounded-lg shadow">
                 <button

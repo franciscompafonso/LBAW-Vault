@@ -67,7 +67,7 @@
             <!-- Sign In Button -->
             <div class="mt-6 text-center">
             <button type="submit" 
-              class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">
+              class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat" aria-label="Sign in to your account">
               Sign in</button>
             </div>
           </form>
@@ -75,7 +75,7 @@
           <!-- Registration Link -->
           <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">
             Not a member? 
-            <a href="{{ route('register') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue">Sign up</a>
+            <a href="{{ route('register') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Sign up for a new account">Sign up</a>
           </p>
       </div>
     </section>

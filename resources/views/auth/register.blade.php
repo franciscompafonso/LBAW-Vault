@@ -97,14 +97,14 @@
 
           <!-- Register Button -->
           <div class="mt-6 text-center">
-            <button type="submit" class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">Sign up</button>
+            <button type="submit" class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat" aria-label="Create a new account">Sign up</button>
           </div>
         </form>
 
         <!-- Registration Link -->
         <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">   
           Have an account?
-          <a href="{{ route('login') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue">Sign in</a>   
+          <a href="{{ route('login') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Sign in to your account">Sign in</a>   
         </p>
       </div>
     </section>
