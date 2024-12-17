@@ -318,7 +318,7 @@
             </div>
 
             <!-- Botão de fechar -->
-            <button id="popup-close" class="bg-transparent border-transparent text-darkSlateGrey hover:text-red-500">
+            <button id="popup-close" class="bg-transparent border-transparent hover:border-transparent focus:border-transparent hover:bg-transparent focus:bg-transparent focus:text-red-500 text-darkSlateGrey hover:text-red-500">
                 <i class="text-4xl fa-solid fa-times"></i>
             </button>
         </div>
@@ -331,7 +331,7 @@
                 const popupMessage = document.getElementById('popup-message');
                 const closeBtn = document.getElementById('popup-close');
 
-                const status = '{{ session('status') }}';
+                const success = '{{ session('success') }}';
                 const message = '{{ session('message') }}';
 
                 popupMessage.textContent = message;

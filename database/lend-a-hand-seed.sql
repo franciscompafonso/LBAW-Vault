@@ -378,10 +378,16 @@ CREATE TRIGGER trigger_create_invite_notification
 -- create accepted invite notification
 CREATE FUNCTION create_accepted_invite_notification() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    notification_id INTEGER; 
 BEGIN
     IF NEW.accepted = TRUE THEN
         INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.invite_to_id, NEW.invite_by_id, CURRENT_TIMESTAMP, FALSE);
+        VALUES (NEW.invite_to_id, NEW.invite_by_id, CURRENT_TIMESTAMP, FALSE)
+        RETURNING id INTO notification_id;
+
+        INSERT INTO accepted_invite_notification (id, invite_id)
+        VALUES (notification_id, NEW.id);
     END IF;
 
     RETURN NEW;

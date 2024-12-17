@@ -7,7 +7,6 @@ use App\Models\Invite;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\User;
-use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 
 class InviteController extends Controller
@@ -37,7 +36,7 @@ class InviteController extends Controller
 
         if (!$invitee) {
             return back()->with([
-                'message' => "The user with the specified username '{$request->username}' does not exist.",
+                'message' => "The user with the specified username does not exist.",
                 'success' => false
             ]);
         }
@@ -86,15 +85,12 @@ class InviteController extends Controller
     {
         $invite = Invite::findOrFail($inviteId);
 
-        // Mark the invite as accepted
         $invite->accepted = true;
         $invite->save();
 
-        // Join the event using EventController's logic
         $eventController = app(EventController::class);
         $eventController->joinEvent($invite->event_id);
 
-        // Dismiss the notification
         $notificationController = app(NotificationController::class);
         $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
 
@@ -105,7 +101,6 @@ class InviteController extends Controller
     {
         $invite = Invite::findOrFail($id);
 
-        // Optional: Check if the user has permission to delete the invite
         if (Auth::id() !== $invite->invite_by_id) {
             return back()->with('error', 'You do not have permission to delete this invite.');
         }
