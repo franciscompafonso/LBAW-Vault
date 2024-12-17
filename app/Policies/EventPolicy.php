@@ -84,18 +84,19 @@ class EventPolicy
 
     public function join(User $user, Event $event)
     {
-        return $event->visibility === 'public'
+        return (!$event->participators->contains($user) && $event->creator->id === $user->id) || ($event->visibility === 'public'
             && $event->participators()->count() < $event->capacity
             && !$event->participators->contains($user)
-            && !$user->isblocked;
+            && !$user->isblocked);
     }
 
     public function requestJoin(User $user, Event $event)
     {
         return $event->visibility === 'request_only'
             && !$event->participators->contains($user)
-            && $event->requests->where('join_request_by_id', $user->id)->where('accepted', false)->isNotEmpty()
-            && !$user->isblocked;
+            && $event->requests->where('join_request_by_id', $user->id)->where('accepted', false)->isEmpty()
+            && !$user->isblocked
+            && $event->creator->id !== $user->id;
     }
     public function leave(User $user, Event $event)
     {
@@ -110,7 +111,7 @@ class EventPolicy
 
     public function invite(User $user, Event $event): bool
     {
-        return $event->visibility === 'public' || $user->id === $event->creator_id;
+        return ($event->participators->contains($user) && $event->visibility === 'public') || $user->id === $event->creator_id;
     }
 
     public function uploadPhotos(User $user, Event $event)

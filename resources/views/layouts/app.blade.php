@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-        <link rel="icon" type="image/jpg" href="{{ asset('images/others/logo.jpg') }}">
+        <link rel="icon" type="image/jpg" href="{{ asset('images/others/icon.png') }}">
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">

@@ -218,40 +218,133 @@
             <!-- Participants -->
             <div class="p-6" aria-labelledby="participants-heading">
                 <!-- Header with Participant Counter -->
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center justify-between mb-6">
                     <h2 class="text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                         Participants
                     </h2>
                     <!-- Participant Counter -->
-                    <span class="text-3xl text-darkSlateGrey font-montserrat font-semibold">
+                    <span class="text-3xl font-semibold text-darkSlateGrey font-montserrat">
                         {{ $event->participators()->count() }} / {{ $event->capacity }}
                     </span>
                 </div>
 
                 <!-- Participant List or Empty State -->
-                @if ($event->participators()->count() > 0)
-                    <ul class="space-y-4" aria-label="List of event participants">
+                <ul class="space-y-4" aria-label="List of event participants">
+                    @can('invite', $event)
+                        <!-- Invite Form -->
+                        <div class="mt-4">
+                            <form action="{{ route('events.invite', $event->id) }}" method="POST" class="flex items-center space-x-2">
+                                @csrf
+                        
+                                <div class="w-full">
+                                    <input 
+                                        id="invite_user" 
+                                        type="text" 
+                                        name="username" 
+                                        placeholder="username" 
+                                        value="{{ old('username') }}" 
+                                        class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" 
+                                        required 
+                                    >
+                                    @error('username')
+                                        <span class="text-sm text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                        
+                                <div class="w-full">
+                                    <input 
+                                        id="invite_desc" 
+                                        type="text" 
+                                        name="description" 
+                                        placeholder="Invite message" 
+                                        value="{{ old('description') }}" 
+                                        class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" 
+                                    >
+                                </div>
+                        
+                                <button 
+                                    type="submit" 
+                                    class="text-4xl transition-colors duration-200 bg-transparent border-none text-ultraViolet font-montserrat hover:text-cambridgeBlue hover:bg-transparent focus:outline-none">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                            </form>
+                        </div>  
+                    @endcan
+                    @if ($event->participators()->count() > 0)
                         @foreach ($event->participators()->orderBy('id')->get() as $participator)
                             @include('partials.participator', [
                                 'participator' => $participator,
                                 'creatorId' => $event->creator_id
                             ])
                         @endforeach
-                    </ul>
-                @else
-                    <!-- No Participants Message -->
-                    <p class="text-xl text-gray-500 font-medium" aria-label="No participants message">
-                        No participants yet.
-                    </p>
-                @endif
+                    @else
+                        <!-- No Participants Message -->
+                        <p class="text-xl font-medium text-gray-500" aria-label="No participants message">
+                            No participants yet.
+                        </p>
+                    @endif
+                </ul>
             </div>
         </div>
     </div>
+    
+    <!-- Message Popup -->
+    <div id="popup" class="fixed bottom-0 right-0 z-50 p-4 mb-4 mr-4 transition-transform duration-500 ease-in-out transform translate-x-full bg-white rounded-lg shadow-lg opacity-0 text-darkSlateGrey">
+        <div class="flex items-start justify-between">
+            <!-- Mensagem -->
+            <div class="pr-4">
+                <h3 id="popup-title" class="text-2xl font-semibold font-montserrat"></h3>
+                <p id="popup-message" class="mt-1 text-md"></p>
+            </div>
+
+            <!-- Botão de fechar -->
+            <button id="popup-close" class="bg-transparent border-transparent text-darkSlateGrey hover:text-red-500">
+                <i class="text-4xl fa-solid fa-times"></i>
+            </button>
+        </div>
+    </div>
+    @if (session('message'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const popup = document.getElementById('popup');
+                const popupTitle = document.getElementById('popup-title');
+                const popupMessage = document.getElementById('popup-message');
+                const closeBtn = document.getElementById('popup-close');
+
+                const status = '{{ session('status') }}';
+                const message = '{{ session('message') }}';
+
+                popupMessage.textContent = message;
+
+                if (status === 'success') {
+                    popupTitle.textContent = 'Success';
+                    popupTitle.classList.add('text-green-500');
+                } else {
+                    popupTitle.textContent = 'Error';
+                    popupTitle.classList.add('text-red-500');
+                }
+
+                popup.classList.remove('translate-x-full', 'opacity-0');
+                popup.classList.add('translate-x-0', 'opacity-100');
+
+                closeBtn.addEventListener('click', function () {
+                    popup.classList.remove('translate-x-0', 'opacity-100');
+                    popup.classList.add('translate-x-full', 'opacity-0');
+                });
+
+                setTimeout(() => {
+                    popup.classList.remove('translate-x-0', 'opacity-100');
+                    popup.classList.add('translate-x-full', 'opacity-0');
+                }, 5000);
+            });
+        </script>
+    @endif
 </div>
 
 
 @include('partials.poll-form', ['event' => $event])
 
+<script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
 <script>
     function validatePhotos() {
         const photosInput = document.getElementById('photos');
@@ -298,21 +391,6 @@
             });
         });
     });
-
-
-    // Function to show notifications
-    function showNotification(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `px-4 py-3 rounded-lg shadow-lg mb-4 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
-        notification.textContent = message;
-        
-        // Append notification to container
-        const container = document.getElementById('notification-container');
-        container.appendChild(notification);
-
-        // Remove notification after 5 seconds
-        setTimeout(() => notification.remove(), 5000);
-    }
 
     document.addEventListener('click', (event) => {
         const menu = document.getElementById('menu');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\InviteSent;
 use App\Models\Invite;
 use Illuminate\Http\Request;
 use App\Models\Event;
@@ -22,9 +23,6 @@ class InviteController extends Controller
         ]);
     }
 
-    /**
-     * Invite a user to the event.
-     */
     public function sendInvite(Request $request, $eventId)
     {
         $request->validate([
@@ -33,17 +31,21 @@ class InviteController extends Controller
         ]);
 
         $event = Event::findOrFail($eventId);
-
-        // Check if the user is authorized to invite
         $this->authorize('invite', $event);
 
         $invitee = User::where('username', $request->username)->first();
 
         if (!$invitee) {
-            return back()->with('message', 'The user with the specified username does not exist.');
+            $message = "The user with the specified username '{$request->username}' does not exist.";
+            // Enviando evento Pusher com mensagem
+            event(new InviteSent($eventId, $message));
+
+            return back()->with([
+                'message' => $message,
+                'status' => 'error'
+            ]);
         }
 
-        // Check if the user is already a participator or has been invited
         $isParticipator = $event->participators()->where('id', $invitee->id)->exists();
         $isAlreadyInvited = Invite::where('invite_to_id', $invitee->id)
                                 ->where('invite_by_id', Auth::id())
@@ -51,11 +53,21 @@ class InviteController extends Controller
                                 ->exists();
 
         if ($isParticipator) {
-            return back()->with('message', 'User is already a participator in this event.');
+            $message = 'User is already a participator in this event.';
+            event(new InviteSent($eventId, $message)); // Envia a mensagem do Pusher
+            return back()->with([
+                'message' => $message,
+                'status' => 'error'
+            ]);
         }
 
         if ($isAlreadyInvited) {
-            return back()->with('message', 'User has already been invited to this event.');
+            $message = 'User has already been invited to this event.';
+            event(new InviteSent($eventId, $message)); // Envia a mensagem do Pusher
+            return back()->with([
+                'message' => $message,
+                'status' => 'error'
+            ]);
         }
 
         $inviteData = [
@@ -69,8 +81,15 @@ class InviteController extends Controller
         ];
 
         Invite::create($inviteData);
-        
-        return back()->with('message', 'Invitation sent successfully!');
+
+        // Envia a mensagem do Pusher ao sucesso
+        $message = 'Invitation sent successfully!';
+        event(new InviteSent($eventId, $message)); 
+
+        return back()->with([
+            'message' => $message,
+            'status' => 'success'
+        ]);
     }
 
     public function acceptInvite(Request $request, $inviteId)
