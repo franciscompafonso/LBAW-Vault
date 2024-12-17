@@ -957,7 +957,7 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Emergency Response Simulation', 'Disaster preparedness training for volunteers', '2024-03-05 08:00', '2024-03-07 17:00', 'request_only', 30, 11, 20, 10, 15),
 ('Child Development Workshop', 'Training for early childhood educators', '2024-04-15 09:00', '2024-04-16 17:00', 'private', 25, 12, 6, 2, 16),
 ('Social Justice Advocacy Training', 'Workshop on community rights and equality', '2024-02-20 09:30', '2024-02-22 16:30', 'public', 45, 13, 18, 8, 17),
-('Wellness Marathon', 'Community run supporting health awareness', '2024-05-01 06:00', '2024-05-01 14:00', 'public', 200, 14, 1, 1, 18),
+('Wellness Marathon', 'Community run supporting health awareness', '2024-05-01 06:00', '2024-05-01 14:00', 'canceled', 200, 14, 1, 1, 18),
 ('Environmental Education Camp', 'Week-long ecological awareness program', '2024-06-15 10:00', '2024-06-22 16:00', 'public', 50, 15, 9, 6, 19),
 ('Senior Companionship Program', 'Visiting and supporting elderly community members', '2024-01-10 09:00', '2024-12-31 17:00', 'request_only', 40, 16, 5, 9, 20),
 ('Mental Health First Aid Training', 'Certification course for community support', '2024-03-30 09:00', '2024-04-01 17:00', 'private', 30, 17, 19, 5, 21),

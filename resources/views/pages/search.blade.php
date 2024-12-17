@@ -78,9 +78,9 @@
             <div>
                 <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('visibility')">
                     <span>Visibility</span>
-                    <i id="visibility-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
+                    <i id="visibility-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2" id="visibility">
+                <div class="mt-2 hidden" id="visibility">
                     <label class="flex items-center space-x-2 mt-1">
                         <input type="checkbox" name="visibility[]" value="public" 
                             {{ request('visibility') && in_array('public', request('visibility')) ? 'checked' : '' }} />
@@ -98,9 +98,9 @@
             <div>
                 <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('category')">
                     <span>Category</span>
-                    <i id="category-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
+                    <i id="category-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2" id="category">
+                <div class="mt-2 hidden" id="category">
                     @foreach ($categories as $category)
                         <label class="flex items-center space-x-2 mt-1">
                             <input type="checkbox" name="category[]" value="{{ $category->id }}" 
@@ -108,7 +108,6 @@
                             <span>{{ $category->name }}</span>
                         </label>
                     @endforeach
-
                 </div>
             </div>
 
@@ -116,9 +115,9 @@
             <div>
                 <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('location')">
                     <span>Location</span>
-                    <i id="location-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
+                    <i id="location-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2" id="location">
+                <div class="mt-2 hidden" id="location">
                     @foreach ($locations as $location)
                         <label class="flex items-center space-x-2 mt-1">
                             <input type="checkbox" name="location[]" value="{{ $location->id }}" 
@@ -133,9 +132,9 @@
             <div>
                 <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('status')">
                     <span>Status</span>
-                    <i id="status-arrow" class="fa-solid fa-angle-right transform transition-transform duration-200"></i>
+                    <i id="status-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2" id="status">
+                <div class="mt-2 hidden" id="status">
                     <label class="flex items-center space-x-2 mt-1">
                         <input type="checkbox" name="status_finished" value="1" 
                             {{ request('status_finished') ? 'checked' : '' }} />
@@ -156,6 +155,18 @@
                             {{ request('status_full_capacity') ? 'checked' : '' }} />
                         <span>At full capacity</span>
                     </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="status_canceled" value="1" 
+                            {{ request('status_canceled') ? 'checked' : '' }} />
+                        <span>Canceled</span>
+                    </label>
+                    @auth
+                        <label class="flex items-center space-x-2 mt-1">
+                            <input type="checkbox" name="status_joined" value="1" 
+                                {{ request('status_joined') ? 'checked' : '' }} />
+                            <span>Joined</span>
+                        </label>
+                    @endauth
                 </div>
             </div>
 
@@ -190,21 +201,22 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Uncollapse sections based on localStorage state
+        // Initial state: collapsed by default
         const collapsedSections = JSON.parse(localStorage.getItem('collapsedSections')) || {};
 
-        // Restore section visibility
-        Object.keys(collapsedSections).forEach(function (sectionId) {
+        const sections = ['visibility', 'category', 'location', 'status'];
+        sections.forEach((sectionId) => {
             const section = document.getElementById(sectionId);
             const icon = document.getElementById(sectionId + '-arrow');
-            if (collapsedSections[sectionId] === 'collapsed') {
+            
+            if (!collapsedSections[sectionId] || collapsedSections[sectionId] === 'collapsed') {
                 section.classList.add('hidden');
                 icon.classList.add('transform', 'rotate-90');
-            } else {
-                section.classList.remove('hidden');
-                icon.classList.remove('transform', 'rotate-90');
+                collapsedSections[sectionId] = 'collapsed'; // Ensure default is saved
             }
         });
+
+        localStorage.setItem('collapsedSections', JSON.stringify(collapsedSections));
 
         // Toggle sections visibility and save state to localStorage
         window.toggleSectionVisibility = function (id) {
@@ -212,11 +224,11 @@
             const icon = document.getElementById(id + '-arrow');
             if (section.classList.contains('hidden')) {
                 section.classList.remove('hidden');
-                icon.classList.remove('transform', 'rotate-90');
+                icon.classList.remove('rotate-90');
                 collapsedSections[id] = 'expanded';
             } else {
                 section.classList.add('hidden');
-                icon.classList.add('transform', 'rotate-90');
+                icon.classList.add('rotate-90');
                 collapsedSections[id] = 'collapsed';
             }
             localStorage.setItem('collapsedSections', JSON.stringify(collapsedSections));

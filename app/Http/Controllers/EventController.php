@@ -189,7 +189,6 @@ class EventController extends Controller
 
         // Pagination (results per page)
         $resultsPerPage = $request->get('results', 21);
-        $query->paginate($resultsPerPage);
 
         // Date Filters
         if ($request->filled('startDate')) {
@@ -214,8 +213,7 @@ class EventController extends Controller
             $query->whereIn('location_id', $request->input('location')); // Matches form input name
         }
 
-        // Status Filter
-        if ($request->filled('status_finished') || $request->filled('status_upcoming') || $request->filled('status_ongoing') || $request->filled('status_full_capacity')) {
+        if ($request->filled('status_finished') || $request->filled('status_upcoming') || $request->filled('status_ongoing') || $request->filled('status_full_capacity') || $request->filled('status_canceled') || $request->filled('status_joined')) {
             $query->where(function ($q) use ($request) {
                 if ($request->filled('status_finished')) {
                     $q->orWhere('end_date', '<', now());
@@ -231,17 +229,32 @@ class EventController extends Controller
                 }
                 if ($request->filled('status_full_capacity')) {
                     $q->orWhereRaw(
-                        '(SELECT COUNT(*) FROM participator WHERE participator.event_id = events.id) >= events.capacity'
+                        '(SELECT COUNT(*) FROM participator WHERE participator.event_id = event.id) >= event.capacity'
                     );
                 }
+                if ($request->filled('status_canceled')) {
+                    $q->where('visibility', 'canceled');
+                }
+                if ($request->filled('status_joined') && auth()->check()) {
+                    $userId = auth()->id(); 
+                    $q->whereExists(function ($subQuery) use ($userId) {
+                        $subQuery->select('participator.participator_id') 
+                            ->from('participator')
+                            ->whereColumn('participator.event_id', 'event.id') 
+                            ->where('participator.participator_id', $userId); 
+                    });
+                }                
             });
         }
+        
 
         // Count the total filtered events
         $eventsCount = $query->count();
 
         // Return the filtered results (with pagination)
+        //\DB::enableQueryLog();
         $events = $query->paginate($resultsPerPage);
+        //dd(\DB::getQueryLog());
 
         return view('pages.search', compact(
             'events',

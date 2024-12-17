@@ -18,7 +18,7 @@
         </div>
         
         <!-- Description (Hidden by default, appears with sliding effect on hover) -->
-        <div class="overflow-hidden font-montserrat text-3xl transition-all duration-700 transform description max-h-0 group-hover:max-h-40">
+        <div class="overflow-hidden font-montserrat text-3xl transition-all duration-700 transform description max-h-0 group-hover:max-h-40 truncate overflow-hidden whitespace-nowrap">
             {{ $event->description }}
         </div>
     </div>
