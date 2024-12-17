@@ -252,9 +252,7 @@ class EventController extends Controller
         $eventsCount = $query->count();
 
         // Return the filtered results (with pagination)
-        //\DB::enableQueryLog();
         $events = $query->paginate($resultsPerPage);
-        //dd(\DB::getQueryLog());
 
         return view('pages.search', compact(
             'events',

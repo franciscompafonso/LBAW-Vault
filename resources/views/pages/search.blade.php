@@ -194,6 +194,11 @@
             @empty
                 <p class="text-eerieBlack font-montserrat col-span-full">No events available in this category.</p>
             @endforelse
+
+            <!-- Pagination Links -->
+            <div class="col-span-full mt-6 flex justify-center">
+                {{ $events->appends(request()->query())->links() }}
+            </div>
         </div>
 
     </div>
