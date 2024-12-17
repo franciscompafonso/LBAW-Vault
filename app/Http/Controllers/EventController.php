@@ -21,6 +21,8 @@ class EventController extends Controller
 {
     public function create(): Factory|View
     {
+        $this->authorize('create', Event::class);
+
         $districts = District::all();
         $categories = Category::all();
 
@@ -107,12 +109,15 @@ class EventController extends Controller
             'file_id' => $fileId ?? null
         ]);
 
+        $this->authorize('create', Event::class);
         return redirect()->route('events.show', ['id' => $event->id])->with('success', 'Event created successfully!');
     }
 
     public function edit($id)
     {
+        
         $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
         $districts = District::all();
         $categories = Category::all();
 
@@ -121,10 +126,11 @@ class EventController extends Controller
 
     public function update(Request $request, $id)
     {
-     
+        $event = Event::findOrFail($id);
+        $this->authorize('update', $event);
+
         try {
             DB::beginTransaction();
-            $event = Event::findOrFail($id);
             $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'required|string',
@@ -148,7 +154,8 @@ class EventController extends Controller
                     if ($pictureId) $this->deleteBanner($pictureId);
                 }
             }
-
+            
+            
             $event->update($data);
 
             DB::commit();
@@ -285,14 +292,9 @@ class EventController extends Controller
      */
     public function deleteEvent($eventId)
     {
+        
         $event = Event::findOrFail($eventId);
-
-        $isAdmin = auth()->guard('admin')->check();
-        $isEventCreator = auth()->check() && auth()->user()->id === $event->creator_id;
-
-        if (! $isAdmin && ! $isEventCreator) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorize('delete', $event);
 
         $pictureId = $event->file_id;
         $event->delete();
@@ -305,6 +307,7 @@ class EventController extends Controller
     public function requestToJoin(Event $event)
     {
         $user = Auth::user();
+        $this->authorize('requestJoin', $event);
 
         if ($event->participators->contains($user) || $event->creator_id === $user->id) {
             return redirect()->back()->with('message', 'You are already part of this event.');
@@ -335,6 +338,8 @@ class EventController extends Controller
     public function joinEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
+
+        $this->authorize('join', $event);
 
         if ($event->participators()->where('id', Auth::id())->exists()) {
             return response()->json([
@@ -377,6 +382,7 @@ class EventController extends Controller
     public function leaveEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
+        $this->authorize('leave', $event);
 
         if (! $event->participators()->where('id', Auth::id())->exists()) {
             return back()->with('message', 'You are not participating in this event.');
@@ -393,6 +399,7 @@ class EventController extends Controller
     public function kickParticipator($eventId, $userId)
     {
         $event = Event::findOrFail($eventId);
+        $this->authorize('kick', $event);
 
         if (! $event->participators()->where('id', $userId)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');
@@ -424,6 +431,8 @@ class EventController extends Controller
     public function showSurvey($eventId)
     {
         $event = Event::findOrFail($eventId);
+        $this->authorize('survey', $event);
+
         $questions = QuestionReview::all();
         $hasSubmitted = AnswerReview::where('answered_by_id', auth()->id())
             ->where('about_event_id', $eventId)
@@ -434,6 +443,8 @@ class EventController extends Controller
 
     public function submitSurvey(Request $request, $eventId)
     {
+        $event = Event::findOrFail($eventId);
+        $this->authorize('survey', $event);
         $request->validate([
             'answers.*' => 'required|integer|between:1,5',
         ]);
@@ -454,11 +465,7 @@ class EventController extends Controller
     public function showSurveyStats($eventId)
     {
         $event = Event::findOrFail($eventId);
-
-        if ($event->end_date > now()) {
-            return redirect()->route('events.show', $eventId)->with('error', 'Survey results are available only after the event ends.');
-        }
-
+        $this->authorize('viewSurveyResults', $event);
         $answers = AnswerReview::where('about_event_id', $eventId)
             ->join('question_review', 'answer_review.question_id', '=', 'question_review.id')
             ->select('question_review.id as question_id', 'question_review.question_text', 'answer_review.rating')

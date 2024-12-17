@@ -17,10 +17,13 @@
                 </a>
             @endif
 
-            <!-- Display "(Creator)" next to the name if the participator is the creator -->
             @if($participator->id === $creatorId)
                 <span class="text-sm font-semibold text-green-600">(Creator)</span>
+            @elseif($participator->id === Auth::id())
+                <span class="text-sm font-semibold text-wisteria">(Me)</span>
             @endif
+
+            
         </div>
 
         @if ($creatorId === Auth::id() || auth()->guard('admin')->check())
