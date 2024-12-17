@@ -27,7 +27,7 @@
                         <i class="text-4xl fa-solid fa-ellipsis"></i>
                     </button>
                 @endif
-                
+
                 <!-- Options dropdown -->
                 <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg">
                     <div class="space-y-2">
@@ -161,7 +161,18 @@
                 </h2>
                 @if (Auth::id() == $event->creator_id)
                     <p class="text-3xl text-darkSlateGrey font-montserrat">
-                        <strong class="font-semibold">Visibility:</strong> {{ $event->visibility }}
+                        <strong class="font-semibold">Visibility:</strong> 
+                        @if ($event->visibility == 'public')
+                            Public
+                        @elseif ($event->visibility == 'private')
+                            Private
+                        @elseif ($event->visibility == 'request_only')
+                            Request only
+                        @elseif ($event->visibility == 'canceled')
+                            Canceled
+                        @else
+                            {{ $event->visibility }} <!-- Fallback to original value if no match -->
+                        @endif
                     </p>
                 @endif
                 <p class="text-3xl text-darkSlateGrey font-montserrat">

@@ -82,6 +82,15 @@
         @endif
       </div>
 
+      <!-- Location -->
+      <div class="mb-4">
+        <label for="location" class="block text-lg font-semibold font-montserrat">Location</label>
+        <textarea id="location" name="location" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">{{ old('location') }}</textarea>
+        @if ($errors->has('location'))
+          <span class="mt-1 text-sm text-red-600">{{ $errors->first('location') }}</span>
+        @endif
+      </div>
+
       <!-- Category Selector -->
       <div class="mb-4">
         <label for="category_id" class="block text-lg font-semibold font-montserrat">Category</label>
