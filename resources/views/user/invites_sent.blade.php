@@ -58,14 +58,14 @@
                             <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <!-- Recipient -->
                                 <div class="text-center font-montserrat">
-                                    <a href="{{ route('user.profile', ['id' => $invite->invitee->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                    <a href="{{ route('user.profile', ['id' => $invite->invitee->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey" aria-label="View profile of {{ $invite->invitee->username }}">
                                         {{ $invite->invitee->username }}
                                     </a>
                                 </div>
                                                                                                 
                                 <!-- Event -->
                                 <div class="text-center font-montserrat">
-                                    <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                    <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey" aria-label="View details of event {{ $invite->event->name }}">
                                         {{ $invite->event->name }}
                                     </a>
                                 </div>                                
@@ -90,7 +90,7 @@
                                     <form action="{{ route('invite.delete', ['id' => $invite->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this invite?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="flex items-center px-4 py-2 space-x-2 border-white rounded-lg hover:border-white focus:border-white hover:bg-white focus:bg-white text-darkSlateGrey hover:text-red-600 focus:text-darkSlateGrey">
+                                        <button type="submit" class="flex items-center px-4 py-2 space-x-2 border-white rounded-lg hover:border-white focus:border-white hover:bg-white focus:bg-white text-darkSlateGrey hover:text-red-600 focus:text-darkSlateGrey" aria-label="Delete invite for {{ $invite->event->name }} to {{ $invite->invitee->username }}">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>

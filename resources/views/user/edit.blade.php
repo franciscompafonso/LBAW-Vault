@@ -19,7 +19,7 @@
                 </div>
                 <div>
                     <label for="profilepicture" class="block text-lg font-semibold font-montserrat">Upload Image</label>
-                    <input type="file" id="profilepicture" name="file" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)">
+                    <input type="file" id="profilepicture" name="file" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)" aria-label="Upload a new profile picture">
                     @error('file')
                         <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                     @enderror
@@ -29,7 +29,7 @@
             <!-- Name -->
             <div class="mb-4">
                 <label for="name" class="block text-lg font-semibold font-montserrat">Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
+                <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new name">
                 @error('name')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
@@ -38,7 +38,7 @@
             <!-- Username -->
             <div class="mb-4">
                 <label for="username" class="block text-lg font-semibold font-montserrat">Username</label>
-                <input type="text" id="username" name="username" value="{{ old('username', $user->displayName) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
+                <input type="text" id="username" name="username" value="{{ old('username', $user->displayName) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new username">
                 @error('username')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
@@ -47,7 +47,7 @@
             <!-- Email -->
             <div class="mb-4">
                 <label for="email" class="block text-lg font-semibold font-montserrat">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required>
+                <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new email address">
                 @error('email')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                 @enderror
@@ -62,6 +62,7 @@
                     name="current_password" 
                     class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 
                     placeholder="Enter current password"
+                    aria-label="Enter current password"
                 >
                 @error('current_password')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
@@ -77,6 +78,7 @@
                     name="new_password" 
                     class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 
                     placeholder="Enter new password"
+                    aria-label="Enter new password"
                 >
                 @error('new_password')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
@@ -92,6 +94,7 @@
                     name="new_password_confirmation" 
                     class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 
                     placeholder="Confirm new password"
+                    aria-label="Confirm new password"
                 >
                 @error('new_password_confirmation')
                     <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
@@ -99,7 +102,7 @@
             </div>
 
             <div class="mt-6 text-center">
-                <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat">Save Changes</button>
+                <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat" aria-label="Save profile changes">Save Changes</button>
             </div>
 
         </form>
@@ -109,7 +112,7 @@
             <form action="{{ route('user.delete', ['id' => $user->id]) }}" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-500 hover:text-darkSlateGrey hover:border-red-500">
+                <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-500 hover:text-darkSlateGrey hover:border-red-500" aria-label="Delete account">
                     Delete Account
                 </button>
 

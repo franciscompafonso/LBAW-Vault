@@ -4,13 +4,13 @@
 
     <p class="text-white mx-4"> • </p>
 
-    <a href="{{ url('/about') }}" class="text-whiteSmoke font-montserrat hover:text-darkSlateGrey mx-2" title="About Us">
+    <a href="{{ url('/about') }}" class="text-whiteSmoke font-montserrat hover:text-darkSlateGrey mx-2" title="About Us" aria-label="Learn more about us">
         About Us
     </a>
 
     <p class="text-white mx-4"> • </p>
 
-    <a href="{{ url('/faqs') }}" class="text-whiteSmoke font-montserrat hover:text-darkSlateGrey mx-2" title="Frequently Asked Questions">
+    <a href="{{ url('/faqs') }}" class="text-whiteSmoke font-montserrat hover:text-darkSlateGrey mx-2" title="Frequently Asked Questions" aria-label="Visit the Frequently Asked Questions page"
         FAQs
     </a>
 </footer>

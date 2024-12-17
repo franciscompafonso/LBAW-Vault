@@ -5,7 +5,7 @@
         <h1 class="text-3xl font-bold text-ultraViolet">{{ $event->name }} - Survey Results</h1>
 
         @if (session('error'))
-            <div class="bg-red-100 text-red-700 p-4 rounded-md mb-4">
+            <div class="bg-red-100 text-red-700 p-4 rounded-md mb-4" role="alert" aria-live="assertive">
                 {{ session('error') }}
             </div>
         @endif
@@ -22,7 +22,7 @@
             @foreach ($chartData as $data)
                 <div class="mt-6">
                     <h2 class="text-xl font-semibold">{{ $data['question_text'] }}</h2>
-                    <canvas id="chart-{{ $loop->index }}" width="350" height="350"></canvas>
+                    <canvas id="chart-{{ $loop->index }}" width="350" height="350" aria-label="Pie chart showing responses for {{ $data['question_text'] }}"></canvas>
 
                     <script>
                         new Chart(document.getElementById('chart-{{ $loop->index }}'), {

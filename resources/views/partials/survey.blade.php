@@ -4,7 +4,7 @@
     <div class="max-w-2xl mx-auto p-8">
         <h1 class="text-3xl font-bold text-ultraViolet">{{ $event->name }} - Satisfaction Survey</h1>
         @if ($hasSubmitted)
-            <p class="text-lg text-center text-green-500">You have already submitted your feedback for this event. Thank you!</p>
+            <p class="text-lg text-center text-green-500" aria-live="polite">You have already submitted your feedback for this event. Thank you!</p>
         @else
             <form action="{{ route('events.submitSurvey', $event->id) }}" method="POST">
                 @csrf
@@ -21,7 +21,7 @@
                 @endforeach
 
                 <div class="mt-6 flex justify-end">
-                    <button type="submit" class="px-6 py-2 text-white bg-burgundy rounded-lg">Submit</button>
+                    <button type="submit" class="px-6 py-2 text-white bg-burgundy rounded-lg" aria-label="Submit your survey feedback">Submit</button>
                 </div>
             </form>
         @endif

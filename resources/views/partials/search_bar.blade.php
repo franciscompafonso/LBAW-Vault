@@ -6,18 +6,20 @@
                    class="w-full p-6 pl-6 pr-12 border-2 border-ultraViolet font-montserrat rounded-full search-input focus:ring-2 focus:ring-wisteria focus:border-wisteria focus:outline-none text-3xl text-black placeholder:text-3xl placeholder:text-black" 
                    placeholder="Search events..." 
                    autocomplete="off"
+                   aria-label="Search events"
                    onkeyup="searchEvents(event)" 
                    onkeydown="searchEvents(event)"
                    onfocus="showSearchResults()" 
                    onblur="hideSearchResults()">
 
             <i class="absolute right-4 top-1/2 transform -translate-y-1/2 text-4xl fa-solid fa-search {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} cursor-pointer" 
-               onclick="performSearch()">
+               onclick="performSearch()"
+               aria-label="Search button">
             </i>
         </div>
 
         <!-- Floating Results -->
-        <div id="searchResults" class="absolute mt-2 bg-white rounded-lg shadow-lg max-h-80 overflow-y-auto z-40 w-full lg:w-[30%]">
+        <div id="searchResults" class="absolute mt-2 bg-white rounded-lg shadow-lg max-h-80 overflow-y-auto z-40 w-full lg:w-[30%]" aria-live="polite" role="listbox">
             <!-- Dynamically populated search results will go here -->
         </div>
     </div>

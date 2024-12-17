@@ -35,7 +35,7 @@
                             <td class="flex space-x-2">
                                 @if($request->status === 'pending')
                                     <!-- Approve Button -->
-                                    <form action="{{ route('admin.unblock.requests.approve', $request->id) }}" method="POST">
+                                    <form action="{{ route('admin.unblock.requests.approve', $request->id) }}" method="POST" aria-label="Approve unblock request">
                                         @csrf
                                         <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-green-600 hover:bg-green-700">
                                             Approve
@@ -43,7 +43,7 @@
                                     </form>
                                     
                                     <!-- Reject Button -->
-                                    <form action="{{ route('admin.unblock.requests.reject', $request->id) }}" method="POST">
+                                    <form action="{{ route('admin.unblock.requests.reject', $request->id) }}" method="POST" aria-label="Reject unblock request">
                                         @csrf
                                         <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-red-600 hover:bg-red-700">
                                             Reject

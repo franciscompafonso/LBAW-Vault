@@ -9,6 +9,7 @@
                     type="text" 
                     name="name" 
                     id="poll_name" 
+                    aria-label="Poll Name"
                     class="w-full p-2 border border-gray-300 rounded-lg" 
                     required>
             </div>
@@ -19,6 +20,7 @@
                     name="options" 
                     id="poll_options" 
                     rows="3" 
+                    aria-label="Poll Options"
                     class="w-full p-2 border border-gray-300 rounded-lg" 
                     required></textarea>
             </div>
@@ -29,6 +31,7 @@
                     type="datetime-local" 
                     name="start_time" 
                     id="poll_start_time" 
+                    aria-label="Poll Start Time"
                     class="w-full p-2 border border-gray-300 rounded-lg" 
                     required>
             </div>
@@ -39,6 +42,7 @@
                     type="datetime-local" 
                     name="end_time" 
                     id="poll_end_time" 
+                    aria-label="Poll End Time"
                     class="w-full p-2 border border-gray-300 rounded-lg" 
                     required>
             </div>
@@ -47,11 +51,13 @@
                 <button 
                     type="button" 
                     onclick="togglePollForm()" 
+                    aria-label="Cancel Poll Creation"
                     class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
                     Cancel
                 </button>
                 <button 
                     type="submit" 
+                    aria-label="Submit Poll Form"
                     class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">
                     Create Poll
                 </button>

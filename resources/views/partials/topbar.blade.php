@@ -4,7 +4,7 @@
     <h1 class="font-bold">
         <a href="{{ url(path: '/home') }}" 
            class="text-5xl font-montserrat hover:text-darkSlateGrey 
-                  {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
+                  {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" aria-label="Lend-A-Hand Home Page">
             Lend-A-Hand
         </a>
     </h1>
@@ -17,12 +17,14 @@
             @if (Auth::user()->isblocked)
                 <a href="{{ url('/unblock-request') }}" 
                 title="Unblock Request" 
+                aria-label="Request Unblock"
                 class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
                     <i class="text-4xl fa-solid fa-lock-open"></i>
                 </a>
                 @else
                 <a href="{{ url('/event/create') }}" 
                 title="Create Event" 
+                aria-label="Create Event"
                 class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
                     <i class="text-4xl fa-solid fa-plus"></i>
                 </a>
@@ -44,7 +46,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <p id="no-notifications" class="text-xl text-center text-gray-500">There are no notifications.</p>
                         <!-- Dismiss All Button -->
-                        <button id="dismiss-all-btn" onclick="dismissAllNotifications()" class="hidden font-bold border-transparent font-montserrat focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
+                        <button id="dismiss-all-btn" onclick="dismissAllNotifications()" class="hidden font-bold border-transparent font-montserrat focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria" aria-label="Dismiss all notifications">
                             Dismiss all
                         </button>
                     </div>
@@ -64,10 +66,10 @@
 
                 <!-- Profile Dropdown -->
                 <div id="profile-dropdown" 
-                    class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-auto max-w-[90vw]">
+                    class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-auto max-w-[90vw]" aria-label="User Profile">
                     <!-- Profile Info Card -->
                     <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" 
-                    class="block p-6 hover:bg-gray-100">
+                    class="block p-6 hover:bg-gray-100" aria-label="View Profile">
                         <div class="flex items-center gap-6">
                             <!-- Profile Image -->
                             <img src="{{ asset('images/profile-pictures/' . (Auth::user()->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
@@ -89,7 +91,7 @@
 
                     <!-- Logout Option -->
                     <a href="{{ url('/logout') }}" 
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100">
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100" aria-label="Sign out">
                         <i class="text-xl fa-solid fa-right-from-bracket"></i>
                         <span class="font-medium font-montserrat">Sign out</span>
                     </a>
@@ -100,21 +102,24 @@
         @if (Auth::guard('admin')->check())
             <a href="{{ url('/admin/user-management') }}" 
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
-               title="Users">
+               title="Users"
+               aria-label="User Management">
                 <i class="text-4xl fa-solid fa-users-gear"></i>
             </a>
             <a href="{{ url('/admin/create') }}" 
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
-               title="Admins">
+               title="Admins"
+               aria-label="Create Admin">
                 <i class="text-4xl fa-solid fa-user-tie"></i>
             </a>
             <a href="{{ url('/admin/unblock-requests') }}" 
                 class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
-                title="Unblock Requests">
+                title="Unblock Requests"
+                aria-label="Unblock Requests">
                     <i class="text-4xl fa-solid fa-lock"></i>
             </a>
             <a href="{{ url('/logout') }}" 
-               title="Logout" 
+               title="Logout" aria-label="Logout"
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
                 <i class="text-4xl fa-solid fa-right-from-bracket"></i>
             </a>
@@ -123,7 +128,7 @@
         @if (Auth::guest() && !Request::is('login') && (!Auth::guard('admin')->check()))
             <!-- Login Icon -->
             <a href="{{ url('/login') }}" 
-               title="Login" 
+               title="Login" aria-label="Login"
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}">
                 <i class="text-4xl fa-solid fa-right-to-bracket"></i>
             </a>

@@ -30,7 +30,7 @@
             <div class="flex items-center justify-end">
                 <form action="{{ route('events.participators.kick', ['event' => $event->id, 'user' => $participator->id]) }}" class="m-0" method="POST">
                     @csrf
-                    <button type="submit" class="text-red-200 transition-colors duration-200 border-none font-montserrat hover:text-red-600 hover:bg-transparent focus:outline-none">
+                    <button type="submit" class="text-red-200 transition-colors duration-200 border-none font-montserrat hover:text-red-600 hover:bg-transparent focus:outline-none" aria-label="Remove {{ $participator->name }} from the event">
                         X
                     </button>
                 </form>

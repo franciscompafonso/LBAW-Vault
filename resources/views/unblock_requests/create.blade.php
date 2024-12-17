@@ -10,14 +10,14 @@
     
     <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
         @if (session('success'))
-            <div class="mb-4 text-green-600 font-medium font-montserrat">
+            <div class="mb-4 text-green-600 font-medium font-montserrat" role="alert">
                 {{ session('success') }}
             </div>
         @endif
 
         @if ($errors->any())
             <div class="mb-4">
-                <ul class="list-disc list-inside text-red-600 font-montserrat">
+                <ul class="list-disc list-inside text-red-600 font-montserrat" role="alert">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -41,7 +41,7 @@
 
             <!-- Botão de Envio -->
             <div class="text-center">
-                <button type="submit" 
+                <button type="submit" aria-label="Submit Unblock Request"
                     class="px-6 py-2 bg-ultraViolet text-white font-bold text-lg rounded-md hover:bg-ultraViolet-dark transition duration-200 font-montserrat">
                     Submit Request
                 </button>

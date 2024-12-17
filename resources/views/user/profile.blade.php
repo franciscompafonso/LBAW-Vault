@@ -31,13 +31,13 @@
     <div class="flex space-x-4">
     @if((Auth::id() === $user->id && !$user->isdeleted && !$user->isblocked) || auth()->guard('admin')->check())
         <!-- Edit Profile Button -->
-        <a href="{{ auth()->guard('admin')->check() ? route('admin.edit.form', ['id' => $user->id]) : route('user.edit.form', ['id' => $user->id]) }}" 
+        <a href="{{ auth()->guard('admin')->check() ? route('admin.edit.form', ['id' => $user->id]) : route('user.edit.form', ['id' => $user->id]) }}" aria-label="Edit profile of {{ $user->name }}"
            class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
             <i class="text-xl fa-solid fa-user-edit mr-2"></i> Edit Profile
         </a>
         
         <!-- Invitations Sent Button -->
-        <a href="{{ route('user.invites.sent', ['id' => $user->id]) }}" 
+        <a href="{{ route('user.invites.sent', ['id' => $user->id]) }}" aria-label="View invitations sent by {{ $user->name }}"
            class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet ">
             <i class="text-xl fa-solid fa-envelope mr-2"></i> Invitations
         </a>
