@@ -24,5 +24,5 @@
     </div>
   
     <!-- Clickable Link -->
-    <a href="{{ route('events.show', $event->id) }}" class="absolute inset-0 z-10"></a>
+    <a href="{{ route('events.show', $event->id) }}" class="absolute inset-0 z-10" aria-label="View details for {{ $event->name }} event"></a>
 </div>

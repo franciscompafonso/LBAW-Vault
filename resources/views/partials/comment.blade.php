@@ -36,14 +36,14 @@
                 @if (auth()->guard('admin')->check())
                     <form action="{{ route('admin.comment.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
-                        <button type="submit" class="text-red-200 transition-colors duration-200 bg-transparent border-none font-montserrat hover:text-red-600 hover:bg-transparent focus:outline-none">
+                        <button type="submit" class="text-red-200 transition-colors duration-200 bg-transparent border-none font-montserrat hover:text-red-600 hover:bg-transparent focus:outline-none" aria-label="Delete this comment">
                             X
                         </button>
                     </form>
                 @elseif ($comment->comment_by_id === Auth::id())
                     <form action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
-                        <button type="submit" class="text-red-200 transition-colors duration-200 bg-transparent border-none font-montserrat hover:text-red-600 hover:bg-transparent focus:outline-none">
+                        <button type="submit" class="text-red-200 transition-colors duration-200 bg-transparent border-none font-montserrat hover:text-red-600 hover:bg-transparent focus:outline-none" aria-label="Delete this comment">
                             X
                         </button>
                     </form>
@@ -56,13 +56,13 @@
                                 <input type="hidden" name="comment_id" value="{{ $comment->id }}">
                                 @if ($comment->feedback(Auth::id()) == 1)
                                     <button 
-                                        type="submit"
+                                        type="submit" aria-label="Like this comment"
                                         class="text-green-500 transition-colors duration-200 border-none like-btn hover:text-gray-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
                                         <i class="fas fa-thumbs-up"></i>
                                     </button>
                                 @else
                                     <button 
-                                        type="submit"
+                                        type="submit" aria-label="Like this comment"
                                         class="text-gray-500 transition-colors duration-200 border-none like-btn hover:text-green-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
                                         <i class="fas fa-thumbs-up"></i>
                                     </button>
@@ -75,7 +75,7 @@
                                 <input type="hidden" name="comment_id" value="{{ $comment->id }}">
                                 @if ($comment->feedback(Auth::id()) == -1)
                                     <button 
-                                        type="submit"
+                                        type="submit" 
                                         class="text-red-500 transition-colors duration-200 border-none dislike-btn hover:text-gray-500 focus:text-red-500 hover:bg-transparent focus:bg-transparent focus:outline-none" 
                                         aria-label="Dislike this comment">
                                         <i class="fas fa-thumbs-down"></i>
@@ -91,7 +91,8 @@
                             </form>
                         @else
                             <a href="{{ url('/login') }}" title="Login"
-                                class="text-gray-500 transition-colors duration-200 border-none like-btn hover:text-green-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none" aria-label="Like this comment">
+                                class="text-gray-500 transition-colors duration-200 border-none like-btn hover:text-green-500 focus:text-green-500 hover:bg-transparent focus:bg-transparent focus:outline-none"
+                                aria-label="Like this comment">
                                 <i class="fas fa-thumbs-up"></i>
                             </a>
                             <a href="{{ url('/login') }}" title="Login"
@@ -133,7 +134,7 @@
         <div class="mt-2 text-left">
             <button 
                 class="text-blue-500 transition-colors duration-200 border-none font-montserrat hover:text-blue-800 hover:bg-transparent focus:bg-transparent focus:outline-none"
-                aria-label="Respond to comment"
+                aria-label="Reply to this comment"
                 onclick="toggleReplyForm({{ $comment->id }})">
                 Reply
             </button>
