@@ -216,17 +216,33 @@
 
             <!-- Participants -->
             <div class="p-6" aria-labelledby="participants-heading">
-                <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
-                Participants
-                </h2>
-                <ul class="space-y-4" aria-label="List of event participants">
-                @foreach ($event->participators()->orderBy('id')->get() as $participator)
-                    @include('partials.participator', [
-                    'participator' => $participator,
-                    'creatorId' => $event->creator_id
-                    ])
-                @endforeach
-                </ul>
+                <!-- Header with Participant Counter -->
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
+                        Participants
+                    </h2>
+                    <!-- Participant Counter -->
+                    <span class="text-3xl text-darkSlateGrey font-montserrat font-semibold">
+                        {{ $event->participators()->count() }} / {{ $event->capacity }}
+                    </span>
+                </div>
+
+                <!-- Participant List or Empty State -->
+                @if ($event->participators()->count() > 0)
+                    <ul class="space-y-4" aria-label="List of event participants">
+                        @foreach ($event->participators()->orderBy('id')->get() as $participator)
+                            @include('partials.participator', [
+                                'participator' => $participator,
+                                'creatorId' => $event->creator_id
+                            ])
+                        @endforeach
+                    </ul>
+                @else
+                    <!-- No Participants Message -->
+                    <p class="text-xl text-gray-500 font-medium" aria-label="No participants message">
+                        No participants yet.
+                    </p>
+                @endif
             </div>
         </div>
     </div>
