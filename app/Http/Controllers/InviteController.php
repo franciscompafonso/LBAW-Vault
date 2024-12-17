@@ -36,12 +36,8 @@ class InviteController extends Controller
         $invitee = User::where('username', $request->username)->first();
 
         if (!$invitee) {
-            $message = "The user with the specified username '{$request->username}' does not exist.";
-            // Enviando evento Pusher com mensagem
-            event(new InviteSent($eventId, $message));
-
             return back()->with([
-                'message' => $message,
+                'message' => "The user with the specified username '{$request->username}' does not exist.",
                 'status' => 'error'
             ]);
         }
@@ -53,19 +49,15 @@ class InviteController extends Controller
                                 ->exists();
 
         if ($isParticipator) {
-            $message = 'User is already a participator in this event.';
-            event(new InviteSent($eventId, $message)); // Envia a mensagem do Pusher
             return back()->with([
-                'message' => $message,
+                'message' => 'User is already a participator in this event.',
                 'status' => 'error'
             ]);
         }
 
         if ($isAlreadyInvited) {
-            $message = 'User has already been invited to this event.';
-            event(new InviteSent($eventId, $message)); // Envia a mensagem do Pusher
             return back()->with([
-                'message' => $message,
+                'message' => 'User has already been invited to this event.',
                 'status' => 'error'
             ]);
         }
@@ -82,12 +74,10 @@ class InviteController extends Controller
 
         Invite::create($inviteData);
 
-        // Envia a mensagem do Pusher ao sucesso
-        $message = 'Invitation sent successfully!';
-        event(new InviteSent($eventId, $message)); 
-
+        
+        event(new InviteSent($invitee->id, $eventId, User::find(Auth::id())->name . " has invited you to " . $event->name));
         return back()->with([
-            'message' => $message,
+            'message' => 'Invitation sent successfully!',
             'status' => 'success'
         ]);
     }

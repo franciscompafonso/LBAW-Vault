@@ -9,7 +9,7 @@
     
         <!-- Profile Picture Section -->
         <div class="flex justify-center mb-6">
-            <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/'. ($user->picture->first()->path ?? App\Models\User::DEFAULT_PIC)) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-ultraViolet">
+            <img id="profile-picture-preview" src="{{ asset('images/profile-pictures/'. ($user->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" alt="Profile Picture" class="w-32 h-32 border-2 rounded-full border-ultraViolet">
         </div>
 
         <!-- User Info Section -->

@@ -366,7 +366,7 @@ class EventController extends Controller
         $event->participators()->attach(Auth::id());
 
         // Broadcast event (for real-time notification)
-        event(new JoinEvent($event->name));
+        event(new JoinEvent($event->creator->id, User::find(Auth::id())->name . ' has joined ' . $event->name));
 
         return response()->json([
             'success' => true,

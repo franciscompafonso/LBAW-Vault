@@ -13,30 +13,24 @@ class JoinEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
-    public $event_name;
+    public $receiverId;
+    public $title;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct($event_name)
+    public function __construct($receiverId, $message)
     {
-        $this->event_name = $event_name;
-        $this->message = 'You joined the ' . $event_name . ' event';
+        $this->receiverId = $receiverId;
+        $this->title = "New participator in your event!";
+        $this->message = $message;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
-    public function broadcastOn() {
-        return new Channel('event-channel');
-    }    
+    public function broadcastOn()
+    {
+        return new Channel('user.' . $this->receiverId);
+    }
 
-
-    // You should specify the name of the generated notification.
-    public function broadcastAs() {
-        return 'notification-join-event';
+    public function broadcastAs()
+    {
+        return 'notification';
     }
 }
 

@@ -12,22 +12,26 @@ class InviteSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $event_id;
+    public $receiverId;
     public $message;
+    public $eventId;
+    public $title;
 
-    public function __construct($event_id, $message)
+    public function __construct($receiverId, $eventId, $message)
     {
-        $this->event_id = $event_id;
+        $this->receiverId = $receiverId;
+        $this->eventId = $eventId;
+        $this->title = "You have received an invite!";
         $this->message = $message;
     }
 
     public function broadcastOn()
     {
-        return new Channel('event.' . $this->event_id);
+        return new Channel('user.' . $this->receiverId);
     }
 
     public function broadcastAs()
     {
-        return 'invite-sent';
+        return 'notification';
     }
 }
