@@ -351,17 +351,16 @@ CREATE INDEX idx_event_full_text_search ON event USING GIN (ts_vector);
 
 -- Triggers
 
+-- create invite notification
 CREATE OR REPLACE FUNCTION create_invite_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
     notification_id INT;
 BEGIN
-    -- Insert a new notification and retrieve the generated ID
     INSERT INTO notification (emitted_by, emitted_to, date, viewed)
     VALUES (NEW.invite_by_id, NEW.invite_to_id, CURRENT_TIMESTAMP, FALSE)
     RETURNING id INTO notification_id;
 
-    -- Insert the invite notification entry using the retrieved notification ID
     INSERT INTO invite_notification (id, invite_id)
     VALUES (notification_id, NEW.id);
 
@@ -376,6 +375,7 @@ CREATE TRIGGER trigger_create_invite_notification
     FOR EACH ROW
     EXECUTE FUNCTION create_invite_notification();
 
+-- create accepted invite notification
 CREATE FUNCTION create_accepted_invite_notification() RETURNS TRIGGER AS
 $BODY$
 BEGIN
@@ -395,23 +395,22 @@ CREATE TRIGGER trigger_accepted_invite_notification
     WHEN (NEW.accepted IS TRUE AND OLD.accepted IS DISTINCT FROM NEW.accepted)
     EXECUTE FUNCTION create_accepted_invite_notification();
 
+
+-- create join request notification
 CREATE OR REPLACE FUNCTION create_join_request_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
     notification_id INT;
     join_request_to_id INT;
 BEGIN
-    -- Fetch the creator_id from the event table based on the event_id in the join_request
     SELECT creator_id INTO join_request_to_id
     FROM event
     WHERE id = NEW.event_id;
 
-    -- Insert a new notification and retrieve the generated ID
     INSERT INTO notification (emitted_by, emitted_to, date, viewed)
     VALUES (NEW.join_request_by_id, join_request_to_id, CURRENT_TIMESTAMP, FALSE)
     RETURNING id INTO notification_id;
 
-    -- Insert the join request notification entry using the retrieved notification ID
     INSERT INTO join_request_notification (id, join_request_id)
     VALUES (notification_id, NEW.id);
 
@@ -425,25 +424,22 @@ CREATE TRIGGER trigger_create_join_request_notification
     FOR EACH ROW
     EXECUTE FUNCTION create_join_request_notification();
 
+-- create accepted join request notification
 CREATE OR REPLACE FUNCTION create_accepted_join_request_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
     notification_id INT;
     join_request_to_id INT;
 BEGIN
-    -- Fetch the creator_id from the event table based on the event_id in the join request
     SELECT creator_id INTO join_request_to_id
     FROM event
     WHERE id = NEW.event_id;
 
-    -- Create a notification only if the join_request is accepted
     IF NEW.accepted = TRUE THEN
-        -- Insert a new notification and retrieve the generated ID
         INSERT INTO notification (emitted_by, emitted_to, date, viewed)
         VALUES (join_request_to_id, NEW.join_request_by_id, CURRENT_TIMESTAMP, FALSE)
         RETURNING id INTO notification_id;
 
-        -- Insert the accepted join_request notification entry using the retrieved notification ID
         INSERT INTO accepted_join_request_notification (id, join_request_id)
         VALUES (notification_id, NEW.id);
     END IF;
@@ -459,6 +455,8 @@ CREATE TRIGGER trigger_accepted_join_request_notification
     WHEN (NEW.accepted IS TRUE AND OLD.accepted IS DISTINCT FROM NEW.accepted)
     EXECUTE FUNCTION create_accepted_join_request_notification();
 
+
+-- create event update notification
 CREATE FUNCTION create_event_update_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -486,6 +484,8 @@ CREATE TRIGGER trigger_event_update_notification
     FOR EACH ROW
     EXECUTE FUNCTION create_event_update_notification();
 
+
+-- create comment notification
 CREATE FUNCTION create_comment_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -518,13 +518,13 @@ CREATE TRIGGER trigger_comment_notification
     EXECUTE FUNCTION create_comment_notification();
 
 
+-- create event cancellation notification
 CREATE OR REPLACE FUNCTION notify_event_cancellation() RETURNS TRIGGER AS
 $BODY$
 DECLARE
     participant RECORD;
     notification_id INT;
 BEGIN
-    -- Loop through all participants for the canceled event
     FOR participant IN
         SELECT participator_id
         FROM participator
@@ -533,8 +533,6 @@ BEGIN
         INSERT INTO notification (emitted_by, emitted_to, date, viewed)
         VALUES (NEW.id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
         RETURNING id INTO notification_id;
-
-        -- Optionally log or handle additional actions for participants here
     END LOOP;
 
     RETURN NEW;
@@ -549,6 +547,7 @@ CREATE TRIGGER trigger_event_cancellation
     EXECUTE FUNCTION notify_event_cancellation();
 
 
+-- create poll remider notification
 CREATE FUNCTION create_poll_reminder() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -576,21 +575,22 @@ CREATE TRIGGER trigger_poll_reminder
     FOR EACH ROW
     EXECUTE FUNCTION create_poll_reminder();
 
-CREATE FUNCTION create_event_reminder_notification() RETURNS TRIGGER AS
+
+-- create event reminder notification
+CREATE OR REPLACE FUNCTION create_event_reminder_notification()
+RETURNS TRIGGER AS
 $BODY$
 DECLARE
-    notification_id INT;
     participant RECORD;
+    notification_id INT;
     reminder_date TIMESTAMP;
 BEGIN
     FOR participant IN
         SELECT participator_id FROM participator WHERE event_id = NEW.id
     LOOP
-        IF NEW.start_date > CURRENT_DATE + INTERVAL '3 days' THEN
+        IF NEW.start_date > CURRENT_TIMESTAMP + INTERVAL '3 days' THEN
             reminder_date := NEW.start_date - INTERVAL '3 days';
-
-            PERFORM pg_sleep(24 * 60 * 60 * 2); 
-
+            
             INSERT INTO notification (emitted_by, emitted_to, date, viewed)
             VALUES (NEW.creator_id, participant.participator_id, reminder_date, FALSE)
             RETURNING id INTO notification_id;
@@ -599,11 +599,9 @@ BEGIN
             VALUES (notification_id, NEW.id);
         END IF;
 
-        IF NEW.start_date > CURRENT_DATE + INTERVAL '1 day' THEN
+        IF NEW.start_date > CURRENT_TIMESTAMP + INTERVAL '1 day' THEN
             reminder_date := NEW.start_date - INTERVAL '1 day';
-
-            PERFORM pg_sleep(24 * 60 * 60); 
-
+            
             INSERT INTO notification (emitted_by, emitted_to, date, viewed)
             VALUES (NEW.creator_id, participant.participator_id, reminder_date, FALSE)
             RETURNING id INTO notification_id;
@@ -619,10 +617,12 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_event_reminder_notification
-    AFTER INSERT ON event
-    FOR EACH ROW
-    EXECUTE FUNCTION create_event_reminder_notification();
+AFTER INSERT ON event
+FOR EACH ROW
+EXECUTE FUNCTION create_event_reminder_notification();
 
+
+-- create unblock notification
 CREATE FUNCTION create_unblock_notification() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -648,25 +648,108 @@ CREATE TRIGGER trigger_unblock_notification
     WHEN (NEW.status IN ('approved', 'denied') AND OLD.status IS DISTINCT FROM NEW.status)
     EXECUTE FUNCTION create_unblock_notification();
 
-CREATE FUNCTION delete_orphaned_notifications() RETURNS TRIGGER AS
+
+-- delete from notification table
+CREATE OR REPLACE FUNCTION delete_orphaned_notifications() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1
-        FROM comment_notification
-        WHERE id = OLD.id
+        SELECT 1 FROM comment_notification WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM invite_notification WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM accepted_invite_notification WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM join_request_notification WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM accepted_join_request_notification WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM poll_reminder WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM event_cancelation WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM event_reminder WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM event_update_notification WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM admin_action WHERE id = OLD.id
+        UNION ALL
+        SELECT 1 FROM unblock_notification WHERE id = OLD.id
     ) THEN
         DELETE FROM notification WHERE id = OLD.id;
     END IF;
+    
     RETURN OLD;
 END;
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER check_orphaned_notifications
+-- Trigger for deleted comment_notification
+CREATE TRIGGER check_orphaned_notifications_comment
 AFTER DELETE ON comment_notification
 FOR EACH ROW
 EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted invite_notification
+CREATE TRIGGER check_orphaned_notifications_invite
+AFTER DELETE ON invite_notification
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted accepted_invite_notification
+CREATE TRIGGER check_orphaned_notifications_accepted_invite
+AFTER DELETE ON accepted_invite_notification
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted join_request_notification
+CREATE TRIGGER check_orphaned_notifications_join_request
+AFTER DELETE ON join_request_notification
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted accepted_join_request_notification
+CREATE TRIGGER check_orphaned_notifications_accepted_join_request
+AFTER DELETE ON accepted_join_request_notification
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted poll_reminder
+CREATE TRIGGER check_orphaned_notifications_poll_reminder
+AFTER DELETE ON poll_reminder
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted event_cancelation
+CREATE TRIGGER check_orphaned_notifications_event_cancelation
+AFTER DELETE ON event_cancelation
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted event_reminder
+CREATE TRIGGER check_orphaned_notifications_event_reminder
+AFTER DELETE ON event_reminder
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted event_update_notification
+CREATE TRIGGER check_orphaned_notifications_event_update
+AFTER DELETE ON event_update_notification
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted admin_action
+CREATE TRIGGER check_orphaned_notifications_admin_action
+AFTER DELETE ON admin_action
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
+-- Trigger for deleted unblock_notification
+CREATE TRIGGER check_orphaned_notifications_unblock
+AFTER DELETE ON unblock_notification
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_notifications();
+
 
 /*
 CREATE FUNCTION create_block_notification(admin_id INT) RETURNS TRIGGER AS
@@ -712,7 +795,7 @@ INSERT INTO file (path) VALUES
 ('Crestwood-Manor-519545542.jpg'),
 ('1662414732399.jpg'),
 ('SASItVqIRhNxeRQ6DNEKuFtyyEzxvgu61619458342.jpg'),
-('mandatory-training.jpg'),
+('mandatory-training.png'),
 ('images.png'),
 ('website-banner-youth-digital-skills.jpg'),
 ('00409-MED.jpg'),
@@ -992,7 +1075,7 @@ INSERT INTO event (name, description, location, start_date, end_date, visibility
 ('Digital Mentorship for Seniors', 'Ongoing technology support and training for elderly community members', 'Biblioteca Municipal de Castelo Branco', '2024-02-01 10:00', '2025-01-30 16:00', 'public', 40, 2, 5, 4, 43),
 ('Urban Garden Maintenance Project', 'Continuous support for community sustainable agriculture initiatives', 'Parque do Caia', '2024-03-01 08:00', '2025-01-31 17:00', 'public', 50, 3, 14, 6, 44),
 ('Youth Tutoring and Homework Help', 'Weekly academic support for underprivileged children', 'Aliados', '2024-01-20 14:00', '2024-12-26 17:30', 'public', 60, 4, 16, 2, 45),
-('Community Health Screening Caravan', 'Monthly free health check-ups and medical consultations', 'Base Naval de Setúbal', '2024-02-15 09:00', '2024-12-29 16:00', 'public', 100, 5, 15, 1, 46),
+('Community Health Screening Caravan', 'Monthly free health check-ups and medical consultations', 'Base Naval de Setúbal', '2024-12-18 11:17', '2024-12-29 16:00', 'public', 100, 5, 15, 1, 46),
 ('Environmental Clean-Up Patrol', 'Ongoing local park, street, and community space cleaning', 'Parque da Cidade de Aveiro', '2024-04-01 08:00', '2024-12-30 18:00', 'public', 80, 6, 1, 6, 47),
 ('Senior Companionship Program', 'Weekly visits and support for isolated elderly community members', 'Centro Social de Castelo Branco', '2024-01-10 10:00', '2025-02-28 15:00', 'request_only', 45, 7, 5, 9, 48),
 ('Art Therapy for Trauma Survivors', 'Continuous creative healing workshops', 'Centro Cultural de Leiria', '2024-03-15 09:30', '2025-02-15 16:00', 'request_only', 30, 8, 10, 5, 49),
