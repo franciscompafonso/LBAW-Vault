@@ -19,9 +19,12 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if (! $user | $user->isdeleted) {
+        $this->authorize('viewProfile', $user);
+
+        if ($user->isdeleted) {
             abort(404, 'User not found');
         }
+
         $myEvents = $user->myEvents()->paginate(4, ['*'], 'myEventsPage');
 
         $participatedEvents = $user->participatedEvents()->paginate(4, ['*'], 'participatedPage');
@@ -69,17 +72,18 @@ class UserController extends Controller
     public function editForm(int $id)
     {
         $user = User::find($id);
-        $this->authorize('edit_profile', $user, Auth::user());
+        $this->authorize('editProfile', $user);
 
         return view('user.edit', compact('user'));
     }
 
     public function edit(int $id, Request $request)
     {
+        $user = User::findOrFail($id);
+        $this->authorize('editProfile', $user);
+
         try {
             DB::beginTransaction();
-            
-            $user = User::find($id);
 
             if (Auth::user()->cannot('edit_profile', $user) && ! auth()->guard('admin')->check()) {
                 abort(403, 'Unauthorized action.');
@@ -141,6 +145,7 @@ class UserController extends Controller
 
     private function deletePicture($pictureId)
     {
+        
         $file = File::find($pictureId);
         $path = $file->path;
         $file->delete();
@@ -149,9 +154,10 @@ class UserController extends Controller
 
     public function deleteAccount($id)
     {
-        try {
-            $user = User::findOrFail($id);
+        $user = User::findOrFail($id);
+        $this->authorize('editProfile', $user);
 
+        try {
             $upcomingEventIds = $user->notYetParticipatedEvents()
                 ->where('end_date', '>', Carbon::now())
                 ->pluck('event_id')
