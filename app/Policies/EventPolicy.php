@@ -94,9 +94,9 @@ class EventPolicy
     {
         return $event->visibility === 'request_only'
             && !$event->participators->contains($user)
+            && $event->requests->where('join_request_by_id', $user->id)->where('accepted', false)->isNotEmpty()
             && !$user->isblocked;
     }
-
     public function leave(User $user, Event $event)
     {
         return $event->participators->contains($user);

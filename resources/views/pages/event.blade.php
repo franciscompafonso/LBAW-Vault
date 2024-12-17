@@ -20,87 +20,89 @@
 
             <!-- Options Icon -->
             <div class="absolute top-0 right-0">
-                @if (Auth::guard('admin')->check() || $event->creator_id === Auth::id() || $event->end_date < now())
+                @can('update', $event)
                     <button 
                         class="w-12 h-12 border-0 rounded-full text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
                         onclick="toggleMenu(event)" id="icon">
                         <i class="text-4xl fa-solid fa-ellipsis"></i>
                     </button>
-                @endif
+                @endcan
 
                 <!-- Options dropdown -->
                 <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg">
                     <div class="space-y-2">
-                        @if (Auth::guard(name: 'admin')->check() || $event->creator_id === Auth::id())
+                        @can('update', $event)
                             <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
+                        @endcan
+
+                        @can('delete', $event)
                             <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
                             </form>
-                        @endif
-                        @if (Auth::id() === $event->creator_id)
+                        @endcan
+                        
+                        @can('createPoll', $event)
                             <button 
                                 class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100"
                                 onclick="togglePollForm()">
                                 Create Poll
                             </button>
-                            @if ($event->end_date < now())
-                                <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
-                            @else
-                                <button 
-                                    title="Survey results are available after the event ends."
-                                    class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
-                                    Survey Results Not Available
-                                </button>
-                            @endif
-                        @endif
+                        @endcan
+                        @can('viewSurveyResults', $event)
+                            <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
+                        @else
+                            <button 
+                                title="Survey results are available after the event ends."
+                                class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
+                                Survey Results Not Available
+                            </button>
+                        @endcan
                     </div>
                 </div>
-
             </div>
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-4 mt-auto">
-                @if (Auth::guard('web')->check())
-                    @if ($event->participators->contains('id', Auth::id()))
-                        <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Joined Event</button>
-                    @elseif ($event->visibility === 'public' && $event->participators()->count() < $event->capacity)
-                        <form id="joinEventForm" action="{{ route('events.join', $event->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Join Event</button>
-                        </form>
-                    @elseif ($event->visibility === 'request_only')
-                        @if ($event->requests->where('join_request_by_id', Auth::id())->where('accepted', false)->isNotEmpty())
-                            <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Request Sent</button>
-                        @else
-                            <form action="{{ route('events.request', $event->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Request to Join</button>
-                            </form>
-                        @endif
-                    @endif
-                    <div class="relative">
-                        <!-- Share Button -->
-                        <button id="share-button" onclick="togglePopup()" class="flex items-center justify-center px-4 py-2 font-bold transition-all duration-300 border-transparent focus:text-wisteria focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
-                            <i class="mr-2 fa-solid fa-share"></i>
-                        </button>
+                @can('leave', $event)
+                    <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Joined Event</button>
+                @endcan
+
+                @can('join', $event)
+                    <form id="joinEventForm" action="{{ route('events.join', $event->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Join Event</button>
+                    </form>
+                @endcan
+
+                @can ('requestJoin', $event)
+                    <form action="{{ route('events.request', $event->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Request to Join</button>
+                    </form>
+                @endcan
                     
-                        <!-- Popup (initially hidden) -->
-                        <div id="share-popup" class="absolute left-0 hidden w-[350px] p-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
-                            <!-- Popup Text -->
-                            <p class="text-darkSlateGray text-md font-montserrat">Copy the text below to share the event:</p>
-                            
-                            <!-- Input Field for Link with Copy Button -->
-                            <div class="flex items-center h-auto p-2 mt-2 bg-gray-100 rounded-lg">
-                                <input id="share-link" type="text" value="" readonly class="w-full h-auto bg-transparent text-md font-montserrat focus:outline-none text-darkSlateGray"/>
-                                <button onclick="copyToClipboard()" class="ml-2 font-bold border-transparent text-md font-montserrat hover:text-wisteria text-ultraViolet focus:border-transparent hover:border-transparent hover:bg-transparent">
-                                    Copy
-                                </button>
-                            </div>
+                <div class="relative">
+                    <!-- Share Button -->
+                    <button id="share-button" onclick="togglePopup()" class="flex items-center justify-center px-4 py-2 font-bold transition-all duration-300 border-transparent focus:text-wisteria focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria">
+                        <i class="mr-2 fa-solid fa-share"></i>
+                    </button>
+                
+                    <!-- Popup (initially hidden) -->
+                    <div id="share-popup" class="absolute left-0 hidden w-[350px] p-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+                        <!-- Popup Text -->
+                        <p class="text-darkSlateGray text-md font-montserrat">Copy the text below to share the event:</p>
+                        
+                        <!-- Input Field for Link with Copy Button -->
+                        <div class="flex items-center h-auto p-2 mt-2 bg-gray-100 rounded-lg">
+                            <input id="share-link" type="text" value="" readonly class="w-full h-auto bg-transparent text-md font-montserrat focus:outline-none text-darkSlateGray"/>
+                            <button onclick="copyToClipboard()" class="ml-2 font-bold border-transparent text-md font-montserrat hover:text-wisteria text-ultraViolet focus:border-transparent hover:border-transparent hover:bg-transparent">
+                                Copy
+                            </button>
                         </div>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
     </div>
@@ -125,7 +127,7 @@
                         required></textarea>
 
                     <!-- Photo Upload for Participators -->
-                    @if ($event->participators->contains('id', Auth::id()))
+                    @can('uploadPhotos', $event)
                         <div class="mt-4">
                             <input 
                                 type="file" 
@@ -138,8 +140,7 @@
                                 onchange="validatePhotos()" />
                             <small class="text-gray-500">You can upload up to 15 photos.</small>
                         </div>
-                    @endif
-
+                    @endcan
                     <div class="flex justify-end mt-4">
                         <button 
                             type="submit" 
@@ -183,7 +184,7 @@
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                     Details
                 </h2>
-                @if (Auth::id() == $event->creator_id)
+                @can('update', $event)
                     <p class="text-3xl text-darkSlateGrey font-montserrat">
                         <strong class="font-semibold">Visibility:</strong> 
                         @if ($event->visibility == 'public')
@@ -198,7 +199,7 @@
                             {{ $event->visibility }} <!-- Fallback to original value if no match -->
                         @endif
                     </p>
-                @endif
+                @endcan
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
                     <strong class="font-semibold">Start:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y H:i') }}
                 </p>
