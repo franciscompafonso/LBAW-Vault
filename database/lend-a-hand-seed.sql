@@ -211,7 +211,7 @@ CREATE TABLE accepted_invite_notification (
 CREATE TABLE join_request (
     id SERIAL PRIMARY KEY,
     join_request_by_id INT REFERENCES user_account(id),
-    event_id INT REFERENCES event(id),
+    event_id INT REFERENCES event(id) ON DELETE CASCADE,
 	accepted BOOLEAN,
     date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP)
 );
@@ -248,13 +248,13 @@ CREATE TABLE poll_reminder (
 
 CREATE TABLE event_cancelation (
     id INT REFERENCES notification(id),
-    event_id INT REFERENCES event(id),
+    event_id INT REFERENCES event(id) ON DELETE CASCADE,
     PRIMARY KEY (id, event_id)
 );
 
 CREATE TABLE event_reminder (
     id INT REFERENCES notification(id),
-    event_id INT REFERENCES event(id),
+    event_id INT REFERENCES event(id) ON DELETE CASCADE,
     PRIMARY KEY (id, event_id)
 );
 
@@ -516,24 +516,27 @@ CREATE TRIGGER trigger_comment_notification
     FOR EACH ROW
     EXECUTE FUNCTION create_comment_notification();
 
-CREATE FUNCTION notify_event_cancellation() RETURNS TRIGGER AS
+
+CREATE OR REPLACE FUNCTION notify_event_cancellation() RETURNS TRIGGER AS
 $BODY$
 DECLARE
-    notification_id INT;
     participant RECORD;
+    notification_id INT;
 BEGIN
+    -- Loop through all participants for the canceled event
     FOR participant IN
-        SELECT participator_id FROM participator WHERE event_id = OLD.id
+        SELECT participator_id
+        FROM participator
+        WHERE event_id = NEW.id
     LOOP
         INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (OLD.creator_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
+        VALUES (NEW.id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
         RETURNING id INTO notification_id;
 
-        INSERT INTO event_cancelation (id, event_id)
-        VALUES (notification_id, OLD.id);
+        -- Optionally log or handle additional actions for participants here
     END LOOP;
 
-    RETURN OLD;
+    RETURN NEW;
 END;
 $BODY$
 LANGUAGE plpgsql;
@@ -543,6 +546,7 @@ CREATE TRIGGER trigger_event_cancellation
     FOR EACH ROW
     WHEN (OLD.visibility IS DISTINCT FROM 'canceled' AND NEW.visibility = 'canceled')
     EXECUTE FUNCTION notify_event_cancellation();
+
 
 CREATE FUNCTION create_poll_reminder() RETURNS TRIGGER AS
 $BODY$
