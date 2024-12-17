@@ -6,85 +6,37 @@
 <div class="w-full">
     <!-- Banner Section -->
     <div class="w-full py-16 shadow-md bg-gradient-to-r from-whiteSmoke {{ Auth::guard('admin')->check() ? 'to-ultraViolet' : 'to-wisteria' }} bg-opacity-75 text-center text-white rounded-lg">
-    <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-evenly lg:items-center">
-        <!-- Text Section -->
-        <div class="flex flex-col justify-between h-full text-left">
-            <h2 id="quote" class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">
-                Empowering Communities, One Event at a Time.
-            </h2>
-            @if (Auth::guard('admin')->check())
-                <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Welcome back message for admin">Welcome back, Admin!</p>
-            @elseif (Auth::guard('web')->check())
-                <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Welcome back message for user">Welcome back, {{ Auth::user()->name }}!</p>
-            @else
-                <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Invitation to join the platform">Join us now!</p>
-            @endif
-        </div>
-
-        <!-- Image Section -->
-        <div class="flex justify-center lg:justify-center">
-            <div class="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-64 lg:h-64">
-                <img 
-                    src="{{ asset('images/others/main-pic.png') }}" 
-                    alt="Main Picture" 
-                    class="object-cover w-full h-full transition-transform duration-300 transform bg-white rounded-full shadow-lg hover:scale-105"
-                >
+        <div class="flex flex-col items-center px-6 mx-auto lg:flex-row lg:justify-between lg:items-center">
+            <!-- Text Section -->
+            <div class="flex flex-col justify-between h-full text-left lg:ml-[6em]">
+                <h2 id="quote" class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">
+                    Empowering Communities, One Event at a Time.
+                </h2>
+                @if (Auth::guard('admin')->check())
+                    <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Welcome back message for admin">Welcome back, Admin!</p>
+                @elseif (Auth::guard('web')->check())
+                    <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Welcome back message for user">Welcome back, {{ Auth::user()->name }}!</p>
+                @else
+                    <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Invitation to join the platform">Join us now!</p>
+                @endif
             </div>
+
+
+            <!-- Image Section -->
+            <div class="flex justify-center lg:justify-center lg:mr-[6em]">
+                <div class="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-64 lg:h-64">
+                    <img 
+                        src="{{ asset('images/others/main-pic.png') }}" 
+                        alt="Main Picture" 
+                        class="object-cover w-full h-full transition-transform duration-300 transform bg-white rounded-full shadow-lg hover:scale-105"
+                    >
+
+                </div>
+
+            </div>
+            
         </div>
-        
     </div>
-</div>
-
-<script>
-    // Quotes Array
-    const quotes = [
-    "Empowering Communities, One Event at a Time.",
-    "Building Stronger Bonds, One Step at a Time.",
-    "Transforming Lives,  One Kind Act at a Time.",
-    "Inspiring Change, One Small Action at a Time.",
-    "Spreading Warmth, One Smile Given at a Time.",
-    "Uplifting Spirits, One Act of Care at a Time."
-
-    ];
-
-
-    const quoteElement = document.getElementById('quote');
-    let currentIndex = 0;
-
-    // Function to update the quote with a transition
-    function updateQuote() {
-        quoteElement.classList.add('fade-out');
-        setTimeout(() => {
-            currentIndex = (currentIndex + 1) % quotes.length;
-            quoteElement.textContent = quotes[currentIndex];
-
-            quoteElement.classList.remove('fade-out');
-            quoteElement.classList.add('fade-in');
-        }, 500);
-
-        setTimeout(() => {
-            quoteElement.classList.remove('fade-in');
-        }, 500);
-    }
-
-    // Change quote every 5 seconds
-    setInterval(updateQuote, 5000);
-</script>
-
-<style>
-    /* Transition Styles */
-    .fade-out {
-        opacity: 0;
-        transition: opacity 0.5s ease-out;
-    }
-
-    .fade-in {
-        opacity: 1;
-        transition: opacity 0.5s ease-in;
-    }
-</style>
-
-
 
    <!-- Categories Section -->
     <section class="py-8" aria-label="Categories section">
@@ -134,6 +86,55 @@
             @endif
         </div>
     </section>
-
 </div>
+
+
+<script>
+    // Quotes Array
+    const quotes = [
+    "Empowering Communities, One Event at a Time.",
+    "Building Stronger Bonds, One Step at a Time.",
+    "Transforming Lives,  One Kind Act at a Time.",
+    "Inspiring Change, One Small Action at a Time.",
+    "Spreading Warmth, One Smile Given at a Time.",
+    "Uplifting Spirits, One Act of Care at a Time."
+
+    ];
+
+
+    const quoteElement = document.getElementById('quote');
+    let currentIndex = 0;
+
+    // Function to update the quote with a transition
+    function updateQuote() {
+        quoteElement.classList.add('fade-out');
+        setTimeout(() => {
+            currentIndex = (currentIndex + 1) % quotes.length;
+            quoteElement.textContent = quotes[currentIndex];
+
+            quoteElement.classList.remove('fade-out');
+            quoteElement.classList.add('fade-in');
+        }, 500);
+
+        setTimeout(() => {
+            quoteElement.classList.remove('fade-in');
+        }, 500);
+    }
+
+    // Change quote every 5 seconds
+    setInterval(updateQuote, 5000);
+</script>
+
+<style>
+    /* Transition Styles */
+    .fade-out {
+        opacity: 0;
+        transition: opacity 0.5s ease-out;
+    }
+
+    .fade-in {
+        opacity: 1;
+        transition: opacity 0.5s ease-in;
+    }
+</style>
 @endsection

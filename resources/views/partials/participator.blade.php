@@ -1,18 +1,19 @@
 <li data-id="{{ $participator->id }}">
-    <div class="grid items-center grid-cols-3 gap-4">
-        <div class="flex items-center col-span-2 space-x-2">
+    <div class="flex items-center col-span-2 space-x-2 justify-between">
+        <!-- Left-aligned Content -->
+        <div class="flex items-center space-x-2">
             <img 
-                src="{{ asset('images/profile-pictures/' . ($participator->profilepicture ?? App\Models\User::DEFAULT_PIC)) }}" 
+                src="{{ asset('images/profile-pictures/' . ($participator->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
                 alt="{{ $participator->username ? $participator->username . ' profile picture' : 'Default profile picture' }}" 
-                class="object-cover w-12 h-12 rounded-full"
+                class="object-cover w-16 h-16 rounded-full"
             >
             @if($participator->isdeleted)
-                <span class="text-2xl font-semibold text-black font-montserrat">
+                <span class="text-3xl text-darkSlateGrey font-montserrat">
                     {{ $participator->displayName }}
                 </span>
             @else
                 <a href="{{ route('user.profile', ['id' => $participator->id]) }}" 
-                    class="text-2xl font-semibold text-gray-900 font-montserrat">
+                    class="text-3xl text-darkSlateGrey font-montserrat">
                     {{ $participator->name }}
                 </a>
             @endif
@@ -22,12 +23,11 @@
             @elseif($participator->id === Auth::id())
                 <span class="text-sm font-semibold text-wisteria">(Me)</span>
             @endif
-
-            
         </div>
 
+        <!-- Right-aligned "X" Button -->
         @if ($creatorId === Auth::id() || auth()->guard('admin')->check())
-            <div class="flex items-center justify-end">
+            <div class="flex justify-end">
                 <form action="{{ route('events.participators.kick', ['event' => $event->id, 'user' => $participator->id]) }}" class="m-0" method="POST">
                     @csrf
                     <button type="submit" class="text-red-200 transition-colors duration-200 border-none font-montserrat hover:text-red-600 hover:bg-transparent focus:outline-none" aria-label="Remove {{ $participator->name }} from the event">
