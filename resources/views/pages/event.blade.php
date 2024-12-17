@@ -153,7 +153,28 @@
             <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
-        </div>
+                <!-- make Poll -->
+                @if (Auth::id() === $event->creator_id)
+                    <div class="flex justify-end mt-4">
+                        <button 
+                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue""
+                            onclick="togglePollForm()">
+                            Create Poll
+                        </button>
+                    </div>
+                    @if ($event->end_date < now())
+                        <a href="{{ route('events.surveyStats', $event->id) }}" class="block mt-4 text-center">
+                            <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
+                                View Survey Results
+                            </button>
+                        </a>
+                    @else
+                        <p class="text-lg text-red-600">Survey results are available after the event ends.</p>
+                    @endif
+                @endif
+                <!-- Polls -->
+                @each('partials.poll', $event->polls, 'poll')
+            </div>
 
         <!-- Details and Participants Section -->
         <div class="flex flex-col gap-6 lg:w-1/5">
