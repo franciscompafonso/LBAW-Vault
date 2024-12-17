@@ -38,7 +38,7 @@ class InviteController extends Controller
         if (!$invitee) {
             return back()->with([
                 'message' => "The user with the specified username '{$request->username}' does not exist.",
-                'status' => 'error'
+                'success' => false
             ]);
         }
 
@@ -51,14 +51,14 @@ class InviteController extends Controller
         if ($isParticipator) {
             return back()->with([
                 'message' => 'User is already a participator in this event.',
-                'status' => 'error'
+                'success' => false
             ]);
         }
 
         if ($isAlreadyInvited) {
             return back()->with([
                 'message' => 'User has already been invited to this event.',
-                'status' => 'error'
+                'success' => false
             ]);
         }
 
@@ -78,7 +78,7 @@ class InviteController extends Controller
         event(new InviteSent($invitee->id, $eventId, User::find(Auth::id())->name . " has invited you to " . $event->name));
         return back()->with([
             'message' => 'Invitation sent successfully!',
-            'status' => 'success'
+            'success' => true
         ]);
     }
 

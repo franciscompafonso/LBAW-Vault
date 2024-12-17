@@ -316,7 +316,7 @@
 
                 popupMessage.textContent = message;
 
-                if (status === 'success') {
+                if (success) {
                     popupTitle.textContent = 'Success';
                     popupTitle.classList.add('text-green-500');
                 } else {
