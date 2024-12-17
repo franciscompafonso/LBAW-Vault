@@ -42,9 +42,9 @@ class Event extends Model
         return $this->belongsTo(User::class, 'creator_id');
     }
 
-    public function location(): BelongsTo
+    public function district(): BelongsTo
     {
-        return $this->belongsTo(Location::class, 'location_id');
+        return $this->belongsTo(District::class, 'district_id');
     }
 
     public function category(): BelongsTo

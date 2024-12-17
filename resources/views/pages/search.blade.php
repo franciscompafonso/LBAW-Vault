@@ -111,18 +111,18 @@
                 </div>
             </div>
 
-            <!-- Location -->
+            <!-- District -->
             <div>
-                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('location')">
-                    <span>Location</span>
-                    <i id="location-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
+                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('district')">
+                    <span>District</span>
+                    <i id="district-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
                 </label>
-                <div class="mt-2 hidden" id="location">
-                    @foreach ($locations as $location)
+                <div class="mt-2 hidden" id="district">
+                    @foreach ($districts as $district)
                         <label class="flex items-center space-x-2 mt-1">
-                            <input type="checkbox" name="location[]" value="{{ $location->id }}" 
-                                {{ request('location') && in_array($location->id, request('location')) ? 'checked' : '' }} />
-                            <span>{{ $location->name }}</span>
+                            <input type="checkbox" name="district[]" value="{{ $district->id }}" 
+                                {{ request('district') && in_array($district->id, request('district')) ? 'checked' : '' }} />
+                            <span>{{ $district->name }}</span>
                         </label>
                     @endforeach
                 </div>
@@ -209,7 +209,7 @@
         // Initial state: collapsed by default
         const collapsedSections = JSON.parse(localStorage.getItem('collapsedSections')) || {};
 
-        const sections = ['visibility', 'category', 'location', 'status'];
+        const sections = ['visibility', 'category', 'district', 'status'];
         sections.forEach((sectionId) => {
             const section = document.getElementById(sectionId);
             const icon = document.getElementById(sectionId + '-arrow');

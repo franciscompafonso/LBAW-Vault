@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS join_request_notification CASCADE;
 DROP TABLE IF EXISTS join_request CASCADE;
 DROP TABLE IF EXISTS unblock_request CASCADE;
 DROP TABLE IF EXISTS admin CASCADE;
-DROP TABLE IF EXISTS location CASCADE;
+DROP TABLE IF EXISTS district CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS notification CASCADE;
 DROP TABLE IF EXISTS poll_response CASCADE;
@@ -86,7 +86,7 @@ CREATE TABLE user_account (
     remember_token VARCHAR(255) DEFAULT NULL
 );
 
-CREATE TABLE location (
+CREATE TABLE district (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
@@ -102,12 +102,13 @@ CREATE TABLE "event" (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
+    location TEXT,
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
     visibility VisibilityTypes NOT NULL,
     capacity INT,
     creator_id INT REFERENCES user_account(id) NOT NULL,
-    location_id INT REFERENCES location(id) NOT NULL,
+    district_id INT REFERENCES district(id) NOT NULL,
     category_id INT REFERENCES category(id) NOT NULL,
     file_id INT,
     CONSTRAINT ck_start_end CHECK (start_date < end_date)
@@ -308,7 +309,7 @@ ALTER TABLE event ADD COLUMN ts_vector TSVECTOR;
 
 UPDATE event
 SET ts_vector = to_tsvector('english', name || ' ' || description || ' ' ||
-                COALESCE((SELECT name FROM location WHERE location.id = event.location_id), '') || ' ' ||
+                COALESCE((SELECT name FROM district WHERE district.id = event.district_id), '') || ' ' ||
                 COALESCE((SELECT name FROM category WHERE category.id = event.category_id), '')
 );
 
@@ -318,7 +319,7 @@ BEGIN
         NEW.ts_vector := (
             setweight(to_tsvector('english', NEW.name), 'A') ||
             setweight(to_tsvector('english', NEW.description), 'B') ||
-            setweight(to_tsvector('english', COALESCE((SELECT name FROM location WHERE location.id = NEW.location_id), '')), 'C') ||
+            setweight(to_tsvector('english', COALESCE((SELECT name FROM district WHERE district.id = NEW.district_id), '')), 'C') ||
             setweight(to_tsvector('english', COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), '')), 'C')
         );
     END IF;
@@ -326,13 +327,13 @@ BEGIN
     IF TG_OP = 'UPDATE' THEN
         IF (NEW.name <> OLD.name OR 
             NEW.description <> OLD.description OR 
-            NEW.location_id <> OLD.location_id OR 
+            NEW.district_id <> OLD.district_id OR 
             NEW.category_id <> OLD.category_id) THEN
 
             NEW.ts_vector := (
                 setweight(to_tsvector('english', NEW.name), 'A') ||
                 setweight(to_tsvector('english', NEW.description), 'B') ||
-                setweight(to_tsvector('english', COALESCE((SELECT name FROM location WHERE location.id = NEW.location_id), '')), 'C') ||
+                setweight(to_tsvector('english', COALESCE((SELECT name FROM district WHERE district.id = NEW.district_id), '')), 'C') ||
                 setweight(to_tsvector('english', COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), '')), 'C')
             );
         END IF;
@@ -481,7 +482,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_event_update_notification
-    AFTER UPDATE OF name, description, start_date, end_date, location_id, category_id ON event
+    AFTER UPDATE OF name, description, start_date, end_date, district_id, category_id ON event
     FOR EACH ROW
     EXECUTE FUNCTION create_event_update_notification();
 
@@ -905,33 +906,32 @@ INSERT INTO admin (email, password) VALUES
 ('admin1@example.com', '$2y$10$ii5KNGv4MCXCh20tghqKg./7AzxujQjCGIvcRe5CO1iXYIUK59CoS'),
 ('admin2@example.com', '$2y$10$IEkOO9H2AQe1WSf6qYZ5MeWBLzcvcOzh3koKw93wfQiuJBOvN9LmG');
 
-INSERT INTO location (name) VALUES
-('Central City Park'),
-('Community Center Downtown'),
-('Public Library Main Branch'),
-('Local Hospital Courtyard'),
-('Senior Citizens Center'),
-('Elementary School Gymnasium'),
-('University Campus Green'),
-('Youth Development Center'),
-('Environmental Research Station'),
-('City Art Museum'),
-('Tech Innovation Hub'),
-('Homeless Shelter Grounds'),
-('Rehabilitation Center'),
-('Urban Garden Project'),
-('Public Health Clinic'),
-('Children''s Learning Center'),
-('Cultural Heritage Museum'),
-('Neighborhood Community Hall'),
-('Mental Health Institute'),
-('Disaster Response Training Ground'),
-('Downtown Fitness Studio'),
-('Regional Blood Bank'),
-('Local Conference Center'),
-('Community Arts Pavilion'),
-('Animal Rescue Facility'),
-('Beachfront Cleanup Area');
+INSERT INTO district (name) VALUES
+('Aveiro'),
+('Beja'),
+('Braga'),
+('Bragança'),
+('Castelo Branco'),
+('Coimbra'),
+('Évora'),
+('Faro'),
+('Guarda'),
+('Leiria'),
+('Lisboa'),
+('Madeira'),
+('Montijo'),
+('Portalegre'),
+('Porto'),
+('Santarém'),
+('Setúbal'),
+('Viana do Castelo'),
+('Vila Real'),
+('Viseu'),
+('Açores'),
+('Madeira'),
+('Multiple districts'),
+('European'),
+('Internacional');
 
 INSERT INTO category (name) VALUES
 ('Health and Wellness'),
@@ -947,70 +947,70 @@ INSERT INTO category (name) VALUES
 ('Animal Welfare and Conservation');
 
 -- Past events
-INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id, file_id) VALUES
-('Mental Health Awareness Workshop', 'Interactive session on understanding mental health challenges', '2024-02-15 09:00', '2024-02-16 17:00', 'public', 50, 1, 19, 5, 5),
-('Children''s Reading Program', 'Volunteer reading sessions for underprivileged children', '2024-03-10 10:00', '2024-05-20 16:00', 'public', 30, 2, 16, 2, 6),
-('Urban Gardening Initiative', 'Community garden planting and maintenance', '2024-04-22 08:00', '2024-06-30 18:00', 'public', 40, 3, 14, 6, 7),
-('Senior Technology Training', 'Teaching digital skills to elderly community members', '2024-01-15 10:00', '2024-03-15 15:00', 'public', 25, 4, 5, 4, 8),
-('Art Therapy for Trauma Survivors', 'Creative healing workshop for psychological recovery', '2024-02-01 09:30', '2024-02-28 16:00', 'request_only', 20, 5, 19, 5, 9),
-('Community Clean-Up Day', 'City-wide environmental cleaning event', '2024-04-05 07:00', '2024-04-05 18:00', 'public', 100, 6, 1, 6, 10),
-('Healthcare Professional Training', 'Training for community health volunteers', '2024-03-20 09:00', '2024-03-22 17:00', 'private', 40, 7, 4, 1, 11),
-('Youth Leadership Summit', 'Empowerment program for young community leaders', '2024-05-10 08:30', '2024-05-12 16:30', 'public', 60, 8, 7, 7, 12),
-('Digital Skills for Unemployed', 'Free computer and job application training', '2024-02-10 09:00', '2024-04-10 16:00', 'public', 35, 9, 11, 4, 13),
-('Cultural Heritage Exhibition', 'Showcasing local community''s diverse cultural traditions', '2024-01-25 10:00', '2024-02-10 19:00', 'public', 75, 10, 10, 3, 14),
-('Emergency Response Simulation', 'Disaster preparedness training for volunteers', '2024-03-05 08:00', '2024-03-07 17:00', 'request_only', 30, 11, 20, 10, 15),
-('Child Development Workshop', 'Training for early childhood educators', '2024-04-15 09:00', '2024-04-16 17:00', 'private', 25, 12, 6, 2, 16),
-('Social Justice Advocacy Training', 'Workshop on community rights and equality', '2024-02-20 09:30', '2024-02-22 16:30', 'public', 45, 13, 18, 8, 17),
-('Wellness Marathon', 'Community run supporting health awareness', '2024-05-01 06:00', '2024-05-01 14:00', 'canceled', 200, 14, 1, 1, 18),
-('Environmental Education Camp', 'Week-long ecological awareness program', '2024-06-15 10:00', '2024-06-22 16:00', 'public', 50, 15, 9, 6, 19),
-('Senior Companionship Program', 'Visiting and supporting elderly community members', '2024-01-10 09:00', '2024-12-31 17:00', 'request_only', 40, 16, 5, 9, 20),
-('Mental Health First Aid Training', 'Certification course for community support', '2024-03-30 09:00', '2024-04-01 17:00', 'private', 30, 17, 19, 5, 21),
-('Children''s Art Workshop', 'Creative expression program for kids', '2024-05-15 10:00', '2024-05-22 15:00', 'public', 35, 18, 10, 3, 22),
-('Tech Support for Non-Profits', 'Providing IT solutions for community organizations', '2024-02-05 08:00', '2024-04-05 16:00', 'public', 25, 19, 11, 4, 23),
-('Community Food Bank Support', 'Organizing and distributing food resources', '2024-01-20 07:00', '2024-12-31 17:00', 'public', 60, 20, 12, 7, 24),
-('Psychological Resilience Seminar', 'Workshop on mental strength and coping', '2024-04-10 10:00', '2024-04-11 15:00', 'request_only', 40, 1, 19, 5, 25),
-('Early Learning Playground Build', 'Constructing safe play areas for children', '2024-05-25 08:00', '2024-05-26 18:00', 'public', 50, 2, 6, 2, 26),
-('Cultural Music Festival', 'Celebrating diverse musical traditions', '2024-06-01 14:00', '2024-06-02 21:00', 'public', 100, 3, 10, 3, 27),
-('Digital Literacy for Seniors', 'Introductory computer classes', '2024-03-15 09:00', '2024-05-15 15:00', 'public', 30, 4, 5, 4, 28),
-('Environmental Policy Roundtable', 'Discussing local sustainability initiatives', '2024-04-18 13:00', '2024-04-19 17:00', 'request_only', 35, 5, 9, 6, 29),
-('Community Health Screening', 'Free medical check-ups and consultations', '2024-02-28 08:00', '2024-02-29 16:00', 'public', 80, 6, 15, 1, 30),
-('Youth Sports Mentorship', 'Athletic training and life skills program', '2024-05-05 09:00', '2024-08-30 17:00', 'public', 45, 7, 7, 7, 31),
-('Art Restoration Project', 'Preserving local historical artifacts', '2024-03-10 10:00', '2024-06-10 17:00', 'private', 20, 8, 10, 3, 32),
-('Homeless Shelter Support', 'Providing meals and essential services', '2024-01-01 08:00', '2024-12-31 20:00', 'public', 50, 9, 12, 7, 33),
-('Emergency Medical Training', 'First aid and crisis response course', '2024-04-20 09:00', '2024-04-21 16:00', 'request_only', 35, 10, 4, 10, 34),
-('Childhood Nutrition Program', 'Educating on healthy eating for kids', '2024-03-05 09:30', '2024-05-05 16:00', 'public', 40, 11, 16, 2, 35),
-('Digital Rights Workshop', 'Exploring online privacy and safety', '2024-02-15 10:00', '2024-02-16 15:00', 'public', 30, 12, 11, 4, 36),
-('Tech Support for Non-Profits', 'Providing IT solutions for community organizations', '2024-06-10 09:00', '2024-06-12 17:00', 'public', 60, 13, 18, 8, 37),
-('Wellness Yoga Retreat', 'Holistic health and stress management', '2024-05-20 08:00', '2024-05-22 14:00', 'public', 25, 14, 7, 1, 38),
-('Urban Garden Maintenance Project', 'Continuous support for community sustainable agriculture initiatives', '2024-04-25 08:00', '2024-07-26 18:00', 'public', 100, 15, 9, 6, 39),
-('Career Counseling for Seniors', 'Job search and skill development', '2024-03-25 10:00', '2024-04-25 16:00', 'public', 35, 16, 5, 9, 40),
-('Disaster Preparedness Workshop', 'Community safety and emergency planning', '2024-02-05 10:00', '2024-02-06 15:00', 'public', 50, 17, 20, 10, 41);
+INSERT INTO event (name, description, location, start_date, end_date, visibility, capacity, creator_id, district_id, category_id, file_id) VALUES
+('Mental Health Awareness Workshop', 'Interactive session on understanding mental health challenges', 'Centro Cultural de Viseu', '2024-02-15 09:00', '2024-02-16 17:00', 'public', 50, 1, 19, 5, 5),
+('Children''s Reading Program', 'Volunteer reading sessions for underprivileged children', 'Biblioteca Municipal do Porto', '2024-03-10 10:00', '2024-05-20 16:00', 'public', 30, 2, 16, 2, 6),
+('Urban Gardening Initiative', 'Community garden planting and maintenance', 'Parque do Caia', '2024-04-22 08:00', '2024-06-30 18:00', 'public', 40, 3, 14, 6, 7),
+('Senior Technology Training', 'Teaching digital skills to elderly community members', 'Centro Social de Castelo Branco', '2024-01-15 10:00', '2024-03-15 15:00', 'public', 25, 4, 5, 4, 8),
+('Art Therapy for Trauma Survivors', 'Creative healing workshop for psychological recovery', 'Centro Cultural de Viseu', '2024-02-01 09:30', '2024-02-28 16:00', 'request_only', 20, 5, 19, 5, 9),
+('Community Clean-Up Day', 'City-wide environmental cleaning event', 'Parque da Cidade de Aveiro', '2024-04-05 07:00', '2024-04-05 18:00', 'public', 100, 6, 1, 6, 10),
+('Healthcare Professional Training', 'Training for community health volunteers', 'Hospital Distrital de Bragança', '2024-03-20 09:00', '2024-03-22 17:00', 'private', 40, 7, 4, 1, 11),
+('Youth Leadership Summit', 'Empowerment program for young community leaders', 'Centro Juvenil de Évora', '2024-05-10 08:30', '2024-05-12 16:30', 'public', 60, 8, 7, 7, 12),
+('Digital Skills for Unemployed', 'Free computer and job application training', 'Biblioteca Municipal de Lisboa', '2024-02-10 09:00', '2024-04-10 16:00', 'public', 35, 9, 11, 4, 13),
+('Cultural Heritage Exhibition', 'Showcasing local community''s diverse cultural traditions', 'Centro Cultural de Leiria', '2024-01-25 10:00', '2024-02-10 19:00', 'public', 75, 10, 10, 3, 14),
+('Emergency Response Simulation', 'Disaster preparedness training for volunteers', 'Centro de Formação de Viseu', '2024-03-05 08:00', '2024-03-07 17:00', 'request_only', 30, 11, 20, 10, 15),
+('Child Development Workshop', 'Training for early childhood educators', 'Centro Educacional de Coimbra', '2024-04-15 09:00', '2024-04-16 17:00', 'private', 25, 12, 6, 2, 16),
+('Social Justice Advocacy Training', 'Workshop on community rights and equality', 'Centro Comunitário de Viana do Castelo', '2024-02-20 09:30', '2024-02-22 16:30', 'public', 45, 13, 18, 8, 17),
+('Wellness Marathon', 'Community run supporting health awareness', 'Marginal de Aveiro', '2024-05-01 06:00', '2024-05-01 14:00', 'canceled', 200, 14, 1, 1, 18),
+('Environmental Education Camp', 'Week-long ecological awareness program', 'Serra da Estrela', '2024-06-15 10:00', '2024-06-22 16:00', 'public', 50, 15, 9, 6, 19),
+('Senior Companionship Program', 'Visiting and supporting elderly community members', 'Centro Social de Castelo Branco', '2024-01-10 09:00', '2024-12-31 17:00', 'request_only', 40, 16, 5, 9, 20),
+('Mental Health First Aid Training', 'Certification course for community support', 'Centro Cultural de Viseu', '2024-03-30 09:00', '2024-04-01 17:00', 'private', 30, 17, 19, 5, 21),
+('Children''s Art Workshop', 'Creative expression program for kids', 'Centro Cultural de Leiria', '2024-05-15 10:00', '2024-05-22 15:00', 'public', 35, 18, 10, 3, 22),
+('Tech Support for Non-Profits', 'Providing IT solutions for community organizations', 'Biblioteca Municipal de Lisboa', '2024-02-05 08:00', '2024-04-05 16:00', 'public', 25, 19, 11, 4, 23),
+('Community Food Bank Support', 'Organizing and distributing food resources', 'Centro Comunitário da Madeira', '2024-01-20 07:00', '2024-12-31 17:00', 'public', 60, 20, 12, 7, 24),
+('Psychological Resilience Seminar', 'Workshop on mental strength and coping', 'Centro Cultural de Viseu', '2024-04-10 10:00', '2024-04-11 15:00', 'request_only', 40, 1, 19, 5, 25),
+('Early Learning Playground Build', 'Constructing safe play areas for children', 'Centro Educacional de Coimbra', '2024-05-25 08:00', '2024-05-26 18:00', 'public', 50, 2, 6, 2, 26),
+('Cultural Music Festival', 'Celebrating diverse musical traditions', 'Centro Cultural de Leiria', '2024-06-01 14:00', '2024-06-02 21:00', 'public', 100, 3, 10, 3, 27),
+('Digital Literacy for Seniors', 'Introductory computer classes', 'Centro Social de Castelo Branco', '2024-03-15 09:00', '2024-05-15 15:00', 'public', 30, 4, 5, 4, 28),
+('Environmental Policy Roundtable', 'Discussing local sustainability initiatives', 'Serra da Estrela', '2024-04-18 13:00', '2024-04-19 17:00', 'request_only', 35, 5, 9, 6, 29),
+('Community Health Screening', 'Free medical check-ups and consultations', 'Base Naval de Setúbal', '2024-02-28 08:00', '2024-02-29 16:00', 'public', 80, 6, 15, 1, 30),
+('Youth Sports Mentorship', 'Athletic training and life skills program', 'Estádio Municipal de Évora', '2024-05-05 09:00', '2024-08-30 17:00', 'public', 45, 7, 7, 7, 31),
+('Art Restoration Project', 'Preserving local historical artifacts', 'Centro Cultural de Leiria', '2024-03-10 10:00', '2024-06-10 17:00', 'private', 20, 8, 10, 3, 32),
+('Homeless Shelter Support', 'Providing meals and essential services', 'Centro Comunitário da Madeira', '2024-01-01 08:00', '2024-12-31 20:00', 'public', 50, 9, 12, 7, 33),
+('Emergency Medical Training', 'First aid and crisis response course', 'Hospital Distrital de Bragança', '2024-04-20 09:00', '2024-04-21 16:00', 'request_only', 35, 10, 4, 10, 34),
+('Childhood Nutrition Program', 'Educating on healthy eating for kids', 'Biblioteca Municipal do Porto', '2024-03-05 09:30', '2024-05-05 16:00', 'public', 40, 11, 16, 2, 35),
+('Digital Rights Workshop', 'Exploring online privacy and safety', 'Biblioteca Municipal de Lisboa', '2024-02-15 10:00', '2024-02-16 15:00', 'public', 30, 12, 11, 4, 36),
+('Tech Support for Non-Profits', 'Providing IT solutions for community organizations', 'Centro Comunitário de Viana do Castelo', '2024-06-10 09:00', '2024-06-12 17:00', 'public', 60, 13, 18, 8, 37),
+('Wellness Yoga Retreat', 'Holistic health and stress management', 'Estádio Municipal de Évora', '2024-05-20 08:00', '2024-05-22 14:00', 'public', 25, 14, 7, 1, 38),
+('Urban Garden Maintenance Project', 'Continuous support for community sustainable agriculture initiatives', 'Serra da Estrela', '2024-04-25 08:00', '2024-07-26 18:00', 'public', 100, 15, 9, 6, 39),
+('Career Counseling for Seniors', 'Job search and skill development', 'Centro Social de Castelo Branco', '2024-03-25 10:00', '2024-04-25 16:00', 'public', 35, 16, 5, 9, 40),
+('Disaster Preparedness Workshop', 'Community safety and emergency planning', 'Centro de Formação de Viseu', '2024-02-05 10:00', '2024-02-06 15:00', 'public', 50, 17, 20, 10, 41);
 
 -- Ongoing Events
-INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id, file_id) VALUES
-('Community Meal Preparation Program', 'Continuous volunteer cooking and meal distribution for vulnerable populations', '2024-01-15 09:00', '2024-12-31 18:00', 'public', 75, 1, 12, 7, 42),
-('Digital Mentorship for Seniors', 'Ongoing technology support and training for elderly community members', '2024-02-01 10:00', '2025-01-30 16:00', 'public', 40, 2, 5, 4, 43),
-('Urban Garden Maintenance Project', 'Continuous support for community sustainable agriculture initiatives', '2024-03-01 08:00', '2025-01-31 17:00', 'public', 50, 3, 14, 6, 44),
-('Youth Tutoring and Homework Help', 'Weekly academic support for underprivileged children', '2024-01-20 14:00', '2024-12-26 17:30', 'public', 60, 4, 16, 2, 45),
-('Community Health Screening Caravan', 'Monthly free health check-ups and medical consultations', '2024-02-15 09:00', '2024-12-29 16:00', 'public', 100, 5, 15, 1, 46),
-('Environmental Clean-Up Patrol', 'Ongoing local park, street, and community space cleaning', '2024-04-01 08:00', '2024-12-30 18:00', 'public', 80, 6, 1, 6, 47),
-('Senior Companionship Program', 'Weekly visits and support for isolated elderly community members', '2024-01-10 10:00', '2025-02-28 15:00', 'request_only', 45, 7, 5, 9, 48),
-('Art Therapy for Trauma Survivors', 'Continuous creative healing workshops', '2024-03-15 09:30', '2025-02-15 16:00', 'request_only', 30, 8, 10, 5, 49),
-('Community Legal Aid Support', 'Ongoing volunteer assistance for legal consultations', '2024-02-01 10:00', '2025-02-15 17:00', 'request_only', 35, 9, 2, 8, 50),
-('Wildlife Conservation Monitoring', 'Regular habitat observation and preservation efforts', '2024-05-01 08:30', '2025-01-30 15:30', 'public', 40, 10, 9, 6, 51),
-('Mental Health Peer Support Network', 'Continuous volunteer-driven support group', '2024-01-25 17:00', '2025-01-20 19:00', 'request_only', 25, 11, 19, 5, 52),
-('Community Technology Lab', 'Ongoing digital skills training and computer access', '2024-02-15 09:00', '2025-01-30 17:00', 'public', 50, 12, 11, 4, 53),
-('Children''s Hospital Buddy Program', 'Volunteer companionship for pediatric patients', '2024-03-01 10:00', '2025-01-15 16:00', 'request_only', 35, 13, 4, 2, 54),
-('Sustainable Living Workshop Series', 'Monthly eco-friendly lifestyle education', '2024-04-15 14:00', '2025-02-15 16:30', 'public', 40, 14, 2, 6, 55),
-('Community Sports Mentorship', 'Ongoing athletic training and life skills support', '2024-02-01 15:00', '2025-02-28 19:00', 'public', 55, 15, 7, 7, 56),
-('Homeless Shelter Support Initiative', 'Continuous volunteer assistance at local shelters', '2024-01-15 08:30', '2025-02-28 20:00', 'public', 70, 16, 12, 7, 57),
-('Cultural Heritage Preservation', 'Ongoing documentation and protection of local traditions', '2024-05-01 10:00', '2025-02-28 17:00', 'request_only', 30, 17, 17, 3, 58),
-('Community Garden Education Program', 'Continuous gardening and nutrition workshops', '2024-03-15 09:00', '2025-01-15 16:00', 'public', 45, 18, 14, 6, 59),
-('Emergency Response Training Corps', 'Ongoing volunteer first responder skill development', '2024-02-10 08:30', '2025-02-10 17:30', 'request_only', 40, 19, 20, 10, 60),
-('Animal Shelter Support Program', 'Continuous care and support for shelter animals', '2024-01-01 07:00', '2025-02-28 18:00', 'public', 60, 20, 13, 11, 61);
+INSERT INTO event (name, description, location, start_date, end_date, visibility, capacity, creator_id, district_id, category_id, file_id) VALUES
+('Community Meal Preparation Program', 'Continuous volunteer cooking and meal distribution for vulnerable populations', 'Centro Cultural de Aveiro', '2024-01-15 09:00', '2024-12-31 18:00', 'public', 75, 1, 1, 7, 42),
+('Digital Mentorship for Seniors', 'Ongoing technology support and training for elderly community members', 'Biblioteca Municipal de Castelo Branco', '2024-02-01 10:00', '2025-01-30 16:00', 'public', 40, 2, 5, 4, 43),
+('Urban Garden Maintenance Project', 'Continuous support for community sustainable agriculture initiatives', 'Parque do Caia', '2024-03-01 08:00', '2025-01-31 17:00', 'public', 50, 3, 14, 6, 44),
+('Youth Tutoring and Homework Help', 'Weekly academic support for underprivileged children', 'Aliados', '2024-01-20 14:00', '2024-12-26 17:30', 'public', 60, 4, 16, 2, 45),
+('Community Health Screening Caravan', 'Monthly free health check-ups and medical consultations', 'Base Naval de Setúbal', '2024-02-15 09:00', '2024-12-29 16:00', 'public', 100, 5, 15, 1, 46),
+('Environmental Clean-Up Patrol', 'Ongoing local park, street, and community space cleaning', 'Parque da Cidade de Aveiro', '2024-04-01 08:00', '2024-12-30 18:00', 'public', 80, 6, 1, 6, 47),
+('Senior Companionship Program', 'Weekly visits and support for isolated elderly community members', 'Centro Social de Castelo Branco', '2024-01-10 10:00', '2025-02-28 15:00', 'request_only', 45, 7, 5, 9, 48),
+('Art Therapy for Trauma Survivors', 'Continuous creative healing workshops', 'Centro Cultural de Leiria', '2024-03-15 09:30', '2025-02-15 16:00', 'request_only', 30, 8, 10, 5, 49),
+('Community Legal Aid Support', 'Ongoing volunteer assistance for legal consultations', 'Junta de Freguesia de Beja', '2024-02-01 10:00', '2025-02-15 17:00', 'request_only', 35, 9, 2, 8, 50),
+('Wildlife Conservation Monitoring', 'Regular habitat observation and preservation efforts', 'Serra da Estrela', '2024-05-01 08:30', '2025-01-30 15:30', 'public', 40, 10, 9, 6, 51),
+('Mental Health Peer Support Network', 'Continuous volunteer-driven support group', 'Centro Cívico de Viseu', '2024-01-25 17:00', '2025-01-20 19:00', 'request_only', 25, 11, 20, 5, 52),
+('Community Technology Lab', 'Ongoing digital skills training and computer access', 'Biblioteca Municipal de Lisboa', '2024-02-15 09:00', '2025-01-30 17:00', 'public', 50, 12, 11, 4, 53),
+('Children''s Hospital Buddy Program', 'Volunteer companionship for pediatric patients', 'Hospital Distrital de Bragança', '2024-03-01 10:00', '2025-01-15 16:00', 'request_only', 35, 13, 4, 2, 54),
+('Sustainable Living Workshop Series', 'Monthly eco-friendly lifestyle education', 'Centro Ambiental de Beja', '2024-04-15 14:00', '2025-02-15 16:30', 'public', 40, 14, 2, 6, 55),
+('Community Sports Mentorship', 'Ongoing athletic training and life skills support', 'Estádio Municipal de Évora', '2024-02-01 15:00', '2025-02-28 19:00', 'public', 55, 15, 7, 7, 56),
+('Homeless Shelter Support Initiative', 'Continuous volunteer assistance at local shelters', 'Centro Comunitário da Madeira', '2024-01-15 08:30', '2025-02-28 20:00', 'public', 70, 16, 12, 7, 57),
+('Cultural Heritage Preservation', 'Ongoing documentation and protection of local traditions', 'Museu de Setúbal', '2024-05-01 10:00', '2025-02-28 17:00', 'request_only', 30, 17, 17, 3, 58),
+('Community Garden Education Program', 'Continuous gardening and nutrition workshops', 'Hortas Comunitárias de Portalegre', '2024-03-15 09:00', '2025-01-15 16:00', 'public', 45, 18, 14, 6, 59),
+('Emergency Response Training Corps', 'Ongoing volunteer first responder skill development', 'Centro de Formação de Viseu', '2024-02-10 08:30', '2025-02-10 17:30', 'request_only', 40, 19, 20, 10, 60),
+('Animal Shelter Support Program', 'Continuous care and support for shelter animals', 'Canil Municipal do Montijo', '2024-01-01 07:00', '2025-02-28 18:00', 'public', 60, 20, 13, 11, 61);
 
 -- Future Events
-INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id, file_id) VALUES
+INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, district_id, category_id, file_id) VALUES
 ('Community Playground Renovation', 'Volunteers needed to rebuild and paint local children''s playground', '2024-07-15 08:00', '2024-07-20 17:00', 'public', 75, 1, 1, 7, 62),
 ('Beach Clean-Up Marathon', 'Large-scale environmental cleanup of coastal areas', '2024-08-05 07:00', '2024-08-06 18:00', 'public', 200, 2, 1, 6, 63),
 ('Senior Home Painting Project', 'Volunteer painters to refresh local senior living facilities', '2024-09-10 09:00', '2024-09-15 17:30', 'public', 50, 3, 5, 9, 64),
@@ -1051,7 +1051,7 @@ INSERT INTO event (name, description, start_date, end_date, visibility, capacity
 ('Digital Accessibility Project', 'Help make technology more accessible for disabled community members', '2024-08-25 09:00', '2024-09-25 16:30', 'public', 35, 18, 11, 4, 99);
 
 -- More Events
-INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, location_id, category_id, file_id) VALUES
+INSERT INTO event (name, description, start_date, end_date, visibility, capacity, creator_id, district_id, category_id, file_id) VALUES
 ('Community Health Check-up', 'A volunteer-driven event to assist in health screenings for underserved communities.', '2025-01-20 09:00', '2025-01-20 12:00', 'public', 50, 1, 1, 1, 100),
 ('Fitness for All', 'Help organize and lead fitness sessions for community members.', '2025-03-01 08:00', '2025-03-30 10:00', 'public', 30, 2, 2, 1, 101),
 ('Health Education Seminar', 'Provide guidance on healthy living, nutrition, and lifestyle choices.', '2025-04-05 10:00', '2025-04-05 13:00', 'public', 40, 3, 1, 1, 102),

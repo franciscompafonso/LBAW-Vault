@@ -7,7 +7,7 @@ use App\Models\Category;
 use App\Models\Event;
 use App\Models\File;
 use App\Models\JoinRequest;
-use App\Models\Location;
+use App\Models\District;
 use App\Models\QuestionReview;
 use App\Models\User;
 use App\Events\JoinEvent;
@@ -21,10 +21,10 @@ class EventController extends Controller
 {
     public function create(): Factory|View
     {
-        $locations = Location::all();
+        $districts = District::all();
         $categories = Category::all();
 
-        return view('event.create', compact('locations', 'categories'));
+        return view('event.create', compact('districts', 'categories'));
     }
 
     /**
@@ -83,7 +83,7 @@ class EventController extends Controller
             'end_date' => 'required|date|after:start_date',
             'visibility' => 'required|in:public,private',
             'capacity' => 'required|integer|min:1',
-            'location_id' => 'required|integer',
+            'district_id' => 'required|integer',
             'category_id' => 'required|integer',
             'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
@@ -100,7 +100,7 @@ class EventController extends Controller
             'visibility' => $validated['visibility'],
             'capacity' => $validated['capacity'],
             'creator_id' => Auth::id(),
-            'location_id' => $validated['location_id'],
+            'district_id' => $validated['district_id'],
             'category_id' => $validated['category_id'],
             'file_id' => $fileId ?? null
         ]);
@@ -111,10 +111,10 @@ class EventController extends Controller
     public function edit($id)
     {
         $event = Event::findOrFail($id);
-        $locations = Location::all();
+        $districts = District::all();
         $categories = Category::all();
 
-        return view('event.edit', compact('event', 'locations', 'categories'));
+        return view('event.edit', compact('event', 'districts', 'categories'));
     }
 
     public function update(Request $request, $id)
@@ -130,7 +130,7 @@ class EventController extends Controller
                 'end_date' => 'required|date|after:start_date',
                 'visibility' => 'required|in:public,private,request_only',
                 'capacity' => 'required|integer|min:1',
-                'location_id' => 'required|integer',
+                'district_id' => 'required|integer',
                 'category_id' => 'required|integer',
                 'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
             ]);
@@ -161,7 +161,7 @@ class EventController extends Controller
     public function searchFiltered(Request $request)
     {
         $query = Event::query();
-        $locations = Location::all();
+        $districts = District::all();
         $categories = Category::all();
 
         $searchQuery = $request->input('q');
@@ -214,9 +214,9 @@ class EventController extends Controller
         }
         
 
-        // Location Filter
-        if ($request->filled('location')) {
-            $query->whereIn('location_id', $request->input('location')); // Matches form input name
+        // District Filter
+        if ($request->filled('district')) {
+            $query->whereIn('district_id', $request->input('district')); // Matches form input name
         }
 
         if ($request->filled('status_finished') || $request->filled('status_upcoming') || $request->filled('status_ongoing') || $request->filled('status_full_capacity') || $request->filled('status_canceled') || $request->filled('status_joined')) {
@@ -262,7 +262,7 @@ class EventController extends Controller
 
         return view('pages.search', compact(
             'events',
-            'locations',
+            'districts',
             'categories',
             'eventsCount'
         ));
@@ -408,8 +408,8 @@ class EventController extends Controller
         $query = $request->input('q');
 
         $events = Event::query()
-            ->select('event.*', 'location.name as location_name', 'category.name as category_name')
-            ->join('location', 'event.location_id', '=', 'location.id')
+            ->select('event.*', 'district.name as district_name', 'category.name as category_name')
+            ->join('district', 'event.district_id', '=', 'district.id')
             ->join('category', 'event.category_id', '=', 'category.id')
             ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$query])
             ->limit(5)

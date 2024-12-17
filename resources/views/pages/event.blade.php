@@ -27,8 +27,9 @@
                         <i class="text-4xl fa-solid fa-ellipsis"></i>
                     </button>
                 @endif
-                <!-- Options Menu -->
-                <div id="menu" class="absolute top-0 right-0 hidden w-64 mt-2 bg-white rounded-lg shadow-lg">
+                
+                <!-- Options dropdown -->
+                <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg">
                     <div class="space-y-2">
                         @if (Auth::guard(name: 'admin')->check() || $event->creator_id === Auth::id())
                             <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
@@ -48,15 +49,15 @@
                                 <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
                             @else
                                 <button 
-                                    disabled 
                                     title="Survey results are available after the event ends."
-                                    class="block w-full px-6 py-4 text-xl text-left text-gray-500 cursor-not-allowed hover:text-darkSlateGrey">
+                                    class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
                                     Survey Results Not Available
                                 </button>
                             @endif
                         @endif
                     </div>
                 </div>
+
             </div>
 
             <!-- Action Buttons -->
@@ -170,7 +171,10 @@
                     <strong class="font-semibold">End:</strong> {{ \Carbon\Carbon::parse($event->end_date)->format('d/m/Y H:i') }}
                 </p>
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
-                    <strong class="font-semibold">Location:</strong> {{ $event->location->name ?? 'No location specified' }}
+                    <strong class="font-semibold">District:</strong> {{ $event->district->name ?? 'No district specified' }}
+                </p>
+                <p class="text-3xl text-darkSlateGrey font-montserrat">
+                    <strong class="font-semibold">Location:</strong> {{ $event->location ?? 'No location specified' }}
                 </p>
             </div>
 

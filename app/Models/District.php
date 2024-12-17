@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Location extends Model
+class District extends Model
 {
     use HasFactory;
 
@@ -16,10 +16,10 @@ class Location extends Model
     public $timestamps  = false;
 
     // Specify the table name
-    protected $table = 'location';
+    protected $table = 'district';
 
     /**
-     * Get the events that belong to that location.
+     * Get the events that belong to that district.
      */
     public function events() : HasMany
     {

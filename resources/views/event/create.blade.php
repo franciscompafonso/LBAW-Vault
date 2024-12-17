@@ -68,17 +68,17 @@
         @endif
       </div>
 
-      <!-- Location Selector -->
+      <!-- District Selector -->
       <div class="mb-4">
-        <label for="location_id" class="block text-lg font-semibold font-montserrat">Location</label>
-        <select id="location_id" name="location_id" required class="block px-2 text-lg font-semibold font-montserrat">
-          <option value="">Select a Location</option>
-          @foreach($locations as $location)
-            <option value="{{ $location->id }}" {{ old('location_id') == $location->id ? 'selected' : '' }}>{{ $location->name }}</option>
+        <label for="district_id" class="block text-lg font-semibold font-montserrat">District</label>
+        <select id="district_id" name="district_id" required class="block px-2 text-lg font-semibold font-montserrat">
+          <option value="">Select a District</option>
+          @foreach($districts as $district)
+            <option value="{{ $district->id }}" {{ old('district_id') == $district->id ? 'selected' : '' }}>{{ $district->name }}</option>
           @endforeach
         </select>
-        @if ($errors->has('location_id'))
-          <span class="mt-1 text-sm text-red-600">{{ $errors->first('location_id') }}</span>
+        @if ($errors->has('district_id'))
+          <span class="mt-1 text-sm text-red-600">{{ $errors->first('district_id') }}</span>
         @endif
       </div>
 
