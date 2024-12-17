@@ -29,4 +29,9 @@ class UserPolicy
     return $currentUser->id === $targetUser->id;
     }
 
+    public function login(User $user)
+    {
+        return !$user->isdeleted;
+    }
+
 }

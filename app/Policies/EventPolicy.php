@@ -55,7 +55,7 @@ class EventPolicy
 
     public function create(User $user): bool
     {
-        return Auth::check();
+        return Auth::check() && !$user->isblocked;
     }
 
     public function delete(User $user, Event $event): bool

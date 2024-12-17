@@ -33,17 +33,20 @@ Route::get('/events/search', [EventController::class, 'searchFiltered'])->name('
 Route::get('/photos/{id}', [FileController::class, 'show'])->name('photos.show');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
 
-// Authentication
-Route::controller(LoginController::class)->group(function () {
-    Route::get('/login', 'showLoginForm')->name('login');
-    Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout');
-    Route::post('/admin/logout', 'logout')->name('admin.logout');
+Route::middleware('guest')->group(function () {
+    // Login routes
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'authenticate']);
+
+    // Registration routes
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
 });
 
-Route::controller(RegisterController::class)->group(function () {
-    Route::get('/register', 'showRegistrationForm')->name('register');
-    Route::post('/register', 'register');
+// Authentication
+Route::controller(LoginController::class)->group(function () {
+    Route::get('/logout', 'logout')->name('logout');
+    Route::post('/admin/logout', 'logout')->name('admin.logout');
 });
 
 Route::controller(MailController::class)->group(function () {

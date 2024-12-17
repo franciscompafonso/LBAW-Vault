@@ -10,19 +10,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next, string ...$guards): Response
+    
+    public function handle(Request $request, Closure $next, $guard = null): Response
     {
-        $guards = empty($guards) ? [null] : $guards;
+        if (Auth::guard('web')->check()) {
+            return redirect('/home'); // Redirect regular users
+        }
 
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
-            }
+        if (Auth::guard('admin')->check()) {
+            return redirect('/home'); // Redirect admins
         }
 
         return $next($request);
