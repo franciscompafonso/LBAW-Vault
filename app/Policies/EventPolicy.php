@@ -123,5 +123,10 @@ class EventPolicy
         return $event->participators->contains($user)
             && $event->end_date < now();
     }
-
+    
+    public function addToCalendar(User $user, Event $event)
+    {
+        return $event->participators->contains($user)
+            && $event->end_date < now();
+    }
 }
