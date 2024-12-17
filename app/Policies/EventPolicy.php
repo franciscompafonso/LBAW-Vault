@@ -74,7 +74,7 @@ class EventPolicy
     public function viewSurveyResults(User $user, Event $event)
     {
         $isAdmin = auth()->guard('admin')->check();
-        return $user->id === $event->creator_id && $event->end_date < now() || $isAdmin;
+        return $user->id === $event->creator_id || $isAdmin;
     }
 
     public function createPoll(User $user, Event $event)

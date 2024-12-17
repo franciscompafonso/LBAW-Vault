@@ -12,13 +12,13 @@
                 <h2 id="quote" class="mb-8 text-6xl font-semibold font-montserrat text-eerieBlack">
                     Empowering Communities, One Event at a Time.
                 </h2>
-                @if (Auth::guard('admin')->check())
+                @auth('admin')
                     <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Welcome back message for admin">Welcome back, Admin!</p>
-                @elseif (Auth::guard('web')->check())
+                @elseauth('web')
                     <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Welcome back message for user">Welcome back, {{ Auth::user()->name }}!</p>
                 @else
                     <p class="text-4xl font-montserrat text-eerieBlack" aria-label="Invitation to join the platform">Join us now!</p>
-                @endif
+                @endauth
             </div>
 
 

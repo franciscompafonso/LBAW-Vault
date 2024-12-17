@@ -9,12 +9,19 @@ use App\Models\Comment;
 class CommentPolicy
 {
 
-    /**
-     * Determine if a comment can be deleted by a user.
-     */
-    public function delete(User $user, Comment $comment): bool
+    public function delete(User $user, Comment $comment)
     {
-      // Only a comment owner can delete it.
-      return $user->id === $comment->comment_by_id;
+      $isAdmin = auth()->guard('admin')->check();
+      return $isAdmin || $user->id === $comment->comment_by_id;
+    }
+
+    public function reply(User $user, Comment $comment)
+    {
+        return !$user->isdeleted && !$user->isblocked;
+    }
+
+    public function like(User $user, Comment $comment)
+    {
+        return !$user->isdeleted && !$user->isblocked;
     }
 }

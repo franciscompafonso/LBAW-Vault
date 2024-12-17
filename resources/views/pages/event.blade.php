@@ -20,17 +20,27 @@
 
             <!-- Options Icon -->
             <div class="absolute top-0 right-0">
-                @can('update', $event)
-                    <button 
-                        class="w-12 h-12 border-0 rounded-full text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
-                        onclick="toggleMenu(event)" id="icon">
-                        <i class="text-4xl fa-solid fa-ellipsis"></i>
-                    </button>
-                @endcan
+                <button 
+                    class="w-12 h-12 border-0 rounded-full text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
+                    onclick="toggleMenu(event)" id="icon">
+                    <i class="text-4xl fa-solid fa-ellipsis"></i>
+                </button>
 
                 <!-- Options dropdown -->
-                <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg">
+                <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg w-[12em]">
                     <div class="space-y-2">
+                        @php
+                            $eventName = urlencode($event->name); // Event name
+                            $startDate = urlencode($event->start_date->format('Ymd\THis')); // Start time in UTC
+                            $endDate = urlencode($event->end_date->format('Ymd\THis')); // End time in UTC
+                            $description = urlencode($event->description); // Event description
+                            $location = urlencode($event->location); // Event location
+
+                            $googleCalendarUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$eventName}&dates={$startDate}/{$endDate}&details={$description}&location={$location}";
+                        @endphp
+
+                        <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
+
                         @can('update', $event)
                             <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
                         @endcan
@@ -50,14 +60,24 @@
                                 Create Poll
                             </button>
                         @endcan
+
                         @can('viewSurveyResults', $event)
-                            <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
-                        @else
-                            <button 
-                                title="Survey results are available after the event ends."
-                                class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
-                                Survey Results Not Available
-                            </button>
+                            @if($event->end_date < now())
+                                <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
+                            @else
+                                <button 
+                                    title="Survey results are available after the event ends."
+                                    class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
+                                    Survey Results Not Available
+                                </button>
+                            @endif
+                        @endcan
+
+                        @can('leave', $event)
+                            <form action="{{ route('events.leave', $event->id) }}" method="POST" class="block">
+                                @csrf
+                                <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Leave Event</button>
+                            </form>
                         @endcan
                     </div>
                 </div>
@@ -66,7 +86,7 @@
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-4 mt-auto">
                 @can('leave', $event)
-                    <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Joined Event</button>
+                    <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Joined!</button>
                 @endcan
 
                 @can('join', $event)
