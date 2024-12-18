@@ -77,6 +77,11 @@
             Not a member? 
             <a href="{{ route('register') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Sign up for a new account">Sign up</a>
           </p>
+
+          <!-- No account -->
+          <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">
+            <a href="{{ url(path: '/home') }}" class="font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Continue without an account">Continue without an account</a>
+          </p>
       </div>
     </section>
   </div>

@@ -106,6 +106,11 @@
           Have an account?
           <a href="{{ route('login') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Sign in to your account">Sign in</a>   
         </p>
+        
+        <!-- No account -->
+        <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">
+            <a href="{{ url(path: '/home') }}" class="font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Continue without an account">Continue without an account</a>
+          </p>
       </div>
     </section>
   </div>
