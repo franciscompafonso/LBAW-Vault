@@ -14,8 +14,12 @@
 @endcan
 
 @can ('requestJoin', $event)
-    <form action="{{ route('events.request', $event->id) }}" method="POST">
+    <form id="requestEventForm" action="{{ route('events.request', $event->id) }}" method="POST">
         @csrf
         <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Request to Join</button>
     </form>
+@endcan
+
+@can('requestSent', $event)
+    <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Request Sent!</button>
 @endcan

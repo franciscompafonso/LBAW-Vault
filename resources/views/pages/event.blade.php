@@ -96,10 +96,14 @@
                     @endcan
 
                     @can ('requestJoin', $event)
-                        <form action="{{ route('events.request', $event->id) }}" method="POST">
+                        <form id="requestEventForm" action="{{ route('events.request', $event->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Request to Join</button>
                         </form>
+                    @endcan
+
+                    @can('requestSent', $event)
+                        <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Request Sent!</button>
                     @endcan
                 </div>
                     
@@ -145,32 +149,32 @@
             <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
-                <!-- make Poll -->
-                @can('createPoll', $event)
-                    <div class="flex justify-end mt-4">
-                        <button 
-                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue""
-                            onclick="togglePollForm()">
-                            Create Poll
-                        </button>
-                    </div>
-                @endcan
+            <!-- make Poll -->
+            @can('createPoll', $event)
+                <div class="flex justify-end mt-4">
+                    <button 
+                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue""
+                        onclick="togglePollForm()">
+                        Create Poll
+                    </button>
+                </div>
+            @endcan
 
-                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
-                    <a href="{{ route('events.surveyStats', $event->id) }}" class="block mt-4 text-center">
-                        <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
-                            View Survey Results
-                        </button>
-                    </a>
-                @else
-                    <p class="text-lg text-red-600">Survey results are available after the event ends.</p>
-                @endif
-                <!-- Polls -->
-                @each('partials.poll', $event->polls, 'poll')
-            </div>
+            @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
+                <a href="{{ route('events.surveyStats', $event->id) }}" class="block mt-4 text-center">
+                    <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
+                        View Survey Results
+                    </button>
+                </a>
+            @else
+                <p class="text-lg text-red-600">Survey results are available after the event ends.</p>
+            @endif
+            <!-- Polls -->
+            @each('partials.poll', $event->polls, 'poll')
+        </div>
 
         <!-- Details and Participants Section -->
-        <div class="flex flex-col gap-6 lg:w-1/5">
+        <div class="flex flex-col gap-6 lg:w-2/5">
             <!-- Event Details -->
             <div class="p-6 space-y-8">
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
@@ -294,6 +298,39 @@
                     const button = form.querySelector('button');
                     button.textContent = "Joined!";
                     button.disabled = true;
+                }
+
+                updateParticipantInfo();
+                updateCommentForm();
+                updateEventActions();
+            })
+            .catch(error => {
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        }
+    });
+
+    // Handle Request to join Event button click
+    document.addEventListener('submit', function (event) {
+        if (event.target.id === "requestEventForm") {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                showPopup(data.success, data.message);
+
+                if (data.success) {
+                    const button = form.querySelector('button');
+                    button.textContent = "Request Sent!";
+                    button.disabled = false;
                 }
 
                 updateParticipantInfo();

@@ -230,7 +230,7 @@ class EventController extends Controller
         $this->authorize('requestJoin', $event);
 
         if ($event->participators->contains($user) || $event->creator_id === $user->id) {
-            return redirect()->back()->with([
+            return response()->json([
                 'message' => 'You are already part of this event!',
                 'success' => false
             ]);;
@@ -242,7 +242,7 @@ class EventController extends Controller
             ->first();
 
         if ($existingRequest) {
-            return redirect()->back()->with([
+            return response()->json([
                 'message' => 'You have already requested to join this event!',
                 'success' => false
             ]);
@@ -255,7 +255,7 @@ class EventController extends Controller
             'date' => now(),
         ]);
 
-        return redirect()->back()->with([
+        return response()->json([
             'message' => 'Your request to join has been sent!',
             'success' => true
         ]);
