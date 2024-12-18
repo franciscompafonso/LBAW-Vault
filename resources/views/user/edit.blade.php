@@ -8,7 +8,7 @@
         </div>
 
         <!-- Edit Profile Form -->
-        <form action="{{ auth()->guard('admin')->check() ? route('admin.edit.action', ['id' => $user->id]) : route('user.edit.action', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('user.edit.action', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('POST')
 

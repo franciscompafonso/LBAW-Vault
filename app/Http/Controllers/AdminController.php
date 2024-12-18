@@ -134,6 +134,7 @@ class AdminController extends Controller
         }
     }
 
+    /*
     public function adminEditForm(int $id)
     {
         $this->authorize('manageUsers', Admin::class);
@@ -184,7 +185,7 @@ class AdminController extends Controller
 
         $user->save();
         return redirect()->route('user.profile', ['id' => $user->id]);
-
+        
     }
-
+    */
 }
