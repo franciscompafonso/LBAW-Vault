@@ -39,7 +39,7 @@
           <div>
             <label for="name" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Name</label>   
             <div class="mt-1">
-              <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
+              <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="name-error">   
               @if ($errors->has('name'))
                 <span class="mt-1 text-sm text-red-600">
                   {{ $errors->first('name') }}
@@ -52,7 +52,7 @@
           <div>
             <label for="username" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Username</label>   
             <div class="mt-1">
-              <input id="username" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
+              <input id="username" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="username-error">   
               @if ($errors->has('username'))
                 <span class="mt-1 text-sm text-red-600">
                   {{ $errors->first('username') }}
@@ -65,7 +65,7 @@
           <div>
             <label for="email" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Email Address</label>   
             <div class="mt-1">
-              <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
+              <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="email-error">   
               @if ($errors->has('email'))
                 <span class="mt-1 text-sm text-red-600">
                   {{ $errors->first('email') }}
@@ -78,7 +78,7 @@
           <div>
             <label for="password" class="block font-montserrat text-3xl font-medium text-darkSlateGrey">Password</label>   
             <div class="mt-1">
-              <input id="password" type="password" name="password" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
+              <input id="password" type="password" name="password" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="password-error">   
               @if ($errors->has('password'))
                 <span class="mt-1 text-sm text-red-600">
                   {{ $errors->first('password') }}

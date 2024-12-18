@@ -53,7 +53,7 @@
             <div>
               <div class="flex justify-between">
                 <label for="password" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Password</label>
-                <a href="{{ route('password.request') }}" class="block text-2xl font-medium text-darkSlateGrey hover:text-cambrigdeBlue">Forgot password?</a>
+                <a href="{{ route('password.request') }}" class="block text-2xl font-medium text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Forgot your password?">Forgot password?</a>
               </div>
               <div class="mt-1">
                 <input id="password" type="password" name="password" required autocomplete="current-password" 
