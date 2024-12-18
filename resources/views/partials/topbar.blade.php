@@ -266,7 +266,7 @@
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
                         <p class="text-sm text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.join_request_by_id}">
-                                ${notification.data.join_request_by_name ? notification.data.join_request_by_name : ''}
+                                ${notification.data.user_name ? notification.data.user_name : ''}
                             </a> 
                             has requested to join the
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">

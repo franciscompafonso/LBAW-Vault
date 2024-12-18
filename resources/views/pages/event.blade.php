@@ -159,16 +159,7 @@
                     </button>
                 </div>
             @endcan
-
-            @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
-                <a href="{{ route('events.surveyStats', $event->id) }}" class="block mt-4 text-center">
-                    <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
-                        View Survey Results
-                    </button>
-                </a>
-            @else
-                <p class="text-lg text-red-600">Survey results are available after the event ends.</p>
-            @endif
+            
             <!-- Polls -->
             @each('partials.poll', $event->polls, 'poll')
         </div>
