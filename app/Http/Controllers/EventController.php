@@ -350,6 +350,30 @@ class EventController extends Controller
         ]);
     }
 
+    public function getParticipants($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        $participators = $event->participators;
+
+        $participantHtml = view('partials.invite-form', [
+            'event' => $event
+        ])->render();;
+
+        foreach ($participators as $participator) {
+            $participantHtml .= view('partials.participator', [
+                'participator' => $participator,
+                'creatorId' => $event->creator_id,
+                'event' => $event
+            ])->render();
+        }
+
+        return response()->json([
+            'count' => $participators->count(),
+            'capacity' => $event->capacity,
+            'participantHtml' => $participantHtml
+        ]);
+    }
+
     /**
      * Join an event.
      */

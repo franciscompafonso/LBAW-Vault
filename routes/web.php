@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/events/{event}/survey/stats', [EventController::class, 'showSurveyStats'])->name('events.surveyStats');
     Route::post('/events/{event}/request', [EventController::class, 'requestToJoin'])->name('events.request');
     Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
+    Route::get('/events/{event}/participants', [EventController::class, 'getParticipants'])->name('events.participants');
     Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('events.delete');
     Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
 
@@ -82,6 +83,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/comment/like', [CommentFeedbackController::class, 'like'])->name('comment.like');
     Route::post('/comment/dislike', [CommentFeedbackController::class, 'dislike'])->name('comment.dislike');
+
 
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
 
