@@ -21,6 +21,7 @@
             <!-- Options Icon -->
             <div class="absolute top-0 right-0">
                 <button 
+                    id="toggleMenu"
                     class="w-12 h-12 border-0 rounded-full text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
                     onclick="toggleMenu(event)" id="icon">
                     <i class="text-4xl fa-solid fa-ellipsis"></i>
@@ -135,7 +136,7 @@
             <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Comments
             </h2>
-            @if (Auth::id())
+            @can('comment', $event)
                 <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
                     @csrf
                     <textarea 
@@ -170,7 +171,7 @@
                         </button>
                     </div>
                 </form>
-            @endif
+            @endcan
             <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
@@ -217,7 +218,7 @@
                         @elseif ($event->visibility == 'canceled')
                             Canceled
                         @else
-                            {{ $event->visibility }} <!-- Fallback to original value if no match -->
+                            {{ $event->visibility }}
                         @endif
                     </p>
                 @endcan
@@ -232,6 +233,9 @@
                 </p>
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
                     <strong class="font-semibold">Location:</strong> {{ $event->location ?? 'No location specified' }}
+                </p>
+                <p class="text-3xl text-darkSlateGrey font-montserrat">
+                    <strong class="font-semibold">Creator:</strong> {{ $event->creator->name ?? 'No location specified' }}
                 </p>
             </div>
 
@@ -307,7 +311,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Message Popup -->
     <div id="popup" class="fixed bottom-0 right-0 z-50 p-4 mb-4 mr-4 transition-transform duration-500 ease-in-out transform translate-x-full bg-white rounded-lg shadow-lg opacity-0 text-darkSlateGrey">
         <div class="flex items-start justify-between">
@@ -412,14 +416,11 @@
 
     document.addEventListener('click', (event) => {
         const menu = document.getElementById('menu');
-        const button = document.querySelector('button[onclick="toggleMenu(event)"]');
+        const button = document.getElementById('toggleMenu');
 
         // Check if click happened outside of dropdown and button
         if (!menu.contains(event.target) && !button.contains(event.target)) {
             menu.classList.add('hidden');
-
-            const icon = document.getElementById('icon');
-            icon.classList.toggle('hidden');
         }
     });
 

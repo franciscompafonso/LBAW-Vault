@@ -279,7 +279,7 @@ CREATE TABLE file (
 
 CREATE TABLE comment_feedback (
     user_id INT REFERENCES user_account(id),
-    comment_id INT REFERENCES comment(id),
+    comment_id INT REFERENCES comment(id) ON DELETE CASCADE,
     feedback INT NOT NULL,
     PRIMARY KEY (user_id, comment_id)
 );

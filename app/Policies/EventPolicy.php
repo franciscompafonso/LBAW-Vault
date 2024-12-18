@@ -84,15 +84,17 @@ class EventPolicy
 
     public function join(User $user, Event $event)
     {
-        return (!$event->participators->contains($user) && $event->creator->id === $user->id) || ($event->visibility === 'public'
+        return $event->end_date > now()
+            && ((!$event->participators->contains($user) && $event->creator->id === $user->id) || ($event->visibility === 'public'
             && $event->participators()->count() < $event->capacity
             && !$event->participators->contains($user)
-            && !$user->isblocked);
+            && !$user->isblocked));
     }
 
     public function requestJoin(User $user, Event $event)
     {
-        return $event->visibility === 'request_only'
+        return $event->end_date > now()
+            && $event->visibility === 'request_only'
             && !$event->participators->contains($user)
             && $event->requests->where('join_request_by_id', $user->id)->where('accepted', false)->isEmpty()
             && !$user->isblocked
@@ -111,12 +113,19 @@ class EventPolicy
 
     public function invite(User $user, Event $event): bool
     {
-        return ($event->participators->contains($user) && $event->visibility === 'public') || $user->id === $event->creator_id;
+        return$event->end_date > now()
+            && (($event->participators->contains($user) && $event->visibility === 'public') || $user->id === $event->creator_id);
     }
 
     public function uploadPhotos(User $user, Event $event)
     {
-        return $event->participators->contains($user);
+        return $event->end_date > now()->addDays(7)
+        && $event->participators->contains($user);
+    }
+
+    public function comment(User $user, Event $event)
+    {
+        return $event->end_date > now()->addDays(7);
     }
 
     public function survey(User $user, Event $event)

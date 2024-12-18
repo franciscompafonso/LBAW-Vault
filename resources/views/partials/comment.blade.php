@@ -37,7 +37,7 @@
                     <form action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-red-200 transition-colors duration-200 hover:text-red-600" aria-label="Delete this comment">
+                        <button type="submit" class="text-red-200 transition-colors duration-200 border-transparent hover:text-red-600 hover:border-transparent hover:bg-transparent focus:bg-transparent focus:border-transparent" aria-label="Delete this comment">
                             X
                         </button>
                     </form>
@@ -127,7 +127,7 @@
         @can('reply', $comment)
             <div class="mt-2 text-left">
                 <button 
-                    class="text-ultraViolet transition-colors duration-200 border-none font-montserrat hover:text-blue-800 hover:bg-transparent focus:bg-transparent focus:outline-none"
+                    class="transition-colors duration-200 border-none text-ultraViolet font-montserrat hover:text-blue-800 hover:bg-transparent focus:bg-transparent focus:outline-none"
                     aria-label="Reply to this comment"
                     onclick="toggleReplyForm({{ $comment->id }})">
                     Reply
