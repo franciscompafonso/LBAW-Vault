@@ -4,7 +4,7 @@
         <form action="{{ route('polls.store', $event->id) }}" method="POST">
             @csrf
             <div class="mb-4">
-                <label for="poll_name" class="block mb-2 text-gray-700">Poll Name</label>
+                <label for="poll_name" class="block mb-2 text-gray-700">Poll Name <span class="text-red-600">*</span></label>
                 <input 
                     type="text" 
                     name="name" 
@@ -15,7 +15,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="poll_options" class="block mb-2 text-gray-700">Options (comma-separated)</label>
+                <label for="poll_options" class="block mb-2 text-gray-700">Options (comma-separated) <span class="text-red-600">*</span></label>
                 <textarea 
                     name="options" 
                     id="poll_options" 
@@ -26,7 +26,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="poll_start_time" class="block mb-2 text-gray-700">Start Time</label>
+                <label for="poll_start_time" class="block mb-2 text-gray-700">Start Time <span class="text-red-600">*</span></label>
                 <input 
                     type="datetime-local" 
                     name="start_time" 
@@ -37,7 +37,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="poll_end_time" class="block mb-2 text-gray-700">End Time</label>
+                <label for="poll_end_time" class="block mb-2 text-gray-700">End Time <span class="text-red-600">*</span></label>
                 <input 
                     type="datetime-local" 
                     name="end_time" 

@@ -26,7 +26,7 @@
 
           <!-- Event Name -->
           <div class="mb-4">
-            <label for="name" class="block text-lg font-semibold font-montserrat">Event Name</label>
+            <label for="name" class="block text-lg font-semibold font-montserrat">Event Name <span class="text-red-600">*</span></label>
               <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="name-error">
                 @if ($errors->has('name'))
                   <span id="name-error" class="mt-1 text-sm text-red-600" aria-live="polite">{{ $errors->first('name') }}</span>
@@ -35,7 +35,7 @@
 
           <!-- Description -->
           <div class="mb-4">
-            <label for="description" class="block text-lg font-semibold font-montserrat">Description</label>
+            <label for="description" class="block text-lg font-semibold font-montserrat">Description <span class="text-red-600">*</span></label>
               <textarea id="description" name="description" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="description-error">{{ old('description') }}</textarea>
                 @if ($errors->has('description'))
                   <span id="description-error" class="mt-1 text-sm text-red-600" aria-live="polite">{{ $errors->first('description') }}</span>
@@ -46,7 +46,7 @@
         <legend class="text-lg font-semibold font-montserrat">Date and Time</legend>
           <!-- Start Date and Time -->
           <div class="mb-4">
-            <label for="start_date" class="block text-lg font-semibold font-montserrat">Start Date & Time</label>
+            <label for="start_date" class="block text-lg font-semibold font-montserrat">Start Date & Time <span class="text-red-600">*</span></label>
             <input id="start_date" type="datetime-local" name="start_date" value="{{ old('start_date') }}" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="start_date-error">
             <style>
               input[type="datetime-local"]::-webkit-calendar-picker-indicator {
@@ -60,7 +60,7 @@
 
           <!-- End Date and Time -->
           <div class="mb-4">
-            <label for="end_date" class="block text-lg font-semibold font-montserrat">End Date & Time</label>
+            <label for="end_date" class="block text-lg font-semibold font-montserrat">End Date & Time <span class="text-red-600">*</span></label>
             <input id="end_date" type="datetime-local" name="end_date" value="{{ old('end_date') }}" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="end-date-error">
             <style>
               input[type="datetime-local"]::-webkit-calendar-picker-indicator {
@@ -77,7 +77,7 @@
         <legend class="text-lg font-semibold font-montserrat">Location</legend>
           <!-- District Selector -->
           <div class="mb-4">
-            <label for="district_id" class="block text-lg font-semibold font-montserrat">District</label>
+            <label for="district_id" class="block text-lg font-semibold font-montserrat">District <span class="text-red-600">*</span></label>
             <select id="district_id" name="district_id" required class="block px-2 text-lg font-semibold font-montserrat" aria-label="Select the district for your event" aria-describedby="district_id-error">
               <option value="">Select a District</option>
               @foreach($districts as $district)
@@ -91,7 +91,7 @@
 
           <!-- Location -->
           <div class="mb-4">
-            <label for="location" class="block text-lg font-semibold font-montserrat">Location</label>
+            <label for="location" class="block text-lg font-semibold font-montserrat">Location <span class="text-red-600">*</span></label>
             <textarea id="location" name="location" class="w-full p-2 border border-gray-300 rounded-md font-montserrat">{{ old('location') }}</textarea>
             @if ($errors->has('location'))
               <span id="location-error" class="mt-1 text-sm text-red-600" aria-live="polite">{{ $errors->first('location') }}</span>
@@ -103,7 +103,7 @@
         <legend class="text-lg font-semibold font-montserrat">Additional Information</legend>
           <!-- Category Selector -->
           <div class="mb-4">
-            <label for="category_id" class="block text-lg font-semibold font-montserrat">Category</label>
+            <label for="category_id" class="block text-lg font-semibold font-montserrat">Category <span class="text-red-600">*</span></label>
             <select id="category_id" name="category_id" required class="block px-2 text-lg font-semibold font-montserrat" aria-label="Select the category for your event" aria-describedby="category-error">
               <option value="">Select a Category</option>
               @foreach($categories as $category)
@@ -117,7 +117,7 @@
 
           <!-- Visibility -->
           <div class="mb-4">
-            <label for="visibility" class="block text-lg font-semibold font-montserrat">Visibility</label>
+            <label for="visibility" class="block text-lg font-semibold font-montserrat">Visibility <span class="text-red-600">*</span></label>
             <select id="visibility" name="visibility" required class="block px-2 text-lg font-semibold font-montserrat" aria-label="Select the visibility level for your event" aria-describedby="visibility-error">
               <option value="public" {{ old('visibility') == 'public' ? 'selected' : '' }}>Public</option>
               <option value="request_only" {{ old('visibility') == 'request_only' ? 'selected' : '' }}>Request Only</option>
@@ -130,7 +130,7 @@
 
           <!-- Capacity -->
           <div class="mb-4">
-            <label for="capacity" class="block text-lg font-semibold font-montserrat">Capacity</label>
+            <label for="capacity" class="block text-lg font-semibold font-montserrat">Capacity <span class="text-red-600">*</span></label>
             <input id="capacity" type="number" name="capacity" value="{{ old('capacity') }}" required class="block text-lg font-semibold font-montserrat" aria-describedby="capacity-error">
             @if ($errors->has('capacity'))
               <span id="capacity-error" class="mt-1 text-sm text-red-600" aria-live="polite">{{ $errors->first('capacity') }}</span>
