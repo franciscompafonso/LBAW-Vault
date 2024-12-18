@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
-@section('Title', 'Search')
-
+@section('Title', 
+    request('q') ? 'Search results for: ' . request('q') : 
+    (request('category') ? implode(', ', $categories->whereIn('id', request('category'))->pluck('name')->toArray()) : 'Search')
+)
 @section('content')
 <!-- Events by Category Section -->
 <section class="w-full px-6 py-16" role="region" aria-label="Events search and filters section">

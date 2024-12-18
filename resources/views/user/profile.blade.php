@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('Title', 'Profile')
+@section('Title', $user->name . "'s Profile")
 @section('content')
     @if ($user->isblocked)
         <div class="p-4 mb-6 text-white bg-red-500 rounded-md">

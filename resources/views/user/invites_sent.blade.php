@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('Title', 'Invites Sent')
+@section('Title', 'Invitations Sent')
 @section('content')
     <div class="max-w-full p-6 mx-auto mt-6 bg-white rounded-lg shadow-md lg:max-w-8xl"> <!-- Increased width -->
         <div class="mb-6 text-center">

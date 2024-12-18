@@ -21,7 +21,7 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label for="email" class="block text-ultraViolet mb-1 font-montserrat">Email</label>
+                        <label for="email" class="block text-ultraViolet mb-1 font-montserrat">Email <span class="text-red-600">*</span></label>
                         <input type="email" id="email" name="email" value="{{ old('email') }}" required 
                                class="w-full p-2 border border-gray-300 rounded-lg">
                         @error('email')
@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="block text-ultraViolet mb-1 font-montserrat">Password</label>
+                        <label for="password" class="block text-ultraViolet mb-1 font-montserrat">Password <span class="text-red-600">*</span></label>
                         <input type="password" id="password" name="password" required 
                                class="w-full p-2 border border-gray-300 rounded-lg">
                         @error('password')
@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="password_confirmation" class="block mb-1 text-ultraViolet font-montserrat">Confirm Password</label>
+                        <label for="password_confirmation" class="block mb-1 text-ultraViolet font-montserrat">Confirm Password <span class="text-red-600">*</span></label>
                         <input type="password" id="password_confirmation" name="password_confirmation" required 
                                class="w-full p-2 border border-gray-300 rounded-lg">
                     </div>
