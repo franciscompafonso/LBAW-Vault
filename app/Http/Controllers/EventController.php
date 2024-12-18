@@ -11,6 +11,7 @@ use App\Models\District;
 use App\Models\QuestionReview;
 use App\Models\User;
 use App\Events\JoinEvent;
+use App\Events\JoinRequestSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -254,6 +255,8 @@ class EventController extends Controller
             'accepted' => false,
             'date' => now(),
         ]);
+
+        event(new JoinRequestSent($event->creator->id, $event->id, User::find(Auth::id())->name . " has resquested to join your event."));
 
         return response()->json([
             'message' => 'Your request to join has been sent!',

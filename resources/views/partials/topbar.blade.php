@@ -263,7 +263,7 @@
                     `;
                 } else if (notification.type === 'join_request_notification') {
                     notificationContent += `
-                        <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
+                        <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">Join Request</a>
                         <p class="text-sm text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.join_request_by_id}">
                                 ${notification.data.user_name ? notification.data.user_name : ''}
