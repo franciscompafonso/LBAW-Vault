@@ -198,7 +198,27 @@
                 
                 <!-- Reset Button -->
                 <button type="button" aria-label="Reset filters"
-                        onclick="window.location.href = '{{ url()->current() }}';"
+                        onclick="
+                            let params = new URLSearchParams();
+                            
+                            @if(request('source') === 'bar')
+                                params.set('q', '{{ request('q') }}'); // Preserve search query
+                                params.set('source', 'bar');
+                            @elseif(request('source') === 'district')
+                                @foreach(request('district', []) as $district)
+                                    params.append('district[]', '{{ $district }}'); // Preserve districts
+                                @endforeach
+                                params.set('source', 'district');
+                            @elseif(request('source') === 'category')
+                                @foreach(request('category', []) as $category)
+                                    params.append('category[]', '{{ $category }}'); // Preserve categories
+                                @endforeach
+                                params.set('source', 'category');
+                            @endif
+
+                            // Redirect with preserved parameters
+                            window.location.href = '{{ url()->current() }}?' + params.toString();
+                        "
                         class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Reset
                 </button>
