@@ -118,61 +118,74 @@ class EventController extends Controller
 
     public function edit($id)
     {
-        
         $event = Event::findOrFail($id);
-        $this->authorize('update', $event);
-        $districts = District::all();
-        $categories = Category::all();
 
-        return view('event.edit', compact('event', 'districts', 'categories'));
+        // Check if the current user is an admin or authorized by policy
+        if (auth()->guard('admin')->check() || auth()->user()->can('update', $event)) {
+            $districts = District::all();
+            $categories = Category::all();
+
+            return view('event.edit', compact('event', 'districts', 'categories'));
+        }
+
+        // Unauthorized response
+        abort(403, 'You are not authorized to edit this event.');
     }
 
     public function update(Request $request, $id)
     {
         $event = Event::findOrFail($id);
-        $this->authorize('update', $event);
 
-        try {
-            DB::beginTransaction();
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'location' => 'nullable|string',
-                'start_date' => 'required|date|after:now',
-                'end_date' => 'required|date|after:start_date',
-                'visibility' => 'required|in:public,private,request_only',
-                'capacity' => 'required|integer|min:1',
-                'district_id' => 'required|integer',
-                'category_id' => 'required|integer',
-                'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
-            ]);
+        // Check if the current user is an admin or authorized by policy
+        if (auth()->guard('admin')->check() || auth()->user()->can('update', $event)) {
+            try {
+                DB::beginTransaction();
 
-            $data = $request->except(['_token', '_method', 'file']);
+                // Validate the request data
+                $request->validate([
+                    'name' => 'required|string|max:255',
+                    'description' => 'required|string',
+                    'location' => 'nullable|string',
+                    'start_date' => 'required|date|after:now',
+                    'end_date' => 'required|date|after:start_date',
+                    'visibility' => 'required|in:public,private,request_only',
+                    'capacity' => 'required|integer|min:1',
+                    'district_id' => 'required|integer',
+                    'category_id' => 'required|integer',
+                    'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
+                ]);
 
-            if ($request->hasFile('file')) {
-                $fileId = FileController::store($request, 'banner');
-                if ($fileId) {
-                    $pictureId = $event->file_id;
-                    $data['file_id'] = $fileId;
-                    if ($pictureId) $this->deleteBanner($pictureId);
+                // Extract data and handle file upload if necessary
+                $data = $request->except(['_token', '_method', 'file']);
+                if ($request->hasFile('file')) {
+                    $fileId = FileController::store($request, 'banner');
+                    if ($fileId) {
+                        $pictureId = $event->file_id;
+                        $data['file_id'] = $fileId;
+                        if ($pictureId) $this->deleteBanner($pictureId);
+                    }
                 }
+
+                // Update the event
+                $event->update($data);
+
+                DB::commit();
+
+                return redirect()->route('events.show', $event->id)->with([
+                    'message' => 'Event successfully updated!',
+                    'success' => true,
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+
+                return redirect()->back()->withErrors($e->getMessage())->withInput();
             }
-            
-            
-            $event->update($data);
-
-            DB::commit();
-
-            return redirect()->route('events.show', $event->id)->with([
-                'message' => 'Event successfully updated!',
-                'success' => true
-            ]);
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
+
+        // Unauthorized response
+        abort(403, 'You are not authorized to update this event.');
     }
+
 
     public function searchFiltered(Request $request)
     {
@@ -298,20 +311,29 @@ class EventController extends Controller
      */
     public function deleteEvent($eventId)
     {
-        
         $event = Event::findOrFail($eventId);
-        $this->authorize('delete', $event);
 
-        $pictureId = $event->file_id;
-        $event->delete();
+        // Check if the current user is an admin or authorized by policy
+        if (auth()->guard('admin')->check() || auth()->user()->can('delete', $event)) {
+            // Store the banner ID to delete after the event is removed
+            $pictureId = $event->file_id;
 
-        $this->deleteBanner($pictureId);
+            // Delete the event
+            $event->delete();
 
-        return redirect()->route('pages.home')->with([
-            'message' => 'Event was successfully deleted.',
-            'success' => true
-        ]);;
+            // Delete the associated banner if it exists
+            $this->deleteBanner($pictureId);
+
+            return redirect()->route('pages.home')->with([
+                'message' => 'Event was successfully deleted.',
+                'success' => true,
+            ]);
+        }
+
+        // Unauthorized response
+        abort(403, 'You are not authorized to delete this event.');
     }
+
 
     public function requestToJoin(Event $event)
     {
@@ -422,20 +444,16 @@ class EventController extends Controller
     $event = Event::findOrFail($eventId);
     $user = User::findOrFail($userId);
 
-    // Explicitly check if the current user is an admin or authorized by policy
     if (auth()->guard('admin')->check() || auth()->user()->can('kickParticipator', [$event, $user])) {
-        // Ensure the user is participating in the event
+
         if (! $event->participators()->where('id', $userId)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');
         }
 
-        // Remove the participator from the event
         $event->participators()->detach($userId);
-
         return back()->with('message', 'You have removed the participator.');
     }
 
-    // If neither condition is met, deny access
     abort(403, 'You are not authorized to perform this action.');
 }
 
@@ -495,7 +513,12 @@ class EventController extends Controller
     public function showSurveyStats($eventId)
     {
         $event = Event::findOrFail($eventId);
-        $this->authorize('viewSurveyResults', $event);
+
+        // Explicitly check if the user is an admin or authorized via the policy
+        if (!auth()->guard('admin')->check() && !auth()->user()->can('viewSurveyResults', $event)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $answers = AnswerReview::where('about_event_id', $eventId)
             ->join('question_review', 'answer_review.question_id', '=', 'question_review.id')
             ->select('question_review.id as question_id', 'question_review.question_text', 'answer_review.rating')
@@ -516,4 +539,5 @@ class EventController extends Controller
 
         return view('partials.survey_stats', compact('event', 'chartData'));
     }
+
 }

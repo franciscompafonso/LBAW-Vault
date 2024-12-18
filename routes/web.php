@@ -63,14 +63,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/event/create', [EventController::class, 'create'])->name('event.create');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/events', [EventController::class, 'index'])->name('v');
-    Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
-    Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::get('/events/{event}/survey', [EventController::class, 'showSurvey'])->name('events.survey');
     Route::post('/events/{event}/survey', [EventController::class, 'submitSurvey'])->name('events.submitSurvey');
-    Route::get('/events/{event}/survey/stats', [EventController::class, 'showSurveyStats'])->name('events.surveyStats');
     Route::post('/events/{event}/request', [EventController::class, 'requestToJoin'])->name('events.request');
     Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
-    Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('events.delete');
     Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
 
     Route::post('/invites/{invitesId}/decline', [InviteController::class, 'declineInvite'])->name('invites.decline');
@@ -135,4 +131,8 @@ Route::middleware(['auth:admin'])->group(function () {
 Route::middleware(['auth:web,admin'])->group(function () {
     Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
     Route::delete('/comments/{id}', [CommentController::class, 'delete'])->name('comments.delete');
+    Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('events.delete');
+    Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+    Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
+    Route::get('/events/{event}/survey/stats', [EventController::class, 'showSurveyStats'])->name('events.surveyStats');
 });

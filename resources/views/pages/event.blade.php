@@ -42,17 +42,17 @@
 
                         <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
 
-                        @can('update', $event)
+                        @if (auth()->guard('admin')->check() || auth()->user()->can('update', $event))
                             <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
-                        @endcan
+                        @endif
 
-                        @can('delete', $event)
+                        @if (auth()->guard('admin')->check() || auth()->user()->can('delete', $event))
                             <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
                             </form>
-                        @endcan
+                        @endif
                         
                         @can('createPoll', $event)
                             <button 
@@ -62,7 +62,7 @@
                             </button>
                         @endcan
 
-                        @can('viewSurveyResults', $event)
+                        @if (auth()->guard('admin')->check() || auth()->user()->can('viewSurveyResults', $event))
                             @if($event->end_date < now())
                                 <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
                             @else
@@ -72,7 +72,7 @@
                                     Survey Results Not Available
                                 </button>
                             @endif
-                        @endcan
+                        @endif
 
                         @can('leave', $event)
                             <form action="{{ route('events.leave', $event->id) }}" method="POST" class="block">
@@ -186,7 +186,7 @@
                     </div>
                 @endcan
 
-                @can('viewSurveyResults', $event)
+                @if (auth()->guard('admin')->check() || auth()->user()->can('viewSurveyResults', $event))
                     <a href="{{ route('events.surveyStats', $event->id) }}" class="block mt-4 text-center">
                         <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
                             View Survey Results
@@ -194,7 +194,7 @@
                     </a>
                 @else
                     <p class="text-lg text-red-600">Survey results are available after the event ends.</p>
-                @endcan
+                @endif
                 <!-- Polls -->
                 @each('partials.poll', $event->polls, 'poll')
             </div>
@@ -206,7 +206,7 @@
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                     Details
                 </h2>
-                @can('update', $event)
+                @if (auth()->guard('admin')->check() || auth()->user()->can('update', $event))
                     <p class="text-3xl text-darkSlateGrey font-montserrat">
                         <strong class="font-semibold">Visibility:</strong> 
                         @if ($event->visibility == 'public')
@@ -221,7 +221,7 @@
                             {{ $event->visibility }}
                         @endif
                     </p>
-                @endcan
+                @endif
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
                     <strong class="font-semibold">Start:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y H:i') }}
                 </p>

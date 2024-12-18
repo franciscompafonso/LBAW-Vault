@@ -58,21 +58,23 @@ class EventPolicy
         return Auth::check() && !$user->isblocked;
     }
 
-    public function delete(User $user, Event $event): bool
+    public function delete($user, Event $event): bool
     {
+        if (auth()->guard('admin')->check()) { return true;}
         return $user->id === $event->creator_id;
     }
 
-    public function update(User $user, Event $event)
+    public function update($user, Event $event): bool
     {
-        $isAdmin = auth()->guard('admin')->check();
-        return $user->id === $event->creator_id || $isAdmin;
+        if (auth()->guard('admin')->check()) { return true;}
+        return $user->id === $event->creator_id;
     }
 
-    public function viewSurveyResults(User $user, Event $event)
+
+    public function viewSurveyResults($user, Event $event)
     {
-        $isAdmin = auth()->guard('admin')->check();
-        return $user->id === $event->creator_id || $isAdmin;
+        if (auth()->guard('admin')->check()) { return true;}
+        return $user->id === $event->creator_id;
     }
 
     public function createPoll(User $user, Event $event)
