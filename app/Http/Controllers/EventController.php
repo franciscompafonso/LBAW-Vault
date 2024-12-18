@@ -338,12 +338,12 @@ class EventController extends Controller
         $this->authorize('leave', $event);
 
         if (! $event->participators()->where('id', Auth::id())->exists()) {
-            return back()->with('message', 'You are not participating in this event.');
+            return response()->json('message', 'You are not participating in this event.');
         }
 
         $event->participators()->detach(Auth::id());
 
-        return back()->with([
+        return response()->json([
             'message' => 'You have successfully left the event!',
             'success' => true
         ]);;
@@ -447,10 +447,10 @@ class EventController extends Controller
         ]);
     }
 
-    public function eventOptions($eventId) {
+    public function updateEventActions($eventId) {
         $event = Event::findOrFail($eventId);
 
-        $html = view('partials.event-options', [
+        $html = view('partials.event-actions', [
             'event' => $event,
         ])->render();
 

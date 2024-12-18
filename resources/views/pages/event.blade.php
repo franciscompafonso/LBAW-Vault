@@ -29,31 +29,79 @@
 
                 <!-- Options dropdown -->
                 <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg w-[12em]">
-                    @include('partials.event-options', [
-                            'event' => $event
-                        ])
+                    <div class="space-y-2">
+                        @php
+                            $eventName = urlencode($event->name); // Event name
+                            $startDate = urlencode($event->start_date->format('Ymd\THis')); // Start time in UTC
+                            $endDate = urlencode($event->end_date->format('Ymd\THis')); // End time in UTC
+                            $description = urlencode($event->description); // Event description
+                            $location = urlencode($event->location); // Event location
+                    
+                            $googleCalendarUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$eventName}&dates={$startDate}/{$endDate}&details={$description}&location={$location}";
+                        @endphp
+                    
+                        <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
+                    
+                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
+                            <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
+                        @endif
+                    
+                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event)))
+                            <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
+                            </form>
+                        @endif
+                        
+                        @can('createPoll', $event)
+                            <button 
+                                class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100"
+                                onclick="togglePollForm()">
+                                Create Poll
+                            </button>
+                        @endcan
+                    
+                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
+                            @if($event->end_date < now())
+                                <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
+                            @else
+                                <button 
+                                    title="Survey results are available after the event ends."
+                                    class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
+                                    Survey Results Not Available
+                                </button>
+                            @endif
+                        @endif
+                    </div>
                 </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-4 mt-auto">
-                @can('leave', $event)
-                    <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Joined!</button>
-                @endcan
+                <div id="actions" class="flex flex-wrap gap-4 mt-auto">
+                    @can('leave', $event)
+                        <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Joined!</button>
+                        <form id="leaveEventForm" action="{{ route('events.leave', $event->id) }}" method="POST" class="block">
+                            @csrf
+                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Leave Event</button>
+                        </form>
+                    @endcan
 
-                @can('join', $event)
-                    <form id="joinEventForm" action="{{ route('events.join', $event->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Join Event</button>
-                    </form>
-                @endcan
+                    @can('join', $event)
+                        <form id="joinEventForm" action="{{ route('events.join', $event->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Join Event</button>
+                        </form>
+                    @endcan
 
-                @can ('requestJoin', $event)
-                    <form action="{{ route('events.request', $event->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Request to Join</button>
-                    </form>
-                @endcan
+                    @can ('requestJoin', $event)
+                        <form action="{{ route('events.request', $event->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Request to Join</button>
+                        </form>
+                    @endcan
+                </div>
                     
                 <div class="relative">
                     <!-- Share Button -->
@@ -226,14 +274,15 @@
     }
 
     // Handle Join Event button click
-    document.querySelectorAll('form#joinEventForm').forEach(form => {
-        form.addEventListener('submit', function (event) {
+    document.addEventListener('submit', function (event) {
+        if (event.target.id === "joinEventForm") {
             event.preventDefault(); // Prevent form submission (page reload)
 
-            const formData = new FormData(this); // Get form data
+            const form = event.target;
+            const formData = new FormData(form);
 
             // Make AJAX request to join the event
-            fetch(this.action, {
+            fetch(form.action, {
                 method: 'POST',
                 body: formData,
             })
@@ -242,56 +291,53 @@
                 showPopup(data.success, data.message);
 
                 if (data.success) {
-                    const button = this.querySelector('button');
+                    const button = form.querySelector('button');
                     button.textContent = "Joined!";
                     button.disabled = true;
                 }
 
                 updateParticipantInfo();
                 updateCommentForm();
-                updateEventOptions();
+                updateEventActions();
             })
             .catch(error => {
-                // Show error popup
                 showPopup(false, 'Something went wrong. Please try again later.');
                 console.error(error);
             });
-        });
+        }
     });
 
     // Handle Leave Event button click
-    document.querySelectorAll('form#leaveEventForm').forEach(form => {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent form submission (page reload)
+    document.addEventListener('submit', function (event) {
+        if (event.target.id === "leaveEventForm") {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
 
-            const formData = new FormData(this); // Get form data
-
-            // Make AJAX request to leave the event
-            fetch(this.action, {
+            fetch(form.action, {
                 method: 'POST',
                 body: formData,
             })
-            .then(response => response.json()) // Assuming the server responds with JSON
+            .then(response => response.json())
             .then(data => {
-                // Show response
                 showPopup(data.success, data.message);
 
                 if (data.success) {
-                    // Update button state to "Join"
-                    const button = this.querySelector('button');
+                    const button = form.querySelector('button');
                     button.textContent = "Join Event";
-                    button.disabled = false; // Re-enable the button
+                    button.disabled = false;
                 }
 
-                // Update participant counter or participants list
                 updateParticipantInfo();
+                updateCommentForm();
+                updateEventActions();
             })
             .catch(error => {
-                // Show error popup
                 showPopup(false, 'Something went wrong. Please try again later.');
                 console.error(error);
             });
-        });
+        }
     });
 
     // Reload Participant Info (count or list)
@@ -325,16 +371,16 @@
     }
 
     // Reload Event Options
-    function updateEventOptions() {
-        fetch(`/events/{{$event->id}}/event-options`)
+    function updateEventActions() {
+        fetch(`/events/{{$event->id}}/event-actions`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Error updating event options.');
+                    throw new Error('Error updating event actions.');
                 }
                 return response.json();
             })
             .then(data => {
-                document.getElementById('menu').innerHTML = data.html;
+                document.getElementById('actions').innerHTML = data.html;
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -344,7 +390,13 @@
     document.addEventListener('click', (event) => {
         const menu = document.getElementById('menu');
         const button = document.getElementById('toggleMenu');
+        const sharePopup = document.getElementById('share-popup');
+        const shareButton = document.getElementById('share-button');
 
+        // Check if the click is outside the popup and the button
+        if (!event.target.closest('#share-button') && !event.target.closest('#share-popup')) {
+            sharePopup.classList.add('hidden'); // Hide the popup
+        }
         // Check if click happened outside of dropdown and button
         if (!menu.contains(event.target) && !button.contains(event.target)) {
             menu.classList.add('hidden');
@@ -355,9 +407,6 @@
         event.stopPropagation(); // Prevent click from closing the menu
         const menu = document.getElementById('menu');
         menu.classList.toggle('hidden');
-
-        const icon = document.getElementById('icon');
-        icon.classList.toggle('hidden');
     }
 
     // Set the input value to the current page URL dynamically
@@ -369,16 +418,6 @@
         const popup = document.getElementById('share-popup');
         popup.classList.toggle('hidden');
     }
-
-    document.addEventListener('click', (event) => {
-        const sharePopup = document.getElementById('share-popup');
-        const shareButton = document.getElementById('share-button');
-
-        // Check if the click is outside the popup and the button
-        if (!event.target.closest('#share-button') && !event.target.closest('#share-popup')) {
-            sharePopup.classList.add('hidden'); // Hide the popup
-        }
-    });
 
     // Copies the text inside the input field to the clipboard
     function copyToClipboard() {

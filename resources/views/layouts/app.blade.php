@@ -21,12 +21,12 @@
 
         <!-- Pusher -->
         <script>
-        const pusherAppKey = "{{ env('PUSHER_APP_KEY') }}";
-        const pusherCluster = "{{ env('PUSHER_APP_CLUSTER') }}";
+            const pusherAppKey = "{{ env('PUSHER_APP_KEY') }}";
+            const pusherCluster = "{{ env('PUSHER_APP_CLUSTER') }}";
         </script>
         <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
-
         <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
+        
         @vite('resources/css/app.css')
     </head>
     <body class="flex flex-col min-h-screen">
@@ -146,7 +146,7 @@
 
                     closeBtn.addEventListener('click', () => hidePopup(popup));
 
-                    setTimeout(() => hidePopup(popup), 5000);
+                    setTimeout(() => hidePopup(popup), 6000);
                 }
 
                 // Function to hide the popup

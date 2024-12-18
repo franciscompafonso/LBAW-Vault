@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->name('events.invite');
     Route::get('/events/{event}/participants', [EventController::class, 'getParticipants'])->name('events.participants');
     Route::get('/events/{event}/update-comment-form', [EventController::class, 'updateCommentForm']);
-    Route::get('/events/{event}/event-options', [EventController::class, 'eventOptions']);
+    Route::get('/events/{event}/event-actions', [EventController::class, 'updateEventActions']);
 
     Route::post('/invites/{invitesId}/decline', [InviteController::class, 'declineInvite'])->name('invites.decline');
     Route::post('/invites/{invitesId}/accept', [InviteController::class, 'acceptInvite'])->name('invites.accept');
