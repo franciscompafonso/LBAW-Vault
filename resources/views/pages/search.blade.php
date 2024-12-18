@@ -8,14 +8,13 @@
 <!-- Events by Category Section -->
 <section class="w-full" role="region" aria-label="Events search and filters section">
 
-    <h1 class="pb-[1em] text-6xl font-medium text-darkSlateGrey font-montserrat">
-        
+    <h1 class="pb-[1em] lg:text-5xl text-4xl font-medium text-darkSlateGrey font-montserrat">
         @if(request('source') === 'bar')
-            Search results for: <span class="text-6xl font-bold text-ultraViolet font-montserrat">{{ $searchQuery }}</span>
+            Search results for: <span class="lg:text-5xl text-4xl font-bold text-ultraViolet font-montserrat">{{ $searchQuery }}</span>
         @elseif(request('source') === 'category')
-            Category: <span class="text-6xl font-bold text-ultraViolet font-montserrat">{{ $categories->whereIn('id', request('category'))->pluck('name')->first() }}</span>
+            Category: <span class="lg:text-5xl text-4xl font-bold text-ultraViolet font-montserrat">{{ $categories->whereIn('id', request('category'))->pluck('name')->first() }}</span>
         @elseif(request('source') === 'district')
-            District: <span class="text-6xl font-bold text-ultraViolet font-montserrat">{{ $districts->whereIn('id', request('district'))->pluck('name')->first() }}</span>
+            District: <span class="lg:text-5xl text-4xl font-bold text-ultraViolet font-montserrat">{{ $districts->whereIn('id', request('district'))->pluck('name')->first() }}</span>
         @else
             Search events
         @endif
@@ -185,7 +184,7 @@
             </div>
 
             <!-- Buttons -->
-            <div class="flex space-x-4 w-full">
+            <div class="flex gap-4 w-full">
                 <!-- Preserve Source -->
                 @if(request('source'))
                     <input type="hidden" name="source" value="{{ request('source') }}">

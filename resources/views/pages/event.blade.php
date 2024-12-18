@@ -32,15 +32,23 @@
                     <div class="space-y-2">
                         @php
                             $eventName = urlencode($event->name); // Event name
-                            $startDate = urlencode($event->start_date->format('Ymd\THis')); // Start time in UTC
-                            $endDate = urlencode($event->end_date->format('Ymd\THis')); // End time in UTC
                             $description = urlencode($event->description); // Event description
                             $location = urlencode($event->location); // Event location
+
+                            $googleStartDate = urlencode($event->start_date->format('Ymd\THis'));
+                            $googleEndDate = urlencode($event->end_date->format('Ymd\THis'));
+
+                            $outlookStartDate = urlencode($event->start_date->format('Y-m-d\TH:i:s'));
+                            $outlookEndDate = urlencode($event->end_date->format('Y-m-d\TH:i:s'));
                     
-                            $googleCalendarUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$eventName}&dates={$startDate}/{$endDate}&details={$description}&location={$location}";
+                            $googleCalendarUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$eventName}&dates={$googleStartDate}/{$googleEndDate}&details={$description}&location={$location}";
+
+                            $outlookCalendarUrl = "https://outlook.live.com/calendar/0/deeplink/compose?subject={$eventName}&startdt={$outlookStartDate}&enddt={$outlookEndDate}&body={$description}&location={$location}";
                         @endphp
                     
                         <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
+
+                        <a target="_blank" href="{{ $outlookCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Outlook Calendar</a>
                     
                         @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
                             <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
