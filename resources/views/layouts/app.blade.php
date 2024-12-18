@@ -17,6 +17,7 @@
         <!-- Styles -->
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url('css/print.css') }}" media="print">
 
         <!-- Pusher -->
         <script>
