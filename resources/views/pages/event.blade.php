@@ -136,42 +136,13 @@
             <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Comments
             </h2>
-            @can('comment', $event)
-                <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
-                    @csrf
-                    <textarea 
-                        name="content" 
-                        rows="4" 
-                        class="w-full p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-burgundy"
-                        placeholder="Add your comment here..."
-                        aria-labelledby="comments-heading"
-                        required></textarea>
-
-                    <!-- Photo Upload for Participators -->
-                    @can('uploadPhotos', $event)
-                        <div class="mt-4">
-                            <input 
-                                type="file" 
-                                name="photos[]" 
-                                id="photos" 
-                                multiple 
-                                accept="image/*"
-                                class="w-full p-2 mt-2 border border-gray-300 rounded-lg" 
-                                aria-describedby="photo-help"
-                                onchange="validatePhotos()" />
-                            <small class="text-gray-500">You can upload up to 15 photos.</small>
-                        </div>
-                    @endcan
-                    <div class="flex justify-end mt-4">
-                        <button 
-                            type="submit" 
-                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue"
-                            aria-label="Submit your comment">
-                            Comment
-                        </button>
-                    </div>
-                </form>
-            @endcan
+            <!-- Comment Form -->
+            <div id="comment-form" class="mt-4">
+                @include('partials.create-comment', [
+                            'event' => $event
+                        ])
+            </div>
+            <!-- Comment List -->
             <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
@@ -247,53 +218,17 @@
                         Participants
                     </h2>
                     <!-- Participant Counter -->
-                    <span class="text-3xl font-semibold text-darkSlateGrey font-montserrat">
+                    <span id="participant-count" class="text-3xl font-semibold text-darkSlateGrey font-montserrat">
                         {{ $event->participators()->count() }} / {{ $event->capacity }}
                     </span>
                 </div>
 
                 <!-- Participant List or Empty State -->
-                <ul class="space-y-4" aria-label="List of event participants">
-                    @can('invite', $event)
-                        <!-- Invite Form -->
-                        <div class="mt-4">
-                            <form action="{{ route('events.invite', $event->id) }}" method="POST" class="flex items-center space-x-2">
-                                @csrf
-                        
-                                <div class="w-full">
-                                    <input 
-                                        id="invite_user" 
-                                        type="text" 
-                                        name="username" 
-                                        placeholder="username" 
-                                        value="{{ old('username') }}" 
-                                        class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" 
-                                        required 
-                                    >
-                                    @error('username')
-                                        <span class="text-sm text-red-500">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                        
-                                <div class="w-full">
-                                    <input 
-                                        id="invite_desc" 
-                                        type="text" 
-                                        name="description" 
-                                        placeholder="Invite message" 
-                                        value="{{ old('description') }}" 
-                                        class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" 
-                                    >
-                                </div>
-                        
-                                <button 
-                                    type="submit" 
-                                    class="text-4xl transition-colors duration-200 bg-transparent border-none text-ultraViolet font-montserrat hover:text-cambridgeBlue hover:bg-transparent focus:outline-none">
-                                    <i class="fa-solid fa-check"></i>
-                                </button>
-                            </form>
-                        </div>  
-                    @endcan
+                <ul id="participant-list" class="space-y-4" aria-label="List of event participants">
+                    <!-- Invite Form -->
+                    @include('partials.invite-form', [
+                        'event' => $event
+                    ])
                     @if ($event->participators()->count() > 0)
                         @foreach ($event->participators()->orderBy('id')->get() as $participator)
                             @include('partials.participator', [
@@ -327,38 +262,121 @@
         }
     }
 
-    // Select all the Join Event forms on the page
+    // Handle Join Event button click
     document.querySelectorAll('form#joinEventForm').forEach(form => {
         form.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission (page reload)
+            event.preventDefault(); // Prevent form submission (page reload)
 
-            const formData = new FormData(this); // Get the form data
+            const formData = new FormData(this); // Get form data
 
-            // Send AJAX request using fetch API
+            // Make AJAX request to join the event
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
             })
-            .then(response => response.json()) // Assuming the server responds with JSON
+            .then(response => response.json())
             .then(data => {
-                // Update the popup content based on the response
                 showPopup(data.success, data.message);
-                
+
                 if (data.success) {
-                    // On success: Update button state (optional)
                     const button = this.querySelector('button');
                     button.textContent = "Joined!";
-                    button.disabled = true; // Disable the button to prevent multiple clicks
+                    button.disabled = true;
                 }
+
+                updateParticipantInfo();
             })
             .catch(error => {
-                // On error: Show a generic error message in the popup
+                // Show error popup
                 showPopup(false, 'Something went wrong. Please try again later.');
                 console.error(error);
             });
         });
     });
 
+    // Handle Leave Event button click
+    document.querySelectorAll('form#leaveEventForm').forEach(form => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission (page reload)
+
+            const formData = new FormData(this); // Get form data
+
+            // Make AJAX request to leave the event
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json()) // Assuming the server responds with JSON
+            .then(data => {
+                // Show response
+                showPopup(data.success, data.message);
+
+                if (data.success) {
+                    // Update button state to "Join"
+                    const button = this.querySelector('button');
+                    button.textContent = "Join Event";
+                    button.disabled = false; // Re-enable the button
+                }
+
+                // Update participant counter or participants list
+                updateParticipantInfo();
+            })
+            .catch(error => {
+                // Show error popup
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        });
+    });
+
+    // Handle Request Join button click
+    document.querySelectorAll('form#requestJoinForm').forEach(form => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission (page reload)
+
+            const formData = new FormData(this); // Get form data
+
+            // Make AJAX request to request to join the event
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json()) // Assuming the server responds with JSON
+            .then(data => {
+                // Show response
+                showPopup(data.success, data.message);
+
+                if (data.success) {
+                    // Update button state to "Request Pending"
+                    const button = this.querySelector('button');
+                    button.textContent = "Request Pending";
+                    button.disabled = true; // Disable the button while request is in progress
+                }
+
+                // Update participant counter or participants list
+                updateParticipantInfo();
+            })
+            .catch(error => {
+                // Show error popup
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        });
+    });
+
+    // Update Participant Info (count or list)
+    function updateParticipantInfo() {
+        fetch(`/events/{{$event->id}}/participants`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
+                
+                const participantList = document.getElementById('participant-list');
+                participantList.innerHTML = data.participantHtml;
+            })
+            .catch(error => console.error('Error updating participants:', error));
+    }
+    
     document.addEventListener('click', (event) => {
         const menu = document.getElementById('menu');
         const button = document.getElementById('toggleMenu');

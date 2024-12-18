@@ -1,4 +1,4 @@
-<div class="news-card relative overflow-hidden rounded-lg shadow-lg w-full aspect-[16/9] transition-transform duration-300 group">
+<div class="news-card relative overflow-hidden rounded-lg shadow-lg w-full aspect-[16/9] transition-transform duration-300 group focus:outline-none focus:ring-4 focus:ring-ultraViolet focus:ring-opacity-50" tabindex="0">
     <!-- Background Image -->
     <img src="{{ asset('images/banner/'. ($event->banner->path ?? App\Models\Event::DEFAULT_BANNER)) }}" alt="{{ $event->name ? $event->name . ' banner image' : 'Default event banner image' }}"
          class="absolute inset-0 object-cover w-full h-full transition-transform duration-700 transform group-hover:scale-110">
@@ -23,6 +23,8 @@
         </div>
     </div>
   
-    <!-- Clickable Link -->
-    <a href="{{ route('events.show', $event->id) }}" class="absolute inset-0 z-10" aria-label="View details for {{ $event->name }} event"></a>
+    <!-- Clickable Link (Focusable) -->
+    <a href="{{ route('events.show', $event->id) }}" 
+       class="absolute inset-0 z-10" 
+       aria-label="View details for {{ $event->name }} event"></a>
 </div>
