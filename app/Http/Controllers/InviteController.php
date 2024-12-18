@@ -14,6 +14,8 @@ class InviteController extends Controller
     public function showUserInvites($id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('viewInvites', $user);
+        
         $invites = Invite::where('invite_by_id', $id)->with(['invitee', 'event'])->get();
 
         return view('user.invites_sent', [
