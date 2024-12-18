@@ -398,8 +398,9 @@ class EventController extends Controller
      */
     public function kickParticipator($eventId, $userId)
     {
+        $user = User::findOrFail($userId);
         $event = Event::findOrFail($eventId);
-        $this->authorize('kick', $event);
+        $this->authorize('kickParticipator', [$event, $user]);
 
         if (! $event->participators()->where('id', $userId)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');

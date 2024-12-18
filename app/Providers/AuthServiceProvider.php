@@ -10,7 +10,8 @@ use App\Models\Admin;
 use App\Policies\AdminPolicy;
 use App\Models\Comment;
 use App\Policies\CommentPolicy;
-
+use App\Models\Poll;
+use App\Policies\PollPolicy;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -27,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         Admin::class => AdminPolicy::class,
         User::class => UserPolicy::class,
         Comment::class => CommentPolicy::class,
+        Poll::class => PollPolicy::class,
     ];
 
     /**

@@ -47,36 +47,13 @@ class PollController extends Controller
 
     public function vote(Request $request, $pollId)
     {
-        $request->validate([
-            'option' => 'required|integer', 
-        ]);
 
         $poll = Poll::findOrFail($pollId);
 
-        if (now()->isBefore($poll->start_time)) {
-            return back()->with([
-                'error' => 'Voting has not started yet.',
-                'poll_id' => $pollId,
-            ]);
-        }
-    
-        if (now()->isAfter($poll->end_time)) {
-            return back()->with([
-                'error' => 'Voting has ended for this poll.',
-                'poll_id' => $pollId,
-            ]);
-        }
-
-        $existingVote = PollResponse::where('poll_id', $poll->id)
-            ->where('user_id', auth()->id()) 
-            ->first();
-        
-        if ($existingVote) {
-            return back()->with([
-                'error' => 'You have already voted on this poll.',
-                'poll_id' => $pollId,
-            ])->with('voted_option', $existingVote->option);
-        }
+        $this->authorize('vote', $poll);
+        $request->validate([
+            'option' => 'required|integer', 
+        ]);
 
         PollResponse::create([
             'poll_id' => $poll->id,
