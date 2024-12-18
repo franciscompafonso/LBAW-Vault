@@ -58,6 +58,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md delete-btn font-montserrat bg-ultraViolet hover:bg-red-600 hover:text-white border-ultraViolet hover:border-red-600">
+                                                <span class="loading-icon hidden" id="loading-{{ $user->id }}">⏳</span> 
                                                 Delete
                                             </button>
                                         </form>
@@ -71,6 +72,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md unblock-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                                                <span class="loading-icon hidden" id="unblock-loading-{{ $user->id }}">⏳</span>
                                                 Unblock
                                             </button>
                                         </form>
@@ -79,7 +81,10 @@
                                     @can('manageUsers', App\Models\Admin::class)
                                         <form action="{{ route('admin.block.user', $user->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md block-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" aria-label="Block user {{ $user->username }}">Block</button>
+                                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md block-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" aria-label="Block user {{ $user->username }}">
+                                                <span class="loading-icon hidden" id="block-loading-{{ $user->id }}">⏳</span>
+                                                Block
+                                            </button>
                                         </form>
                                     @endcan
                                 @endif
@@ -97,4 +102,15 @@
             <p>No users found.</p>
         @endif
     </div>
+
+    <script>
+        document.querySelectorAll('.delete-btn, .unblock-btn, .block-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                let loadingIcon = button.querySelector('.loading-icon');
+                if (loadingIcon) {
+                    loadingIcon.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
 @endsection
