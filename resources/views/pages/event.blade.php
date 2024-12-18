@@ -151,13 +151,25 @@
                     <strong class="font-semibold">End:</strong> {{ \Carbon\Carbon::parse($event->end_date)->format('d/m/Y H:i') }}
                 </p>
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
-                    <strong class="font-semibold">District:</strong> {{ $event->district->name ?? 'No district specified' }}
+                    <strong class="font-semibold">District:</strong> 
+                    <a href="{{ route('events.search', ['district[]' => $event->district->id, 'source' => 'district']) }}">
+                        {{ $event->district->name ?? 'No district specified' }}
+                    </a>
                 </p>
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
                     <strong class="font-semibold">Location:</strong> {{ $event->location ?? 'No location specified' }}
                 </p>
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
-                    <strong class="font-semibold">Creator:</strong> {{ $event->creator->name ?? 'No location specified' }}
+                    <strong class="font-semibold">Creator:</strong>
+                    <a href="{{ route('user.profile', ['id' => $event->creator->id]) }}">
+                        {{ $event->creator->name ?? 'No category specified' }}
+                    </a>
+                </p>
+                <p class="text-3xl text-darkSlateGrey font-montserrat">
+                    <strong class="font-semibold">Category:</strong> 
+                    <a href="{{ route('events.search', ['category[]' => $event->category->id, 'source' => 'category']) }}">
+                        {{ $event->category->name ?? 'No category specified' }}
+                    </a>
                 </p>
             </div>
 

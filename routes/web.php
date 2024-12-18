@@ -28,7 +28,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('pages.home');
 Route::get('/about', fn() => view('pages.about'));
 Route::get('/faqs', fn() => view('pages.faqs'))->name('faqs');
 
-Route::get('/events/search', [EventController::class, 'searchFiltered'])->name('events.search');
+Route::get('/events/search', [SearchController::class, 'filteredSearch'])->name('events.search');
 
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
 Route::get('/photos/{id}', [FileController::class, 'show'])->name('photos.show');
@@ -112,7 +112,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/unblock-request', [UnblockRequestController::class, 'create'])->name('unblock.request.create');
     Route::post('/unblock-request', [UnblockRequestController::class, 'store'])->name('unblock.request.store');
 });
-Route::get('/api/search', [EventController::class, 'search'])->name('search');
+Route::get('/api/search', [SearchController::class, 'search'])->name('search');
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/user-management', [AdminController::class, 'listUsers'])->name('admin.user-management');

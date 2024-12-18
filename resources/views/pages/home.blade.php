@@ -43,7 +43,9 @@
         <div class="flex flex-col space-y-6">
             @foreach ($categories as $category)
                 @if ($category->events->count() >= 4)
-                    <a href="{{ route('events.search', ['category[]' => $category->id]) }}" class="flex items-center space-x-4 group" aria-label="Explore events in {{ $category->name }}">
+                    <a href="{{ route('events.search', ['category[]' => $category->id, 'source' => 'category']) }}" 
+                        class="flex items-center space-x-4 group" 
+                        aria-label="Explore events in {{ $category->name }}">
                         <!-- Category Name with Link -->
                         <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
                             {{ $category->name }}

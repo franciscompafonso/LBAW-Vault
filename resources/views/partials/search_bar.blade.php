@@ -40,7 +40,7 @@
             
             // Only perform search if the query length is greater than or equal to 3
             if (query.length >= 3) {
-                window.location.href = `/events/search?q=${encodeURIComponent(query)}`;
+                window.location.href = `/events/search?q=${encodeURIComponent(query)}&source=bar`;
             }
         }
 
@@ -48,7 +48,7 @@
             const query = document.getElementById('searchInput').value;
 
             if (event.key === 'Enter' && query.length >= 3) {
-                window.location.href = `/events/search?q=${encodeURIComponent(query)}`;
+                window.location.href = `/events/search?q=${encodeURIComponent(query)}&source=bar`;
                 return;
             }
 

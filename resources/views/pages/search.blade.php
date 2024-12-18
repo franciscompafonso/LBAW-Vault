@@ -6,7 +6,20 @@
 )
 @section('content')
 <!-- Events by Category Section -->
-<section class="w-full px-6 py-16" role="region" aria-label="Events search and filters section">
+<section class="w-full" role="region" aria-label="Events search and filters section">
+
+    <h1 class="pb-[1em] text-6xl font-medium text-darkSlateGrey font-montserrat">
+        
+        @if(request('source') === 'bar')
+            Search results for: <span class="text-6xl font-bold text-ultraViolet font-montserrat">{{ $searchQuery }}</span>
+        @elseif(request('source') === 'category')
+            Category: <span class="text-6xl font-bold text-ultraViolet font-montserrat">{{ $categories->whereIn('id', request('category'))->pluck('name')->first() }}</span>
+        @elseif(request('source') === 'district')
+            District: <span class="text-6xl font-bold text-ultraViolet font-montserrat">{{ $districts->whereIn('id', request('district'))->pluck('name')->first() }}</span>
+        @else
+            Search events
+        @endif
+    </h1>
 
     <!-- Main Grid Layout -->
     <div class="grid grid-cols-5 gap-6">
@@ -18,11 +31,8 @@
                 Number of events: <span class="text-ultraViolet">{{ $eventsCount }}</span>
             </p>
 
-            <!-- Display Search Context -->
+            <!-- Search Context -->
             @if(request('q'))
-                <p class="text-md font-montserrat font-semibold text-darkSlateGrey mb-4">
-                    Showing events for: <span class="text-ultraViolet">{{ request('q') }}</span>
-                </p>
                 <!-- Hidden Input to Preserve Search Query -->
                 <input type="hidden" name="q" value="{{ request('q') }}">
             @endif
@@ -99,7 +109,7 @@
             </div>
 
             <!-- Category -->
-            <div>
+            <div class="{{ request('source') === 'category' ? 'hidden' : '' }}">
                 <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('category')">
                     <span>Category</span>
                     <i id="category-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
@@ -116,7 +126,7 @@
             </div>
 
             <!-- District -->
-            <div>
+            <div class="{{ request('source') === 'district' ? 'hidden' : '' }}">
                 <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('district')">
                     <span>District</span>
                     <i id="district-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
@@ -162,7 +172,7 @@
                     <label class="flex items-center space-x-2">
                         <input type="checkbox" name="status_canceled" value="1" 
                             {{ request('status_canceled') ? 'checked' : '' }} />
-                        <span>Canceled</span>
+                        <span>Not canceled</span>
                     </label>
                     @auth
                         <label class="flex items-center space-x-2 mt-1">
@@ -176,13 +186,17 @@
 
             <!-- Buttons -->
             <div class="flex space-x-4 w-full">
+                <!-- Preserve Source -->
+                @if(request('source'))
+                    <input type="hidden" name="source" value="{{ request('source') }}">
+                @endif
                 <!-- Submit Button -->
                 <button type="submit" aria-label="Apply filters" 
-                    class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                        class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
                     Apply
                 </button>
                 
-            <!-- Reset Button -->
+                <!-- Reset Button -->
                 <button type="button" aria-label="Reset filters"
                         onclick="window.location.href = '{{ url()->current() }}';"
                         class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
