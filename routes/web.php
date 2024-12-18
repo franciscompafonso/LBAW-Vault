@@ -88,7 +88,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Users
     Route::controller(UserController::class)->group(function () {
-        Route::get('/user/{id}', 'show')->name('user.profile');
         Route::get('/user/{id}/edit', 'editForm')->name('user.edit.form');
         Route::post('/user/{id}/edit', 'edit')->name('user.edit.action');
         Route::delete('/user/{id}/delete', 'deleteAccount')->name('user.delete');
@@ -137,4 +136,5 @@ Route::middleware(['auth:web,admin'])->group(function () {
     Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
     Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::get('/events/{event}/survey/stats', [EventController::class, 'showSurveyStats'])->name('events.surveyStats');
+    Route::get('/user/{id}', [UserController::class, 'show'], )->name('user.profile');
 });

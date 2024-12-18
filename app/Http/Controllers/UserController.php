@@ -17,11 +17,13 @@ class UserController extends Controller
 {
     public function show(int $id, Request $request)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
-        $this->authorize('viewProfile', $user);
+        if (!auth()->guard('admin')->check() && !(auth()->check() && auth()->user()->can('viewProfile', $user))) {
+            abort(403, 'You do not have permission to view this profile.');
+        }
 
-        if ($user->isdeleted) {
+        if ($user->isdeleted && !auth()->guard('admin')->check()) {
             abort(404, 'User not found');
         }
 
@@ -71,8 +73,10 @@ class UserController extends Controller
 
     public function editForm(int $id)
     {
-        $user = User::find($id);
-        $this->authorize('editProfile', $user);
+        $user = User::findOrFail($id);
+        if (!auth()->guard('admin')->check() && !(auth()->check() && auth()->user()->can('editProfile', $user))) {
+            abort(403, 'You do not have permission to edit this profile.');
+        }
 
         return view('user.edit', compact('user'));
     }
@@ -80,13 +84,12 @@ class UserController extends Controller
     public function edit(int $id, Request $request)
     {
         $user = User::findOrFail($id);
+        if (!auth()->guard('admin')->check() && !(auth()->check() && auth()->user()->can('editProfile', $user))) {
+            abort(403, 'You do not have permission to edit this profile.');
+        }
 
         try {
             DB::beginTransaction();
-
-            if (Auth::user()->cannot('editProfile', $user) && ! auth()->guard('admin')->check()) {
-                abort(403, 'You do not have permission to edit this profile.');
-            }
 
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
