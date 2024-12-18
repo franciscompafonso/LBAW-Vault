@@ -84,7 +84,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/comment/dislike', [CommentFeedbackController::class, 'dislike'])->name('comment.dislike');
 
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
-    Route::delete('/comments/{id}', [CommentController::class, 'delete'])->name('comments.delete');
 
     Route::post('/events/{event}/polls', [PollController::class, 'store'])->name('polls.store');
     Route::post('/polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
@@ -135,4 +134,5 @@ Route::middleware(['auth:admin'])->group(function () {
 
 Route::middleware(['auth:web,admin'])->group(function () {
     Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
+    Route::delete('/comments/{id}', [CommentController::class, 'delete'])->name('comments.delete');
 });

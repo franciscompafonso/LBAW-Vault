@@ -11,8 +11,7 @@ class CommentPolicy
 
     public function delete(User $user, Comment $comment)
     {
-      $isAdmin = auth()->guard('admin')->check();
-      return $isAdmin || $user->id === $comment->comment_by_id;
+      return $user->id === $comment->comment_by_id;
     }
 
     public function reply(User $user, Comment $comment)

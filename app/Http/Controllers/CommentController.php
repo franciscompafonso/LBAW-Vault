@@ -19,10 +19,12 @@ class CommentController extends Controller
      */
     public function delete($id)
     {
-        $comment = Comment::find($id);
-        $this->authorize('delete', $comment);
-        $photos = $comment->photos;
-        foreach($photos as $photo) {
+    $comment = Comment::findOrFail($id);
+
+    // Check if the current user is an admin or authorized by policy
+    if (auth()->guard('admin')->check() || auth()->user()->can('delete', $comment)) {
+        // Delete associated photos
+        foreach ($comment->photos as $photo) {
             $photoId = $photo->id;
             $photoPath = $photo->path;
 
@@ -30,12 +32,19 @@ class CommentController extends Controller
             Storage::disk('others')->delete($photoPath);
         }
 
+        // Delete the comment
         $comment->delete();
+
         return back()->with([
             'message' => 'Comment deleted successfully!',
             'success' => true
-        ]);;
+        ]);
     }
+
+    // Unauthorized response
+    abort(403, 'You are not authorized to delete this comment.');
+    }
+
 
     public function show($eventId)
     {

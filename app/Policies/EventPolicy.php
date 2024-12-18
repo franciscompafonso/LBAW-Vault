@@ -59,11 +59,9 @@ class EventPolicy
     }
 
     public function delete(User $user, Event $event): bool
-{
-    $isAdmin = auth()->guard('admin')->check();
-
-    return $user->id === $event->creator_id || $isAdmin;
-}
+    {
+        return $user->id === $event->creator_id;
+    }
 
     public function update(User $user, Event $event)
     {

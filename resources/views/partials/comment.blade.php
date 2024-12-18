@@ -33,7 +33,7 @@
             </div>
 
             <div class="text-right">
-                @can('delete', $comment)
+                @if (auth()->guard('admin')->check() || auth()->user()->can('delete', $comment))
                     <form action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
@@ -41,7 +41,7 @@
                             X
                         </button>
                     </form>
-                @endcan
+                @endif
 
                 <div class="flex items-center justify-end space-x-2">
                     <!-- Like button form -->
