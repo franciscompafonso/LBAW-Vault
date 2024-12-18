@@ -7,7 +7,7 @@
   <div class="grid w-[70%] grid-cols-1 rounded-lg shadow-lg lg:grid-cols-2 bg-babyPowder overflow-hidden">
 
     <!-- Banner Section -->
-    <section class="flex flex-col justify-center py-12 px-6">
+    <section class="flex flex-col justify-center px-6 py-12">
       <div class="flex flex-col items-center max-w-md mx-auto lg:max-w-none lg:items-center">
         <!-- Image Section -->
         <div class="flex justify-center mt-6">
@@ -29,7 +29,7 @@
     <section class="flex items-center justify-center px-8 py-12 bg-babyPowder">
       <div class="w-2/3">
         <!-- Title -->
-        <h2 class="mb-6 text-7xl py-4 font-extrabold font-montserrat text-ultraViolet">Sign up</h2>
+        <h2 class="py-4 mb-6 font-extrabold text-7xl font-montserrat text-ultraViolet">Sign up</h2>
         
         <!-- Form Container -->
         <form method="POST" action="{{ route('register') }}" class="space-y-6">
@@ -37,11 +37,11 @@
 
           <!-- Name Field -->
           <div>
-            <label for="name" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Name</label>   
+            <label for="name" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Name</label>   
             <div class="mt-1">
               <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="name-error">   
               @if ($errors->has('name'))
-                <span class="mt-1 text-sm text-red-600">
+                <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('name') }}
                 </span>
               @endif
@@ -50,11 +50,11 @@
 
           <!-- Username Field -->
           <div>
-            <label for="username" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Username</label>   
+            <label for="username" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Username</label>   
             <div class="mt-1">
               <input id="username" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="username-error">   
               @if ($errors->has('username'))
-                <span class="mt-1 text-sm text-red-600">
+                <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('username') }}
                 </span>
               @endif
@@ -63,11 +63,11 @@
 
           <!-- Email Field -->
           <div>
-            <label for="email" class="block text-3xl font-montserrat font-medium text-darkSlateGrey">Email Address</label>   
+            <label for="email" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Email Address</label>   
             <div class="mt-1">
               <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="email-error">   
               @if ($errors->has('email'))
-                <span class="mt-1 text-sm text-red-600">
+                <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('email') }}
                 </span>
               @endif
@@ -76,11 +76,11 @@
 
           <!-- Password Field -->
           <div>
-            <label for="password" class="block font-montserrat text-3xl font-medium text-darkSlateGrey">Password</label>   
+            <label for="password" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Password</label>   
             <div class="mt-1">
               <input id="password" type="password" name="password" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="password-error">   
               @if ($errors->has('password'))
-                <span class="mt-1 text-sm text-red-600">
+                <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('password') }}
                 </span>
               @endif
@@ -89,7 +89,7 @@
 
           <!-- Confirm Password Field -->
           <div>
-            <label for="password-confirm" class="block font-montserrat text-3xl font-medium text-darkSlateGrey">Confirm Password</label>   
+            <label for="password-confirm" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Confirm Password</label>   
             <div class="mt-1">
               <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
             </div>

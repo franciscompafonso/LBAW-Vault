@@ -347,7 +347,7 @@ class EventController extends Controller
         return redirect()->back()->with([
             'message' => 'Your request to join has been sent!',
             'success' => true
-        ]);;
+        ]);
     }
 
     /**
@@ -387,6 +387,7 @@ class EventController extends Controller
         event(new JoinEvent($event->creator->id, User::find(Auth::id())->name . ' has joined ' . $event->name));
 
         return response()->json([
+            'success' => true,
             'message' => 'You have successfully joined the event!',
         ]);
         

@@ -333,7 +333,6 @@
             event.preventDefault(); // Prevent the default form submission (page reload)
 
             const formData = new FormData(this); // Get the form data
-            const eventId = this.getAttribute('data-event-id'); // Get event ID from the data attribute
 
             // Send AJAX request using fetch API
             fetch(this.action, {
@@ -342,23 +341,20 @@
             })
             .then(response => response.json()) // Assuming the server responds with JSON
             .then(data => {
-                // Check if the response contains a success message or notification
+                // Update the popup content based on the response
+                showPopup(data.success, data.message);
+                
                 if (data.success) {
-                    // No notification, just log success message to console if needed
-                    console.log('Success:', data.message);
-                    
-                    // Update the UI to reflect the changes (like updating the button text)
+                    // On success: Update button state (optional)
                     const button = this.querySelector('button');
                     button.textContent = "Joined!";
                     button.disabled = true; // Disable the button to prevent multiple clicks
-                } else {
-                    // No error notification, just log error to console
-                    console.error('Error:', data.message);
                 }
             })
             .catch(error => {
-                // Log network or other errors to the console
-                console.error('Something went wrong. Please try again later.', error);
+                // On error: Show a generic error message in the popup
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
             });
         });
     });
