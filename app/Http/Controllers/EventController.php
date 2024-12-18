@@ -110,7 +110,10 @@ class EventController extends Controller
         ]);
 
         $this->authorize('create', Event::class);
-        return redirect()->route('events.show', ['id' => $event->id])->with('success', 'Event created successfully!');
+        return redirect()->route('events.show', ['id' => $event->id])->with([
+            'message' => 'Event successfully created!',
+            'success' => true
+        ]);;
     }
 
     public function edit($id)
@@ -160,7 +163,10 @@ class EventController extends Controller
 
             DB::commit();
 
-            return redirect()->route('events.show', $event->id)->with('success', 'Event updated successfully!');
+            return redirect()->route('events.show', $event->id)->with([
+                'message' => 'Event successfully updated!',
+                'success' => true
+            ]);
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -301,7 +307,10 @@ class EventController extends Controller
 
         $this->deleteBanner($pictureId);
 
-        return redirect()->route('pages.home')->with('message', 'The event has been deleted.');
+        return redirect()->route('pages.home')->with([
+            'message' => 'Event was successfully deleted.',
+            'success' => true
+        ]);;
     }
 
     public function requestToJoin(Event $event)
@@ -310,7 +319,10 @@ class EventController extends Controller
         $this->authorize('requestJoin', $event);
 
         if ($event->participators->contains($user) || $event->creator_id === $user->id) {
-            return redirect()->back()->with('message', 'You are already part of this event.');
+            return redirect()->back()->with([
+                'message' => 'You are already part of this event!',
+                'success' => false
+            ]);;
         }
 
         $existingRequest = JoinRequest::where('join_request_by_id', $user->id)
@@ -319,7 +331,10 @@ class EventController extends Controller
             ->first();
 
         if ($existingRequest) {
-            return redirect()->back()->with('message', 'You have already requested to join this event.');
+            return redirect()->back()->with([
+                'message' => 'You have already requested to join this event!',
+                'success' => false
+            ]);
         }
 
         JoinRequest::create([
@@ -329,7 +344,10 @@ class EventController extends Controller
             'date' => now(),
         ]);
 
-        return redirect()->back()->with('message', 'Your request to join has been sent.');
+        return redirect()->back()->with([
+            'message' => 'Your request to join has been sent!',
+            'success' => true
+        ]);;
     }
 
     /**

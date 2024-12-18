@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewComment;
 use App\Models\Comment;
 use App\Models\Event;
 use App\Models\File;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -29,7 +31,10 @@ class CommentController extends Controller
         }
 
         $comment->delete();
-        return back()->with('message', 'successfully deleted the comment!');
+        return back()->with([
+            'message' => 'Comment deleted successfully!',
+            'success' => true
+        ]);;
     }
 
     public function show($eventId)
@@ -66,7 +71,16 @@ class CommentController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'Comentário adicionado com sucesso!');
+        $participants = $event->participators;
+
+        foreach ($participants as $participant) {
+            event(new NewComment($participant->id, $event->id, User::find(Auth::id())->name . " has commented on " . Event::find($comment->event_id)->name));
+        }
+
+        return redirect()->back()->with([
+            'message' => 'Comment created with success!',
+            'success' => true
+        ]);;
     }
 
     public function reply(Request $request, $commentId)
@@ -79,7 +93,10 @@ class CommentController extends Controller
 
         // Check if the comment exists
         if (!$comment) {
-            return redirect()->back()->with('error', 'Comment not found.');
+            return redirect()->back()->with([
+                'message' => 'Comment not found.',
+                'success' => false
+            ]);;
         }
 
         // Create a new reply to the comment
@@ -91,6 +108,11 @@ class CommentController extends Controller
         $reply->date = now();  // Set the current timestamp
         $reply->save();
 
-        return redirect()->back(); // Redirect back after posting the reply
+        event(new NewComment($comment->comment_by_id, $comment->event_id, User::find(Auth::id())->name . " has answered to your comment on " . Event::find($comment->event_id)->name));
+
+        return redirect()->back()->with([
+            'message' => 'Reply added with success!',
+            'success' => true
+        ]);
     }
 }
