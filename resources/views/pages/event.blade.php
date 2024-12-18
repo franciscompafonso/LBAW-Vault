@@ -29,58 +29,9 @@
 
                 <!-- Options dropdown -->
                 <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg w-[12em]">
-                    <div class="space-y-2">
-                        @php
-                            $eventName = urlencode($event->name); // Event name
-                            $startDate = urlencode($event->start_date->format('Ymd\THis')); // Start time in UTC
-                            $endDate = urlencode($event->end_date->format('Ymd\THis')); // End time in UTC
-                            $description = urlencode($event->description); // Event description
-                            $location = urlencode($event->location); // Event location
-
-                            $googleCalendarUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$eventName}&dates={$startDate}/{$endDate}&details={$description}&location={$location}";
-                        @endphp
-
-                        <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
-
-                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
-                            <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
-                        @endif
-
-                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event)))
-                            <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
-                            </form>
-                        @endif
-                        
-                        @can('createPoll', $event)
-                            <button 
-                                class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100"
-                                onclick="togglePollForm()">
-                                Create Poll
-                            </button>
-                        @endcan
-
-                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
-                            @if($event->end_date < now())
-                                <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
-                            @else
-                                <button 
-                                    title="Survey results are available after the event ends."
-                                    class="block w-full px-6 py-4 text-xl text-left border-0 text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
-                                    Survey Results Not Available
-                                </button>
-                            @endif
-                        @endif
-
-                        @can('leave', $event)
-                            <form action="{{ route('events.leave', $event->id) }}" method="POST" class="block">
-                                @csrf
-                                <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Leave Event</button>
-                            </form>
-                        @endcan
-                    </div>
+                    @include('partials.event-options', [
+                            'event' => $event
+                        ])
                 </div>
             </div>
 
@@ -285,6 +236,8 @@
                 }
 
                 updateParticipantInfo();
+                updateCommentForm();
+                updateEventOptions();
             })
             .catch(error => {
                 // Show error popup
@@ -329,42 +282,7 @@
         });
     });
 
-    // Handle Request Join button click
-    document.querySelectorAll('form#requestJoinForm').forEach(form => {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent form submission (page reload)
-
-            const formData = new FormData(this); // Get form data
-
-            // Make AJAX request to request to join the event
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json()) // Assuming the server responds with JSON
-            .then(data => {
-                // Show response
-                showPopup(data.success, data.message);
-
-                if (data.success) {
-                    // Update button state to "Request Pending"
-                    const button = this.querySelector('button');
-                    button.textContent = "Request Pending";
-                    button.disabled = true; // Disable the button while request is in progress
-                }
-
-                // Update participant counter or participants list
-                updateParticipantInfo();
-            })
-            .catch(error => {
-                // Show error popup
-                showPopup(false, 'Something went wrong. Please try again later.');
-                console.error(error);
-            });
-        });
-    });
-
-    // Update Participant Info (count or list)
+    // Reload Participant Info (count or list)
     function updateParticipantInfo() {
         fetch(`/events/{{$event->id}}/participants`)
             .then(response => response.json())
@@ -375,6 +293,40 @@
                 participantList.innerHTML = data.participantHtml;
             })
             .catch(error => console.error('Error updating participants:', error));
+    }
+
+    // Reload Comment Form
+    function updateCommentForm() {
+        fetch(`/events/{{$event->id}}/update-comment-form`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error updating comment form.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('comment-form').innerHTML = data.commentFormHtml;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Reload Event Options
+    function updateEventOptions() {
+        fetch(`/events/{{$event->id}}/event-options`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error updating event options.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('menu').innerHTML = data.html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
     
     document.addEventListener('click', (event) => {

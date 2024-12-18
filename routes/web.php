@@ -69,6 +69,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
     Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
     Route::get('/events/{event}/participants', [EventController::class, 'getParticipants'])->name('events.participants');
+    Route::get('/events/{event}/update-comment-form', [EventController::class, 'updateCommentForm']);
+    Route::get('/events/{event}/event-options', [EventController::class, 'eventOptions']);
 
     Route::post('/invites/{invitesId}/decline', [InviteController::class, 'declineInvite'])->name('invites.decline');
     Route::post('/invites/{invitesId}/accept', [InviteController::class, 'acceptInvite'])->name('invites.accept');

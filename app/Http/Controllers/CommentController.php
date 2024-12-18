@@ -54,11 +54,6 @@ class CommentController extends Controller
         return view('event.show', compact('comments'));
     }
 
-    public function showCommentForm(Event $event)
-    {
-        return view('partials.create-comment', compact('event'));
-    }
-
     public function store(Request $request)
     {
         

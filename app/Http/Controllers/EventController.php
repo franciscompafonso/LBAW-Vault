@@ -564,4 +564,29 @@ class EventController extends Controller
         return view('partials.survey_stats', compact('event', 'chartData'));
     }
 
+    public function updateCommentForm($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+
+        $commentFormHtml = view('partials.create-comment', [
+            'event' => $event,
+        ])->render();
+
+        return response()->json([
+            'commentFormHtml' => $commentFormHtml,
+        ]);
+    }
+
+    public function eventOptions($eventId) {
+        $event = Event::findOrFail($eventId);
+
+        $html = view('partials.event-options', [
+            'event' => $event,
+        ])->render();
+
+        return response()->json([
+            'html' => $html,
+        ]);
+    }
+
 }
