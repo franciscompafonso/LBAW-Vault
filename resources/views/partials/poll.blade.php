@@ -58,7 +58,7 @@
             @endforeach
         </div>
 
-        @if(!$userResponse && Auth::id() && now()->between($poll->start_time, $poll->end_time))
+        @can('vote', $poll)
             <div class="mt-4">
                 <button 
                     type="submit" aria-label="Submit your vote for the poll"
@@ -66,10 +66,14 @@
                     Vote
                 </button>
             </div>
-        @elseif(now()->isAfter($poll->end_time))
+        @else
             <div class="mt-4 text-red-500" role="alert" aria-live="assertive">
-                Voting has ended for this poll.
+                @if(now()->isAfter($poll->end_time))
+                    Voting has ended for this poll.
+                @else
+                    You have already voted.
+                @endif
             </div>
-        @endif
+        @endcan
     </form>
 </div>
