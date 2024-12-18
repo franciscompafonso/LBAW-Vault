@@ -277,7 +277,7 @@
                         <!-- Container for the buttons, using flex to position them side by side -->
                         <div class="flex space-x-4">
                             <!-- Accept Button -->
-                            <form action="/requests/${notification.data.join_request_id}/accept" method="POST">
+                            <form action="/requests/${notification.data.id}/accept" method="POST">
                                 <input type="hidden" name="_token" value="${csrfToken}">
                                 <input type="hidden" name="notification_id" value="${notification.id}">
                                 <button 
@@ -289,7 +289,7 @@
                             </form>
 
                             <!-- Decline Button -->
-                            <form action="/requests/${notification.data.join_request_id}/decline" method="POST">
+                            <form action="/requests/${notification.data.id}/decline" method="POST">
                                 <input type="hidden" name="_token" value="${csrfToken}">
                                 <input type="hidden" name="notification_id" value="${notification.id}">
                                 <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-[#6B0010] hover:text-gray-100 border-[#800020] hover:border-[#6B0010]">
