@@ -26,7 +26,7 @@
         </div>
 
         <!-- Right-aligned "X" Button -->
-        @can('kickParticipator', [$event, $participator])
+        @if (auth()->guard('admin')->check() || auth()->user()->can('kickParticipator', [$event, $participator]))
             <div class="flex justify-end">
                 <form action="{{ route('events.participators.kick', ['event' => $event->id, 'user' => $participator->id]) }}" class="m-0" method="POST">
                     @csrf
@@ -35,6 +35,6 @@
                     </button>
                 </form>
             </div>
-        @endcan
+        @endif
     </div>
 </li>

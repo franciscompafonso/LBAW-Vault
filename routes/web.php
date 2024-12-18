@@ -72,7 +72,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
     Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('events.delete');
     Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
-    Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
 
     Route::post('/invites/{invitesId}/decline', [InviteController::class, 'declineInvite'])->name('invites.decline');
     Route::post('/invites/{invitesId}/accept', [InviteController::class, 'acceptInvite'])->name('invites.accept');
@@ -134,4 +133,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/unblock-requests/{id}/reject', [UnblockRequestController::class, 'reject'])->name('admin.unblock.requests.reject');
 });
 
-
+Route::middleware(['auth:web,admin'])->group(function () {
+    Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
+});

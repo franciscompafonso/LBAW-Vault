@@ -107,9 +107,7 @@ class EventPolicy
 
     public function kickParticipator(User $user, Event $event, User $participator)
     {
-        // Check if the user is the creator of the event or is an admin
-        $isAdmin = auth()->guard('admin')->check();
-        return ($user->id === $event->creator_id || $isAdmin) && $event->participators->contains($participator);
+        return $user->id === $event->creator_id && $event->participators->contains($participator);
     }   
 
     public function invite(User $user, Event $event): bool

@@ -418,18 +418,27 @@ class EventController extends Controller
      * Kick a participator from the event.
      */
     public function kickParticipator($eventId, $userId)
-    {
-        $event = Event::findOrFail($eventId);
-        $this->authorize('kick', $event);
+{
+    $event = Event::findOrFail($eventId);
+    $user = User::findOrFail($userId);
 
+    // Explicitly check if the current user is an admin or authorized by policy
+    if (auth()->guard('admin')->check() || auth()->user()->can('kickParticipator', [$event, $user])) {
+        // Ensure the user is participating in the event
         if (! $event->participators()->where('id', $userId)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');
         }
 
+        // Remove the participator from the event
         $event->participators()->detach($userId);
 
         return back()->with('message', 'You have removed the participator.');
     }
+
+    // If neither condition is met, deny access
+    abort(403, 'You are not authorized to perform this action.');
+}
+
 
     /**
      * Search
