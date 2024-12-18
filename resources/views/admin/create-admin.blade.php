@@ -45,8 +45,8 @@
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" aria-label="Create New Admin">
-                            Create Admin
+                        <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue active:border-cambridgeBlue" aria-label="Create New Admin">
+                            <span id="loading-icon" class="hidden">⏳</span> Create Admin
                         </button>
                     </div>
                 </form>
@@ -82,4 +82,15 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.action-btn').forEach(function(button) {
+            button.addEventListener('click', function() {
+                let loadingIcon = button.querySelector('.loading-icon');
+                if (loadingIcon) {
+                    loadingIcon.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
 @endsection

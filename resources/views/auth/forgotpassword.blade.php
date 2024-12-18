@@ -56,6 +56,7 @@
                 <button type="submit" 
                     class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat"
                     aria-label="Send password reset link">
+                    <span class="loading-icon hidden" id="loading-reset">⏳</span>
                     Send Reset Link
                 </button>
             </div>
@@ -76,4 +77,14 @@
     </section>
   </div>
 </div>
+
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function () {
+        const loadingIcon = document.getElementById('loading-reset');
+        if (loadingIcon) {
+            loadingIcon.classList.remove('hidden');
+        }
+    });
+</script>
 @endsection

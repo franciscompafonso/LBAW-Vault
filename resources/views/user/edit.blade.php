@@ -112,7 +112,9 @@
             </fieldset>
 
             <div class="mt-6 text-center">
-                <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat" aria-label="Save profile changes">Save Changes</button>
+                <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat" aria-label="Save profile changes">
+                    <span id="timeEmoji" class="hidden">⏳</span>
+                    Save Changes</button>
             </div>
 
         </form>
@@ -143,5 +145,10 @@
                 reader.readAsDataURL(file); 
             }
         }
+
+        document.querySelector('form').addEventListener('submit', function () {
+            document.getElementById('timeEmoji').classList.remove('hidden');
+            document.getElementById('submitButton').disabled = true;
+        });
     </script>
 @endsection
