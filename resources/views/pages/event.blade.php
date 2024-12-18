@@ -312,57 +312,6 @@
         </div>
     </div>
 
-    <!-- Message Popup -->
-    <div id="popup" class="fixed bottom-0 right-0 z-50 p-4 mb-4 mr-4 transition-transform duration-500 ease-in-out transform translate-x-full bg-white rounded-lg shadow-lg opacity-0 text-darkSlateGrey">
-        <div class="flex items-start justify-between">
-            <div class="pr-4">
-                <h3 id="popup-title" class="text-2xl font-semibold font-montserrat"></h3>
-                <p id="popup-message" class="mt-1 text-md"></p>
-            </div>
-
-            <button id="popup-close" class="bg-transparent border-transparent hover:border-transparent focus:border-transparent hover:bg-transparent focus:bg-transparent focus:text-red-500 text-darkSlateGrey hover:text-red-500">
-                <i class="text-4xl fa-solid fa-times"></i>
-            </button>
-        </div>
-    </div>
-    @if (session('message'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const popup = document.getElementById('popup');
-                const popupTitle = document.getElementById('popup-title');
-                const popupMessage = document.getElementById('popup-message');
-                const closeBtn = document.getElementById('popup-close');
-
-                const success = '{{ session('success') }}';
-                const message = '{{ session('message') }}';
-
-                popupMessage.textContent = message;
-
-                if (success) {
-                    popupTitle.textContent = 'Success';
-                    popupTitle.classList.add('text-green-500');
-                } else {
-                    popupTitle.textContent = 'Error';
-                    popupTitle.classList.add('text-red-500');
-                }
-
-                popup.classList.remove('translate-x-full', 'opacity-0');
-                popup.classList.add('translate-x-0', 'opacity-100');
-
-                closeBtn.addEventListener('click', function () {
-                    popup.classList.remove('translate-x-0', 'opacity-100');
-                    popup.classList.add('translate-x-full', 'opacity-0');
-                });
-
-                setTimeout(() => {
-                    popup.classList.remove('translate-x-0', 'opacity-100');
-                    popup.classList.add('translate-x-full', 'opacity-0');
-                }, 5000);
-            });
-        </script>
-    @endif
-</div>
-
 
 @include('partials.poll-form', ['event' => $event])
 

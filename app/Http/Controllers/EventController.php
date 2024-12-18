@@ -369,7 +369,6 @@ class EventController extends Controller
         event(new JoinEvent($event->creator->id, User::find(Auth::id())->name . ' has joined ' . $event->name));
 
         return response()->json([
-            'success' => true,
             'message' => 'You have successfully joined the event!',
         ]);
         
@@ -390,7 +389,10 @@ class EventController extends Controller
 
         $event->participators()->detach(Auth::id());
 
-        return back()->with('message', 'You have successfully left the event.');
+        return back()->with([
+            'message' => 'You have successfully left the event!',
+            'success' => true
+        ]);;
     }
 
     /**
@@ -398,9 +400,8 @@ class EventController extends Controller
      */
     public function kickParticipator($eventId, $userId)
     {
-        $user = User::findOrFail($userId);
         $event = Event::findOrFail($eventId);
-        $this->authorize('kickParticipator', [$event, $user]);
+        $this->authorize('kick', $event);
 
         if (! $event->participators()->where('id', $userId)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');
