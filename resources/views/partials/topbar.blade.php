@@ -1,3 +1,9 @@
+<!-- Skip to Content Link -->
+<a href="#main" 
+   class="absolute left-[-999px] top-[-999px] focus:left-0 focus:top-0 focus:z-50 focus:bg-ultraViolet focus:text-white focus:px-4 focus:py-2 focus:rounded-md">
+   Skip to Content
+</a>
+
 <!-- Header Section -->
 <header class="relative flex flex-wrap items-center justify-between p-6">
     <!-- Logo -->
