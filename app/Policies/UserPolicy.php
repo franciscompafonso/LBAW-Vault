@@ -12,13 +12,13 @@ class UserPolicy
         return $currentUser->id === $user->id || $currentUser->is_admin;
     }
 
-    public function viewProfile(User $currentUser, User $targetUser)
+    public function viewProfile($currentUser, User $targetUser)
     {
         $isAdmin = auth()->guard('admin')->check();
         return !$targetUser->isdeleted || $isAdmin;
     }
 
-    public function editProfile(User $currentUser, User $targetUser)
+    public function editProfile($currentUser, User $targetUser)
     {
         $isAdmin = auth()->guard('admin')->check();
         return $currentUser->id === $targetUser->id || $isAdmin;
@@ -26,7 +26,7 @@ class UserPolicy
 
     public function deleteAccount(User $currentUser, User $targetUser)
     {
-    return $currentUser->id === $targetUser->id;
+        return $currentUser->id === $targetUser->id;
     }
 
     public function login(User $user)

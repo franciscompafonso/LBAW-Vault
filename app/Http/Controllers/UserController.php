@@ -80,13 +80,12 @@ class UserController extends Controller
     public function edit(int $id, Request $request)
     {
         $user = User::findOrFail($id);
-        $this->authorize('editProfile', $user);
 
         try {
             DB::beginTransaction();
 
-            if (Auth::user()->cannot('edit_profile', $user) && ! auth()->guard('admin')->check()) {
-                abort(403, 'Unauthorized action.');
+            if (Auth::user()->cannot('editProfile', $user) && ! auth()->guard('admin')->check()) {
+                abort(403, 'You do not have permission to edit this profile.');
             }
 
             $validatedData = $request->validate([

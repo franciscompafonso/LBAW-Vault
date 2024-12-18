@@ -22,7 +22,7 @@ class CommentController extends Controller
     $comment = Comment::findOrFail($id);
 
     // Check if the current user is an admin or authorized by policy
-    if (auth()->guard('admin')->check() || auth()->user()->can('delete', $comment)) {
+    if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $comment))) {
         // Delete associated photos
         foreach ($comment->photos as $photo) {
             $photoId = $photo->id;

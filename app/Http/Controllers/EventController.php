@@ -121,7 +121,7 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         // Check if the current user is an admin or authorized by policy
-        if (auth()->guard('admin')->check() || auth()->user()->can('update', $event)) {
+        if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event))) {
             $districts = District::all();
             $categories = Category::all();
 
@@ -137,7 +137,7 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         // Check if the current user is an admin or authorized by policy
-        if (auth()->guard('admin')->check() || auth()->user()->can('update', $event)) {
+        if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event))) {
             try {
                 DB::beginTransaction();
 
@@ -314,7 +314,7 @@ class EventController extends Controller
         $event = Event::findOrFail($eventId);
 
         // Check if the current user is an admin or authorized by policy
-        if (auth()->guard('admin')->check() || auth()->user()->can('delete', $event)) {
+        if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event))) {
             // Store the banner ID to delete after the event is removed
             $pictureId = $event->file_id;
 
@@ -468,7 +468,7 @@ class EventController extends Controller
     $event = Event::findOrFail($eventId);
     $user = User::findOrFail($userId);
 
-    if (auth()->guard('admin')->check() || auth()->user()->can('kickParticipator', [$event, $user])) {
+    if (auth()->guard('admin')->check() || ( auth()->check() && auth()->user()->can('kickParticipator', [$event, $user]))) {
 
         if (! $event->participators()->where('id', $userId)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');
@@ -539,7 +539,7 @@ class EventController extends Controller
         $event = Event::findOrFail($eventId);
 
         // Explicitly check if the user is an admin or authorized via the policy
-        if (!auth()->guard('admin')->check() && !auth()->user()->can('viewSurveyResults', $event)) {
+        if (!auth()->guard('admin')->check() && ( auth()->check() && !auth()->user()->can('viewSurveyResults', $event))) {
             abort(403, 'Unauthorized action.');
         }
 
