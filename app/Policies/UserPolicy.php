@@ -34,4 +34,9 @@ class UserPolicy
         return !$user->isdeleted;
     }
 
+    public function viewInvites($currentUser, User $targetUser)
+    {
+        return $currentUser->id === $targetUser->id;
+    }
+
 }

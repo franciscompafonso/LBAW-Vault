@@ -29,7 +29,6 @@ Route::get('/about', fn() => view('pages.about'));
 Route::get('/faqs', fn() => view('pages.faqs'))->name('faqs');
 
 Route::get('/events/search', [EventController::class, 'searchFiltered'])->name('events.search');
-
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
 Route::get('/photos/{id}', [FileController::class, 'show'])->name('photos.show');
 
@@ -112,7 +111,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/unblock-request', [UnblockRequestController::class, 'create'])->name('unblock.request.create');
     Route::post('/unblock-request', [UnblockRequestController::class, 'store'])->name('unblock.request.store');
 });
-Route::get('/api/search', [EventController::class, 'search'])->name('search');
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/user-management', [AdminController::class, 'listUsers'])->name('admin.user-management');
@@ -142,3 +140,4 @@ Route::middleware(['auth:web,admin'])->group(function () {
 Route::controller(MailController::class)->group(function () {
     Route::post('forgot-password/email', 'sendResetLink')->name('password.email');
 });
+Route::get('/api/search', [EventController::class, 'search'])->name('search');
