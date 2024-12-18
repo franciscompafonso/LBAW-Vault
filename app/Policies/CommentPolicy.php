@@ -9,9 +9,10 @@ use App\Models\Comment;
 class CommentPolicy
 {
 
-    public function delete(User $user, Comment $comment)
+    public function delete($user, Comment $comment)
     {
-      return $user->id === $comment->comment_by_id;
+        if (auth()->guard('admin')->check()) { return true;}
+        return $user->id === $comment->comment_by_id;
     }
 
     public function reply(User $user, Comment $comment)

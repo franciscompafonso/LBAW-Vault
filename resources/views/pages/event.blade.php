@@ -42,11 +42,11 @@
 
                         <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
 
-                        @if (auth()->guard('admin')->check() || auth()->user()->can('update', $event))
+                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
                             <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
                         @endif
 
-                        @if (auth()->guard('admin')->check() || auth()->user()->can('delete', $event))
+                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event)))
                             <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
                                 @csrf
                                 @method('DELETE')
@@ -62,7 +62,7 @@
                             </button>
                         @endcan
 
-                        @if (auth()->guard('admin')->check() || auth()->user()->can('viewSurveyResults', $event))
+                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
                             @if($event->end_date < now())
                                 <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
                             @else
@@ -157,7 +157,7 @@
                     </div>
                 @endcan
 
-                @if (auth()->guard('admin')->check() || auth()->user()->can('viewSurveyResults', $event))
+                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
                     <a href="{{ route('events.surveyStats', $event->id) }}" class="block mt-4 text-center">
                         <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
                             View Survey Results
@@ -177,7 +177,7 @@
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                     Details
                 </h2>
-                @if (auth()->guard('admin')->check() || auth()->user()->can('update', $event))
+                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
                     <p class="text-3xl text-darkSlateGrey font-montserrat">
                         <strong class="font-semibold">Visibility:</strong> 
                         @if ($event->visibility == 'public')
