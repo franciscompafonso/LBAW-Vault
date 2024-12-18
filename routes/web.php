@@ -29,6 +29,7 @@ Route::get('/about', fn() => view('pages.about'));
 Route::get('/faqs', fn() => view('pages.faqs'))->name('faqs');
 
 Route::get('/events/search', [EventController::class, 'searchFiltered'])->name('events.search');
+
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
 Route::get('/photos/{id}', [FileController::class, 'show'])->name('photos.show');
 
@@ -67,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/events/{event}/request', [EventController::class, 'requestToJoin'])->name('events.request');
     Route::post('/events/{event}/join', [EventController::class, 'joinEvent'])->name('events.join');
     Route::post('/events/{event}/leave', [EventController::class, 'leaveEvent'])->name('events.leave');
+    Route::post('/events/{event}/invite', [InviteController::class, 'sendInvite'])->name('events.invite');
     Route::get('/events/{event}/participants', [EventController::class, 'getParticipants'])->name('events.participants');
     Route::get('/events/{event}/update-comment-form', [EventController::class, 'updateCommentForm']);
     Route::get('/events/{event}/event-options', [EventController::class, 'eventOptions']);
@@ -83,6 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
 
     Route::post('/polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
+    Route::post('/events/{event}/polls', [PollController::class, 'store'])->name('polls.store');
 
     // Users
     Route::controller(UserController::class)->group(function () {
