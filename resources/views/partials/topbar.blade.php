@@ -74,7 +74,7 @@
                 <div id="profile-dropdown" 
                     class="absolute right-0 z-10 hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-auto max-w-[90vw]" aria-label="User Profile">
                     <!-- Profile Info Card -->
-                    <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}" 
+                    <a href="{{ route('user.profile', ['username' => Auth::user()->username]) }}" 
                     class="block p-6 hover:bg-gray-100" aria-label="View Profile">
                         <div class="flex items-center gap-6">
                             <!-- Profile Image -->
@@ -219,14 +219,14 @@
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">You have received an invite!</a>
                         <p class="text-sm text-gray-600">
-                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.sender_id}">
-                                ${notification.data.receiver_name ? notification.data.receiver_name : ''}
+                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.sender_username}">
+                                ${notification.data.sender_name ?? 'Someone'}
                             </a> 
                             has invited you to 
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
-                                ${notification.data.event_name ? notification.data.event_name + ' event.' : 'an event'}
-                            </a><br>
-                            ${notification.data.description ? notification.data.description : ''}
+                                ${notification.data.event_name ?? 'an '}
+                            </a>
+                            event.
                         </p>
                         <!-- Container for the buttons, using flex to position them side by side -->
                         <div class="flex space-x-4">
@@ -259,12 +259,12 @@
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">Your invite was accepted!</a>
                         <p class="text-sm text-gray-600">
-                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.receiver_id}">
-                                ${notification.data.receiver_name ? notification.data.receiver_name : 'Someone'}
+                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.receiver_username}">
+                                ${notification.data.receiver_name ?? 'Someone'}
                             </a>
                             accepted your invite for
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
-                                ${notification.data.event_name ? notification.data.event_name : 'an event'}
+                                ${notification.data.event_name ?? 'an event'}
                             </a>
                         </p>
                     `;
@@ -272,12 +272,12 @@
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">Join Request</a>
                         <p class="text-sm text-gray-600">
-                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.join_request_by_id}">
-                                ${notification.data.user_name ? notification.data.user_name : ''}
+                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.join_request_by_username}">
+                                ${notification.data.join_request_by_name ?? ''}
                             </a> 
                             has requested to join the
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
-                                ${notification.data.event_name ? notification.data.event_name : 'an '}
+                                ${notification.data.event_name ?? 'an '}
                             </a> 
                             event.
                         </p>
@@ -309,12 +309,12 @@
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Join request was accepted!</p>
                         <p class="text-sm text-gray-600">
-                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.event_creator_id}">
-                                ${notification.data.event_creator_name ? notification.data.event_creator_name : 'The event creator'}
+                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.event_creator_username}">
+                                ${notification.data.event_creator_name ?? 'The event creator'}
                             </a>
                             accepted your request to join
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
-                                ${notification.data.event_name ? notification.data.event_name : 'an event'}
+                                ${notification.data.event_name ?? 'an event'}
                             </a>.
                         </p>
                     `;
@@ -332,12 +332,12 @@
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">New Comment!</a><br>
                         <p class="text-sm text-gray-600">
-                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.receiver_id}">
-                                ${notification.data.user_name ?? 'Someone'}
+                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.commenter_username}">
+                                ${notification.data.commenter_name ?? 'Someone'}
                             </a>
                             commented in
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
-                                ${notification.data.event_name ? notification.data.event_name : 'an event youre a part of'}
+                                ${notification.data.event_name ?? "an event you're a part of"}
                             </a>
                         </p>
                     `;

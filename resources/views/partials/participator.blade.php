@@ -12,7 +12,7 @@
                     {{ $participator->displayName }}
                 </span>
             @else
-                <a href="{{ route('user.profile', ['id' => $participator->id]) }}" 
+                <a href="{{ route('user.profile', ['username' => $participator->username]) }}" 
                     class="text-3xl text-darkSlateGrey font-montserrat">
                     {{ $participator->name }}
                 </a>

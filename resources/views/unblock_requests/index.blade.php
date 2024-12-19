@@ -19,7 +19,7 @@
                     @foreach($requests as $request)
                         <tr>
                             <td>
-                                <a href="{{ route('user.profile', ['id' => $request->requested_by_id]) }}" 
+                                <a href="{{ route('user.profile', ['username' => $request->requestedBy->username]) }}" 
                                 class="font-bold">
                                     {{ $request->requestedBy->username }}
                                 </a>

@@ -26,7 +26,7 @@
                     <i class="text-xl fa-solid fa-user-edit mr-2"></i> Edit Profile
                 </a>
 
-                <a href="{{ route('user.profile', ['id' => $user->id]) }}" 
+                <a href="{{ route('user.profile', ['username' => $user->username]) }}" 
                    aria-label="View {{ $user->name }} profile"
                    class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet ">
                     <i class="text-xl fa-solid fa-user mr-2"></i> Profile
@@ -57,7 +57,7 @@
                         @foreach($sentInvites as $invite)
                             <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="text-center font-montserrat">
-                                    <a href="{{ route('user.profile', ['id' => $invite->receiver->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                    <a href="{{ route('user.profile', ['username' => $invite->receiver->v]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
                                         {{ $invite->receiver->username }}
                                     </a>
                                 </div>
@@ -110,7 +110,7 @@
                         @foreach($receivedInvites as $invite)
                             <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="text-center font-montserrat">
-                                    <a href="{{ route('user.profile', ['id' => $invite->sender->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                    <a href="{{ route('user.profile', ['username' => $invite->sender->username]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
                                         {{ $invite->sender->username }}
                                     </a>
                                 </div>

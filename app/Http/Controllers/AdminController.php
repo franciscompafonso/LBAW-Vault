@@ -184,7 +184,7 @@ class AdminController extends Controller
         }
 
         $user->save();
-        return redirect()->route('user.profile', ['id' => $user->id]);
+        return redirect()->route('user.profile', ['username' => $user->username]);
         
     }
     */

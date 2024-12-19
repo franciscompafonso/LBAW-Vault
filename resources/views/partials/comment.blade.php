@@ -9,7 +9,7 @@
                     class="object-cover w-12 h-12 rounded-full"
                 >
                 @if(!$comment->user->isdeleted)
-                    <a href="{{ route('user.profile', ['id' => $comment->user->id]) }}" 
+                    <a href="{{ route('user.profile', ['username' => $comment->user->username]) }}" 
                     class="text-lg font-semibold text-gray-900 font-montserrat">
                         {{ $comment->user->displayName }}
                     </a>
@@ -160,7 +160,7 @@
                                 alt="{{ $reply->user->username }}" 
                                 class="object-cover w-12 h-12 rounded-full"
                             >
-                            <a href="{{ route('user.profile', ['id' => $reply->user->id]) }}" 
+                            <a href="{{ route('user.profile', ['username' => $reply->user->username]) }}" 
                                 class="text-lg font-semibold text-gray-900 font-montserrat">
                                     {{ $reply->user->username }}
                             </a>
