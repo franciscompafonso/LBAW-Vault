@@ -3,10 +3,10 @@
 @section('Title', 'Invitations')
 @section('content')
     <!-- Profile Section Container -->
-    <div class="relative bg-gradient-to-r from-whiteSmoke to-wisteria p-16 rounded-lg shadow-lg flex items-center justify-between">
+    <div class="relative flex items-center justify-between p-16 rounded-lg shadow-lg bg-gradient-to-r from-whiteSmoke to-wisteria">
         <!-- Left: Profile Picture and Info -->
         <div class="flex items-center space-x-6">
-            <div class="w-32 h-32 rounded-full border-4 border-white overflow-hidden">
+            <div class="w-32 h-32 overflow-hidden border-4 border-white rounded-full">
                 <img src="{{ asset('images/profile-pictures/' . ($user->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
                     alt="{{ $user->name }}" 
                     class="object-cover w-full h-full">
@@ -23,23 +23,23 @@
                 <a href="{{ route('user.edit.form', ['id' => $user->id]) }}" 
                    aria-label="Edit profile of {{ $user->name }}"
                    class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
-                    <i class="text-xl fa-solid fa-user-edit mr-2"></i> Edit Profile
+                    <i class="mr-2 text-xl fa-solid fa-user-edit"></i> Edit Profile
                 </a>
 
                 <a href="{{ route('user.profile', ['username' => $user->username]) }}" 
                    aria-label="View {{ $user->name }} profile"
                    class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet ">
-                    <i class="text-xl fa-solid fa-user mr-2"></i> Profile
+                    <i class="mr-2 text-xl fa-solid fa-user"></i> Profile
                 </a>
             @endif
         </div>
     </div>
 
     <!-- Two Column Layout -->
-    <div class="mt-10 grid grid-cols-2 gap-12">
+    <div class="grid grid-cols-2 gap-12 mt-10">
         <!-- Sent Invitations Column -->
         <div>
-            <h3 class="mb-4 py-6 text-4xl font-semibold font-montserrat text-eerieBlack">Invites Sent</h3>
+            <h3 class="py-6 mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Invites Sent</h3>
             @if($sentInvites->isEmpty())
                 <p class="text-xl text-center text-gray-500">No invitations sent yet.</p>
             @else
@@ -57,7 +57,7 @@
                         @foreach($sentInvites as $invite)
                             <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="text-center font-montserrat">
-                                    <a href="{{ route('user.profile', ['username' => $invite->receiver->v]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                    <a href="{{ route('user.profile', ['username' => $invite->receiver->username]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
                                         {{ $invite->receiver->username }}
                                     </a>
                                 </div>
@@ -93,7 +93,7 @@
 
         <!-- Received Invitations Column -->
         <div>
-            <h3 class="mb-4 py-6 text-4xl font-semibold font-montserrat text-eerieBlack">Invites Received</h3>
+            <h3 class="py-6 mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Invites Received</h3>
             @if($receivedInvites->isEmpty())
                 <p class="text-xl text-center text-gray-500">No invitations received yet.</p>
             @else
