@@ -339,8 +339,7 @@
             .then(response => response.json())
             .then(data => {
                 showPopup(data.success, data.message);
-                document.getElementById('invite_user').value = '';
-                document.getElementById('invite_desc').value = ''; 
+                document.getElementById('inviteForm').reset();
             })
             .catch(error => {
                 showPopup(false, 'Something went wrong. Please try again later.');
