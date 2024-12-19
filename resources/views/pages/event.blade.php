@@ -299,84 +299,84 @@
     }
 
     // -------------------- AJAX RELOAD COMMENTS --------------------
-    document.addEventListener('submit', function (event) {
-    if (event.target.id === "comment-form") {
-        event.preventDefault();
+    // document.addEventListener('submit', function (event) {
+    // if (event.target.id === "comment-form") {
+    //     event.preventDefault();
 
-        var form = event.target;
-        var formData = new FormData(form);
+    //     var form = event.target;
+    //     var formData = new FormData(form);
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', form.action, true);
-        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open('POST', form.action, true);
+    //     xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var response = JSON.parse(xhr.responseText);
-                if (response.status === 'success') {
-                    document.getElementById('comment-content').value = '';
-                    document.getElementById('photos').value = '';
+    //     xhr.onload = function () {
+    //         if (xhr.status === 200) {
+    //             var response = JSON.parse(xhr.responseText);
+    //             if (response.status === 'success') {
+    //                 document.getElementById('comment-content').value = '';
+    //                 document.getElementById('photos').value = '';
                     
-                    document.getElementById('comment-list').innerHTML += response.commentHtml;
-                } else {
-                    alert('Erro ao enviar o comentário.');
-                }
-            } else {
-                alert('Ocorreu um erro ao tentar enviar o comentário.');
-            }
-        };
+    //                 document.getElementById('comment-list').innerHTML += response.commentHtml;
+    //             } else {
+    //                 alert('Erro ao enviar o comentário.');
+    //             }
+    //         } else {
+    //             alert('Ocorreu um erro ao tentar enviar o comentário.');
+    //         }
+    //     };
 
-        xhr.send(formData);
-    }
-    });
+    //     xhr.send(formData);
+    // }
+    // });
 
-    function updateParticipantInfo() {
-    fetch(`/events/{{$event->id}}/comments`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
+    // function updateParticipantInfo() {
+    // fetch(`/events/{{$event->id}}/comments`)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
             
-            const participantList = document.getElementById('participant-list');
-            participantList.innerHTML = data.participantHtml;
-        })
-        .catch(error => console.error('Error updating participants:', error));
-    }
+    //         const participantList = document.getElementById('participant-list');
+    //         participantList.innerHTML = data.participantHtml;
+    //     })
+    //     .catch(error => console.error('Error updating participants:', error));
+    // }
 
     // -------------------- AJAX RELOAD EVENT PAGE --------------------
 
     // Handle Join Event button click
-    // document.addEventListener('submit', function (event) {
-    // if (event.target.id === "joinEventForm") {
-    //     event.preventDefault(); // Prevent form submission (page reload)
+    document.addEventListener('submit', function (event) {
+    if (event.target.id === "joinEventForm") {
+        event.preventDefault(); // Prevent form submission (page reload)
 
-    //     const form = event.target;
-    //     const formData = new FormData(form);
+        const form = event.target;
+        const formData = new FormData(form);
 
-    //     // Make AJAX request to join the event
-    //     fetch(form.action, {
-    //         method: 'POST',
-    //         body: formData,
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         showPopup(data.success, data.message);
+        // Make AJAX request to join the event
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            showPopup(data.success, data.message);
 
-    //         if (data.success) {
-    //             const button = form.querySelector('button');
-    //             button.textContent = "Joined!";
-    //             button.disabled = true;
-    //         }
+            if (data.success) {
+                const button = form.querySelector('button');
+                button.textContent = "Joined!";
+                button.disabled = true;
+            }
 
-    //         updateParticipantInfo();
-    //         updateCommentForm();
-    //         updateEventActions();
-    //     })
-    //     .catch(error => {
-    //         showPopup(false, 'Something went wrong. Please try again later.');
-    //         console.error(error);
-    //     });
-    // }
-    // });
+            updateParticipantInfo();
+            updateCommentForm();
+            updateEventActions();
+        })
+        .catch(error => {
+            showPopup(false, 'Something went wrong. Please try again later.');
+            console.error(error);
+        });
+    }
+    });
 
     // Handle Request to join Event button click
     document.addEventListener('submit', function (event) {
