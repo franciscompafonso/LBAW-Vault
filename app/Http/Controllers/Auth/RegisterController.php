@@ -25,6 +25,16 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
+    public function showAdminCreationForm(): View
+    {
+        if (!auth()->guard('admin')->check()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('auth.register'); // Assuming you're reusing the same form.
+    }
+
+
     /**
      * Register a new user.
      */
@@ -44,10 +54,15 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
+        if (auth()->guard('admin')->check()) {
+        return redirect()->route('admin.user-management')->with('success', 'User account created successfully!');
+    }
+
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
         return redirect()->route('pages.home')
             ->withSuccess('You have successfully registered & logged in!');
     }
+
 }

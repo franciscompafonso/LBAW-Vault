@@ -106,6 +106,13 @@
         @endif
 
         @if (Auth::guard('admin')->check())
+        
+            <a href="{{ route('admin.users.create') }}" 
+               class="hover:text-darkSlateGrey text-ultraViolet" 
+               title="Create User"
+               aria-label="Create User">
+                <i class="text-4xl fa-solid fa-user-plus"></i>
+            </a>
             <a href="{{ url('/admin/user-management') }}" 
                class="hover:text-darkSlateGrey {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }}" 
                title="Users"

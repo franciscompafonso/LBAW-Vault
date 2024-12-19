@@ -118,7 +118,7 @@ class EventPolicy
 
     public function invite(User $user, Event $event): bool
     {
-        return$event->end_date > now()
+        return $event->end_date > now()
             && (($event->participators->contains($user) && $event->visibility === 'public') || $user->id === $event->creator_id);
     }
 

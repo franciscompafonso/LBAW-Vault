@@ -98,7 +98,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/invite/{id}', [InviteController::class, 'deleteInvite'])->name('invite.delete');
     });
 
-
     Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
     Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification']);
@@ -124,6 +123,10 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/unblock-requests', [UnblockRequestController::class, 'index'])->name('admin.unblock.requests');
     Route::post('/admin/unblock-requests/{id}/approve', [UnblockRequestController::class, 'approve'])->name('admin.unblock.requests.approve');
     Route::post('/admin/unblock-requests/{id}/reject', [UnblockRequestController::class, 'reject'])->name('admin.unblock.requests.reject');
+
+    Route::get('/admin/users/create', [RegisterController::class, 'showAdminCreationForm'])->name('admin.users.create');
+    Route::post('/admin/users/store', [RegisterController::class, 'register'])->name('admin.users.store');
+    
 });
 
 Route::middleware(['auth:web,admin'])->group(function () {

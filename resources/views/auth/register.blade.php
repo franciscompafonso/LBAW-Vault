@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('Title', 'Sign up')
+@section('Title', auth()->guard('admin')->check() ? 'Create User' : 'Sign Up')
+
 @section('content')
 <div class="flex items-center justify-center">
   <!-- Card Wrapper -->
@@ -29,10 +30,10 @@
     <section class="flex items-center justify-center px-8 py-12 bg-babyPowder">
       <div class="w-2/3">
         <!-- Title -->
-        <h2 class="py-4 mb-6 font-extrabold text-7xl font-montserrat text-ultraViolet">Sign up</h2>
+        <h2 class="py-4 mb-6 font-extrabold text-7xl font-montserrat text-ultraViolet">{{ auth()->guard('admin')->check() ? 'Create User' : 'Sign up' }}</h2>
         
         <!-- Form Container -->
-        <form method="POST" action="{{ route('register') }}" class="space-y-6">
+        <form method="POST" action="{{ auth()->guard('admin')->check() ? route('admin.users.store') : route('register') }}" class="space-y-6">
           {{ csrf_field() }}
 
           <!-- Name Field -->
@@ -97,20 +98,23 @@
 
           <!-- Register Button -->
           <div class="mt-6 text-center">
-            <button type="submit" class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat" aria-label="Create a new account">Sign up</button>
+            <button type="submit" class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat" aria-label="Create a new account"> {{ auth()->guard('admin')->check() ? 'Create User' : 'Register' }} </button>
           </div>
         </form>
 
-        <!-- Registration Link -->
-        <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">   
-          Have an account?
-          <a href="{{ route('login') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Sign in to your account">Sign in</a>   
-        </p>
-        
-        <!-- No account -->
-        <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">
-            <a href="{{ url(path: '/home') }}" class="font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Continue without an account">Continue without an account</a>
+        @if(!auth()->guard('admin')->check())
+          <!-- Registration Link -->
+          <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">   
+            Have an account?
+            <a href="{{ route('login') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Sign in to your account">Sign in</a>   
           </p>
+        
+        
+          <!-- No account -->
+          <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">
+              <a href="{{ url(path: '/home') }}" class="font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Continue without an account">Continue without an account</a>
+          </p>
+        @endif
       </div>
     </section>
   </div>
