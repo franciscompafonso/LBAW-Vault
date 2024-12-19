@@ -72,6 +72,13 @@
             </div>
           </form>
 
+          <!-- Continue with Google Button -->
+          <div class="mt-6 text-center">
+            <a href="{{ route('google-auth') }}" class="inline-flex items-center justify-center w-12 h-12 transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue" aria-label="Continue with Google">
+              <i class="fab fa-google text-white"></i>
+            </a>
+          </div>
+
           <!-- Registration Link -->
           <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">
             Not a member? 

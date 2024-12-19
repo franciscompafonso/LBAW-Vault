@@ -101,6 +101,13 @@
             <button type="submit" class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat" aria-label="Create a new account"> {{ auth()->guard('admin')->check() ? 'Create User' : 'Register' }} </button>
           </div>
         </form>
+        
+         <!-- Continue with Google Button -->
+         <div class="mt-6 text-center">
+          <a href="{{ route('google-auth') }}" class="inline-flex items-center justify-center w-12 h-12 transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue" aria-label="Continue with Google">
+            <i class="fab fa-google text-white"></i>
+          </a>
+        </div>
 
         @if(!auth()->guard('admin')->check())
           <!-- Registration Link -->

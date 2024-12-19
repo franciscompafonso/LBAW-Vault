@@ -10,6 +10,7 @@ use App\Http\Controllers\PollController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UnblockRequestController;
+use App\Http\Controllers\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -145,3 +146,11 @@ Route::controller(MailController::class)->group(function () {
     Route::post('forgot-password/email', 'sendResetLink')->name('password.email');
 });
 Route::get('/api/search', [SearchController::class, 'search'])->name('search');
+
+// Google
+
+Route::get('/api/search', [SearchController::class, 'search'])->name('search');
+Route::controller(GoogleController::class)->group(function () {
+    Route::get('auth/google', 'redirect')->name('google-auth');
+    Route::get('auth/google/call-back', 'callbackGoogle')->name('google-call-back');
+});

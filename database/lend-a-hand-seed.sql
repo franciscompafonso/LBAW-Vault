@@ -83,7 +83,8 @@ CREATE TABLE user_account (
     isDeleted BOOLEAN DEFAULT FALSE,
     isBlocked BOOLEAN DEFAULT FALSE,
     file_id INT,
-    remember_token VARCHAR(255) DEFAULT NULL
+    remember_token VARCHAR(255) DEFAULT NULL,
+    google_id VARCHAR
 );
 
 CREATE TABLE district (
