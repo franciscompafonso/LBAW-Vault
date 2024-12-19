@@ -21,6 +21,13 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
 
+        if (!$comment->reply_to) {
+            $replies = Comment::where('reply_to', $id)->get();
+            foreach ($replies as $reply) {
+                $this->delete($reply->id);
+            }
+        }
+        
         // Check if the current user is an admin or authorized by policy
         if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $comment))) {
             // Delete associated photos
@@ -44,7 +51,6 @@ class CommentController extends Controller
         // Unauthorized response
         abort(403, 'You are not authorized to delete this comment.');
     }
-
 
     public function show($eventId)
     {
