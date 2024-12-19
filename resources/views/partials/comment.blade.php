@@ -33,7 +33,7 @@
             </div>
 
             <div class="text-right">
-                @if (auth()->guard('admin')->check() || auth()->user()->can('delete', $comment))
+                @if (auth()->guard('admin')->check() || auth()->check() && auth()->user()->can('delete', $comment))
                     <form action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')

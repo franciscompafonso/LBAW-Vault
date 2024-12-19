@@ -83,7 +83,7 @@ class CommentController extends Controller
         $participants = $event->participators;
 
         foreach ($participants as $participant) {
-            event(new NewComment($participant->id, $event->id, User::find(Auth::id())->name . " has commented on " . Event::find($comment->event_id)->name));
+            if($participant->id != Auth::id()) event(new NewComment($participant->id, $event->id, User::find(Auth::id())->name . " has commented on " . Event::find($comment->event_id)->name));
         }
 
         return redirect()->back()->with([
@@ -117,7 +117,7 @@ class CommentController extends Controller
         $reply->date = now();  // Set the current timestamp
         $reply->save();
 
-        event(new NewComment($comment->comment_by_id, $comment->event_id, User::find(Auth::id())->name . " has answered to your comment on " . Event::find($comment->event_id)->name));
+        if($comment->comment_by_id != Auth::id()) event(new NewComment($comment->comment_by_id, $comment->event_id, User::find(Auth::id())->name . " has answered to your comment on " . Event::find($comment->event_id)->name));
 
         return redirect()->back()->with([
             'message' => 'Reply added with success!',
