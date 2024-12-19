@@ -373,7 +373,10 @@ class EventController extends Controller
         }
 
         $event->participators()->detach($userId);
-        return back()->with('message', 'You have removed the participator.');
+        return back()->with([
+            'message' => 'You have removed the participator.',
+            'success' => true
+        ]);
     }
 
     abort(403, 'You are not authorized to perform this action.');

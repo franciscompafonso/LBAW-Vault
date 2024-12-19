@@ -61,7 +61,10 @@ class PollController extends Controller
             'option' => $request->input('option'), 
         ]);
 
-        return back()->with('success', 'Your vote has been recorded.');
+        return back()->with([
+            'message' => 'Your vote has been recorded.',
+            'success' => true
+        ]);
     }
 
 }

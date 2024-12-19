@@ -169,7 +169,10 @@ class NotificationController extends Controller
             $notification->save();
         }
 
-        return back()->with('success', 'You have dismissed the notification');
+        return back()->with([
+            'message' => 'You have dismissed the notification',
+            'success' => true
+        ]);
     }
 
     public function dismissAllNotifications()
