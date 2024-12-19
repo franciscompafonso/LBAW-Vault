@@ -30,10 +30,24 @@
     </h1>
 
     <!-- Main Grid Layout -->
-    <div class="grid grid-cols-5 gap-6">
+    <div class="flex flex-col-reverse lg:flex-row-reverse gap-6">
+
+        <!-- Events Grid -->
+        <div class="flex-1 grid gap-6 sm:grid-cols-2 md:grid-cols-3 auto-rows-min" aria-label="Events grid">
+            @forelse ($events as $event)
+                @include('partials.event', ['event' => $event])
+            @empty
+                <p class="text-eerieBlack font-montserrat col-span-full" aria-live="polite">No events available in this category.</p>
+            @endforelse
+
+            <!-- Pagination Links -->
+            <div class="col-span-full mt-6 flex justify-center" aria-label="Pagination navigation">
+                {{ $events->appends(request()->query())->links() }}
+            </div>
+        </div>
         
         <!-- Filters Section -->
-        <form method="GET" id="filtersForm" class="flex flex-col gap-6">
+        <form method="GET" id="filtersForm" class="flex flex-col gap-6 order-1 lg:order-1">
 
             <p class="text-md font-montserrat font-semibold text-darkSlateGrey mb-4">
                 Number of events: <span class="text-ultraViolet">{{ $eventsCount }}</span>
@@ -232,21 +246,6 @@
                 </button>
             </div>
         </form>
-
-        <!-- Events Grid -->
-        <div class="col-span-4 grid gap-6 sm:grid-cols-2 md:grid-cols-3 auto-rows-min" aria-label="Events grid">
-            @forelse ($events as $event)
-                @include('partials.event', ['event' => $event])
-            @empty
-                <p class="text-eerieBlack font-montserrat col-span-full" aria-live="polite">No events available in this category.</p>
-            @endforelse
-
-            <!-- Pagination Links -->
-            <div class="col-span-full mt-6 flex justify-center" aria-label="Pagination navigation">
-                {{ $events->appends(request()->query())->links() }}
-            </div>
-        </div>
-
     </div>
 </section>
 
