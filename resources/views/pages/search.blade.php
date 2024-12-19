@@ -1,9 +1,18 @@
 @extends('layouts.app')
 
 @section('Title', 
-    request('q') ? 'Search results for: ' . request('q') : 
-    (request('category') ? implode(', ', $categories->whereIn('id', request('category'))->pluck('name')->toArray()) : 'Search')
+    request('source') === 'bar' 
+        ? 'Search results for: ' . $searchQuery 
+        : (request('source') === 'category' 
+            ? 'Category: ' . optional($categories->whereIn('id', request('category'))->pluck('name')->first())->value()
+            : (request('source') === 'district' 
+                ? 'District: ' . optional($districts->whereIn('id', request('district'))->pluck('name')->first())->value()
+                : 'Search events'
+            )
+        )
 )
+
+
 @section('content')
 <!-- Events by Category Section -->
 <section class="w-full" role="region" aria-label="Events search and filters section">
@@ -296,6 +305,55 @@
             startDate.setAttribute('max', endDate.value);
         }
     });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('filtersForm');
+        const eventsGrid = document.querySelector('[aria-label="Events grid"]');
+        const eventsCount = document.querySelector('p span.text-ultraViolet');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(form);
+            const queryString = new URLSearchParams(formData).toString();
+
+            // Update the browser URL without reloading the page
+            const newUrl = `/events/search?${queryString}`;
+            history.pushState(null, '', newUrl); // Update the URL in the browser
+
+            fetch(`/events/search?${queryString}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest', // Signal it's an AJAX request
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update events count
+                if (eventsCount) {
+                    eventsCount.textContent = data.eventsCount;
+                }
+
+                // Update the events grid
+                if (eventsGrid) {
+                    eventsGrid.innerHTML = data.html;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching filtered results:', error);
+            });
+        });
+
+        // Reset button logic
+        const resetButton = form.querySelector('button[aria-label="Reset filters"]');
+        resetButton.addEventListener('click', function () {
+            form.reset(); // Reset all filters
+            form.dispatchEvent(new Event('submit')); // Trigger AJAX reload
+        });
+    });
+
+
 </script>
 
 @endsection

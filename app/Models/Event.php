@@ -107,4 +107,42 @@ class Event extends Model
     {
         return $this->belongsTo(File::class, 'file_id');
     }
+
+    public function scopeVisible($query) {
+        return $query->where('visibility', '!=', 'private');
+    }
+
+    public function scopeCategory($query, $categoryIds) {
+        if (!empty($categoryIds)) {
+            return $query->whereIn('category_id', $categoryIds);
+        }
+        return $query;
+    }
+    
+    public function scopeDistrict($query, $districtIds) {
+        if (!empty($districtIds)) {
+            return $query->whereIn('district_id', $districtIds);
+        }
+        return $query;
+    }
+
+    public function scopeDateRange($query, $startDate, $endDate) {
+        if ($startDate) {
+            $query->where('start_date', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('end_date', '<=', $endDate);
+        }
+        return $query;
+    }
+
+    public function scopeSearch($query, $searchQuery) {
+        if ($searchQuery) {
+            $searchResults = $query->select('id')
+                ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$searchQuery])
+                ->pluck('id');
+            return $query->whereIn('id', $searchResults);
+        }
+        return $query;
+    }
 }
