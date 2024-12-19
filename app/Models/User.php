@@ -94,19 +94,6 @@ class User extends Authenticatable
                     ->where('event.end_date', '>=', now()); // Events that have not yet ended
     }
 
-
-    public function getDisplayNameAttribute()
-    {
-        // Check if the user is marked as deleted
-        if ($this->isdeleted) {
-            // Return the formatted deleted user name
-            return 'deleted-user';
-        }
-
-        // Otherwise, return the user's real name
-        return $this->username;
-    }
-
     public function picture()
     {
         return $this->belongsTo(File::class, 'file_id');

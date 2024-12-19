@@ -9,7 +9,7 @@
             >
             @if($participator->isdeleted)
                 <span class="text-3xl text-darkSlateGrey font-montserrat">
-                    {{ $participator->displayName }}
+                    {{ $participator->name }}
                 </span>
             @else
                 <a href="{{ route('user.profile', ['username' => $participator->username]) }}" 

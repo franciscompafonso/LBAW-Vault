@@ -147,7 +147,6 @@ class UserController extends Controller
 
     private function deletePicture($pictureId)
     {
-        
         $file = File::find($pictureId);
         $path = $file->path;
         $file->delete();
@@ -166,9 +165,12 @@ class UserController extends Controller
                 ->toArray();
             $user->notYetParticipatedEvents()->detach($upcomingEventIds);
 
-            $user->isdeleted = true;
+            $uniqueSuffix = uniqid();
+            $user->name = "Deleted User $uniqueSuffix";
+            $user->username = "deleted-user-$uniqueSuffix";
             $pictureId = $user->file_id;
             $user->file_id = null;
+            $user->isdeleted = true;
             $user->save();
 
             $this->deletePicture($pictureId);

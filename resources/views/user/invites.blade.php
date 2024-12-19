@@ -14,7 +14,7 @@
 
             <div>
                 <h1 class="text-6xl font-bold text-eerieBlack font-montserrat">{{ $user->name }}</h1>
-                <p class="text-3xl text-eerieBlack">{{ "@" . $user->displayName }}</p>
+                <p class="text-3xl text-eerieBlack">{{ "@" . $user->username }}</p>
             </div>
         </div>
 

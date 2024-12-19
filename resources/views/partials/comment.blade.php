@@ -11,11 +11,11 @@
                 @if(!$comment->user->isdeleted)
                     <a href="{{ route('user.profile', ['username' => $comment->user->username]) }}" 
                     class="text-lg font-semibold text-gray-900 font-montserrat">
-                        {{ $comment->user->displayName }}
+                        {{ $comment->user->name }}
                     </a>
                 @else
                     <span class="text-lg font-semibold text-gray-500 font-montserrat">
-                        {{ $comment->user->displayName }}
+                        {{ $comment->user->name }}
                     </span>
                 @endif
             </div>

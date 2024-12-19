@@ -16,14 +16,14 @@
         <!-- Profile Picture -->
         <div class="w-32 h-32 rounded-full border-4 border-white overflow-hidden">
             <img src="{{ asset('images/profile-pictures/' . ($user->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
-                alt="{{ $user->name }}" 
+                alt="{{ $user->username }}" 
                 class="object-cover w-full h-full">
         </div>
 
         <!-- User Info -->
         <div>
             <h1 class="text-6xl font-bold text-eerieBlack font-montserrat">{{ $user->name }}</h1>
-            <p class="text-3xl text-eerieBlack">{{ "@" . $user->displayName }}</p>
+            <p class="text-3xl text-eerieBlack">{{ "@" . $user->username }}</p>
         </div>
     </div>
 

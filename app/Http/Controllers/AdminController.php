@@ -78,9 +78,16 @@ class AdminController extends Controller
                 ->pluck('event_id')
                 ->toArray();
             $user->notYetParticipatedEvents()->detach($upcomingEventIds);
-
+            
+            $uniqueSuffix = uniqid();
+            $user->name = "Deleted User $uniqueSuffix";
+            $user->username = "deleted-user-$uniqueSuffix";
+            $pictureId = $user->file_id;
+            $user->file_id = null;
             $user->isdeleted = true;
             $user->save();
+
+            $this->deletePicture($pictureId);
 
             Event::where('creator_id', $id)
                 ->where('end_date', '>', Carbon::now())
@@ -134,58 +141,4 @@ class AdminController extends Controller
         }
     }
 
-    /*
-    public function adminEditForm(int $id)
-    {
-        $this->authorize('manageUsers', Admin::class);
-
-        $user = User::find($id);
-
-        return view('user.edit', compact('user'));
-    }
-
-    public function adminEdit(int $id, Request $request)
-    {
-        $this->authorize('manageUsers', Admin::class);
-
-        $user = User::find($id);
-
-        // Validate the incoming data for admin
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:user_account,username,' . $user->id,
-            'email' => 'required|email|max:255|unique:user_account,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'profilepicture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-        ]);
-
-
-        // Update user information
-        $user->name = $validatedData['name'];
-        $user->username = $validatedData['username'];
-        $user->email = $validatedData['email'];
-
-        if ($request->filled('password')) {
-            $user->password = bcrypt($validatedData['password']);
-        }
-
-        if ($request->hasFile('profilepicture')) {
-            if ($user->profilepicture) {
-                $oldPath = public_path('images/profile-pictures/' . $user->profilepicture);
-                if (file_exists($oldPath)) {
-                    @unlink($oldPath);
-                }
-            }
-
-            $file = $request->file('profilepicture');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            Storage::put('profile-pictures/' . $filename, file_get_contents($photo));
-            $user->profilepicture = $filename;
-        }
-
-        $user->save();
-        return redirect()->route('user.profile', ['username' => $user->username]);
-        
-    }
-    */
 }

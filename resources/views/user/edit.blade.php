@@ -43,7 +43,7 @@
                 <!-- Username -->
                 <div class="mb-4">
                     <label for="username" class="block text-lg font-semibold font-montserrat">Username</label>
-                    <input type="text" id="username" name="username" value="{{ old('username', $user->displayName) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new username">
+                    <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new username">
                     @error('username')
                         <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                     @enderror
