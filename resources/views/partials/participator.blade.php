@@ -18,7 +18,7 @@
                 </a>
             @endif
 
-            @if($participator->id === $creatorId)
+            @if($participator->id === $event->creator_id)
                 <span class="text-sm font-semibold text-green-600">(Creator)</span>
             @elseif($participator->id === Auth::id())
                 <span class="text-sm font-semibold text-wisteria">(Me)</span>

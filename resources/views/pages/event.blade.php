@@ -79,31 +79,7 @@
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-4 mt-auto">
                 <div id="actions" class="flex flex-wrap gap-4 mt-auto">
-                    @can('leave', $event)
-                        <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Joined!</button>
-                        <form id="leaveEventForm" action="{{ route('events.leave', $event->id) }}" method="POST" class="block">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Leave Event</button>
-                        </form>
-                    @endcan
-
-                    @can('join', $event)
-                        <form id="joinEventForm" action="{{ route('events.join', $event->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Join Event</button>
-                        </form>
-                    @endcan
-
-                    @can ('requestJoin', $event)
-                        <form id="requestEventForm" action="{{ route('events.request', $event->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Request to Join</button>
-                        </form>
-                    @endcan
-
-                    @can('requestSent', $event)
-                        <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Request Sent!</button>
-                    @endcan
+                    @include('partials.event-actions')
                 </div>
                     
                 <div class="relative">
@@ -140,9 +116,7 @@
             </h2>
             <!-- Comment Form -->
             <div id="comment-form" class="mt-4">
-                @include('partials.create-comment', [
-                            'event' => $event
-                        ])
+                @include('partials.create-comment')
             </div>
             <!-- Comment List -->
             <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
@@ -226,10 +200,7 @@
                     ])
                     @if ($event->participators()->count() > 0)
                         @foreach ($event->participators()->orderBy('id')->get() as $participator)
-                            @include('partials.participator', [
-                                'participator' => $participator,
-                                'creatorId' => $event->creator_id
-                            ])
+                            @include('partials.participator')
                         @endforeach
                     @else
                         <!-- No Participants Message -->
