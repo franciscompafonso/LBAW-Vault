@@ -119,7 +119,7 @@
                 @include('partials.create-comment')
             </div>
             <!-- Comment List -->
-            <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
+            <div id="comment-list" class="mt-6 space-y-6" aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
             
@@ -271,195 +271,187 @@
 
     // -------------------- AJAX RELOAD COMMENTS --------------------
     // document.addEventListener('submit', function (event) {
-    // if (event.target.id === "comment-form") {
-    //     event.preventDefault();
+    //     if (event.target.id === "commentForm") {
+    //         event.preventDefault(); // Prevent form submission (page reload)
 
-    //     var form = event.target;
-    //     var formData = new FormData(form);
+    //         const form = event.target;
+    //         const formData = new FormData(form);
 
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('POST', form.action, true);
-    //     xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+    //         // Make AJAX request to join the event
+    //         fetch(form.action, {
+    //             method: 'POST',
+    //             body: formData,
+    //         })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             showPopup(data.success, data.message);
 
-    //     xhr.onload = function () {
-    //         if (xhr.status === 200) {
-    //             var response = JSON.parse(xhr.responseText);
-    //             if (response.status === 'success') {
-    //                 document.getElementById('comment-content').value = '';
-    //                 document.getElementById('photos').value = '';
-                    
-    //                 document.getElementById('comment-list').innerHTML += response.commentHtml;
-    //             } else {
-    //                 alert('Erro ao enviar o comentário.');
-    //             }
-    //         } else {
-    //             alert('Ocorreu um erro ao tentar enviar o comentário.');
-    //         }
-    //     };
-
-    //     xhr.send(formData);
-    // }
+    //             updateCommentInfo();
+    //         })
+    //         .catch(error => {
+    //             showPopup(false, 'Something went wrong. Please try again later.');
+    //             console.error(error);
+    //         });
+    //     }
     // });
 
-    // function updateParticipantInfo() {
+    // function updateCommentInfo() {
     // fetch(`/events/{{$event->id}}/comments`)
     //     .then(response => response.json())
-    //     .then(data => {
-    //         document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
-            
-    //         const participantList = document.getElementById('participant-list');
-    //         participantList.innerHTML = data.participantHtml;
+    //     .then(data => {            
+    //         const commentsList = document.getElementById('comment-list');
+    //         commentsList.innerHTML = data.commentsHtml;
     //     })
-    //     .catch(error => console.error('Error updating participants:', error));
+    //     .catch(error => console.error('Error updating comments:', error));
     // }
 
     // -------------------- AJAX RELOAD EVENT PAGE --------------------
 
     // Handle Join Event button click
     document.addEventListener('submit', function (event) {
-    if (event.target.id === "joinEventForm") {
-        event.preventDefault(); // Prevent form submission (page reload)
+        if (event.target.id === "joinEventForm") {
+            event.preventDefault(); // Prevent form submission (page reload)
 
-        const form = event.target;
-        const formData = new FormData(form);
+            const form = event.target;
+            const formData = new FormData(form);
 
-        // Make AJAX request to join the event
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            showPopup(data.success, data.message);
+            // Make AJAX request to join the event
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                showPopup(data.success, data.message);
 
-            if (data.success) {
-                const button = form.querySelector('button');
-                button.textContent = "Joined!";
-                button.disabled = true;
-            }
+                if (data.success) {
+                    const button = form.querySelector('button');
+                    button.textContent = "Joined!";
+                    button.disabled = true;
+                }
 
-            updateParticipantInfo();
-            updateCommentForm();
-            updateEventActions();
-        })
-        .catch(error => {
-            showPopup(false, 'Something went wrong. Please try again later.');
-            console.error(error);
-        });
-    }
+                updateParticipantInfo();
+                updateCommentForm();
+                updateEventActions();
+            })
+            .catch(error => {
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        }
     });
 
     // Handle Request to join Event button click
     document.addEventListener('submit', function (event) {
-    if (event.target.id === "requestEventForm") {
-        event.preventDefault();
-        
-        const form = event.target;
-        const formData = new FormData(form);
+        if (event.target.id === "requestEventForm") {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
 
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            showPopup(data.success, data.message);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                showPopup(data.success, data.message);
 
-            if (data.success) {
-                const button = form.querySelector('button');
-                button.textContent = "Request Sent!";
-                button.disabled = false;
-            }
+                if (data.success) {
+                    const button = form.querySelector('button');
+                    button.textContent = "Request Sent!";
+                    button.disabled = false;
+                }
 
-            updateParticipantInfo();
-            updateCommentForm();
-            updateEventActions();
-        })
-        .catch(error => {
-            showPopup(false, 'Something went wrong. Please try again later.');
-            console.error(error);
-        });
-    }
+                updateParticipantInfo();
+                updateCommentForm();
+                updateEventActions();
+            })
+            .catch(error => {
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        }
     });
 
     // Handle Leave Event button click
     document.addEventListener('submit', function (event) {
-    if (event.target.id === "leaveEventForm") {
-        event.preventDefault();
-        
-        const form = event.target;
-        const formData = new FormData(form);
+        if (event.target.id === "leaveEventForm") {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
 
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            showPopup(data.success, data.message);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                showPopup(data.success, data.message);
 
-            if (data.success) {
-                const button = form.querySelector('button');
-                button.textContent = "Join Event";
-                button.disabled = false;
-            }
+                if (data.success) {
+                    const button = form.querySelector('button');
+                    button.textContent = "Join Event";
+                    button.disabled = false;
+                }
 
-            updateParticipantInfo();
-            updateCommentForm();
-            updateEventActions();
-        })
-        .catch(error => {
-            showPopup(false, 'Something went wrong. Please try again later.');
-            console.error(error);
-        });
-    }
+                updateParticipantInfo();
+                updateCommentForm();
+                updateEventActions();
+            })
+            .catch(error => {
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        }
     });
 
     // Reload Participant Info (count or list)
     function updateParticipantInfo() {
-    fetch(`/events/{{$event->id}}/participants`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
-            
-            const participantList = document.getElementById('participant-list');
-            participantList.innerHTML = data.participantHtml;
-        })
-        .catch(error => console.error('Error updating participants:', error));
+        fetch(`/events/{{$event->id}}/participants`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
+                
+                const participantList = document.getElementById('participant-list');
+                participantList.innerHTML = data.participantHtml;
+            })
+            .catch(error => console.error('Error updating participants:', error));
     }
 
     // Reload Comment Form
     function updateCommentForm() {
-    fetch(`/events/{{$event->id}}/update-comment-form`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error updating comment form.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            document.getElementById('comment-form').innerHTML = data.commentFormHtml;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+        fetch(`/events/{{$event->id}}/update-comment-form`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error updating comment form.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('comment-form').innerHTML = data.commentFormHtml;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
     // Reload Event Options
     function updateEventActions() {
-    fetch(`/events/{{$event->id}}/event-actions`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error updating event actions.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            document.getElementById('actions').innerHTML = data.html;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+        fetch(`/events/{{$event->id}}/event-actions`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error updating event actions.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('actions').innerHTML = data.html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 </script>
 @endsection
