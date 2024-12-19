@@ -106,7 +106,7 @@ class InviteController extends Controller
         $notificationController = app(NotificationController::class);
         $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
 
-        event(new AnswerInviteSent($invite->invite_to_id, $event->id, User::find(Auth::id())->name . " has accepted your invite to " . $event->name));
+        event(new AnswerInviteSent($invite->invite_by_id, $event->id, User::find(Auth::id())->name . " has accepted your invite to " . $event->name));
 
         return back()->with([
             'message' => 'You have successfully joined the event and accepted the invite!',
@@ -126,7 +126,7 @@ class InviteController extends Controller
             ]);
         }
 
-        event(new AnswerInviteSent($invite->invite_to_id, $event->id, User::find(Auth::id())->name . " has rejected your invite to " . $event->name));
+        event(new AnswerInviteSent($invite->invite_by_id, $event->id, User::find(Auth::id())->name . " has rejected your invite to " . $event->name));
 
         $invite->delete();
 
