@@ -10,45 +10,34 @@ use Illuminate\Support\Facades\Validator;
 
 class CommentFeedbackController extends Controller
 {
-    public function like(Request $request)
+    public function like($commentId)
     {
-        return $this->handleFeedback($request, 1);
+        return $this->handleFeedback($commentId, 1);
     }
 
-    public function dislike(Request $request)
+    public function dislike($commentId)
     {
-        return $this->handleFeedback($request, -1);
+        return $this->handleFeedback($commentId, -1);
     }
 
-    private function handleFeedback(Request $request, int $feedbackValue)
+    private function handleFeedback($commentId, int $feedbackValue)
     {
-        $validator = Validator::make($request->all(), [
-            'comment_id' => 'required|exists:comment,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Invalid data provided.',
-                'errors' => $validator->errors(),
-            ], 400);
-        }
-
         $existingFeedback = CommentFeedback::where('user_id', Auth::id())
-            ->where('comment_id', $request->comment_id)
+            ->where('comment_id', $commentId)
             ->first();
 
-        $comment = Comment::find($request->comment_id);
+        $comment = Comment::find($commentId);
         
         if ($existingFeedback) {
             CommentFeedback::where('user_id', Auth::id())
-                ->where('comment_id', $request->comment_id)
+                ->where('comment_id', $commentId)
                 ->delete();
             if ($existingFeedback->feedback === $feedbackValue) {
                 $comment->score -= $feedbackValue;
             } else {
                 CommentFeedback::create([
                     'user_id' => Auth::id(),
-                    'comment_id' => $request->comment_id,
+                    'comment_id' => $commentId,
                     'feedback' => $feedbackValue,
                 ]);
                 $comment->score += 2*$feedbackValue;
@@ -56,7 +45,7 @@ class CommentFeedbackController extends Controller
         } else {
             CommentFeedback::create([
                 'user_id' => Auth::id(),
-                'comment_id' => $request->comment_id,
+                'comment_id' => $commentId,
                 'feedback' => $feedbackValue,
             ]);
             $comment->score += $feedbackValue;
@@ -64,7 +53,7 @@ class CommentFeedbackController extends Controller
 
         $comment->save();
 
-        return redirect()->back()->with('success', 'Reação adicionada com sucesso!');
+        return response()->json(['success' => true, 'message' => 'Feedback added with success!'], 200);
     }
 
 }

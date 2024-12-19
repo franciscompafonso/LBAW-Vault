@@ -291,7 +291,19 @@ class EventController extends Controller
     public function getComments($eventId)
     {
         $event = Event::findOrFail($eventId);
-        return $event->comments()->orderBy('id')->get();
+        $commentsHtml = '';
+        
+        // Generate HTML content for each comment (avoid HTML injection risks)
+        foreach ($event->comments()->orderBy('id')->get() as $comment) {
+            $commentsHtml .= view('partials.comment', ['comment' => $comment])->render();
+        }
+        
+        // Return comments as JSON response
+        return response()->json([
+            'commentsHtml' => $commentsHtml, 
+            'success' => true,
+            'message' => 'Comments updated successfully!',
+        ]);
     }
 
     /**

@@ -79,8 +79,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/requests/{requestId}/decline', [JoinRequestController::class, 'declineRequest'])->name('requests.decline');
     Route::post('/requests/{requestId}/accept', [JoinRequestController::class, 'acceptRequest'])->name('requests.accept');
 
-    Route::post('/comment/like', [CommentFeedbackController::class, 'like'])->name('comment.like');
-    Route::post('/comment/dislike', [CommentFeedbackController::class, 'dislike'])->name('comment.dislike');
+    Route::post('/comment/{commentId}/like', [CommentFeedbackController::class, 'like'])->name('comment.like');
+    Route::post('/comment/{commentId}/dislike', [CommentFeedbackController::class, 'dislike'])->name('comment.dislike');
 
     Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');
 

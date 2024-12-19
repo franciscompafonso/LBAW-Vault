@@ -19,30 +19,30 @@ class CommentController extends Controller
      */
     public function delete($id)
     {
-    $comment = Comment::findOrFail($id);
+        $comment = Comment::findOrFail($id);
 
-    // Check if the current user is an admin or authorized by policy
-    if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $comment))) {
-        // Delete associated photos
-        foreach ($comment->photos as $photo) {
-            $photoId = $photo->id;
-            $photoPath = $photo->path;
+        // Check if the current user is an admin or authorized by policy
+        if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $comment))) {
+            // Delete associated photos
+            foreach ($comment->photos as $photo) {
+                $photoId = $photo->id;
+                $photoPath = $photo->path;
 
-            File::find($photoId)->delete();
-            Storage::disk('others')->delete($photoPath);
+                File::find($photoId)->delete();
+                Storage::disk('others')->delete($photoPath);
+            }
+
+            // Delete the comment
+            $comment->delete();
+
+            return response()->json([
+                'message' => 'Comment deleted successfully!',
+                'success' => true
+            ]);
         }
 
-        // Delete the comment
-        $comment->delete();
-
-        return back()->with([
-            'message' => 'Comment deleted successfully!',
-            'success' => true
-        ]);
-    }
-
-    // Unauthorized response
-    abort(403, 'You are not authorized to delete this comment.');
+        // Unauthorized response
+        abort(403, 'You are not authorized to delete this comment.');
     }
 
 
@@ -86,7 +86,7 @@ class CommentController extends Controller
             if($participant->id != Auth::id()) event(new NewComment($participant->id, $event->id, User::find(Auth::id())->name . " has commented on " . Event::find($comment->event_id)->name));
         }
 
-        return redirect()->back()->with([
+        return response()->json([
             'message' => 'Comment created with success!',
             'success' => true
         ]);;
@@ -102,7 +102,7 @@ class CommentController extends Controller
 
         // Check if the comment exists
         if (!$comment) {
-            return redirect()->back()->with([
+            return response()->json([
                 'message' => 'Comment not found.',
                 'success' => false
             ]);;
@@ -119,7 +119,7 @@ class CommentController extends Controller
 
         if($comment->comment_by_id != Auth::id()) event(new NewComment($comment->comment_by_id, $comment->event_id, User::find(Auth::id())->name . " has answered to your comment on " . Event::find($comment->event_id)->name));
 
-        return redirect()->back()->with([
+        return response()->json([
             'message' => 'Reply added with success!',
             'success' => true
         ]);

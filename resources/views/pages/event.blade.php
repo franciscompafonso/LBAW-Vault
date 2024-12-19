@@ -283,40 +283,45 @@
     }
 
     // -------------------- AJAX RELOAD COMMENTS --------------------
-    // document.addEventListener('submit', function (event) {
-    //     if (event.target.id === "commentForm") {
-    //         event.preventDefault(); // Prevent form submission (page reload)
+    // Handle Comment button click
+    document.addEventListener('submit', function (event) {
+        if (event.target.id === "deleteCommentForm" || event.target.id === "replyCommentForm" || event.target.id === "commentForm" || event.target.id === "dislikeForm" || event.target.id === "likeForm") {
+            event.preventDefault(); // Prevent form submission (page reload)
 
-    //         const form = event.target;
-    //         const formData = new FormData(form);
+            const form = event.target;
+            const formData = new FormData(form);
 
-    //         // Make AJAX request to join the event
-    //         fetch(form.action, {
-    //             method: 'POST',
-    //             body: formData,
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             showPopup(data.success, data.message);
+            // Make AJAX request to submit the comment
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                showPopup(data.success, data.message);
 
-    //             updateCommentInfo();
-    //         })
-    //         .catch(error => {
-    //             showPopup(false, 'Something went wrong. Please try again later.');
-    //             console.error(error);
-    //         });
-    //     }
-    // });
+                if (data.success) {
+                    updateCommentInfo();
+                }
+            })
+            .catch(error => {
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        }
+    });
 
-    // function updateCommentInfo() {
-    // fetch(`/events/{{$event->id}}/comments`)
-    //     .then(response => response.json())
-    //     .then(data => {            
-    //         const commentsList = document.getElementById('comment-list');
-    //         commentsList.innerHTML = data.commentsHtml;
-    //     })
-    //     .catch(error => console.error('Error updating comments:', error));
-    // }
+    // This function is called to update the comment list in the page after submitting
+    function updateCommentInfo() {
+        fetch(`/events/{{$event->id}}/comments`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('comment-list').innerHTML = data.commentsHtml;
+                updateCommentForm();
+                console.log(data.message);
+            })
+            .catch(error => console.error('Error updating comments:', error));
+    }
 
     // -------------------- AJAX RELOAD EVENT PAGE --------------------
 

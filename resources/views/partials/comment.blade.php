@@ -34,7 +34,7 @@
 
             <div class="text-right">
                 @if (auth()->guard('admin')->check() || auth()->check() && auth()->user()->can('delete', $comment))
-                    <form action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
+                    <form id="deleteCommentForm" action="{{ route('comments.delete', $comment->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="text-red-200 transition-colors duration-200 border-transparent hover:text-red-600 hover:border-transparent hover:bg-transparent focus:bg-transparent focus:border-transparent" aria-label="Delete this comment">
@@ -46,7 +46,7 @@
                 <div class="flex items-center justify-end space-x-2">
                     <!-- Like button form -->
                     @can('like', $comment)
-                        <form action="{{ route('comment.like') }}" method="POST" class="inline">
+                        <form id="likeForm" action="{{ route('comment.like', $comment->id) }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="comment_id" value="{{ $comment->id }}">
                             @if ($comment->feedback(Auth::id()) == 1)
@@ -65,7 +65,7 @@
                         </form>
                     
                     <!-- Dislike button form -->
-                        <form action="{{ route('comment.dislike') }}" method="POST" class="inline">
+                        <form id="dislikeForm" action="{{ route('comment.dislike', $comment->id) }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="comment_id" value="{{ $comment->id }}">
                             @if ($comment->feedback(Auth::id()) == -1)
@@ -137,7 +137,7 @@
 
         <!-- Reply Form -->
         <div id="reply-form-{{ $comment->id }}" class="hidden mt-4">
-            <form action="{{ route('comments.reply', $comment->id) }}" method="POST">
+            <form id="replyCommentForm" action="{{ route('comments.reply', $comment->id) }}" method="POST">
                 @csrf
                 <div class="flex items-center space-x-2">
                     <textarea name="text" class="w-full p-2 text-black border border-gray-300 rounded-lg" placeholder="Write your reply..." required></textarea>
