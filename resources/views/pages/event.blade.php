@@ -12,77 +12,82 @@
 
         <!-- Event Details -->
         <div class="relative flex flex-col justify-between flex-1 px-4">
-            <!-- Event Title -->
-            <h1 class="py-5 text-6xl font-bold text-ultraViolet font-montserrat">{{ $event->name }}</h1>
-            <!-- Event Description -->
-            <p class="text-4xl w-[90%] font-montserrat leading-relaxed text-darkSlateGrey">{{ $event->description }}</p>
+            <!-- Event Title and Countdown Timer -->
+            <div class="flex items-center justify-between py-5">
+                <h1 class="text-6xl font-bold text-ultraViolet font-montserrat">{{ $event->name }}</h1>
+                <div class="flex items-center space-x-4">
+                    <div id="countdown" class="flex items-center justify-center p-1 text-lg font-semibold text-white bg-gray-300 rounded-md shadow-md font-montserrat"></div>
+                    <!-- Options Icon -->
+                    <div class="relative">
+                        <button 
+                            id="toggleMenu"
+                            class="w-12 h-12 border-0 rounded-full text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
+                            onclick="toggleMenu(event)">
+                            <i class="text-4xl fa-solid fa-ellipsis"></i>
+                        </button>
 
-            <!-- Options Icon -->
-            <div class="absolute top-0 right-0">
-                <button 
-                    id="toggleMenu"
-                    class="w-12 h-12 border-0 rounded-full text-ultraViolet hover:bg-whiteSmoke hover:text-ultraViolet active:bg-transparent focus:outline-none"
-                    onclick="toggleMenu(event)" id="icon">
-                    <i class="text-4xl fa-solid fa-ellipsis"></i>
-                </button>
+                        <!-- Options dropdown -->
+                        <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg w-[12em]">
+                            <div class="space-y-2">
+                                @php
+                                    $eventName = urlencode($event->name); // Event name
+                                    $description = urlencode($event->description); // Event description
+                                    $location = urlencode($event->location); // Event location
 
-                <!-- Options dropdown -->
-                <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg w-[12em]">
-                    <div class="space-y-2">
-                        @php
-                            $eventName = urlencode($event->name); // Event name
-                            $description = urlencode($event->description); // Event description
-                            $location = urlencode($event->location); // Event location
+                                    $googleStartDate = urlencode($event->start_date->format('Ymd\THis'));
+                                    $googleEndDate = urlencode($event->end_date->format('Ymd\THis'));
 
-                            $googleStartDate = urlencode($event->start_date->format('Ymd\THis'));
-                            $googleEndDate = urlencode($event->end_date->format('Ymd\THis'));
+                                    $outlookStartDate = urlencode($event->start_date->format('Y-m-d\TH:i:s'));
+                                    $outlookEndDate = urlencode($event->end_date->format('Y-m-d\TH:i:s'));
 
-                            $outlookStartDate = urlencode($event->start_date->format('Y-m-d\TH:i:s'));
-                            $outlookEndDate = urlencode($event->end_date->format('Y-m-d\TH:i:s'));
-                    
-                            $googleCalendarUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$eventName}&dates={$googleStartDate}/{$googleEndDate}&details={$description}&location={$location}";
+                                    $googleCalendarUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$eventName}&dates={$googleStartDate}/{$googleEndDate}&details={$description}&location={$location}";
 
-                            $outlookCalendarUrl = "https://outlook.live.com/calendar/0/deeplink/compose?subject={$eventName}&startdt={$outlookStartDate}&enddt={$outlookEndDate}&body={$description}&location={$location}";
-                        @endphp
-                    
-                        <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
+                                    $outlookCalendarUrl = "https://outlook.live.com/calendar/0/deeplink/compose?subject={$eventName}&startdt={$outlookStartDate}&enddt={$outlookEndDate}&body={$description}&location={$location}";
+                                @endphp
 
-                        <a target="_blank" href="{{ $outlookCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Outlook Calendar</a>
-                    
-                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
-                            <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
-                        @endif
-                    
-                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event)))
-                            <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
-                            </form>
-                        @endif
-                        
-                        @can('createPoll', $event)
-                            <button 
-                                class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100"
-                                onclick="togglePollForm()">
-                                Create Poll
-                            </button>
-                        @endcan
-                    
-                        @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
-                            @if($event->end_date < now())
-                                <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
-                            @else
-                                <button 
-                                    title="Survey results are available after the event ends."
-                                    class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
-                                    Survey Results Not Available
-                                </button>
-                            @endif
-                        @endif
+                                <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
+
+                                <a target="_blank" href="{{ $outlookCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Outlook Calendar</a>
+
+                                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
+                                    <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
+                                @endif
+
+                                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event)))
+                                    <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
+                                    </form>
+                                @endif
+
+                                @can('createPoll', $event)
+                                    <button 
+                                        class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100"
+                                        onclick="togglePollForm()">
+                                        Create Poll
+                                    </button>
+                                @endcan
+
+                                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
+                                    @if($event->end_date < now())
+                                        <a href="{{ route('events.surveyStats', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">View Survey Results</a>
+                                    @else
+                                        <button 
+                                            title="Survey results are available after the event ends."
+                                            class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat text-darkSlateGrey hover:text-darkSlateGrey hover:bg-gray-100">
+                                            Survey Results Not Available
+                                        </button>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Event Description -->
+            <p class="text-4xl w-[90%] font-montserrat leading-relaxed text-darkSlateGrey">{{ $event->description }}</p>
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-4 mt-auto">
@@ -461,5 +466,64 @@
                 console.error('Error:', error);
             });
     }
+
+    function updateCountdown() {
+        const eventStartDate = new Date("{{ $event->start_date }}").getTime();
+        const now = new Date().getTime();
+        const distance = eventStartDate - now;
+        if (distance < 0) {
+            document.getElementById('countdown').innerHTML = "Event has started!";
+            return;
+        }
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        let countdownHtml = '';
+        if (days > 2) {
+            countdownHtml = `
+                <div class="flex flex-col items-center">
+                    <span class="text-2xl">${days}</span>
+                    <span class="text-xs">Days</span>
+                </div>
+            `;
+        } else if (days >= 1) {
+            countdownHtml = `
+                <div class="flex flex-col items-center">
+                    <span class="text-2xl">${days}</span>
+                    <span class="text-xs">Days</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-2xl">${hours}</span>
+                    <span class="text-xs">Hours</span>
+                </div>
+            `;
+        } else if (hours >= 1) {
+            countdownHtml = `
+                <div class="flex flex-col items-center">
+                    <span class="text-2xl">${hours}</span>
+                    <span class="text-xs">Hours</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-2xl">${minutes}</span>
+                    <span class="text-xs">Minutes</span>
+                </div>
+            `;
+        } else {
+            countdownHtml = `
+                <div class="flex flex-col items-center">
+                    <span class="text-2xl">${minutes}</span>
+                    <span class="text-xs">Minutes</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-2xl">${seconds}</span>
+                    <span class="text-xs">Seconds</span>
+                </div>
+            `;
+        }
+        document.getElementById('countdown').innerHTML = `<div class="flex space-x-1">${countdownHtml}</div>`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 </script>
 @endsection
