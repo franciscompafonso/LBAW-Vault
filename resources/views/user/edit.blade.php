@@ -121,7 +121,7 @@
 
         <!-- Delete Account Form -->
         <div class="mt-6 text-center">
-            <form action="{{ route('user.delete', ['id' => $user->id]) }}" method="POST">
+            <form action="{{ auth()->guard('admin')->check()  ? route('admin.delete.user', ['user' => $user->id]) : route('user.delete', ['id' => $user->id]) }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-500 hover:text-darkSlateGrey hover:border-red-500" aria-label="Delete account">

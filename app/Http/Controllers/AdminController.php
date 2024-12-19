@@ -86,8 +86,8 @@ class AdminController extends Controller
                 ->where('end_date', '>', Carbon::now())
                 ->delete();
 
-            return redirect()->route('admin.user-management')
-                ->with('status', 'User has been marked as deleted successfully, and upcoming events have been removed.');
+            return redirect()->route('admin.search.user', ['username' => $user->username])
+                ->with('status', 'User has been deleted successfully!');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Error deleting user: ' . $e->getMessage());

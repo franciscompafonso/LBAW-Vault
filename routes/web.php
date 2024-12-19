@@ -99,8 +99,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/invite/{id}', [InviteController::class, 'deleteInvite'])->name('invite.delete');
     });
 
-    Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
-    Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification']);
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications']);
     Route::post('/events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');

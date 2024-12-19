@@ -24,11 +24,6 @@ class UserPolicy
         return $currentUser->id === $targetUser->id || $isAdmin;
     }
 
-    public function deleteAccount(User $currentUser, User $targetUser)
-    {
-        return $currentUser->id === $targetUser->id;
-    }
-
     public function login(User $user)
     {
         return !$user->isdeleted;
