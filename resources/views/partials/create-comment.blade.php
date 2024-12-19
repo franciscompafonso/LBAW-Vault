@@ -1,5 +1,5 @@
 @can('comment', $event)
-    <form action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
+    <form id="commentForm" action="{{ route('comments.store', ['event' => $event->id]) }}" method="POST" class="mt-6" enctype="multipart/form-data">
         @csrf
         <textarea 
             name="content" 

@@ -263,10 +263,10 @@
                     `;
                 } else if (notification.type === 'join_request_notification') {
                     notificationContent += `
-                        <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">${notification.type ? notification.type : 'No type available'}</a>
+                        <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">Join Request</a>
                         <p class="text-sm text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.join_request_by_id}">
-                                ${notification.data.join_request_by_name ? notification.data.join_request_by_name : ''}
+                                ${notification.data.user_name ? notification.data.user_name : ''}
                             </a> 
                             has requested to join the
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
@@ -277,7 +277,7 @@
                         <!-- Container for the buttons, using flex to position them side by side -->
                         <div class="flex space-x-4">
                             <!-- Accept Button -->
-                            <form action="/requests/${notification.data.join_request_id}/accept" method="POST">
+                            <form action="/requests/${notification.data.id}/accept" method="POST">
                                 <input type="hidden" name="_token" value="${csrfToken}">
                                 <input type="hidden" name="notification_id" value="${notification.id}">
                                 <button 
@@ -289,7 +289,7 @@
                             </form>
 
                             <!-- Decline Button -->
-                            <form action="/requests/${notification.data.join_request_id}/decline" method="POST">
+                            <form action="/requests/${notification.data.id}/decline" method="POST">
                                 <input type="hidden" name="_token" value="${csrfToken}">
                                 <input type="hidden" name="notification_id" value="${notification.id}">
                                 <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-[#6B0010] hover:text-gray-100 border-[#800020] hover:border-[#6B0010]">

@@ -121,7 +121,8 @@ class NotificationController extends Controller
 
                         if ($join_request) {
                             $join_request['event_name'] = Event::find($join_request->event_id)->name;
-                            $join_request['event_creator'] = User::find(Event::find($join_request->event_id)->creator)->name;
+                            $join_request['event_creator_id'] = Event::find($join_request->event_id)->creator->id;
+                            $join_request['event_creator_name'] = Event::find($join_request->event_id)->creator->name;
                             $join_request['user_name'] = User::find($join_request->join_request_by_id)->name;
 
                             return ['type' => $type, 'data' => $join_request];
@@ -130,11 +131,11 @@ class NotificationController extends Controller
                         }
                     } elseif ($type == 'join_request_notification') {
                         $join_request = JoinRequest::find($notification->join_request_id);
+
                         if ($join_request) {
                             $join_request['event_name'] = Event::find($join_request->event_id)->name;
-                            $join_request['event_creator'] = User::find(Event::find($join_request->event_id)->creator)->name;
+                            $join_request['event_creator'] = Event::find($join_request->event_id)->creator->name;
                             $join_request['user_name'] = User::find($join_request->join_request_by_id)->name;
-
                             return ['type' => $type, 'data' => $join_request];
                         } else {
                             return ['type' => $type, 'data' => 'Join request not found'];

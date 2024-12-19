@@ -11,6 +11,7 @@ use App\Models\District;
 use App\Models\QuestionReview;
 use App\Models\User;
 use App\Events\JoinEvent;
+use App\Events\JoinRequestSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -230,7 +231,7 @@ class EventController extends Controller
         $this->authorize('requestJoin', $event);
 
         if ($event->participators->contains($user) || $event->creator_id === $user->id) {
-            return redirect()->back()->with([
+            return response()->json([
                 'message' => 'You are already part of this event!',
                 'success' => false
             ]);;
@@ -242,7 +243,7 @@ class EventController extends Controller
             ->first();
 
         if ($existingRequest) {
-            return redirect()->back()->with([
+            return response()->json([
                 'message' => 'You have already requested to join this event!',
                 'success' => false
             ]);
@@ -255,7 +256,9 @@ class EventController extends Controller
             'date' => now(),
         ]);
 
-        return redirect()->back()->with([
+        event(new JoinRequestSent($event->creator->id, $event->id, User::find(Auth::id())->name . " has requested to join your event."));
+
+        return response()->json([
             'message' => 'Your request to join has been sent!',
             'success' => true
         ]);
@@ -283,6 +286,12 @@ class EventController extends Controller
             'capacity' => $event->capacity,
             'participantHtml' => $participantHtml
         ]);
+    }
+
+    public function getComments($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        return $event->comments()->orderBy('id')->get();
     }
 
     /**

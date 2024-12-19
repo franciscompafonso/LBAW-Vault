@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AnswerInviteSent;
 use App\Events\InviteSent;
 use App\Models\Invite;
 use Illuminate\Http\Request;
@@ -75,7 +76,6 @@ class InviteController extends Controller
 
         Invite::create($inviteData);
 
-        
         event(new InviteSent($invitee->id, $eventId, User::find(Auth::id())->name . " has invited you to " . $event->name));
         return back()->with([
             'message' => 'Invitation sent successfully!',
@@ -86,6 +86,7 @@ class InviteController extends Controller
     public function acceptInvite(Request $request, $inviteId)
     {
         $invite = Invite::findOrFail($inviteId);
+        $event = Event::findOrFail($invite->event_id);
 
         $invite->accepted = true;
         $invite->save();
@@ -96,20 +97,34 @@ class InviteController extends Controller
         $notificationController = app(NotificationController::class);
         $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
 
-        return back()->with('success', 'You have successfully joined the event and accepted the invite!');
+        event(new AnswerInviteSent($invite->invite_to_id, $event->id, User::find(Auth::id())->name . " has accepted your invite to " . $event->name));
+
+        return back()->with([
+            'message' => 'You have successfully joined the event and accepted the invite!',
+            'success' => true
+        ]);
     }
 
     public function deleteInvite($id)
     {
         $invite = Invite::findOrFail($id);
+        $event = Event::findOrFail($invite->event_id);
 
         if (Auth::id() !== $invite->invite_by_id) {
-            return back()->with('error', 'You do not have permission to delete this invite.');
+            return back()->with([
+                'message' => 'You do not have permission to delete this invite.',
+                'success' => false
+            ]);
         }
+
+        event(new AnswerInviteSent($invite->invite_to_id, $event->id, User::find(Auth::id())->name . " has rejected your invite to " . $event->name));
 
         $invite->delete();
 
-        return back()->with('success', 'Invite deleted successfully.');
+        return back()->with([
+            'message' => 'Invite deleted successfully.',
+            'success' => true
+        ]);
     }
 
 }

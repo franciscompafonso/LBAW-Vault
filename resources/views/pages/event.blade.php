@@ -2,8 +2,7 @@
 
 @section('Title', $event->name)
 @section('content')
-<div class="space-y-10">
-    
+<div class="space-y-10"> 
    <!-- Main Content Wrapper -->
    <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Event Banner -->
@@ -88,27 +87,7 @@
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-4 mt-auto">
                 <div id="actions" class="flex flex-wrap gap-4 mt-auto">
-                    @can('leave', $event)
-                        <button disabled class="px-6 py-2 font-bold text-gray-700 bg-gray-400 rounded-md cursor-not-allowed font-montserrat">Joined!</button>
-                        <form id="leaveEventForm" action="{{ route('events.leave', $event->id) }}" method="POST" class="block">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Leave Event</button>
-                        </form>
-                    @endcan
-
-                    @can('join', $event)
-                        <form id="joinEventForm" action="{{ route('events.join', $event->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Join Event</button>
-                        </form>
-                    @endcan
-
-                    @can ('requestJoin', $event)
-                        <form action="{{ route('events.request', $event->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-wisteria hover:text-ultraViolet border-ultraViolet">Request to Join</button>
-                        </form>
-                    @endcan
+                    @include('partials.event-actions')
                 </div>
                     
                 <div class="relative">
@@ -145,40 +124,19 @@
             </h2>
             <!-- Comment Form -->
             <div id="comment-form" class="mt-4">
-                @include('partials.create-comment', [
-                            'event' => $event
-                        ])
+                @include('partials.create-comment')
             </div>
             <!-- Comment List -->
-            <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
+            <div id="comment-list" class="mt-6 space-y-6" aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
-                <!-- make Poll -->
-                @can('createPoll', $event)
-                    <div class="flex justify-end mt-4">
-                        <button 
-                            class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue""
-                            onclick="togglePollForm()">
-                            Create Poll
-                        </button>
-                    </div>
-                @endcan
-
-                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
-                    <a href="{{ route('events.surveyStats', $event->id) }}" class="block mt-4 text-center">
-                        <button class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-cambridgeBlue hover:text-darkSlateGrey border-burgundy hover:border-cambridgeBlue">
-                            View Survey Results
-                        </button>
-                    </a>
-                @else
-                    <p class="text-lg text-red-600">Survey results are available after the event ends.</p>
-                @endif
-                <!-- Polls -->
-                @each('partials.poll', $event->polls, 'poll')
-            </div>
+            
+            <!-- Polls -->
+            @each('partials.poll', $event->polls, 'poll')
+        </div>
 
         <!-- Details and Participants Section -->
-        <div class="flex flex-col gap-6 lg:w-1/5">
+        <div class="flex flex-col gap-6 lg:w-2/5">
             <!-- Event Details -->
             <div class="p-6 space-y-8">
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
@@ -250,10 +208,7 @@
                     ])
                     @if ($event->participators()->count() > 0)
                         @foreach ($event->participators()->orderBy('id')->get() as $participator)
-                            @include('partials.participator', [
-                                'participator' => $participator,
-                                'creatorId' => $event->creator_id
-                            ])
+                            @include('partials.participator')
                         @endforeach
                     @else
                         <!-- No Participants Message -->
@@ -265,7 +220,7 @@
             </div>
         </div>
     </div>
-
+</div>
 
 @include('partials.poll-form', ['event' => $event])
 
@@ -280,6 +235,85 @@
             photosInput.value = ''; // Clear the file input
         }
     }
+
+    document.addEventListener('click', (event) => {
+        const menu = document.getElementById('menu');
+        const button = document.getElementById('toggleMenu');
+        const sharePopup = document.getElementById('share-popup');
+        const shareButton = document.getElementById('share-button');
+
+        // Check if the click is outside the popup and the button
+        if (!event.target.closest('#share-button') && !event.target.closest('#share-popup')) {
+            sharePopup.classList.add('hidden'); // Hide the popup
+        }
+        // Check if click happened outside of dropdown and button
+        if (!menu.contains(event.target) && !button.contains(event.target)) {
+            menu.classList.add('hidden');
+        }
+    });
+
+    function toggleMenu(event) {
+        event.stopPropagation(); // Prevent click from closing the menu
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('hidden');
+    }
+
+    // Set the input value to the current page URL dynamically
+    const shareInput = document.getElementById('share-link');
+    shareInput.value = `Hello! Look at this event I just found! Link: ${window.location.href}`;
+
+    // Toggles the popup visibility when the share button is clicked
+    function togglePopup() {
+        const popup = document.getElementById('share-popup');
+        popup.classList.toggle('hidden');
+    }
+
+    // Copies the text inside the input field to the clipboard
+    function copyToClipboard() {
+        const link = document.getElementById('share-link');
+        link.select();
+        link.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        alert('Link copied to clipboard!');
+    }
+
+    // -------------------- AJAX RELOAD COMMENTS --------------------
+    // document.addEventListener('submit', function (event) {
+    //     if (event.target.id === "commentForm") {
+    //         event.preventDefault(); // Prevent form submission (page reload)
+
+    //         const form = event.target;
+    //         const formData = new FormData(form);
+
+    //         // Make AJAX request to join the event
+    //         fetch(form.action, {
+    //             method: 'POST',
+    //             body: formData,
+    //         })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             showPopup(data.success, data.message);
+
+    //             updateCommentInfo();
+    //         })
+    //         .catch(error => {
+    //             showPopup(false, 'Something went wrong. Please try again later.');
+    //             console.error(error);
+    //         });
+    //     }
+    // });
+
+    // function updateCommentInfo() {
+    // fetch(`/events/{{$event->id}}/comments`)
+    //     .then(response => response.json())
+    //     .then(data => {            
+    //         const commentsList = document.getElementById('comment-list');
+    //         commentsList.innerHTML = data.commentsHtml;
+    //     })
+    //     .catch(error => console.error('Error updating comments:', error));
+    // }
+
+    // -------------------- AJAX RELOAD EVENT PAGE --------------------
 
     // Handle Join Event button click
     document.addEventListener('submit', function (event) {
@@ -302,6 +336,39 @@
                     const button = form.querySelector('button');
                     button.textContent = "Joined!";
                     button.disabled = true;
+                }
+
+                updateParticipantInfo();
+                updateCommentForm();
+                updateEventActions();
+            })
+            .catch(error => {
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        }
+    });
+
+    // Handle Request to join Event button click
+    document.addEventListener('submit', function (event) {
+        if (event.target.id === "requestEventForm") {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                showPopup(data.success, data.message);
+
+                if (data.success) {
+                    const button = form.querySelector('button');
+                    button.textContent = "Request Sent!";
+                    button.disabled = false;
                 }
 
                 updateParticipantInfo();
@@ -393,47 +460,6 @@
             .catch(error => {
                 console.error('Error:', error);
             });
-    }
-    
-    document.addEventListener('click', (event) => {
-        const menu = document.getElementById('menu');
-        const button = document.getElementById('toggleMenu');
-        const sharePopup = document.getElementById('share-popup');
-        const shareButton = document.getElementById('share-button');
-
-        // Check if the click is outside the popup and the button
-        if (!event.target.closest('#share-button') && !event.target.closest('#share-popup')) {
-            sharePopup.classList.add('hidden'); // Hide the popup
-        }
-        // Check if click happened outside of dropdown and button
-        if (!menu.contains(event.target) && !button.contains(event.target)) {
-            menu.classList.add('hidden');
-        }
-    });
-
-    function toggleMenu(event) {
-        event.stopPropagation(); // Prevent click from closing the menu
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('hidden');
-    }
-
-    // Set the input value to the current page URL dynamically
-    const shareInput = document.getElementById('share-link');
-    shareInput.value = `Hello! Look at this event I just found! Link: ${window.location.href}`;
-
-    // Toggles the popup visibility when the share button is clicked
-    function togglePopup() {
-        const popup = document.getElementById('share-popup');
-        popup.classList.toggle('hidden');
-    }
-
-    // Copies the text inside the input field to the clipboard
-    function copyToClipboard() {
-        const link = document.getElementById('share-link');
-        link.select();
-        link.setSelectionRange(0, 99999);
-        document.execCommand('copy');
-        alert('Link copied to clipboard!');
     }
 </script>
 @endsection

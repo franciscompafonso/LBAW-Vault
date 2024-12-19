@@ -100,6 +100,12 @@ class EventPolicy
             && !$user->isblocked
             && $event->creator->id !== $user->id;
     }
+
+    public function requestSent(User $user, Event $event)
+    {
+        return !$event->requests->where('join_request_by_id', $user->id)->where('accepted', false)->isEmpty();
+    }
+
     public function leave(User $user, Event $event)
     {
         return $event->participators->contains($user);
