@@ -189,8 +189,8 @@ CREATE TABLE unblock_request (
 
 CREATE TABLE invite (
     id SERIAL PRIMARY KEY,
-    invite_by_id INT REFERENCES user_account(id),
-    invite_to_id INT REFERENCES user_account(id),
+    sender_id INT REFERENCES user_account(id),
+    receiver_id INT REFERENCES user_account(id),
     event_id INT REFERENCES event(id),
     title VARCHAR(255) NOT NULL,
 	accepted BOOLEAN,
@@ -359,7 +359,7 @@ DECLARE
     notification_id INT;
 BEGIN
     INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-    VALUES (NEW.invite_by_id, NEW.invite_to_id, CURRENT_TIMESTAMP, FALSE)
+    VALUES (NEW.sender_id, NEW.receiver_id, CURRENT_TIMESTAMP, FALSE)
     RETURNING id INTO notification_id;
 
     INSERT INTO invite_notification (id, invite_id)
@@ -384,7 +384,7 @@ DECLARE
 BEGIN
     IF NEW.accepted = TRUE THEN
         INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.invite_to_id, NEW.invite_by_id, CURRENT_TIMESTAMP, FALSE)
+        VALUES (NEW.receiver_id, NEW.sender_id, CURRENT_TIMESTAMP, FALSE)
         RETURNING id INTO notification_id;
 
         INSERT INTO accepted_invite_notification (id, invite_id)

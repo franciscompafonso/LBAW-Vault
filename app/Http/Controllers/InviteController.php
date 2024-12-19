@@ -18,13 +18,13 @@ class InviteController extends Controller
         $this->authorize('viewInvites', $user);
 
         // Fetch sent invitations
-        $sentInvites = Invite::where('invite_by_id', $id)
-                            ->with(['invitee', 'event'])
+        $sentInvites = Invite::where('sender_id', $id)
+                            ->with(['receiver', 'event'])
                             ->get();
 
         // Fetch received invitations
-        $receivedInvites = Invite::where('invite_to_id', $id)
-                                ->with(['inviter', 'event'])
+        $receivedInvites = Invite::where('receiver_id', $id)
+                                ->with(['sender', 'event'])
                                 ->get();
 
         return view('user.invites', [
@@ -44,18 +44,18 @@ class InviteController extends Controller
         $event = Event::findOrFail($eventId);
         $this->authorize('invite', $event);
 
-        $invitee = User::where('username', $request->username)->first();
+        $receiver = User::where('username', $request->username)->first();
 
-        if (!$invitee) {
+        if (!$receiver) {
             return back()->with([
                 'message' => "The user with the specified username does not exist.",
                 'success' => false
             ]);
         }
 
-        $isParticipator = $event->participators()->where('id', $invitee->id)->exists();
-        $isAlreadyInvited = Invite::where('invite_to_id', $invitee->id)
-                                ->where('invite_by_id', Auth::id())
+        $isParticipator = $event->participators()->where('id', $receiver->id)->exists();
+        $isAlreadyInvited = Invite::where('receiver_id', $receiver->id)
+                                ->where('sender_id', Auth::id())
                                 ->where('title', $event->name)
                                 ->exists();
 
@@ -74,8 +74,8 @@ class InviteController extends Controller
         }
 
         $inviteData = [
-            'invite_by_id' => Auth::id(),
-            'invite_to_id' => $invitee->id,
+            'sender_id' => Auth::id(),
+            'receiver_id' => $receiver->id,
             'event_id' => $eventId,
             'title' => $event->name,
             'description' => $request->description ?? '',
@@ -85,7 +85,7 @@ class InviteController extends Controller
 
         Invite::create($inviteData);
 
-        event(new InviteSent($invitee->id, $eventId, User::find(Auth::id())->name . " has invited you to " . $event->name));
+        event(new InviteSent($receiver->id, $eventId, User::find(Auth::id())->name . " has invited you to " . $event->name));
         return back()->with([
             'message' => 'Invitation sent successfully!',
             'success' => true
@@ -106,10 +106,32 @@ class InviteController extends Controller
         $notificationController = app(NotificationController::class);
         $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
 
-        event(new AnswerInviteSent($invite->invite_by_id, $event->id, User::find(Auth::id())->name . " has accepted your invite to " . $event->name));
+        event(new AnswerInviteSent($invite->sender_id, $event->id, User::find(Auth::id())->name . " has accepted your invite to " . $event->name));
 
         return back()->with([
             'message' => 'You have successfully joined the event and accepted the invite!',
+            'success' => true
+        ]);
+    }
+
+    public function declineInvite($id)
+    {
+        $invite = Invite::findOrFail($id);
+        $event = Event::findOrFail($invite->event_id);
+
+        if (Auth::id() !== $invite->receiver_id) {
+            return back()->with([
+                'message' => 'You do not have permission to reject this invite.',
+                'success' => false
+            ]);
+        }
+
+        event(new AnswerInviteSent($invite->sender_id, $event->id, User::find(Auth::id())->name . " has rejected your invite to " . $event->name));
+
+        $invite->delete();
+
+        return back()->with([
+            'message' => 'Invite rejected successfully.',
             'success' => true
         ]);
     }
@@ -119,14 +141,12 @@ class InviteController extends Controller
         $invite = Invite::findOrFail($id);
         $event = Event::findOrFail($invite->event_id);
 
-        if (Auth::id() !== $invite->invite_by_id) {
+        if (Auth::id() !== $invite->sender_id) {
             return back()->with([
                 'message' => 'You do not have permission to delete this invite.',
                 'success' => false
             ]);
         }
-
-        event(new AnswerInviteSent($invite->invite_by_id, $event->id, User::find(Auth::id())->name . " has rejected your invite to " . $event->name));
 
         $invite->delete();
 

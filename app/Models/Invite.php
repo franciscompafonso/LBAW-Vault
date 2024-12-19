@@ -14,8 +14,8 @@ class Invite extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'invite_by_id',
-        'invite_to_id',
+        'sender_id',
+        'receiver_id',
         'event_id',
         'title',
         'accepted',
@@ -35,17 +35,17 @@ class Invite extends Model
             return ['error' => 'Invite not found'];
         }
 
-        // Fetch the username based on invite_by_id
-        $inviteByName = User::find($this->invite_by_id)->name ?? 'Unknown User';
-        $inviteToName = User::find($this->invite_to_id)->name ?? 'Someone';
+        // Fetch the username based on sender_id
+        $senderName = User::find($this->sender_id)->name ?? 'Unknown User';
+        $receiverName = User::find($this->receiver_id)->name ?? 'Someone';
 
         // Return the comment data as an array using the current instance
         return [
             'invite_id' => $this->id,
-            'invite_by_id' => $this->invite_by_id,
-            'invite_to_id' => $this->invite_to_id,
-            'invite_by_name' => $inviteByName,
-            'invite_to_name' => $inviteToName,
+            'sender_id' => $this->sender_id,
+            'receiver_id' => $this->receiver_id,
+            'sender_name' => $senderName,
+            'receiver_name' => $receiverName,
             'event_id' => $this->event_id,
             'title' => $this->title,
             'accepted' => $this->accepted,
@@ -54,14 +54,14 @@ class Invite extends Model
         ];
     }
  
-    public function inviter()
+    public function sender()
     {
-        return $this->belongsTo(User::class, 'invite_by_id');
+        return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function invitee()
+    public function receiver()
     {
-        return $this->belongsTo(User::class, 'invite_to_id');
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 
     public function event()

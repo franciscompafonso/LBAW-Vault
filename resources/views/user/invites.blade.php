@@ -57,8 +57,8 @@
                         @foreach($sentInvites as $invite)
                             <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="text-center font-montserrat">
-                                    <a href="{{ route('user.profile', ['id' => $invite->invitee->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
-                                        {{ $invite->invitee->username }}
+                                    <a href="{{ route('user.profile', ['id' => $invite->receiver->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                        {{ $invite->receiver->username }}
                                     </a>
                                 </div>
                                 <div class="text-center font-montserrat">
@@ -110,8 +110,8 @@
                         @foreach($receivedInvites as $invite)
                             <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
                                 <div class="text-center font-montserrat">
-                                    <a href="{{ route('user.profile', ['id' => $invite->inviter->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
-                                        {{ $invite->inviter->username }}
+                                    <a href="{{ route('user.profile', ['id' => $invite->sender->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+                                        {{ $invite->sender->username }}
                                     </a>
                                 </div>
                                 <div class="text-center font-montserrat">

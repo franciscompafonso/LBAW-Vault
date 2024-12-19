@@ -4,9 +4,9 @@
     request('source') === 'bar' 
         ? 'Search results for: ' . $searchQuery 
         : (request('source') === 'category' 
-            ? 'Category: ' . optional($categories->whereIn('id', request('category'))->pluck('name')->first())->value()
+            ? 'Category: ' . $categories->whereIn('id', request('category'))->pluck('name')->first()
             : (request('source') === 'district' 
-                ? 'District: ' . optional($districts->whereIn('id', request('district'))->pluck('name')->first())->value()
+                ? 'District: ' . $districts->whereIn('id', request('district'))->pluck('name')->first()
                 : 'Search events'
             )
         )
@@ -33,7 +33,7 @@
     <div class="flex flex-col-reverse lg:flex-row-reverse gap-6">
 
         <!-- Events Grid -->
-        <div class="flex-1 grid gap-6 sm:grid-cols-2 md:grid-cols-3 auto-rows-min" aria-label="Events grid">
+        <div class="flex-1 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 auto-rows-min" aria-label="Events grid">
             @forelse ($events as $event)
                 @include('partials.event', ['event' => $event])
             @empty

@@ -9,6 +9,7 @@ use App\Models\JoinRequest;
 use App\Models\Notification;
 use App\Models\Poll;
 use App\Models\User;
+use App\Events\AnswerInviteSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -98,7 +99,7 @@ class NotificationController extends Controller
 
                         if ($invite) {
                             $invite['event_name'] = Event::find($invite->event_id)->name;
-                            $invite['invitee_name'] = User::find($invite->invite_to_id)->name;
+                            $invite['receiver_name'] = User::find($invite->receiver_id)->name;
 
                             return ['type' => $type, 'data' => $invite];
                         } else {
@@ -109,8 +110,8 @@ class NotificationController extends Controller
 
                         if ($invite) {
                             $invite['event_name'] = Event::find($invite->event_id)->name;
-                            $invite['invited_name'] = User::find($invite->invite_to_id)->name;
-                            $invite['invitee_name'] = User::find($invite->invite_to_id)->name;
+                            $invite['invited_name'] = User::find($invite->receiver_id)->name;
+                            $invite['receiver_name'] = User::find($invite->receiver_id)->name;
 
                             return ['type' => $type, 'data' => $invite];
                         } else {

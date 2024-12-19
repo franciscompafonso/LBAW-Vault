@@ -219,8 +219,8 @@
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">You have received an invite!</a>
                         <p class="text-sm text-gray-600">
-                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.invite_by_id}">
-                                ${notification.data.invitee_name ? notification.data.invitee_name : ''}
+                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.sender_id}">
+                                ${notification.data.receiver_name ? notification.data.receiver_name : ''}
                             </a> 
                             has invited you to 
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
@@ -257,10 +257,10 @@
                     `;
                 } else if (notification.type === 'accepted_invite_notification') {
                     notificationContent += `
-                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Your invite was accepted!</p>
+                        <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">Your invite was accepted!</a>
                         <p class="text-sm text-gray-600">
-                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.invite_to_id}">
-                                ${notification.data.invitee_name ? notification.data.invitee_name : 'Someone'}
+                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.receiver_id}">
+                                ${notification.data.receiver_name ? notification.data.receiver_name : 'Someone'}
                             </a>
                             accepted your invite for
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
@@ -321,12 +321,25 @@
                 } else if (notification.type === 'event_update_notification') {
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.id}"><p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event was updated</p></a>
-                        <p class="text-sm text-gray-600">Event ${notification.data.name} has been updated.</p>
+                        <p class="text-sm text-gray-600">
+                            <a class="text-blue-600 hover:underline" href="/events/${notification.data.id}">
+                                ${notification.data.name ?? 'an event youre a part of'}
+                            </a>
+                             has been updated.
+                        </p>
                     `;
                 } else if (notification.type === 'comment_notification') {
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">New Comment!</a><br>
-                        <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">${notification.data.user_name} has post a comment in ${notification.data.event_name} event.</a>
+                        <p class="text-sm text-gray-600">
+                            <a class="text-blue-600 hover:underline" href="/user/${notification.data.receiver_id}">
+                                ${notification.data.user_name ?? 'Someone'}
+                            </a>
+                            commented in
+                            <a class="text-blue-600 hover:underline" href="/events/${notification.data.event_id}">
+                                ${notification.data.event_name ? notification.data.event_name : 'an event youre a part of'}
+                            </a>
+                        </p>
                     `;
                 } else if (notification.type === 'poll_reminder') {
                     const eventEndTime = new Date(notification.data.end_time);
