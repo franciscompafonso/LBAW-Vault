@@ -1,5 +1,5 @@
 @can('invite', $event)
-        <form action="{{ route('events.invite', $event->id) }}" method="POST" class="flex items-center space-x-2">
+        <form id="inviteForm" action="{{ route('events.invite', $event->id) }}" method="POST" class="flex items-center space-x-2">
             @csrf
 
             <div class="w-full">

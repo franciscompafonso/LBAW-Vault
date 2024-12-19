@@ -208,9 +208,7 @@
                 <!-- Participant List or Empty State -->
                 <ul id="participant-list" class="space-y-4" aria-label="List of event participants">
                     <!-- Invite Form -->
-                    @include('partials.invite-form', [
-                        'event' => $event
-                    ])
+                    @include('partials.invite-form')
                     @if ($event->participators()->count() > 0)
                         @foreach ($event->participators()->orderBy('id')->get() as $participator)
                             @include('partials.participator')
@@ -324,6 +322,32 @@
     }
 
     // -------------------- AJAX RELOAD EVENT PAGE --------------------
+
+    // Handle Invite button click
+    document.addEventListener('submit', function (event) {
+        if (event.target.id === "inviteForm") {
+            event.preventDefault(); // Prevent form submission (page reload)
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            // Make AJAX request to submit the comment
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                showPopup(data.success, data.message);
+                document.getElementById('invite_user').value = '';
+                document.getElementById('invite_desc').value = ''; 
+            })
+            .catch(error => {
+                showPopup(false, 'Something went wrong. Please try again later.');
+                console.error(error);
+            });
+        }
+    });
 
     // Handle Join Event button click
     document.addEventListener('submit', function (event) {
