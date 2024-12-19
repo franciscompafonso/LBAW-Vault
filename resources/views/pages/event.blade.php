@@ -180,7 +180,7 @@
                 </p>
                 <p class="text-3xl text-darkSlateGrey font-montserrat">
                     <strong class="font-semibold">Creator:</strong>
-                    <a href="{{ route('user.profile', ['id' => $event->creator->id]) }}">
+                    <a href="{{ route('user.profile', ['username' => $event->creator->username]) }}">
                         {{ $event->creator->name ?? 'No category specified' }}
                     </a>
                 </p>

@@ -38,7 +38,7 @@
                     @foreach($users as $user)
                         <tr>
                             <td>
-                                <a href="{{ route('user.profile', ['id' => $user->id]) }}" 
+                                <a href="{{ route('user.profile', ['username' => $user->username]) }}" 
                                 class="font-semibold"
                                 aria-label="View profile of {{ $user->username }}">
                                     {{ $user->username }}

@@ -38,6 +38,8 @@ class Invite extends Model
         // Fetch the username based on sender_id
         $senderName = User::find($this->sender_id)->name ?? 'Unknown User';
         $receiverName = User::find($this->receiver_id)->name ?? 'Someone';
+        $senderUsername = User::find($this->sender_id)->username;
+        $receiverUsername = User::find($this->receiver_id)->username;
 
         // Return the comment data as an array using the current instance
         return [
@@ -46,6 +48,8 @@ class Invite extends Model
             'receiver_id' => $this->receiver_id,
             'sender_name' => $senderName,
             'receiver_name' => $receiverName,
+            'sender_username' => $senderUsername,
+            'receiver_username' => $receiverUsername,
             'event_id' => $this->event_id,
             'title' => $this->title,
             'accepted' => $this->accepted,

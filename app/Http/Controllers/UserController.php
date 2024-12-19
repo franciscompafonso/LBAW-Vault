@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function show(int $id, Request $request)
+    public function show(string $username, Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('username', $username)->firstOrFail();
 
         if (!auth()->guard('admin')->check() && !(auth()->check() && auth()->user()->can('viewProfile', $user))) {
             abort(403, 'You do not have permission to view this profile.');
@@ -137,7 +137,7 @@ class UserController extends Controller
             
             DB::commit();
 
-            return redirect()->route('user.profile', ['id' => $user->id]);
+            return redirect()->route('user.profile', ['username' => $user->username]);
         } catch (Exception $e) {
             DB::rollBack();
 
