@@ -138,7 +138,8 @@ class Event extends Model
 
     public function scopeSearch($query, $searchQuery) {
         if ($searchQuery) {
-            $searchResults = $query->select('id')
+            $searchResults = $this->query()
+                ->select('id')
                 ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$searchQuery])
                 ->pluck('id');
             return $query->whereIn('id', $searchResults);

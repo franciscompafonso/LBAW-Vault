@@ -47,8 +47,6 @@ class SearchController extends Controller
             ->district($districtIds)
             ->dateRange($startDate, $endDate);
 
-        
-
         // Apply sorting
         $order = $request->get('order', 'date_asc');
         $query->orderBy('start_date', $order === 'date_asc' ? 'asc' : 'desc');
