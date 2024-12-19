@@ -94,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/user/{id}/change_password', 'changePassword')->name('user.change_password.action');
         Route::post('/user/{id}/block_user', 'block')->where('id', '[0-9]+')->name('user.block');
         Route::post('/user/{id}/unblock_user', 'unblock')->where('id', '[0-9]+')->name('user.unblock');
-        Route::get('/user/{id}/invites', [InviteController::class, 'showUserInvites'])->name('user.invites.sent');
+        Route::get('/user/{id}/invites', [InviteController::class, 'showUserInvites'])->name('user.invites');
         Route::delete('/invite/{id}', [InviteController::class, 'deleteInvite'])->name('invite.delete');
     });
 

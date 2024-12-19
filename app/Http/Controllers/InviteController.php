@@ -16,12 +16,21 @@ class InviteController extends Controller
     {
         $user = User::findOrFail($id);
         $this->authorize('viewInvites', $user);
-        
-        $invites = Invite::where('invite_by_id', $id)->with(['invitee', 'event'])->get();
 
-        return view('user.invites_sent', [
+        // Fetch sent invitations
+        $sentInvites = Invite::where('invite_by_id', $id)
+                            ->with(['invitee', 'event'])
+                            ->get();
+
+        // Fetch received invitations
+        $receivedInvites = Invite::where('invite_to_id', $id)
+                                ->with(['inviter', 'event'])
+                                ->get();
+
+        return view('user.invites', [
             'user' => $user,
-            'invites' => $invites,
+            'sentInvites' => $sentInvites,
+            'receivedInvites' => $receivedInvites,
         ]);
     }
 
