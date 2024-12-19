@@ -239,6 +239,10 @@
         }
     }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('commentForm').reset();
+    });
+
     document.addEventListener('click', (event) => {
         const menu = document.getElementById('menu');
         const button = document.getElementById('toggleMenu');

@@ -162,25 +162,27 @@
         }
     }
 
-    function fetchNotifications() {
+    function fetchNotifications(display = true) {
         fetch('/api/notifications', {
             headers: { 'Accept': 'application/json' },
         })
-            .then(response => response.json())
-            .then(data => {
-                displayNotificationResults(data);
+        .then(response => response.json())
+        .then(data => {
+            if (display) displayNotificationResults(data);
+            updateNotificationIndicator(data);
+        })
+        .catch(error => console.error('Error fetching notifications:', error));
+    }
 
-                const notiNumber = document.getElementById('noti-indicator');
-                if (notiNumber) {
-                    if (data.length > 0) {
-                        notiNumber.textContent = data.length;
-                        notiNumber.classList.remove('hidden');
-                    } else {
-                        notiNumber.classList.add('hidden');
-                    }
-                }
-            })
-            .catch(error => console.error('Error fetching notifications:', error));
+    function updateNotificationIndicator(notifications) {
+        const notiIndicator = document.getElementById('noti-indicator');
+
+        if (notifications && notifications.length > 0) {
+            notiIndicator.textContent = notifications.length;
+            notiIndicator.classList.remove('hidden');
+        } else {
+            notiIndicator.classList.add('hidden');
+        }
     }
 
     function displayNotificationResults(notifications) {
@@ -439,5 +441,8 @@
         const dropdown = document.getElementById('profile-dropdown');
         dropdown.classList.toggle('hidden');
     }
+
+    // Reload notifications every 5 seconds
+    setInterval(fetchNotifications, 5000);
 
 </script>
