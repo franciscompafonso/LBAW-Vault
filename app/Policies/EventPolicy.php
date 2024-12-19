@@ -118,7 +118,7 @@ class EventPolicy
 
     public function invite(User $user, Event $event): bool
     {
-        return $event->end_date > now()
+        return !$user->isblocked && $event->end_date > now()
             && (($event->participators->contains($user) && $event->visibility === 'public') || $user->id === $event->creator_id);
     }
 
@@ -130,7 +130,7 @@ class EventPolicy
 
     public function comment(User $user, Event $event)
     {
-        return $event->end_date > now()->addDays(7);
+        return !$user->isblocked && $event->end_date > now()->addDays(7);
     }
 
     public function survey(User $user, Event $event)
