@@ -2,8 +2,7 @@
 
 @section('Title', $event->name)
 @section('content')
-<div class="space-y-10">
-    
+<div class="space-y-10"> 
    <!-- Main Content Wrapper -->
    <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Event Banner -->
@@ -149,16 +148,6 @@
             <div class="mt-6 space-y-6" aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
             </div>
-            <!-- make Poll -->
-            @can('createPoll', $event)
-                <div class="flex justify-end mt-4">
-                    <button 
-                        class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue""
-                        onclick="togglePollForm()">
-                        Create Poll
-                    </button>
-                </div>
-            @endcan
             
             <!-- Polls -->
             @each('partials.poll', $event->polls, 'poll')
@@ -252,7 +241,7 @@
             </div>
         </div>
     </div>
-
+</div>
 
 @include('partials.poll-form', ['event' => $event])
 
@@ -268,153 +257,6 @@
         }
     }
 
-    // Handle Join Event button click
-    document.addEventListener('submit', function (event) {
-        if (event.target.id === "joinEventForm") {
-            event.preventDefault(); // Prevent form submission (page reload)
-
-            const form = event.target;
-            const formData = new FormData(form);
-
-            // Make AJAX request to join the event
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                showPopup(data.success, data.message);
-
-                if (data.success) {
-                    const button = form.querySelector('button');
-                    button.textContent = "Joined!";
-                    button.disabled = true;
-                }
-
-                updateParticipantInfo();
-                updateCommentForm();
-                updateEventActions();
-            })
-            .catch(error => {
-                showPopup(false, 'Something went wrong. Please try again later.');
-                console.error(error);
-            });
-        }
-    });
-
-    // Handle Request to join Event button click
-    document.addEventListener('submit', function (event) {
-        if (event.target.id === "requestEventForm") {
-            event.preventDefault();
-            
-            const form = event.target;
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                showPopup(data.success, data.message);
-
-                if (data.success) {
-                    const button = form.querySelector('button');
-                    button.textContent = "Request Sent!";
-                    button.disabled = false;
-                }
-
-                updateParticipantInfo();
-                updateCommentForm();
-                updateEventActions();
-            })
-            .catch(error => {
-                showPopup(false, 'Something went wrong. Please try again later.');
-                console.error(error);
-            });
-        }
-    });
-
-    // Handle Leave Event button click
-    document.addEventListener('submit', function (event) {
-        if (event.target.id === "leaveEventForm") {
-            event.preventDefault();
-            
-            const form = event.target;
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                showPopup(data.success, data.message);
-
-                if (data.success) {
-                    const button = form.querySelector('button');
-                    button.textContent = "Join Event";
-                    button.disabled = false;
-                }
-
-                updateParticipantInfo();
-                updateCommentForm();
-                updateEventActions();
-            })
-            .catch(error => {
-                showPopup(false, 'Something went wrong. Please try again later.');
-                console.error(error);
-            });
-        }
-    });
-
-    // Reload Participant Info (count or list)
-    function updateParticipantInfo() {
-        fetch(`/events/{{$event->id}}/participants`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
-                
-                const participantList = document.getElementById('participant-list');
-                participantList.innerHTML = data.participantHtml;
-            })
-            .catch(error => console.error('Error updating participants:', error));
-    }
-
-    // Reload Comment Form
-    function updateCommentForm() {
-        fetch(`/events/{{$event->id}}/update-comment-form`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error updating comment form.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById('comment-form').innerHTML = data.commentFormHtml;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-
-    // Reload Event Options
-    function updateEventActions() {
-        fetch(`/events/{{$event->id}}/event-actions`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error updating event actions.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById('actions').innerHTML = data.html;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-    
     document.addEventListener('click', (event) => {
         const menu = document.getElementById('menu');
         const button = document.getElementById('toggleMenu');
@@ -454,6 +296,199 @@
         link.setSelectionRange(0, 99999);
         document.execCommand('copy');
         alert('Link copied to clipboard!');
+    }
+
+    // -------------------- AJAX RELOAD COMMENTS --------------------
+    document.addEventListener('submit', function (event) {
+    if (event.target.id === "comment-form") {
+        event.preventDefault();
+
+        var form = event.target;
+        var formData = new FormData(form);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', form.action, true);
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === 'success') {
+                    document.getElementById('comment-content').value = '';
+                    document.getElementById('photos').value = '';
+                    
+                    document.getElementById('comment-list').innerHTML += response.commentHtml;
+                } else {
+                    alert('Erro ao enviar o comentário.');
+                }
+            } else {
+                alert('Ocorreu um erro ao tentar enviar o comentário.');
+            }
+        };
+
+        xhr.send(formData);
+    }
+    });
+
+    function updateParticipantInfo() {
+    fetch(`/events/{{$event->id}}/comments`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
+            
+            const participantList = document.getElementById('participant-list');
+            participantList.innerHTML = data.participantHtml;
+        })
+        .catch(error => console.error('Error updating participants:', error));
+    }
+
+    // -------------------- AJAX RELOAD EVENT PAGE --------------------
+
+    // Handle Join Event button click
+    // document.addEventListener('submit', function (event) {
+    // if (event.target.id === "joinEventForm") {
+    //     event.preventDefault(); // Prevent form submission (page reload)
+
+    //     const form = event.target;
+    //     const formData = new FormData(form);
+
+    //     // Make AJAX request to join the event
+    //     fetch(form.action, {
+    //         method: 'POST',
+    //         body: formData,
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         showPopup(data.success, data.message);
+
+    //         if (data.success) {
+    //             const button = form.querySelector('button');
+    //             button.textContent = "Joined!";
+    //             button.disabled = true;
+    //         }
+
+    //         updateParticipantInfo();
+    //         updateCommentForm();
+    //         updateEventActions();
+    //     })
+    //     .catch(error => {
+    //         showPopup(false, 'Something went wrong. Please try again later.');
+    //         console.error(error);
+    //     });
+    // }
+    // });
+
+    // Handle Request to join Event button click
+    document.addEventListener('submit', function (event) {
+    if (event.target.id === "requestEventForm") {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            showPopup(data.success, data.message);
+
+            if (data.success) {
+                const button = form.querySelector('button');
+                button.textContent = "Request Sent!";
+                button.disabled = false;
+            }
+
+            updateParticipantInfo();
+            updateCommentForm();
+            updateEventActions();
+        })
+        .catch(error => {
+            showPopup(false, 'Something went wrong. Please try again later.');
+            console.error(error);
+        });
+    }
+    });
+
+    // Handle Leave Event button click
+    document.addEventListener('submit', function (event) {
+    if (event.target.id === "leaveEventForm") {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            showPopup(data.success, data.message);
+
+            if (data.success) {
+                const button = form.querySelector('button');
+                button.textContent = "Join Event";
+                button.disabled = false;
+            }
+
+            updateParticipantInfo();
+            updateCommentForm();
+            updateEventActions();
+        })
+        .catch(error => {
+            showPopup(false, 'Something went wrong. Please try again later.');
+            console.error(error);
+        });
+    }
+    });
+
+    // Reload Participant Info (count or list)
+    function updateParticipantInfo() {
+    fetch(`/events/{{$event->id}}/participants`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('participant-count').innerText = `${data.count} / ${data.capacity}`;
+            
+            const participantList = document.getElementById('participant-list');
+            participantList.innerHTML = data.participantHtml;
+        })
+        .catch(error => console.error('Error updating participants:', error));
+    }
+
+    // Reload Comment Form
+    function updateCommentForm() {
+    fetch(`/events/{{$event->id}}/update-comment-form`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error updating comment form.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('comment-form').innerHTML = data.commentFormHtml;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Reload Event Options
+    function updateEventActions() {
+    fetch(`/events/{{$event->id}}/event-actions`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error updating event actions.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('actions').innerHTML = data.html;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 </script>
 @endsection

@@ -256,7 +256,7 @@ class EventController extends Controller
             'date' => now(),
         ]);
 
-        event(new JoinRequestSent($event->creator->id, $event->id, User::find(Auth::id())->name . " has resquested to join your event."));
+        event(new JoinRequestSent($event->creator->id, $event->id, User::find(Auth::id())->name . " has requested to join your event."));
 
         return response()->json([
             'message' => 'Your request to join has been sent!',
@@ -286,6 +286,12 @@ class EventController extends Controller
             'capacity' => $event->capacity,
             'participantHtml' => $participantHtml
         ]);
+    }
+
+    public function getComments($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        return $event->comments()->orderBy('id')->get();
     }
 
     /**

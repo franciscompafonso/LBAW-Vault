@@ -104,6 +104,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/dismiss', [NotificationController::class, 'dismissNotification']);
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications']);
     Route::post('/events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/events/{event}/comments', [EventController::class, 'getComments'])->name('comments.get');
 
     // API
     Route::get('/api/notifications', [NotificationController::class, 'index']);
