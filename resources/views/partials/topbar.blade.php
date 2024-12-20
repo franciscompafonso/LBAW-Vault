@@ -30,7 +30,7 @@
                     <i class="text-4xl fa-solid fa-lock-open"></i>
                 </a>
             @endcan
-            @can('create', auth()->user())
+            @can('create', App\Models\Event::class, auth()->user())
                 <a href="{{ url('/event/create') }}" 
                 title="Create Event" 
                 aria-label="Create Event"
@@ -39,8 +39,6 @@
                 </a>
             @endcan
             
-
-
             <div class="relative">
                 <!-- Bell Icon with Notification Count -->
                 <a id="notifications-button" onclick="toggleNotificationsDropdown()" class="relative cursor-pointer">
