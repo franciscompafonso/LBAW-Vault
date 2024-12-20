@@ -365,7 +365,10 @@
                 } else if (notification.type === 'event_cancelation') {
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event was canceled</p>
-                        <p class="text-sm text-gray-600">Event ${notification.data.name} has been canceled.</p>
+                        <a class="text-blue-600 hover:underline" href="/events/${notification.data.id}">
+                            ${notification.data.name ?? 'An event youre a part of'}
+                        </a>
+                        <p class="text-sm text-gray-600"> has been canceled.</p>
                     `;
                 } else if (notification.type === 'event_reminder') {
                     notificationContent += `

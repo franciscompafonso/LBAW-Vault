@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\EventCanceled;
+use App\Events\EventUpdate;
 use App\Models\AnswerReview;
 use App\Models\Category;
 use App\Models\Event;
@@ -172,6 +173,10 @@ class EventController extends Controller
                 $event->update($data);
 
                 DB::commit();
+
+                foreach ($event->participators as $participant) {
+                    event(new EventUpdate($participant->id, $event->id, $event->name . " has been updated!"));
+                }
 
                 return redirect()->route('events.show', $event->id)->with([
                     'message' => 'Event successfully updated!',
