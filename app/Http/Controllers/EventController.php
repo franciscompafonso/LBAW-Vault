@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventCanceled;
 use App\Models\AnswerReview;
 use App\Models\Category;
 use App\Models\Event;
@@ -233,6 +234,10 @@ class EventController extends Controller
 
         if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('cancel', $event))) {
             $event->update(['visibility' => 'canceled']);
+
+            foreach ($event->participators as $participant) {
+                event(new EventCanceled($participant->id, $event->id, $event->name . " has been canceled!"));
+            }
 
             return redirect()->route('events.show', $event->id)->with([
                 'message' => 'Event was successfully cancelled.',

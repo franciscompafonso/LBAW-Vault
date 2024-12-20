@@ -463,35 +463,6 @@ CREATE TRIGGER trigger_accepted_join_request_notification
     EXECUTE FUNCTION create_accepted_join_request_notification();
 
 
--- create event update notification
-CREATE FUNCTION create_event_update_notification() RETURNS TRIGGER AS
-$BODY$
-DECLARE
-    notification_id INT;
-    participant RECORD;
-BEGIN
-    FOR participant IN
-        SELECT participator_id FROM participator WHERE event_id = NEW.id
-    LOOP
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.creator_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
-        RETURNING id INTO notification_id;
-
-        INSERT INTO event_update_notification (id, event_id)
-        VALUES (notification_id, NEW.id);
-    END LOOP;
-
-    RETURN NEW;
-END;
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_event_update_notification
-    AFTER UPDATE OF name, description, start_date, end_date, district_id, category_id ON event
-    FOR EACH ROW
-    EXECUTE FUNCTION create_event_update_notification();
-
-
 -- create comment notification
 CREATE FUNCTION create_comment_notification() RETURNS TRIGGER AS
 $BODY$
@@ -539,7 +510,7 @@ BEGIN
         VALUES (NEW.creator_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
         RETURNING id INTO notification_id;
 
-        INSERT INTO event_update_notification (id, event_id)
+        INSERT INTO event_cancelation (id, event_id)
         VALUES (notification_id, NEW.id);
     END LOOP;
 
@@ -553,6 +524,35 @@ CREATE TRIGGER trigger_event_cancellation
     FOR EACH ROW
     WHEN (OLD.visibility IS DISTINCT FROM 'canceled' AND NEW.visibility = 'canceled')
     EXECUTE FUNCTION notify_event_cancellation();
+
+
+-- create event update notification
+CREATE FUNCTION create_event_update_notification() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    notification_id INT;
+    participant RECORD;
+BEGIN
+    FOR participant IN
+        SELECT participator_id FROM participator WHERE event_id = NEW.id
+    LOOP
+        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
+        VALUES (NEW.creator_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
+        RETURNING id INTO notification_id;
+
+        INSERT INTO event_update_notification (id, event_id)
+        VALUES (notification_id, NEW.id);
+    END LOOP;
+
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_event_update_notification
+    AFTER UPDATE OF name, description, start_date, end_date, district_id, category_id ON event
+    FOR EACH ROW
+    EXECUTE FUNCTION create_event_update_notification();
 
 
 -- create poll reminder notification
