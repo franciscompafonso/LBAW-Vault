@@ -523,10 +523,10 @@
             document.getElementById('countdown').innerHTML = "Event has ended!";
             return;
         }
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const days = Math.floor(distanceStart / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distanceStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distanceStart % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distanceStart % (1000 * 60)) / 1000);
         let countdownHtml = '';
         if (days > 2) {
             countdownHtml = `
