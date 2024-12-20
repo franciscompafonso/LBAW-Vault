@@ -50,14 +50,9 @@ class JoinRequestController extends Controller
         // Delete the join request entry from the database
         $joinRequest->delete();
 
-        // Dismiss the notification (mark it as viewed)
-        $notificationId = $request->notification_id; // The notification ID to dismiss
-        $notification = Notification::find($notificationId);
-
-        if ($notification) {
-            $notification->viewed = true;
-            $notification->save();
-        }
+        // Dismiss the notification
+        $notificationId = $request->notification_id;
+        Notification::find($notificationId)->delete();
 
         event(new AnswerJoinRequest($joinRequest->join_request_by_id, $event->id, User::find(Auth::id())->name . " rejected your join request to " . $event->name));
 

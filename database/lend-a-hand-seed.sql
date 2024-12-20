@@ -167,8 +167,7 @@ CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
     emitted_by INT REFERENCES user_account(id),
     emitted_to INT REFERENCES user_account(id),
-    date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP),
-    viewed BOOLEAN DEFAULT FALSE NOT NULL
+    date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE admin (
@@ -199,13 +198,13 @@ CREATE TABLE invite (
 );
 
 CREATE TABLE invite_notification (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     invite_id INT REFERENCES invite(id) ON DELETE CASCADE,
     PRIMARY KEY (id, invite_id)
 );
 
 CREATE TABLE accepted_invite_notification (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     invite_id INT REFERENCES invite(id) ON DELETE CASCADE,
     PRIMARY KEY (id, invite_id)
 );
@@ -219,19 +218,19 @@ CREATE TABLE join_request (
 );
 
 CREATE TABLE join_request_notification (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     join_request_id INT REFERENCES join_request(id) ON DELETE CASCADE,
     PRIMARY KEY (id, join_request_id)
 );
 
 CREATE TABLE accepted_join_request_notification (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     join_request_id INT REFERENCES join_request(id) ON DELETE CASCADE,
     PRIMARY KEY (id, join_request_id)
 );
 
 CREATE TABLE event_update_notification (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     event_id INT REFERENCES event(id)  ON DELETE CASCADE,
     PRIMARY KEY (id, event_id)
 );
@@ -243,31 +242,31 @@ CREATE TABLE comment_notification (
 );
 
 CREATE TABLE poll_reminder (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     poll_id INT REFERENCES poll(id),
     PRIMARY KEY (id, poll_id)
 );
 
 CREATE TABLE event_cancelation (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     event_id INT REFERENCES event(id) ON DELETE CASCADE,
     PRIMARY KEY (id, event_id)
 );
 
 CREATE TABLE event_reminder (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     event_id INT REFERENCES event(id) ON DELETE CASCADE,
     PRIMARY KEY (id, event_id)
 );
 
 CREATE TABLE admin_action (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     admin_id INT REFERENCES admin(id),
     PRIMARY KEY (id, admin_id)
 );
 
 CREATE TABLE unblock_notification (
-    id INT REFERENCES notification(id),
+    id INT REFERENCES notification(id) ON DELETE CASCADE,
     admin_id INT REFERENCES admin(id),
     PRIMARY KEY (id, admin_id)
 );
@@ -358,7 +357,7 @@ $BODY$
 DECLARE
     notification_id INT;
 BEGIN
-    INSERT INTO notification (emitted_by, emitted_to, date, viewed)
+    INSERT INTO notification (emitted_by, emitted_to, date)
     VALUES (NEW.sender_id, NEW.receiver_id, CURRENT_TIMESTAMP, FALSE)
     RETURNING id INTO notification_id;
 
@@ -383,8 +382,8 @@ DECLARE
     notification_id INTEGER; 
 BEGIN
     IF NEW.accepted = TRUE THEN
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.receiver_id, NEW.sender_id, CURRENT_TIMESTAMP, FALSE)
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (NEW.receiver_id, NEW.sender_id, CURRENT_TIMESTAMP)
         RETURNING id INTO notification_id;
 
         INSERT INTO accepted_invite_notification (id, invite_id)
@@ -414,8 +413,8 @@ BEGIN
     FROM event
     WHERE id = NEW.event_id;
 
-    INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-    VALUES (NEW.join_request_by_id, join_request_to_id, CURRENT_TIMESTAMP, FALSE)
+    INSERT INTO notification (emitted_by, emitted_to, date)
+    VALUES (NEW.join_request_by_id, join_request_to_id, CURRENT_TIMESTAMP)
     RETURNING id INTO notification_id;
 
     INSERT INTO join_request_notification (id, join_request_id)
@@ -443,8 +442,8 @@ BEGIN
     WHERE id = NEW.event_id;
 
     IF NEW.accepted = TRUE THEN
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (join_request_to_id, NEW.join_request_by_id, CURRENT_TIMESTAMP, FALSE)
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (join_request_to_id, NEW.join_request_by_id, CURRENT_TIMESTAMP)
         RETURNING id INTO notification_id;
 
         INSERT INTO accepted_join_request_notification (id, join_request_id)
@@ -476,8 +475,8 @@ BEGIN
         WHERE event_id = (SELECT event_id FROM comment WHERE id = NEW.id)
     LOOP
         IF NEW.comment_by_id != participant.participator_id THEN
-            INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-            VALUES (NEW.comment_by_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
+            INSERT INTO notification (emitted_by, emitted_to, date)
+            VALUES (NEW.comment_by_id, participant.participator_id, CURRENT_TIMESTAMP)
             RETURNING id INTO notification_id;
 
             INSERT INTO comment_notification (id, comment_id)
@@ -506,8 +505,8 @@ BEGIN
     FOR participant IN
         SELECT participator_id FROM participator WHERE event_id = NEW.id
     LOOP
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.creator_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (NEW.creator_id, participant.participator_id, CURRENT_TIMESTAMP)
         RETURNING id INTO notification_id;
 
         INSERT INTO event_cancelation (id, event_id)
@@ -536,8 +535,8 @@ BEGIN
     FOR participant IN
         SELECT participator_id FROM participator WHERE event_id = NEW.id
     LOOP
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.creator_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (NEW.creator_id, participant.participator_id, CURRENT_TIMESTAMP)
         RETURNING id INTO notification_id;
 
         INSERT INTO event_update_notification (id, event_id)
@@ -565,8 +564,8 @@ BEGIN
     FOR participant IN
         SELECT participator_id FROM participator WHERE event_id = NEW.event_id
     LOOP
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.event_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (NEW.event_id, participant.participator_id, CURRENT_TIMESTAMP)
         RETURNING id INTO notification_id;
 
         INSERT INTO poll_reminder (id, poll_id)
@@ -589,46 +588,48 @@ CREATE OR REPLACE FUNCTION create_event_reminder_notification()
 RETURNS TRIGGER AS
 $BODY$
 DECLARE
-    participant RECORD;
     notification_id INT;
     reminder_date TIMESTAMP;
+    event_start_date TIMESTAMP;
+    event_creator_id INT;
 BEGIN
-    -- Loop over each participant related to the new event
-    FOR participant IN
-        SELECT participator_id FROM participator WHERE event_id = NEW.id
-    LOOP
-        -- 3-day reminder
-        IF NEW.start_date > CURRENT_TIMESTAMP + INTERVAL '3 days' THEN
-            reminder_date := NEW.start_date - INTERVAL '3 days';
-            
-            INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-            VALUES (NEW.creator_id, participant.participator_id, reminder_date, FALSE)
-            RETURNING id INTO notification_id;
+    -- Get the start_date and creator_id from the event table using event_id from participator
+    SELECT start_date, creator_id INTO event_start_date, event_creator_id
+    FROM event
+    WHERE event.id = NEW.event_id;
 
-            INSERT INTO event_reminder (id, event_id)
-            VALUES (notification_id, NEW.id);
-        END IF;
+    -- If the event does not exist or there's no start_date/creator_id, raise an exception or handle gracefully
+    IF event_start_date IS NULL OR event_creator_id IS NULL THEN
+        RAISE EXCEPTION 'Event data (start_date or creator_id) not found for event ID %', NEW.event_id;
+    END IF;
 
-        -- 1-day reminder
-        IF NEW.start_date > CURRENT_TIMESTAMP + INTERVAL '1 day' THEN
-            reminder_date := NEW.start_date - INTERVAL '1 day';
-            
-            INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-            VALUES (NEW.creator_id, participant.participator_id, reminder_date, FALSE)
-            RETURNING id INTO notification_id;
+    -- 3 days before the event
+    reminder_date := event_start_date - INTERVAL '3 days';
 
-            INSERT INTO event_reminder (id, event_id)
-            VALUES (notification_id, NEW.id);
-        END IF;
-    END LOOP;
+    INSERT INTO notification (emitted_by, emitted_to, date)
+    VALUES (event_creator_id, NEW.participator_id, reminder_date)
+    RETURNING id INTO notification_id;
 
-    RETURN NEW; -- Return the row for further processing in the trigger
+    INSERT INTO event_reminder (id, event_id)
+    VALUES (notification_id, NEW.event_id);
+
+    -- 1 day before the event
+    reminder_date := event_start_date - INTERVAL '1 day';
+
+    INSERT INTO notification (emitted_by, emitted_to, date)
+    VALUES (event_creator_id, NEW.participator_id, reminder_date)
+    RETURNING id INTO notification_id;
+
+    INSERT INTO event_reminder (id, event_id)
+    VALUES (notification_id, NEW.event_id);
+
+    RETURN NEW;
 END;
 $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_event_reminder_notification
-AFTER INSERT ON event
+AFTER INSERT ON participator
 FOR EACH ROW
 EXECUTE FUNCTION create_event_reminder_notification();
 
@@ -640,8 +641,8 @@ DECLARE
     notification_id INT;
 BEGIN
     IF (NEW.status IN ('approved', 'denied')) AND (OLD.status IS DISTINCT FROM NEW.status) THEN
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.decision_by_id, NEW.requested_by_id, CURRENT_TIMESTAMP, FALSE)
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (NEW.decision_by_id, NEW.requested_by_id, CURRENT_TIMESTAMP)
         RETURNING id INTO notification_id;
 
         INSERT INTO unblock_notification (id, admin_id)
@@ -771,8 +772,8 @@ BEGIN
     -- Check if the user was blocked in the update
     IF NEW.isBlocked = TRUE AND OLD.isBlocked = FALSE THEN
         -- Insert a new notification
-        INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.id, NEW.id, CURRENT_TIMESTAMP, FALSE)
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (NEW.id, NEW.id, CURRENT_TIMESTAMP)
         RETURNING id INTO notification_id;
 
         -- Log the action in the admin_action table

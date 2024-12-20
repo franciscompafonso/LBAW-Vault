@@ -9,8 +9,6 @@ use App\Models\JoinRequest;
 use App\Models\Notification;
 use App\Models\Poll;
 use App\Models\User;
-use App\Events\AnswerInviteSent;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -21,7 +19,7 @@ class NotificationController extends Controller
         try {
             $user = Auth::user();
             $notifications = Notification::where('emitted_to', $user->id)
-                ->where('viewed', false)
+                ->where('date', '<=', now())
                 ->orderBy('date', 'desc')
                 ->get();
 
@@ -87,27 +85,16 @@ class NotificationController extends Controller
                         } else {
                             return ['type' => $type, 'data' => 'Comment not found'];
                         }
-                    } elseif ($type == 'event_update_notification') {
+                    } elseif ($type == 'event_cancelation' || $type == 'event_reminder' || $type == 'event_update_notification') {
+                       
                         $event = Event::find($notification->event_id);
 
-                        return ['type' => $type, 'data' => $event];
-                    } elseif ($type == 'event_cancelation') {
-                        $event = Event::find($notification->event_id);
-
-                        return ['type' => $type, 'data' => $event];
-                    } elseif ($type == 'accepted_invite_notification') {
-                        $invite = Invite::find($notification->invite_id);
-
-                        if ($invite) {
-                            $invite['event_name'] = Event::find($invite->event_id)->name;
-                            $invite['receiver_name'] = User::find($invite->receiver_id)->name;
-                            $invite['receiver_username'] = User::find($invite->receiver_id)->username;
-
-                            return ['type' => $type, 'data' => $invite];
+                        if ($event) {
+                            return ['type' => $type, 'data' => $event];
                         } else {
-                            return ['type' => $type, 'data' => 'Invite not found'];
+                            return ['type' => $type, 'data' => 'Event not found'];
                         }
-                    } elseif ($type == 'invite_notification') {
+                    } elseif ($type == 'invite_notification' || $type == 'accepted_invite_notification') {
                         $invite = Invite::find($notification->invite_id);
 
                         if ($invite) {
@@ -115,12 +102,13 @@ class NotificationController extends Controller
                             $invite['sender_name'] = User::find($invite->sender_id)->name;
                             $invite['sender_username'] = User::find($invite->sender_id)->username;
                             $invite['receiver_name'] = User::find($invite->receiver_id)->name;
+                            $invite['receiver_username'] = User::find($invite->receiver_id)->username;
 
                             return ['type' => $type, 'data' => $invite];
                         } else {
                             return ['type' => $type, 'data' => 'Invite not found'];
                         }
-                    } elseif ($type == 'accepted_join_request_notification') {
+                    } elseif ($type == 'accepted_join_request_notification' || $type == 'join_request_notification') {
                         $join_request = JoinRequest::find($notification->join_request_id);
 
                         if ($join_request) {
@@ -129,20 +117,7 @@ class NotificationController extends Controller
                             $join_request['event_creator_name'] = Event::find($join_request->event_id)->creator->name;
                             $join_request['event_creator_username'] = Event::find($join_request->event_id)->creator->username;
                             $join_request['join_request_by_name'] = User::find($join_request->join_request_by_id)->name;
-
-                            return ['type' => $type, 'data' => $join_request];
-                        } else {
-                            return ['type' => $type, 'data' => 'Join request not found'];
-                        }
-                    } elseif ($type == 'join_request_notification') {
-                        $join_request = JoinRequest::find($notification->join_request_id);
-
-                        if ($join_request) {
-                            $join_request['event_name'] = Event::find($join_request->event_id)->name;
-                            $join_request['event_creator'] = Event::find($join_request->event_id)->creator->name;
-                            $join_request['join_request_by_name'] = User::find($join_request->join_request_by_id)->name;
                             $join_request['join_request_by_username'] = User::find($join_request->join_request_by_id)->username;
-                            
 
                             return ['type' => $type, 'data' => $join_request];
                         } else {
@@ -171,11 +146,7 @@ class NotificationController extends Controller
 
     public function dismissNotification($notification_id)
     {
-        $notification = Notification::find($notification_id);
-        if ($notification) {
-            $notification->viewed = true;
-            $notification->save();
-        }
+        Notification::find($notification_id)->delete();
 
         return response()->json([
             'message' => 'You have dismissed the notification',
@@ -187,7 +158,7 @@ class NotificationController extends Controller
     {
         $user = Auth::user();
         Notification::where('emitted_to', $user->id)
-            ->update(['viewed' => true]);
+            ->delete();
 
         return response()->json([
             'message' => 'You have dismissed all notifications with success',

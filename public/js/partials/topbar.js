@@ -222,15 +222,19 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 } else if (notification.type === 'event_cancelation') {
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event was canceled</p>
-                        <a class="text-blue-600 hover:underline" href="/events/${notification.data.id}">
+                        <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
                             ${notification.data.name ?? 'An event youre a part of'}
                         </a>
                         <p class="text-sm text-gray-600"> has been canceled.</p>
                     `;
                 } else if (notification.type === 'event_reminder') {
                     notificationContent += `
-                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">${notification.type ? notification.type : 'No type available'}</p>
-                        <p class="text-sm text-gray-600">Reminder: Event with ID: ${notification.event_id} is coming soon!</p>
+                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event Reminder</p>
+                        <p class="text-sm text-gray-600">
+                        <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
+                            ${notification.data.name ?? 'An event youre a part of'}
+                        </a>
+                        is coming soon!</p>
                     `;
                 } else if (notification.type === 'admin_action') {
                     notificationContent += `
@@ -318,4 +322,8 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     
 
     // Reload notifications every 5 seconds
-    //setInterval(fetchNotifications, 5000);
+    setInterval(fetchNotifications, 5000);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchNotifications();
+    });
