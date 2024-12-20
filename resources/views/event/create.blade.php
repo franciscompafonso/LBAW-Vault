@@ -13,12 +13,12 @@
     <!-- Form Container -->
     <form method="POST" action="{{ route('events.store') }}" class="space-y-8" enctype="multipart/form-data">
       @csrf
-      <fieldset class="border border-gray-300 p-4 rounded-md">
+      <fieldset class="p-4 border border-gray-300 rounded-md">
         <legend class="text-lg font-semibold font-montserrat">Event Details</legend>
           <!-- Banner -->
           <div class="flex items-center mb-4 space-x-4">
             <label for="banner" class="block text-lg font-semibold font-montserrat">Upload Image</label>
-            <input type="file" id="banner" name="file" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)" aria-label="Upload an image to represent your event. Accepted formats: JPEG, PNG.">
+            <input type="file" id="banner" name="file" class="w-full p-2 mt-2 border border-gray-300 rounded-md" aria-label="Upload an image to represent your event. Accepted formats: JPEG, PNG.">
             @error('file')
                 <div class="mt-2 text-sm text-red-600" aria-live="polite">{{ $message }}</div>
             @enderror
@@ -42,7 +42,7 @@
                 @endif
           </div>
       </fieldset>
-      <fieldset class="border border-gray-300 p-4 rounded-md">
+      <fieldset class="p-4 border border-gray-300 rounded-md">
         <legend class="text-lg font-semibold font-montserrat">Date and Time</legend>
           <!-- Start Date and Time -->
           <div class="mb-4">
@@ -73,7 +73,7 @@
           </div>
       </fieldset>          
         
-      <fieldset class="border border-gray-300 p-4 rounded-md">
+      <fieldset class="p-4 border border-gray-300 rounded-md">
         <legend class="text-lg font-semibold font-montserrat">Location</legend>
           <!-- District Selector -->
           <div class="mb-4">
@@ -99,7 +99,7 @@
           </div>
       </fieldset>
 
-      <fieldset class="border border-gray-300 p-4 rounded-md">
+      <fieldset class="p-4 border border-gray-300 rounded-md">
         <legend class="text-lg font-semibold font-montserrat">Additional Information</legend>
           <!-- Category Selector -->
           <div class="mb-4">

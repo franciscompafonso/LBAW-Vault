@@ -169,15 +169,15 @@ class NotificationController extends Controller
         return ['type' => 'unknown'];
     }
 
-    public function dismissNotification(Request $request)
+    public function dismissNotification($notification_id)
     {
-        $notification = Notification::find($request->notification_id);
+        $notification = Notification::find($notification_id);
         if ($notification) {
             $notification->viewed = true;
             $notification->save();
         }
 
-        return back()->with([
+        return response()->json([
             'message' => 'You have dismissed the notification',
             'success' => true
         ]);
@@ -189,6 +189,9 @@ class NotificationController extends Controller
         Notification::where('emitted_to', $user->id)
             ->update(['viewed' => true]);
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'message' => 'You have dismissed all notifications with success',
+            'success' => true
+        ]);
     }
 }

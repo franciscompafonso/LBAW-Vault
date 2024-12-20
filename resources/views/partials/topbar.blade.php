@@ -54,7 +54,11 @@
                     <div class="flex items-center justify-between mb-4">
                         <p id="no-notifications" class="text-xl text-center text-gray-500">There are no notifications.</p>
                         <!-- Dismiss All Button -->
-                        <button id="dismiss-all-btn" onclick="dismissAllNotifications()" class="hidden font-bold border-transparent font-montserrat focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria" aria-label="Dismiss all notifications">
+                        <button 
+                            id="dismiss-all-btn" 
+                            onclick="dismissAllNotifications(event)" 
+                            class="hidden font-bold border-transparent font-montserrat focus:text-ultraViolet focus:border-transparent focus:bg-white hover:border-transparent text-ultraViolet hover:bg-white hover:text-wisteria" 
+                            aria-label="Dismiss all notifications">
                             Dismiss all
                         </button>
                     </div>

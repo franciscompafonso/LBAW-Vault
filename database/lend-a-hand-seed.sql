@@ -593,9 +593,11 @@ DECLARE
     notification_id INT;
     reminder_date TIMESTAMP;
 BEGIN
+    -- Loop over each participant related to the new event
     FOR participant IN
         SELECT participator_id FROM participator WHERE event_id = NEW.id
     LOOP
+        -- 3-day reminder
         IF NEW.start_date > CURRENT_TIMESTAMP + INTERVAL '3 days' THEN
             reminder_date := NEW.start_date - INTERVAL '3 days';
             
@@ -607,6 +609,7 @@ BEGIN
             VALUES (notification_id, NEW.id);
         END IF;
 
+        -- 1-day reminder
         IF NEW.start_date > CURRENT_TIMESTAMP + INTERVAL '1 day' THEN
             reminder_date := NEW.start_date - INTERVAL '1 day';
             
@@ -619,7 +622,7 @@ BEGIN
         END IF;
     END LOOP;
 
-    RETURN NEW;
+    RETURN NEW; -- Return the row for further processing in the trigger
 END;
 $BODY$
 LANGUAGE plpgsql;

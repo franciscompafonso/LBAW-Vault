@@ -62,8 +62,18 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
                 let notificationContent = `
                     <div class="notification-card">
-                        <p class="text-sm font-semibold text-gray-600">${formattedDate}</p>
+                        <div class="grid grid-cols-8 items-center  gap-4">   
+                            <p class="col-span-7 text-sm items-center font-semibold text-gray-600">${formattedDate}</p>
+                            <button 
+                                class="col-span-1 flex justify-end items-center h-6 hover:bg-transparent focus:bg-transparent border-transparent focus:border-transparent hover:border-transparent text-gray-500 focus:text-red-500 hover:text-red-500" 
+                                onclick="dismissNotification(${notification.id}, event)">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
                 `;
+
                 if (notification.type === 'invite_notification') {
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">You have received an invite!</a>
@@ -248,36 +258,6 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchNotifications();
-
-        const dismissAllBtn = document.getElementById('dismiss-all-btn');
-        if (dismissAllBtn) {
-            dismissAllBtn.addEventListener('click', () => {
-                fetch('/notifications/dismiss-all', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                    },
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            fetchNotifications();
-                            alert("All notifications were dismissed successfully!");
-                        } else {
-                            alert("Error dismissing notifications.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error dismissing notifications:', error);
-                        alert("Error dismissing notifications.");
-                    });
-            });
-        }
-    });
-
     document.addEventListener('click', (event) => {
         const notificationsDropdown = document.getElementById('notifications-dropdown');
 
@@ -292,5 +272,50 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         dropdown.classList.toggle('hidden');
     }
 
+    function dismissAllNotifications(event) {
+        fetch('/notifications/dismiss-all', {
+            method: 'POST',
+            headers: { 
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showPopup(data.success, data.message);
+
+                fetchNotifications();
+            }
+        })
+        .catch(error => {
+            showPopup(false, 'Something went wrong. Please try again later.');
+            console.error(error);
+        });
+    }
+    
+    function dismissNotification(notificationId, event) {
+        fetch(`/notifications/${notificationId}/dismiss`, {
+            method: 'POST',
+            headers: { 
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showPopup(data.success, data.message);
+
+                fetchNotifications();
+            }
+        })
+        .catch(error => {
+            showPopup(false, 'Something went wrong. Please try again later.');
+            console.error(error);
+        });
+    }
+    
+
     // Reload notifications every 5 seconds
-    setInterval(fetchNotifications, 5000);
+    //setInterval(fetchNotifications, 5000);

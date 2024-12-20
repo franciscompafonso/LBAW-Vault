@@ -13,12 +13,12 @@
       <form method="POST" action="{{ route('events.update', $event->id) }}" class="space-y-8" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        <fieldset class="border border-gray-300 p-4 rounded-md">
+        <fieldset class="p-4 border border-gray-300 rounded-md">
           <legend class="text-lg font-semibold font-montserrat">Event Details</legend>
             <!-- Banner Input -->
             <div class="flex items-center mb-4 space-x-4">
               <label for="banner" class="block text-lg font-semibold font-montserrat">Upload Image</label>
-              <input type="file" id="banner" name="file" class="w-full p-2 mt-2 border border-gray-300 rounded-md" onchange="previewImage(event)">
+              <input type="file" id="banner" name="file" class="w-full p-2 mt-2 border border-gray-300 rounded-md" >
               @error('file')
                   <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
               @enderror
@@ -43,7 +43,7 @@
               </div>
         </fieldset>
 
-        <fieldset class="border border-gray-300 p-4 rounded-md">
+        <fieldset class="p-4 border border-gray-300 rounded-md">
           <legend class="text-lg font-semibold font-montserrat">Date and Time</legend>
             <!-- Start Date and Time -->
             <div class="mb-4">
@@ -74,7 +74,7 @@
             </div>
         </fieldset>
 
-        <fieldset class="border border-gray-300 p-4 rounded-md">
+        <fieldset class="p-4 border border-gray-300 rounded-md">
           <legend class="text-lg font-semibold font-montserrat">Location</legend>
             <!-- District Selector -->
             <div class="mb-4">
@@ -100,7 +100,7 @@
             </div>
         </fieldset>
 
-        <fieldset class="border border-gray-300 p-4 rounded-md">
+        <fieldset class="p-4 border border-gray-300 rounded-md">
           <legend class="text-lg font-semibold font-montserrat">Additional Information</legend>
             <!-- Category Selector -->
             <div class="mb-4">
