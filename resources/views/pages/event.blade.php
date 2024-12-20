@@ -57,7 +57,7 @@
                                     <form action="{{ route('events.cancel', $event->id) }}" method="POST" class="block">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">
+                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left text-red-500 border-0 font-montserrat hover:text-red-700 hover:bg-gray-100">
                                             Cancel Event
                                         </button>
                                     </form>
@@ -67,7 +67,7 @@
                                     <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
+                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left text-red-500 border-0 font-montserrat hover:text-red-700 hover:bg-gray-100">Delete Event</button>
                                     </form>
                                 @endif
 
