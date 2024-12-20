@@ -6,10 +6,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\File;
 use App\Models\Comment;
 use App\Models\Event;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Exception;
+
 
 class AdminController extends Controller
 {
@@ -91,7 +94,14 @@ class AdminController extends Controller
             $user->isdeleted = true;
             $user->save();
 
-            $this->deletePicture($pictureId);
+            if ($pictureId) {
+                $file = File::find($pictureId);
+                if ($file) {
+                    $path = $file->path;
+                    $file->delete();
+                    Storage::disk('profile-pictures')->delete($path);
+                }
+            }
 
             Event::where('creator_id', $id)
                 ->where('end_date', '>', Carbon::now())
@@ -99,7 +109,7 @@ class AdminController extends Controller
 
             return redirect()->route('admin.search.user', ['username' => $user->username])
                 ->with([
-                    'sucess' => true,
+                    'success' => true,
                     'message' => 'User has been deleted successfully!'
                 ]);
         } catch (\Exception $e) {

@@ -23,7 +23,7 @@ class UserController extends Controller
             abort(403, 'You do not have permission to view this profile.');
         }
 
-        if ($user->isdeleted && !auth()->guard('admin')->check()) {
+        if ($user->isdeleted) {
             abort(404, 'User not found');
         }
 
@@ -147,10 +147,14 @@ class UserController extends Controller
 
     private function deletePicture($pictureId)
     {
-        $file = File::find($pictureId);
-        $path = $file->path;
-        $file->delete();
-        Storage::disk('profile-pictures')->delete($path);
+        if ($pictureId) {
+                $file = File::find($pictureId);
+                if ($file) {
+                    $path = $file->path;
+                    $file->delete();
+                    Storage::disk('profile-pictures')->delete($path);
+                }
+            }
     }
 
     public function deleteAccount($id)
