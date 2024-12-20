@@ -36,7 +36,10 @@ class AdminController extends Controller
         ]);
 
         // go back to home
-        return redirect()->route('admin.admins.create')->with('message', 'New admin account created successfully!');
+        return redirect()->route('admin.admins.create')->with([
+            'success' => true,
+            'message' => 'Admin created successfully!'
+        ]);
     }
 
     public function search(Request $request)
@@ -95,10 +98,16 @@ class AdminController extends Controller
                 ->delete();
 
             return redirect()->route('admin.search.user', ['username' => $user->username])
-                ->with('status', 'User has been deleted successfully!');
+                ->with([
+                    'sucess' => true,
+                    'message' => 'User has been deleted successfully!'
+                ]);
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error deleting user: ' . $e->getMessage());
+                ->with([
+                    'success' => false,
+                    'message' => 'Error deleting user: ' . $e->getMessage()
+                ]);
         }
     }
 
@@ -121,7 +130,10 @@ class AdminController extends Controller
 
             return redirect()->route('admin.user-management')->with('status', 'User has been blocked, and future participations have been removed successfully.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error blocking user: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'success' => false,
+                'message' => 'Error blocking user: ' . $e->getMessage()
+            ]);
         }
     }
 
@@ -136,9 +148,15 @@ class AdminController extends Controller
             $user->isblocked = false;
             $user->save();
 
-            return redirect()->route('admin.users')->with('status', 'User has been unmarked as blocked successfully.');
+            return redirect()->route('admin.users')->with([
+                'success' => true,
+                'message' => 'User has been unblocked successfully.'
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error unblocking user: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'success' => false,
+                'message' => 'Error unblocking user: ' . $e->getMessage()
+            ]);
         }
     }
 
