@@ -81,6 +81,7 @@ class AdminController extends Controller
             
             $uniqueSuffix = uniqid();
             $user->name = "Deleted User $uniqueSuffix";
+            $user->email = "deleted-user-$uniqueSuffix@example.com";
             $user->username = "deleted-user-$uniqueSuffix";
             $pictureId = $user->file_id;
             $user->file_id = null;
