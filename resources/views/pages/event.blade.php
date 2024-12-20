@@ -511,10 +511,16 @@
 
     function updateCountdown() {
         const eventStartDate = new Date("{{ $event->start_date }}").getTime();
+        const eventEndDate = new Date("{{ $event->end_date }}").getTime();
         const now = new Date().getTime();
-        const distance = eventStartDate - now;
-        if (distance < 0) {
+        const distanceStart = eventStartDate - now;
+        const distanceEnd = eventEndDate - now;
+        if (distanceStart < 0 && distanceEnd > 0) {
             document.getElementById('countdown').innerHTML = "Event has started!";
+            return;
+        }
+        if (distanceEnd < 0) {
+            document.getElementById('countdown').innerHTML = "Event has ended!";
             return;
         }
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
