@@ -48,9 +48,19 @@
                                 <a target="_blank" href="{{ $googleCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Google calendar</a>
 
                                 <a target="_blank" href="{{ $outlookCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Outlook Calendar</a>
-
+                                
                                 @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
                                     <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
+                                @endif
+
+                                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('cancel', $event)))
+                                    <form action="{{ route('events.cancel', $event->id) }}" method="POST" class="block">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">
+                                            Cancel Event
+                                        </button>
+                                    </form>
                                 @endif
 
                                 @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event)))

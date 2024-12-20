@@ -61,13 +61,19 @@ class EventPolicy
     public function delete($user, Event $event): bool
     {
         if (auth()->guard('admin')->check()) { return true;}
-        return $user->id === $event->creator_id;
+        return $user->id === $event->creator_id && ($event->visibility === 'canceled' || $event->start_date < now());
+    }
+
+    public function cancel($user, Event $event): bool
+    {
+        if (auth()->guard('admin')->check() && $event->visibility !== 'canceled' && $event->start_date > now()) { return true;}
+        return $user->id === $event->creator_id && $event->visibility !== 'canceled' && $event->start_date > now();
     }
 
     public function update($user, Event $event): bool
     {
-        if (auth()->guard('admin')->check()) { return true;}
-        return $user->id === $event->creator_id;
+        if (auth()->guard('admin')->check() && $event->visibility !== 'canceled') { return true;}
+        return $user->id === $event->creator_id && $event->visibility !== 'canceled';
     }
 
 
@@ -79,13 +85,14 @@ class EventPolicy
 
     public function createPoll(User $user, Event $event)
     {
-        return $user->id === $event->creator_id;
+        return $user->id === $event->creator_id && $event->visibility !== 'canceled';
     }
 
     public function join(User $user, Event $event)
     {
         return $event->end_date > now()
-            && ((!$event->participators->contains($user) && $event->creator->id === $user->id) || ($event->visibility === 'public'
+            && ((!$event->participators->contains($user) && $event->creator->id === $user->id && $event->visibility !== 'canceled')
+            || ($event->visibility === 'public'
             && $event->participators()->count() < $event->capacity
             && !$event->participators->contains($user)
             && !$user->isblocked));
@@ -118,7 +125,7 @@ class EventPolicy
 
     public function invite(User $user, Event $event): bool
     {
-        return !$user->isblocked && $event->end_date > now()
+        return !$user->isblocked && $event->end_date > now() && $event->visibility !== 'canceled'
             && (($event->participators->contains($user) && $event->visibility === 'public') || $user->id === $event->creator_id);
     }
 

@@ -132,6 +132,7 @@ Route::middleware(['auth:web,admin'])->group(function () {
     Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
     Route::delete('/comments/{id}', [CommentController::class, 'delete'])->name('comments.delete');
     Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('events.delete');
+    Route::put('/events/{id}', [EventController::class, 'cancelEvent'])->name('events.cancel');
     Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
     Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::get('/events/{event}/survey/stats', [EventController::class, 'showSurveyStats'])->name('events.surveyStats');

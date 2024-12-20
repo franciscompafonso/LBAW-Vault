@@ -224,6 +224,24 @@ class EventController extends Controller
         abort(403, 'You are not authorized to delete this event.');
     }
 
+    /**
+     * Cancel an event.
+     */
+    public function cancelEvent($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+
+        if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('cancel', $event))) {
+            $event->update(['visibility' => 'canceled']);
+
+            return redirect()->route('events.show', $event->id)->with([
+                'message' => 'Event was successfully cancelled.',
+                'success' => true,
+            ]);
+        }
+
+        abort(403, 'You are not authorized to cancel this event.');
+    }
 
     public function requestToJoin(Event $event)
     {

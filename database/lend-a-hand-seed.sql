@@ -529,17 +529,18 @@ CREATE TRIGGER trigger_comment_notification
 CREATE OR REPLACE FUNCTION notify_event_cancellation() RETURNS TRIGGER AS
 $BODY$
 DECLARE
-    participant RECORD;
     notification_id INT;
+    participant RECORD;
 BEGIN
     FOR participant IN
-        SELECT participator_id
-        FROM participator
-        WHERE event_id = NEW.id
+        SELECT participator_id FROM participator WHERE event_id = NEW.id
     LOOP
         INSERT INTO notification (emitted_by, emitted_to, date, viewed)
-        VALUES (NEW.id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
+        VALUES (NEW.creator_id, participant.participator_id, CURRENT_TIMESTAMP, FALSE)
         RETURNING id INTO notification_id;
+
+        INSERT INTO event_update_notification (id, event_id)
+        VALUES (notification_id, NEW.id);
     END LOOP;
 
     RETURN NEW;
