@@ -17,6 +17,7 @@ class NotificationController extends Controller
     public function index(): \Illuminate\Http\JsonResponse
     {
         try {
+            $this->deleteNotificationsByTime();
             $user = Auth::user();
             $notifications = Notification::where('emitted_to', $user->id)
                 ->where('date', '<=', now())
@@ -49,6 +50,32 @@ class NotificationController extends Controller
             ], 500);
         }
     }
+
+    public function deleteNotificationsByTime(): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            $sevenDaysAgo = now()->subDays(7);
+
+            Notification::where('date', '<=', $sevenDaysAgo)
+                ->delete();
+
+            return response()->json([
+                'message' => 'Notifications deleted successfully',
+                'success' => true
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting notifications: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
 
     public function getType($notificationId)
     {
