@@ -13,12 +13,11 @@ class FileController extends Controller
      */
     public static function store(Request $request, $diskname, $file = null, $commentId = null)
     {
-
         $file = $file ?? $request->file;
         $filename = $file->hashName();
 
         if (Storage::disk($diskname)->put($filename, $file->getContent())) {
-            $addedFile = File::create([ 'path' => $filename, 'comment_id' => $commentId]);
+            $addedFile = File::create(['path' => $filename, 'comment_id' => $commentId]);
 
             return $addedFile->id;
         }

@@ -21,7 +21,7 @@ class UserPolicy
     public function editProfile($currentUser, User $targetUser)
     {
         $isAdmin = auth()->guard('admin')->check();
-        return $currentUser->id === $targetUser->id || $isAdmin;
+        return !$targetUser->isdeleted && ($currentUser->id === $targetUser->id || $isAdmin);
     }
 
     public function login(User $user)

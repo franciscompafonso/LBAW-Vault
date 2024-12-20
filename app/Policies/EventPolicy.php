@@ -143,7 +143,8 @@ class EventPolicy
     public function survey(User $user, Event $event)
     {
         return $event->participators->contains($user)
-            && $event->end_date < now();
+            && $event->end_date < now()
+            && $event->creator_id !== $user->id;
     }
     
     public function addToCalendar(User $user, Event $event)

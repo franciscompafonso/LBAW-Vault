@@ -27,7 +27,7 @@
                         </button>
 
                         <!-- Options dropdown -->
-                        <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg w-[12em]">
+                        <div id="menu" class="absolute top-0 right-0 hidden bg-white rounded-lg shadow-lg w-[14em]">
                             <div class="space-y-2">
                                 @php
                                     $eventName = urlencode($event->name); // Event name
@@ -77,6 +77,10 @@
                                         onclick="togglePollForm()">
                                         Create Poll
                                     </button>
+                                @endcan
+
+                                @can('survey', $event)
+                                    <a href="{{ route('events.survey', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Take Survey</a>
                                 @endcan
 
                                 @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('viewSurveyResults', $event)))
