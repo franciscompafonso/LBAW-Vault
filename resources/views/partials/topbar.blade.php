@@ -20,21 +20,23 @@
     <!-- Navigation Icons -->
     <div class="flex items-center space-x-6">
         @if (Auth::guard('web')->check() )
-            @if (Auth::user()->isblocked)
+            @can('sendUnblockRequest', auth()->user())
                 <a href="{{ url('/unblock-request') }}" 
                 title="Unblock Request" 
                 aria-label="Request Unblock"
                 class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
                     <i class="text-4xl fa-solid fa-lock-open"></i>
                 </a>
-                @else
+            @endcan
+            @can('create', auth()->user())
                 <a href="{{ url('/event/create') }}" 
                 title="Create Event" 
                 aria-label="Create Event"
                 class="{{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} hover:text-darkSlateGrey">
                     <i class="text-4xl fa-solid fa-plus"></i>
                 </a>
-            @endif
+            @endcan
+            
 
 
             <div class="relative">

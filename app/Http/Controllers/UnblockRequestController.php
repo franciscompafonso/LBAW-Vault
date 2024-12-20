@@ -9,26 +9,19 @@ class UnblockRequestController extends Controller
 {
     public function create()
 {
-    if (!auth()->user()->isblocked) {
-        return redirect('home')->with('error', 'You are not allowed to access this page.');
-    }
+    $this->authorize('sendUnblockRequest', auth()->user());
 
     return view('unblock_requests.create');
 }
 
     public function store(Request $request)
     {
+        $this->authorize('sendUnblockRequest', auth()->user());
+
         $request->validate([
             'reason' => 'required|string|max:255',
         ]);
 
-        $existingRequest = UnblockRequest::where('requested_by_id', auth()->id())
-            ->where('status', 'pending')
-            ->first();
-
-        if ($existingRequest) {
-            return redirect()->back()->withErrors('You already have a pending unblock request. Please wait for it to be processed.');
-        }
 
         UnblockRequest::create([
             'requested_by_id' => auth()->id(),

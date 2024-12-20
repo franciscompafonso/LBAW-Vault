@@ -3,6 +3,8 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\UnblockRequest;
+
 use Illuminate\Auth\Access\Response;
 
 class UserPolicy
@@ -32,6 +34,17 @@ class UserPolicy
     public function viewInvites($currentUser, User $targetUser)
     {
         return $currentUser->id === $targetUser->id;
+    }
+
+    public function sendUnblockRequest(User $user)
+    {
+        if (!$user->isblocked) return false;
+
+        $existingRequest = UnblockRequest::where('requested_by_id', $user->id)
+            ->where('status', 'pending')
+            ->first();
+        
+        return !$existingRequest;
     }
 
 }
