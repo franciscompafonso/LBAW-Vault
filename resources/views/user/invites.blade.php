@@ -37,22 +37,34 @@
 
     <div class="mt-10">
         <!-- Tab Buttons -->
-        <div class="flex space-x-4">
-            <button 
+        <div class="flex gap-8 relative">
+            <p 
                 id="tab-sent" 
-                class="text-4xl font-semibold font-montserrat text-eerieBlack border-0 border-b-4 focus:outline-none rounded-none"
+                class="tab text-4xl font-semibold font-montserrat text-eerieBlack focus:outline-none cursor-pointer pb-2"
                 onclick="showTab('sent')"
+                tabindex="0"
+                role="button"
             >
-                <p class="">Invites Sent</p>
-            </button>
-            <button 
+                Invites Sent
+            </p>
+
+            <p 
                 id="tab-received" 
-                class="text-4xl font-semibold font-montserrat text-eerieBlack border-0 border-b-4 focus:outline-none rounded-none"
+                class="tab text-4xl font-semibold font-montserrat text-eerieBlack focus:outline-none cursor-pointer pb-2"
                 onclick="showTab('received')"
+                tabindex="0"
+                role="button"
             >
-                <p class="">Invites Received</p>
-            </button>
+                Invites Received
+            </p>
+
+            <!-- Animated border -->
+            <div 
+                id="tab-indicator" 
+                class="absolute bottom-0 h-1.5 bg-wisteria transition-all duration-300 ease-in-out"
+            ></div>
         </div>
+
 
         <!-- Tab Contents -->
         <div class="mt-6">
@@ -88,7 +100,7 @@
                                     <div class="text-center font-montserrat">{{ $invite->date->format('F j, Y') }}</div>
                                     <div class="text-center font-montserrat">
                                         @if($invite->accepted)
-                                            <span class="font-semibold text-green-500">Accepted</span>
+                                            <span class="font-semibold text-wisteria">Accepted</span>
                                         @else
                                             <span class="font-semibold text-yellow-500">Pending</span>
                                         @endif
@@ -169,20 +181,23 @@
 
     <script>
         function showTab(tab) {
-            // Hide both contents
-            document.getElementById('content-sent').classList.add('hidden');
-            document.getElementById('content-received').classList.add('hidden');
-            
-            // Remove green border from both buttons
-            document.getElementById('tab-sent').classList.remove('border-green-500');
-            document.getElementById('tab-received').classList.remove('border-green-500');
-            document.getElementById('tab-sent').classList.remove('border-green-500');
-            document.getElementById('tab-received').classList.remove('border-green-500');
-            
-            // Show selected content and add green border to the active button
-            document.getElementById(`content-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).classList.add('border-green-500');
-        }
+    // Hide both contents
+    document.getElementById('content-sent').classList.add('hidden');
+    document.getElementById('content-received').classList.add('hidden');
+
+    // Show the selected content
+    document.getElementById(`content-${tab}`).classList.remove('hidden');
+
+    // Update tab indicator position and width
+    const activeTab = document.getElementById(`tab-${tab}`);
+    const tabIndicator = document.getElementById('tab-indicator');
+
+    const tabWidth = activeTab.offsetWidth;
+    const tabOffset = activeTab.offsetLeft;
+
+    tabIndicator.style.width = `${tabWidth}px`;
+    tabIndicator.style.transform = `translateX(${tabOffset}px)`;
+}
 
         // Initialize to show "Sent Invites" tab
         showTab('sent');
