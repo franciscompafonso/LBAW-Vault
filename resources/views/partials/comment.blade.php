@@ -1,3 +1,4 @@
+<script type="text/javascript" src="{{ url('js/partials/comment.js') }}" defer></script>
 <ul class="space-y-4">
     <li class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-md">
         <!-- Profile Image, Username, and Date -->
@@ -181,11 +182,3 @@
         @endif
     </li>
 </ul>
-
-<!-- JavaScript to Toggle Reply Form -->
-<script>
-    function toggleReplyForm(commentId) {
-        const form = document.getElementById('reply-form-' + commentId);
-        form.classList.toggle('hidden'); // Toggles visibility of the form
-    }
-</script>

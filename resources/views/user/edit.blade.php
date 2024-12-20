@@ -2,6 +2,7 @@
 
 @section('Title', 'Edit Profile')
 @section('content')
+<script type="text/javascript" src="{{ url('js/user/edit.js') }}" defer></script>
     <div class="max-w-2xl p-6 mx-auto mt-6 bg-white rounded-lg shadow-md">
         <div class="mb-6 text-center">
             <h2 class="text-3xl font-bold text-ultraViolet font-montserrat">Edit Profile</h2>
@@ -13,7 +14,7 @@
             @method('POST')
 
             <!-- Profile Picture Input -->
-            <fieldset class="mb-6 border border-gray-300 rounded-md p-4">
+            <fieldset class="p-4 mb-6 border border-gray-300 rounded-md">
                 <legend class="px-2 text-lg font-bold text-ultraViolet font-montserrat">Profile Picture</legend>
                 <div class="flex items-center space-x-4">
                     <div class="flex-shrink-0">
@@ -29,7 +30,7 @@
                 </div>
             </fieldset>
 
-            <fieldset class="mb-6 border border-gray-300 rounded-md p-4">
+            <fieldset class="p-4 mb-6 border border-gray-300 rounded-md">
                 <legend class="px-2 text-lg font-bold text-ultraViolet font-montserrat">Personal Information</legend>
                 <!-- Name -->
                 <div class="mb-4">
@@ -60,7 +61,7 @@
             </fieldset>
 
             <!-- Password Group -->
-            <fieldset class="mb-6 border border-gray-300 rounded-md p-4">
+            <fieldset class="p-4 mb-6 border border-gray-300 rounded-md">
                 <legend class="px-2 text-lg font-bold text-ultraViolet font-montserrat">Change Password</legend>
                 <!-- Current Password -->
                 <div class="mb-4">
@@ -131,24 +132,4 @@
             </form>
         </div>
     </div>
-
-    <!-- Image Preview -->
-    <script>
-        function previewImage(event) {
-            const file = event.target.files[0];
-            const preview = document.getElementById('profile-picture-preview');
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                };
-                reader.readAsDataURL(file); 
-            }
-        }
-
-        document.querySelector('form').addEventListener('submit', function () {
-            document.getElementById('timeEmoji').classList.remove('hidden');
-            document.getElementById('submitButton').disabled = true;
-        });
-    </script>
 @endsection

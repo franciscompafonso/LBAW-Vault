@@ -4,19 +4,20 @@
 
 @section('content')
 
-<div class="container mx-auto py-10 px-6">
-    <div class="text-center mb-10">
-        <h1 class="text-4xl font-bold font-montserrat text-ultraViolet mb-6">Frequently Asked Questions (FAQs)</h1>
+<script type="text/javascript" src="{{ url('js/pages/faqs.js') }}" defer></script>
+<div class="container px-6 py-10 mx-auto">
+    <div class="mb-10 text-center">
+        <h1 class="mb-6 text-4xl font-bold font-montserrat text-ultraViolet">Frequently Asked Questions (FAQs)</h1>
         <p class="text-lg text-gray-500">Have questions about Lend-A-Hand? Here are the answers to the most common ones!
         </p>
     </div>
     <!-- General Questions -->
     <section class="mb-10" aria-labelledby="general-questions">
-        <h2 id="general-questions" class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">General Questions</h2>
+        <h2 id="general-questions" class="mb-4 text-2xl font-semibold font-montserrat text-ultraViolet">General Questions</h2>
         <div class="space-y-4">
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('general1')">
                         What is Lend-A-Hand?
                 </button>
@@ -27,7 +28,7 @@
             </div>
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('general2')">
                     Do I need to register to use Lend-A-Hand?
                 </button>
@@ -41,11 +42,11 @@
 
     <!-- Using the Platform -->
     <section class="mb-10" aria-labelledby="platform-questions">
-        <h2 id="platform-questions" class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Using the Platform</h2>
+        <h2 id="platform-questions" class="mb-4 text-2xl font-semibold font-montserrat text-ultraViolet">Using the Platform</h2>
         <div class="space-y-4">
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('platform1')">
                     How do I create an event?
                 </button>
@@ -56,7 +57,7 @@
             </div>
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('platform2')">
                     Can I delete my account?
                 </button>
@@ -67,7 +68,7 @@
             </div>
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('platform3')">
                     How does voting work for event details?
                 </button>
@@ -78,7 +79,7 @@
             </div>
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('platform4')">
                     What happens if an event is canceled?
                 </button>
@@ -92,11 +93,11 @@
 
     <!-- Event Roles and Responsibilities -->
     <section class="mb-10" aria-labelledby="roles-questions">
-        <h2 id="roles-questions" class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Event Roles and Responsibilities</h2>
+        <h2 id="roles-questions" class="mb-4 text-2xl font-semibold font-montserrat text-ultraViolet">Event Roles and Responsibilities</h2>
         <div class="space-y-4">
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('roles1')">
                     What roles are available in an event?
                 </button>
@@ -107,7 +108,7 @@
             </div>
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('roles2')">
                     How can event creators manage visibility?
                 </button>
@@ -118,7 +119,7 @@
             </div>
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('roles3')">
                     Can I report inappropriate events?
                 </button>
@@ -131,11 +132,11 @@
 
     <!-- Technical Support -->
     <section class="mb-10" aria-labelledby="technical-questions">
-        <h2 id="technical-questions" class="text-2xl font-semibold font-montserrat text-ultraViolet mb-4">Technical Support</h2>
+        <h2 id="technical-questions" class="mb-4 text-2xl font-semibold font-montserrat text-ultraViolet">Technical Support</h2>
         <div class="space-y-4">
             <div class="border border-gray-200 rounded-lg shadow">
                 <button
-                    class="w-full text-left text-eerieBlack p-4 font-montserrat font-semibold bg-gray-100 rounded-lg hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet transition duration-200 ease-in-out"
+                    class="w-full p-4 font-semibold text-left transition duration-200 ease-in-out bg-gray-100 rounded-lg text-eerieBlack font-montserrat hover:bg-ultraViolet hover:text-white focus:outline-none focus:ring-2 focus:ring-ultraViolet"
                     onclick="toggleAccordion('support1')">
                     I forgot my password. How can I reset it?
                 </button>
@@ -148,14 +149,3 @@
     </section>
 </div>
 @endsection
-
-<script>
-    function toggleAccordion(id) {
-        const section = document.getElementById(id);
-        if (section.classList.contains('hidden')) {
-            section.classList.remove('hidden');
-        } else {
-            section.classList.add('hidden');
-        }
-    }
-</script>

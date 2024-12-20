@@ -13,7 +13,10 @@ function validatePhotos() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('commentForm').reset();
+    const commentForm = document.getElementById('commentForm');
+    if(commentForm) {
+        commentForm.reset();
+    }
 });
 
 document.addEventListener('click', (event) => {

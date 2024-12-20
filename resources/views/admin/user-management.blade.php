@@ -2,8 +2,9 @@
 
 @section('Title', 'User Management')
 @section('content')
+    <script type="text/javascript" src="{{ url('js/admin/user-management.js') }}" defer></script>
     <div class="container p-8 mx-auto">
-        <h1 class="mb-6 text-5xl text-ultraViolet font-bold font-montserrat">User Management</h1>
+        <h1 class="mb-6 text-5xl font-bold text-ultraViolet font-montserrat">User Management</h1>
 
         <!-- Search Form -->
         <form action="{{ route('admin.search.user') }}" method="GET" class="mb-6">
@@ -11,7 +12,7 @@
                 <input 
                     type="text" 
                     name="username" 
-                    class="w-full p-3 border font-montserrat rounded-l-lg focus:outline-none"
+                    class="w-full p-3 border rounded-l-lg font-montserrat focus:outline-none"
                     placeholder="Search by the exact username" 
                     value="{{ old('username', $search ?? '') }}"
                     aria-label="Search by username">
@@ -28,10 +29,10 @@
             <table aria-label="User Table">
                 <thead>
                     <tr>
-                        <th class="font-montserrat font-bold">Username</th>
-                        <th class="font-montserrat font-bold">Email</th>
-                        <th class="font-montserrat font-bold">Status</th>
-                        <th class="font-montserrat font-bold">Block</th>
+                        <th class="font-bold font-montserrat">Username</th>
+                        <th class="font-bold font-montserrat">Email</th>
+                        <th class="font-bold font-montserrat">Status</th>
+                        <th class="font-bold font-montserrat">Block</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,7 +49,7 @@
                             <td>
                                 @if($user->isdeleted)
                                     <!-- Disabled DELETED Button -->
-                                    <button type="button" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-red-600 cursor-not-allowed" disabled>
+                                    <button type="button" class="px-6 py-2 font-bold text-white transition-all duration-200 bg-red-600 rounded-md cursor-not-allowed font-montserrat" disabled>
                                         DELETED
                                     </button>
                                 @else
@@ -58,7 +59,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md delete-btn font-montserrat bg-ultraViolet hover:bg-red-600 hover:text-white border-ultraViolet hover:border-red-600">
-                                                <span class="loading-icon hidden" id="loading-{{ $user->id }}">⏳</span> 
+                                                <span class="hidden loading-icon" id="loading-{{ $user->id }}">⏳</span> 
                                                 Delete
                                             </button>
                                         </form>
@@ -72,7 +73,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md unblock-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
-                                                <span class="loading-icon hidden" id="unblock-loading-{{ $user->id }}">⏳</span>
+                                                <span class="hidden loading-icon" id="unblock-loading-{{ $user->id }}">⏳</span>
                                                 Unblock
                                             </button>
                                         </form>
@@ -82,7 +83,7 @@
                                         <form action="{{ route('admin.block.user', $user->id) }}" method="POST">
                                             @csrf
                                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md block-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" aria-label="Block user {{ $user->username }}">
-                                                <span class="loading-icon hidden" id="block-loading-{{ $user->id }}">⏳</span>
+                                                <span class="hidden loading-icon" id="block-loading-{{ $user->id }}">⏳</span>
                                                 Block
                                             </button>
                                         </form>
@@ -102,15 +103,4 @@
             <p>No users found.</p>
         @endif
     </div>
-
-    <script>
-        document.querySelectorAll('.delete-btn, .unblock-btn, .block-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                let loadingIcon = button.querySelector('.loading-icon');
-                if (loadingIcon) {
-                    loadingIcon.classList.remove('hidden');
-                }
-            });
-        });
-    </script>
 @endsection

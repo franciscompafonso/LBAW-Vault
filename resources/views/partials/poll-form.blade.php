@@ -1,4 +1,5 @@
-<div id="poll-form" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+<script type="text/javascript" src="{{ url('js/partials/poll-form.js') }}" defer></script>
+<div id="poll-form" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-500 bg-opacity-75">
     <div class="w-1/2 p-6 bg-white rounded-lg shadow-lg">
         <h2 class="mb-4 text-2xl font-bold">Create Poll</h2>
         <form action="{{ route('polls.store', $event->id) }}" method="POST">
@@ -65,9 +66,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    function togglePollForm() {
-        document.getElementById('poll-form').classList.toggle('hidden');
-    }
-</script>

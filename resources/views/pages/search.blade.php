@@ -14,26 +14,27 @@
 
 
 @section('content')
+<script type="text/javascript" src="{{ url('js/pages/search.js') }}" defer></script>
 <!-- Events by Category Section -->
 <section class="w-full" role="region" aria-label="Events search and filters section">
 
     <h1 class="pb-[1em] lg:text-5xl text-4xl font-medium text-darkSlateGrey font-montserrat">
         @if(request('source') === 'bar')
-            Search results for: <span class="lg:text-5xl text-4xl font-bold text-ultraViolet font-montserrat">{{ $searchQuery }}</span>
+            Search results for: <span class="text-4xl font-bold lg:text-5xl text-ultraViolet font-montserrat">{{ $searchQuery }}</span>
         @elseif(request('source') === 'category')
-            Category: <span class="lg:text-5xl text-4xl font-bold text-ultraViolet font-montserrat">{{ $categories->whereIn('id', request('category'))->pluck('name')->first() }}</span>
+            Category: <span class="text-4xl font-bold lg:text-5xl text-ultraViolet font-montserrat">{{ $categories->whereIn('id', request('category'))->pluck('name')->first() }}</span>
         @elseif(request('source') === 'district')
-            District: <span class="lg:text-5xl text-4xl font-bold text-ultraViolet font-montserrat">{{ $districts->whereIn('id', request('district'))->pluck('name')->first() }}</span>
+            District: <span class="text-4xl font-bold lg:text-5xl text-ultraViolet font-montserrat">{{ $districts->whereIn('id', request('district'))->pluck('name')->first() }}</span>
         @else
             Search events
         @endif
     </h1>
 
     <!-- Main Grid Layout -->
-    <div class="flex flex-col-reverse lg:flex-row-reverse gap-6">
+    <div class="flex flex-col-reverse gap-6 lg:flex-row-reverse">
 
         <!-- Events Grid -->
-        <div class="flex-1 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 auto-rows-min" aria-label="Events grid">
+        <div class="grid flex-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 auto-rows-min" aria-label="Events grid">
             @forelse ($events as $event)
                 @include('partials.event', ['event' => $event])
             @empty
@@ -41,15 +42,15 @@
             @endforelse
 
             <!-- Pagination Links -->
-            <div class="col-span-full mt-6 flex justify-center" aria-label="Pagination navigation">
+            <div class="flex justify-center mt-6 col-span-full" aria-label="Pagination navigation">
                 {{ $events->appends(request()->query())->links() }}
             </div>
         </div>
         
         <!-- Filters Section -->
-        <form method="GET" id="filtersForm" class="flex flex-col gap-6 order-1 lg:order-1">
+        <form method="GET" id="filtersForm" class="flex flex-col order-1 gap-6 lg:order-1">
 
-            <p class="text-md font-montserrat font-semibold text-darkSlateGrey mb-4">
+            <p class="mb-4 font-semibold text-md font-montserrat text-darkSlateGrey">
                 Number of events: <span class="text-ultraViolet">{{ $eventsCount }}</span>
             </p>
 
@@ -61,7 +62,7 @@
 
             <!-- Sort by date -->
             <div class="flex items-center">
-                <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
+                <p class="font-semibold text-md font-montserrat text-darkSlateGrey">
                     Sort by date: 
                 </p>
                 <select name="order" id="order" aria-label="Sort events by date" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[9em]">
@@ -72,7 +73,7 @@
 
             <!-- Results per page -->
             <div class="flex items-center">
-                <p class="text-md font-montserrat font-semibold text-darkSlateGrey">
+                <p class="font-semibold text-md font-montserrat text-darkSlateGrey">
                     Events per page: 
                 </p>
                 <select name="results" id="results" aria-label="Number of events per page" class="pl-2 text-md font-montserrat font-semibold text-ultraViolet border-0 rounded w-[4em]">
@@ -87,23 +88,23 @@
 
             <!-- Date Range -->
             <div>
-                <label for="startDate" class="block font-montserrat font-semibold">Start Date</label>
+                <label for="startDate" class="block font-semibold font-montserrat">Start Date</label>
                 <input 
                     type="date" 
                     name="startDate" 
                     id="startDate" 
-                    class="p-2 border rounded mt-2" 
+                    class="p-2 mt-2 border rounded" 
                     value="{{ request('startDate') }}"
                     aria-label="Select start date for events"
                     min="" 
                 >
 
-                <label for="endDate" class="block font-montserrat font-semibold mt-4">End Date</label>
+                <label for="endDate" class="block mt-4 font-semibold font-montserrat">End Date</label>
                 <input 
                     type="date" 
                     name="endDate" 
                     id="endDate" 
-                    class="p-2 border rounded mt-2" 
+                    class="p-2 mt-2 border rounded" 
                     value="{{ request('endDate') }}"
                     aria-label="Select end date for events"
                     min="" 
@@ -112,12 +113,12 @@
 
             <!-- Visibility -->
             <div>
-                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('visibility')">
+                <label class="flex items-center justify-between block font-semibold cursor-pointer font-montserrat" onclick="toggleSectionVisibility('visibility')">
                     <span>Visibility</span>
-                    <i id="visibility-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
+                    <i id="visibility-arrow" class="transition-transform duration-200 transform rotate-90 fa-solid fa-angle-right"></i>
                 </label>
-                <div class="mt-2 hidden" id="visibility">
-                    <label class="flex items-center space-x-2 mt-1">
+                <div class="hidden mt-2" id="visibility">
+                    <label class="flex items-center mt-1 space-x-2">
                         <input type="checkbox" name="visibility[]" value="public" 
                             {{ request('visibility') && in_array('public', request('visibility')) ? 'checked' : '' }} />
                         <span>Public</span>
@@ -132,13 +133,13 @@
 
             <!-- Category -->
             <div class="{{ request('source') === 'category' ? 'hidden' : '' }}">
-                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('category')">
+                <label class="flex items-center justify-between block font-semibold cursor-pointer font-montserrat" onclick="toggleSectionVisibility('category')">
                     <span>Category</span>
-                    <i id="category-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
+                    <i id="category-arrow" class="transition-transform duration-200 transform rotate-90 fa-solid fa-angle-right"></i>
                 </label>
-                <div class="mt-2 hidden" id="category">
+                <div class="hidden mt-2" id="category">
                     @foreach ($categories as $category)
-                        <label class="flex items-center space-x-2 mt-1">
+                        <label class="flex items-center mt-1 space-x-2">
                             <input type="checkbox" name="category[]" value="{{ $category->id }}" 
                                 {{ request('category') && in_array($category->id, request('category')) ? 'checked' : '' }} />
                             <span>{{ $category->name }}</span>
@@ -149,13 +150,13 @@
 
             <!-- District -->
             <div class="{{ request('source') === 'district' ? 'hidden' : '' }}">
-                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('district')">
+                <label class="flex items-center justify-between block font-semibold cursor-pointer font-montserrat" onclick="toggleSectionVisibility('district')">
                     <span>District</span>
-                    <i id="district-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
+                    <i id="district-arrow" class="transition-transform duration-200 transform rotate-90 fa-solid fa-angle-right"></i>
                 </label>
-                <div class="mt-2 hidden" id="district">
+                <div class="hidden mt-2" id="district">
                     @foreach ($districts as $district)
-                        <label class="flex items-center space-x-2 mt-1">
+                        <label class="flex items-center mt-1 space-x-2">
                             <input type="checkbox" name="district[]" value="{{ $district->id }}" 
                                 {{ request('district') && in_array($district->id, request('district')) ? 'checked' : '' }} />
                             <span>{{ $district->name }}</span>
@@ -166,12 +167,12 @@
 
             <!-- Status Section -->
             <div>
-                <label class="block font-montserrat font-semibold cursor-pointer flex items-center justify-between" onclick="toggleSectionVisibility('status')">
+                <label class="flex items-center justify-between block font-semibold cursor-pointer font-montserrat" onclick="toggleSectionVisibility('status')">
                     <span>Status</span>
-                    <i id="status-arrow" class="fa-solid fa-angle-right transform rotate-90 transition-transform duration-200"></i>
+                    <i id="status-arrow" class="transition-transform duration-200 transform rotate-90 fa-solid fa-angle-right"></i>
                 </label>
-                <div class="mt-2 hidden" id="status">
-                    <label class="flex items-center space-x-2 mt-1">
+                <div class="hidden mt-2" id="status">
+                    <label class="flex items-center mt-1 space-x-2">
                         <input type="checkbox" name="status_finished" value="1" 
                             {{ request('status_finished') ? 'checked' : '' }} />
                         <span>Finished</span>
@@ -197,7 +198,7 @@
                         <span>Not canceled</span>
                     </label>
                     @auth
-                        <label class="flex items-center space-x-2 mt-1">
+                        <label class="flex items-center mt-1 space-x-2">
                             <input type="checkbox" name="status_joined" value="1" 
                                 {{ request('status_joined') ? 'checked' : '' }} />
                             <span>Joined</span>
@@ -207,7 +208,7 @@
             </div>
 
             <!-- Buttons -->
-            <div class="flex gap-4 w-full">
+            <div class="flex w-full gap-4">
                 <!-- Preserve Source -->
                 @if(request('source'))
                     <input type="hidden" name="source" value="{{ request('source') }}">
@@ -248,112 +249,6 @@
         </form>
     </div>
 </section>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Initial state: collapsed by default
-        const collapsedSections = JSON.parse(localStorage.getItem('collapsedSections')) || {};
-
-        const sections = ['visibility', 'category', 'district', 'status'];
-        sections.forEach((sectionId) => {
-            const section = document.getElementById(sectionId);
-            const icon = document.getElementById(sectionId + '-arrow');
-            
-            if (!collapsedSections[sectionId] || collapsedSections[sectionId] === 'collapsed') {
-                section.classList.add('hidden');
-                icon.classList.add('transform', 'rotate-90');
-                collapsedSections[sectionId] = 'collapsed'; // Ensure default is saved
-            }
-        });
-
-        localStorage.setItem('collapsedSections', JSON.stringify(collapsedSections));
-
-        // Toggle sections visibility and save state to localStorage
-        window.toggleSectionVisibility = function (id) {
-            const section = document.getElementById(id);
-            const icon = document.getElementById(id + '-arrow');
-            if (section.classList.contains('hidden')) {
-                section.classList.remove('hidden');
-                icon.classList.remove('rotate-90');
-                collapsedSections[id] = 'expanded';
-            } else {
-                section.classList.add('hidden');
-                icon.classList.add('rotate-90');
-                collapsedSections[id] = 'collapsed';
-            }
-            localStorage.setItem('collapsedSections', JSON.stringify(collapsedSections));
-        };
-
-        // Set min and max for date inputs
-        const startDate = document.getElementById('startDate');
-        const endDate = document.getElementById('endDate');
-
-        startDate.addEventListener('change', function () {
-            endDate.setAttribute('min', startDate.value);
-        });
-
-        endDate.addEventListener('change', function () {
-            startDate.setAttribute('max', endDate.value);
-        });
-
-        // Set initial min and max dates if values are already filled
-        if (startDate.value) {
-            endDate.setAttribute('min', startDate.value);
-        }
-        if (endDate.value) {
-            startDate.setAttribute('max', endDate.value);
-        }
-    });
-
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('filtersForm');
-        const eventsGrid = document.querySelector('[aria-label="Events grid"]');
-        const eventsCount = document.querySelector('p span.text-ultraViolet');
-
-        form.addEventListener('submit', function (e) {
-            e.preventDefault(); // Prevent default form submission
-
-            const formData = new FormData(form);
-            const queryString = new URLSearchParams(formData).toString();
-
-            // Update the browser URL without reloading the page
-            const newUrl = `/events/search?${queryString}`;
-            history.pushState(null, '', newUrl); // Update the URL in the browser
-
-            fetch(`/events/search?${queryString}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest', // Signal it's an AJAX request
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Update events count
-                if (eventsCount) {
-                    eventsCount.textContent = data.eventsCount;
-                }
-
-                // Update the events grid
-                if (eventsGrid) {
-                    eventsGrid.innerHTML = data.html;
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching filtered results:', error);
-            });
-        });
-
-        // Reset button logic
-        const resetButton = form.querySelector('button[aria-label="Reset filters"]');
-        resetButton.addEventListener('click', function () {
-            form.reset(); // Reset all filters
-            form.dispatchEvent(new Event('submit')); // Trigger AJAX reload
-        });
-    });
-
-
-</script>
 
 @endsection
 

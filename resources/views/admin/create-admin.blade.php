@@ -2,6 +2,7 @@
 
 @section('Title', 'Create Admin')
 @section('content')
+    <script type="text/javascript" src="{{ url('js/admin/create.js') }}" defer></script>
     <div class="container mx-auto mt-8">
         
         @if (session('message'))
@@ -15,13 +16,13 @@
             
             <!-- Admin Creation Form -->
             <div class="w-1/2 p-6 bg-white rounded-lg shadow-md">
-                <h2 class="mb-4 text-3xl text-ultraViolet py-5 font-montserrat">Create New Admin</h2>
+                <h2 class="py-5 mb-4 text-3xl text-ultraViolet font-montserrat">Create New Admin</h2>
 
                 <form action="{{ route('admin.admins.store') }}" method="POST">
                     @csrf
 
                     <div class="mb-4">
-                        <label for="email" class="block text-ultraViolet mb-1 font-montserrat">Email <span class="text-red-600">*</span></label>
+                        <label for="email" class="block mb-1 text-ultraViolet font-montserrat">Email <span class="text-red-600">*</span></label>
                         <input type="email" id="email" name="email" value="{{ old('email') }}" required 
                                class="w-full p-2 border border-gray-300 rounded-lg">
                         @error('email')
@@ -30,7 +31,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="block text-ultraViolet mb-1 font-montserrat">Password <span class="text-red-600">*</span></label>
+                        <label for="password" class="block mb-1 text-ultraViolet font-montserrat">Password <span class="text-red-600">*</span></label>
                         <input type="password" id="password" name="password" required 
                                class="w-full p-2 border border-gray-300 rounded-lg">
                         @error('password')
@@ -54,7 +55,7 @@
 
             <!-- Admin List -->
             <div class="w-1/2 p-6 bg-white rounded-lg shadow-md">
-                <h2 class="mb-4 text-3xl text-ultraViolet py-5 font-montserrat">Admin List</h2>
+                <h2 class="py-5 mb-4 text-3xl text-ultraViolet font-montserrat">Admin List</h2>
                 
                 @if($admins->count())
                     <table class="w-full border-collapse">
@@ -82,15 +83,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.querySelectorAll('.action-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                let loadingIcon = button.querySelector('.loading-icon');
-                if (loadingIcon) {
-                    loadingIcon.classList.remove('hidden');
-                }
-            });
-        });
-    </script>
 @endsection

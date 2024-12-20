@@ -3,12 +3,13 @@
 @section('Title', 'Recover Password')
 
 @section('content')
+<script type="text/javascript" src="{{ url('js/auth/forgotpassword.js') }}" defer></script>
 <div class="flex items-center justify-center">
   <!-- Card Wrapper -->
   <div class="grid w-[70%] grid-cols-1 rounded-lg shadow-lg lg:grid-cols-2 bg-babyPowder overflow-hidden">
  
     <!-- Banner Section -->
-    <section class="flex flex-col justify-center py-12 px-6">
+    <section class="flex flex-col justify-center px-6 py-12">
       <div class="flex flex-col items-center max-w-md mx-auto lg:max-w-none lg:items-center"> <!-- Center everything and align items center on large screens -->
 
         <!-- Image Section -->
@@ -32,7 +33,7 @@
     <section class="flex items-center justify-center">
       <div class="w-2/3">
         <!-- Title -->
-        <h2 class="mb-6 text-7xl font-extrabold font-montserrat text-ultraViolet">Recover Password</h2>
+        <h2 class="mb-6 font-extrabold text-7xl font-montserrat text-ultraViolet">Recover Password</h2>
         
         <!-- Form Container -->
           <form method="POST" action="{{ route('password.email') }}" class="space-y-6">
@@ -56,7 +57,7 @@
                 <button type="submit" 
                     class="w-full px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue font-montserrat"
                     aria-label="Send password reset link">
-                    <span class="loading-icon hidden" id="loading-reset">⏳</span>
+                    <span class="hidden loading-icon" id="loading-reset">⏳</span>
                     Send Reset Link
                 </button>
             </div>
@@ -77,14 +78,4 @@
     </section>
   </div>
 </div>
-
-<script>
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function () {
-        const loadingIcon = document.getElementById('loading-reset');
-        if (loadingIcon) {
-            loadingIcon.classList.remove('hidden');
-        }
-    });
-</script>
 @endsection
