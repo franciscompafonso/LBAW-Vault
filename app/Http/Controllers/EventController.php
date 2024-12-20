@@ -37,7 +37,15 @@ class EventController extends Controller
      */
     public function show(string $id): View
     {
+        if (!ctype_digit($id)) {
+            abort(404, 'Event not found.');
+        }
+
         $event = Event::with(['polls.responses'])->findOrFail($id);
+
+        if (!$event) {
+            abort(404, 'Event not found.');
+        }
 
         $this->authorize('show', $event);
 

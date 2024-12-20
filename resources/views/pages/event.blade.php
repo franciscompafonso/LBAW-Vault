@@ -57,7 +57,7 @@
                                     <form action="{{ route('events.cancel', $event->id) }}" method="POST" class="block">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">
+                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left text-red-500 border-0 font-montserrat hover:text-red-700 hover:bg-gray-100">
                                             Cancel Event
                                         </button>
                                     </form>
@@ -67,7 +67,7 @@
                                     <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left border-0 font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Delete Event</button>
+                                        <button type="submit" class="block w-full px-6 py-4 text-xl text-left text-red-500 border-0 font-montserrat hover:text-red-700 hover:bg-gray-100">Delete Event</button>
                                     </form>
                                 @endif
 
@@ -515,16 +515,22 @@
 
     function updateCountdown() {
         const eventStartDate = new Date("{{ $event->start_date }}").getTime();
+        const eventEndDate = new Date("{{ $event->end_date }}").getTime();
         const now = new Date().getTime();
-        const distance = eventStartDate - now;
-        if (distance < 0) {
+        const distanceStart = eventStartDate - now;
+        const distanceEnd = eventEndDate - now;
+        if (distanceStart < 0 && distanceEnd > 0) {
             document.getElementById('countdown').innerHTML = "Event has started!";
             return;
         }
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if (distanceEnd < 0) {
+            document.getElementById('countdown').innerHTML = "Event has ended!";
+            return;
+        }
+        const days = Math.floor(distanceStart / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distanceStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distanceStart % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distanceStart % (1000 * 60)) / 1000);
         let countdownHtml = '';
         if (days > 2) {
             countdownHtml = `
