@@ -1,10 +1,28 @@
+<script src="{{ url('js/partials/poll.js') }}" defer></script>
+
+<script>
+    const pollData = {
+        id: "{{ $poll->id }}",
+        startTime: "{{ $poll->start_time }}",
+        endTime: "{{ $poll->end_time }}"
+    };
+</script>
+
 <div class="poll bg-white p-6 rounded-lg shadow-lg mb-6">
     <!-- Poll Question -->
-    <h3 class="text-xl font-bold text-ultraViolet font-montserrat mb-4" id="poll-question-{{ $poll->id }}>{{ $poll->name }}</h3>
+</div>
+
+<div class="poll bg-white p-6 rounded-lg shadow-lg mb-6">
+    <!-- Poll Question -->
+    <h3 class="text-xl font-bold text-ultraViolet font-montserrat mb-4" id="poll-question-{{ $poll->id }}">{{ $poll->name }}</h3>
     <p class="text-lg text-darkSlateGrey font-montserrat mb-4">
-        <strong class="font-semibold">Poll Duration:</strong> 
-        {{ $poll->start_time->format('d/m/Y H:i') }} - 
-        {{ $poll->end_time->format('d/m/Y H:i') }}
+        @if(now()->isBefore($poll->start_time))
+            Poll starts in: <span id="countdown-{{ $poll->id }}"></span>
+        @elseif(now()->isBefore($poll->end_time))
+            Poll ends in: <span id="countdown-{{ $poll->id }}"></span>
+        @else
+            Poll has ended.
+        @endif
     </p>
 
     @if(session('error') && session('poll_id') === $poll->id)
@@ -36,40 +54,7 @@
                         </label>
                         <span class="text-sm text-gray-500">
                             {{ round($percentage) }}%
-                        </span>
-                    </div>
-                    <div class="relative h-4 bg-gray-200 rounded-md mt-1">
-                        <div 
-                            class="absolute h-4 bg-ultraViolet rounded-md transition-all duration-300"
-                            style="width: {{ $percentage }}%;">
-                        </div>
-                    </div>
-                    <input 
-                        type="radio" 
-                        name="option" 
-                        value="{{ $index }}" 
-                        id="option_{{ $poll->id }}_{{ $index }}"
-                        aria-labelledby="option_{{ $poll->id }}_{{ $index }}_label"
-                        @if($userResponse && (string) $userResponse->option === (string) $index) checked @endif
-                        @if($userResponse) disabled @endif
-                        class="hidden"
-                    >
-                </div>
-            @endforeach
-        </div>
-
-        @can('vote', $poll)
-            <div class="mt-4">
-                <button 
-                    type="submit" aria-label="Submit your vote for the poll"
-                    class="px-6 py-2 font-bold text-white bg-ultraViolet hover:bg-cambridgeBlue border-ultraViolet hover:border-cambridgeBlue rounded-md transition-all duration-200">
-                    Vote
-                </button>
-            </div>
-        @else
-            <div class="mt-4 text-red-500" role="alert" aria-live="assertive">
-                @if(now()->isAfter($poll->end_time))
-                    Voting has ended for this poll.
+                        </span>                    </div>                    <div class="relative h-4 bg-gray-200 rounded-md mt-1">                        <div                             class="absolute h-4 bg-ultraViolet rounded-md transition-all duration-300"                            style="width: {{ $percentage }}%;">                        </div>                    </div>                    <input                         type="radio"                         name="option"                         value="{{ $index }}"                         id="option_{{ $poll->id }}_{{ $index }}"                        aria-labelledby="option_{{ $poll->id }}_{{ $index }}_label"                        @if($userResponse && (string) $userResponse->option === (string) $index) checked @endif                        @if($userResponse) disabled @endif                        class="hidden"                    >                </div>            @endforeach        </div>        @can('vote', $poll)            <div class="mt-4">                <button                     type="submit" aria-label="Submit your vote for the poll"                    class="px-6 py-2 font-bold text-white bg-ultraViolet hover:bg-cambridgeBlue border-ultraViolet hover:border-cambridgeBlue rounded-md transition-all duration-200">                    Vote                </button>            </div>        @else            <div class="mt-4 text-red-500" role="alert" aria-live="assertive">                @if(now()->isAfter($poll->end_time))                    Poll is closed.
                 @else
                     You have already voted.
                 @endif
