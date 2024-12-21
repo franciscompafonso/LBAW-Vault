@@ -15,7 +15,7 @@ class PollController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'options' => 'required|string', 
+            'options' => 'required|array', 
             'start_time' => 'required|date',
             'end_time' => 'required|date',
         ]);
@@ -25,7 +25,7 @@ class PollController extends Controller
         $poll = Poll::create([
             'event_id' => $event->id,
             'name' => $request->input('name'),
-            'options' => $request->input('options'), 
+            'options' => json_encode($request->input('options')), 
             'start_time' => $request->input('start_time'),
             'end_time' => $request->input('end_time'),
         ]);
@@ -42,6 +42,10 @@ class PollController extends Controller
         }
 
         $options = json_decode($poll->options, true);
+        if (!is_array($options)) {
+            $options = [];
+        }
+
         return view('poll.show', compact('poll', 'options'));
     }
 
