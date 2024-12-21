@@ -75,9 +75,15 @@ class JoinRequest extends Model
         return $this->accepted;
     }
 
-    public function user()
+    public function sender()
     {
         return $this->belongsTo(User::class, 'join_request_by_id');
+    }
+
+    public function receiver()
+    {
+        $event = Event::find($this->event_id);
+        return $event ? User::find($event->creator_id) : null;
     }
 
     public function event()

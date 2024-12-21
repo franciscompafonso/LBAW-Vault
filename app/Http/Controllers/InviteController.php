@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\AnswerInviteSent;
 use App\Events\InviteSent;
+use App\Events\JoinEvent;
 use App\Models\Invite;
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\JoinRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,10 +29,24 @@ class InviteController extends Controller
                                 ->with(['sender', 'event'])
                                 ->get();
 
+        // Fetch sent requests
+        $sentRequests = JoinRequest::where('join_request_by_id', $id)
+                                    ->with(['event', 'event.creator'])
+                                    ->get();
+
+        // Fetch received requests
+        $receivedRequests = JoinRequest::whereHas('event', function ($query) use ($id) {
+                            $query->where('creator_id', $id);
+                            })
+                            ->with(['sender', 'event'])
+                            ->get();
+
         return view('user.invites', [
             'user' => $user,
             'sentInvites' => $sentInvites,
             'receivedInvites' => $receivedInvites,
+            'sentRequests' => $sentRequests,
+            'receivedRequests' => $receivedRequests,
         ]);
     }
 
