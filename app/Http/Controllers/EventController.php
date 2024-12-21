@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Events\JoinEvent;
 use App\Events\JoinRequestSent;
 use App\Models\Notification;
+use App\Models\NotificationSubtypes\AdminAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -222,6 +223,21 @@ class EventController extends Controller
         if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event))) {
             // Store the banner ID to delete after the event is removed
             $pictureId = $event->file_id;
+
+            if (auth()->guard('admin')->check()) {
+                $notification = Notification::create([
+                    'emitted_by' => null,
+                    'emitted_to' => $event->creator_id,
+                    'date' => now()
+                ]);
+        
+                // Add admin action
+                AdminAction::create([
+                    'id' => $notification->id,
+                    'admin_id' => auth()->user()->id,
+                    'action' => 'Your event, ' . $event->name . ' has been deleted by an admin...',
+                ]);
+            }
 
             // Delete the event
             $event->delete();

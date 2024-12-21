@@ -6,6 +6,8 @@ use App\Events\NewComment;
 use App\Models\Comment;
 use App\Models\Event;
 use App\Models\File;
+use App\Models\Notification;
+use App\Models\NotificationSubtypes\AdminAction;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -37,6 +39,21 @@ class CommentController extends Controller
 
                 File::find($photoId)->delete();
                 Storage::disk('others')->delete($photoPath);
+            }
+
+            if (auth()->guard('admin')->check()) {
+                $notification = Notification::create([
+                    'emitted_by' => null,
+                    'emitted_to' => $comment->comment_by_id,
+                    'date' => now()
+                ]);
+        
+                // Add admin action
+                AdminAction::create([
+                    'id' => $notification->id,
+                    'admin_id' => auth()->user()->id,
+                    'action' => 'Your comment, \'' . $comment->text . '\' in the ' . Event::find($comment->event_id)->name . ' event has been deleted by an admin...',
+                ]);
             }
 
             // Delete the comment
