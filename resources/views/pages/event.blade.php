@@ -144,7 +144,12 @@
         <!-- Comments Section -->
         <div class="flex-1">
             <div>
-                @each('partials.poll', $event->polls, 'poll')
+                @if($event->polls->count() > 0)
+                    <h2 id="polls-heading" class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
+                        {{ $event->polls->count() === 1 ? 'Poll' : 'Polls' }}
+                    </h2>
+                    @each('partials.poll', $event->polls, 'poll')
+                @endif
             </div>
             
             <h2 id="comments-heading" class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">

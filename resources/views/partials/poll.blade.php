@@ -1,74 +1,9 @@
 <script src="{{ url('js/partials/poll.js') }}" defer></script>
 
-<script>
-    const pollData = {
-        id: "{{ $poll->id }}",
-        startTime: new Date("{{ $poll->start_time }}").getTime(),
-        endTime: new Date("{{ $poll->end_time }}").getTime()
-    };
-
-    console.log("Poll Data:", pollData);
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const countdownElement = document.getElementById('countdown-' + pollData.id);
-        const now = new Date().getTime();
-
-        console.log("Current Time:", now);
-        console.log("Poll Start Time:", pollData.startTime);
-        console.log("Poll End Time:", pollData.endTime);
-
-        if (now < pollData.startTime) {
-            console.log("Countdown to poll start");
-            const countdownInterval = setInterval(function() {
-                const now = new Date().getTime();
-                const distance = pollData.startTime - now;
-
-                console.log("Distance to start:", distance);
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-                if (distance < 0) {
-                    clearInterval(countdownInterval);
-                    countdownElement.innerHTML = "Poll has started";
-                    location.reload();
-                }
-            }, 1000);
-        } else if (now < pollData.endTime) {
-            console.log("Countdown to poll end");
-            const countdownInterval = setInterval(function() {
-                const now = new Date().getTime();
-                const distance = pollData.endTime - now;
-
-                console.log("Distance to end:", distance);
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-                if (distance < 0) {
-                    clearInterval(countdownInterval);
-                    countdownElement.innerHTML = "Poll has ended";
-                    location.reload();
-                }
-            }, 1000);
-        } else {
-            countdownElement.innerHTML = "Poll has ended";
-        }
-    });
-</script>
-
 <div class="poll bg-white p-6 rounded-lg shadow-lg mb-6">
     <!-- Poll Question -->
-    <h3 class="text-xl font-bold text-ultraViolet font-montserrat mb-4" id="poll-question-{{ $poll->id }}">{{ $poll->name }}</h3>
-    <p class="text-lg text-darkSlateGrey font-montserrat mb-4">
+    <h3 class="text-3xl font-bold text-ultraViolet font-montserrat mb-4" id="poll-question-{{ $poll->id }}">{{ $poll->name }}</h3>
+    <p class="text-xl text-darkSlateGrey font-montserrat mb-4">
         @if(now()->isBefore($poll->start_time))
             Poll starts in: <span id="countdown-{{ $poll->id }}"></span>
         @elseif(now()->isBefore($poll->end_time))
@@ -107,7 +42,7 @@
                     @endphp
                     <div class="poll-option">
                         <div class="flex justify-between items-center" role="group" aria-labelledby="option-{{ $poll->id }}-{{ $index }}">
-                            <label for="option_{{ $poll->id }}_{{ $index }}" class="text-lg text-darkSlateGrey font-montserrat">
+                            <label for="option_{{ $poll->id }}_{{ $index }}" class="text-2xl text-darkSlateGrey font-montserrat">
                                 {{ $option }}
                             </label>
                             <span class="text-sm text-gray-500">
