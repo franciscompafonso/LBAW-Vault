@@ -12,7 +12,7 @@
    <!-- Main Content Wrapper -->
    <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Event Banner -->
-        <img src="{{ asset('images/banner/' . ($event->banner->path ?? App\Models.Event::DEFAULT_BANNER)) }}" 
+        <img src="{{ asset('images/banner/' . ($event->banner->path ?? App\Models\Event::DEFAULT_BANNER)) }}" 
             alt="Banner of event {{ $event->name }}" 
             class="w-full lg:w-1/2 aspect-[16/9] object-cover rounded-lg shadow-lg transform transition-transform duration-300">
 
