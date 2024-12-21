@@ -28,9 +28,11 @@ class JoinRequestController extends Controller
         $event = Event::findOrFail($joinRequest->event_id);
         $event->participators()->attach($joinRequest->join_request_by_id);
 
-        // Dismiss the notification
-        $notificationController = app(NotificationController::class);
-        $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
+        if($request->notification_id){
+            // Dismiss the notification
+            $notificationController = app(NotificationController::class);
+            $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
+        }
 
         event(new AnswerJoinRequest($joinRequest->join_request_by_id, $event->id, User::find(Auth::id())->name . " accepted your join request to " . $event->name));
 

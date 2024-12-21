@@ -1,4 +1,9 @@
 <div class="grid grid-cols-5 gap-4 p-4 border-b-2 border-gray-200">
+    <div class="flex font-montserrat justify-center items-center">
+        <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+            {{ $invite->event->name }}
+        </a>
+    </div>
     <div class="flex font-montserrat justify-center items-center gap-4">
         <img 
             src="{{ asset('images/profile-pictures/' . ($invite->sender->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
@@ -7,11 +12,6 @@
         >
         <a href="{{ route('user.profile', ['username' => $invite->sender->username]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
             {{ $invite->sender->name }}
-        </a>
-    </div>
-    <div class="flex font-montserrat justify-center items-center">
-        <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
-            {{ $invite->event->name }}
         </a>
     </div>
     <div class="flex font-montserrat justify-center items-center">{{ $invite->description !== '' ? $invite->description : '-' }}</div>

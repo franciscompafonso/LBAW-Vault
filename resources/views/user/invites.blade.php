@@ -29,7 +29,7 @@
                 <a href="{{ route('user.profile', ['username' => $user->username]) }}" 
                    aria-label="View {{ $user->name }} profile"
                    class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet ">
-                    <i class="mr-2 text-xl fa-solid fa-user"></i> Profile
+                    <i class="mr-2 text-xl fa-solid fa-calendar"></i> My Events
                 </a>
             @endif
         </div>
@@ -96,12 +96,11 @@
                     <div class="overflow-x-auto">
                         <!-- Sent Invitations Table Content -->
                         <div class="space-y-4">
-                            <div class="grid grid-cols-6 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg text-darkSlateGrey font-montserrat">
-                                <div class="text-center">Receiver</div>
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg text-darkSlateGrey font-montserrat">
                                 <div class="text-center">Event</div>
+                                <div class="text-center">Receiver</div>
                                 <div class="text-center">Message</div>
                                 <div class="text-center">Date</div>
-                                <div class="text-center">Status</div>
                                 <div class="text-center">Decision</div>
                             </div>
                             @foreach($sentInvites as $invite)
@@ -121,8 +120,8 @@
                         <!-- Received Invitations Table Content -->
                         <div class="gap-8">
                             <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
-                                <div class="text-center">Sender</div>
                                 <div class="text-center">Event</div>
+                                <div class="text-center">Sender</div>
                                 <div class="text-center">Message</div>
                                 <div class="text-center">Date</div>
                                 <div class="text-center">Decision</div>
@@ -143,10 +142,11 @@
                     <div class="overflow-x-auto">
                         <!-- Sent Invitations Table Content -->
                         <div class="space-y-4">
-                            <div class="grid grid-cols-4 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg text-darkSlateGrey font-montserrat">
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg text-darkSlateGrey font-montserrat">
                                 <div class="text-center">Event</div>
-                                <div class="text-center">Date</div>
+                                <div class="text-center"></div>
                                 <div class="text-center">Status</div>
+                                <div class="text-center">Date</div>
                                 <div class="text-center">Decision</div>
                             </div>
                             @foreach($sentRequests as $request)
@@ -157,7 +157,7 @@
                 @endif
             </div>
 
-            <!-- Received Invitations Content -->
+            <!-- Received Requests Content -->
             <div id="content-request-received" class="hidden">
                 @if($receivedRequests->isEmpty())
                     <p class="text-3xl text-center text-gray-500">No invitations received yet.</p>
@@ -165,9 +165,10 @@
                     <div class="overflow-x-auto">
                         <!-- Received Invitations Table Content -->
                         <div class="gap-8">
-                            <div class="grid grid-cols-4 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
-                                <div class="text-center">Sender</div>
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
                                 <div class="text-center">Event</div>
+                                <div class="text-center">Sender</div>
+                                <div class="text-center"></div>
                                 <div class="text-center">Date</div>
                                 <div class="text-center">Decision</div>
                             </div>

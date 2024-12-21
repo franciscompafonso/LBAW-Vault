@@ -1,4 +1,9 @@
-<div class="grid grid-cols-6 gap-4 p-4 border-b-2 border-gray-200">
+<div class="grid grid-cols-5 gap-4 p-4 border-b-2 border-gray-200">
+    <div class="flex font-montserrat justify-center items-center">
+        <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
+            {{ $invite->event->name }}
+        </a>
+    </div>
     <div class="flex font-montserrat justify-center items-center gap-4">
         <img 
             src="{{ asset('images/profile-pictures/' . ($invite->receiver->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
@@ -9,16 +14,8 @@
             {{ $invite->receiver->name }}
         </a>
     </div>
-    <div class="flex font-montserrat justify-center items-center">
-        <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
-            {{ $invite->event->name }}
-        </a>
-    </div>
     <div class="flex font-montserrat justify-center items-center">{{ $invite->description !== '' ? $invite->description : '-' }}</div>
     <div class="flex font-montserrat justify-center items-center">{{ $invite->date->format('F j, Y') }}</div>
-    <div class="flex font-montserrat justify-center items-center">
-        <span class="font-semibold text-yellow-500">Pending</span>
-    </div>
     <div class="flex items-center justify-center">
         <form action="{{ route('invite.delete', ['id' => $invite->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this invite?');" class="m-0">
             @csrf
