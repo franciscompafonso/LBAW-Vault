@@ -143,7 +143,7 @@
     <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Comments Section -->
         <div class="flex-1">
-            <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
+            <h2 id="comments-heading" class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Comments
             </h2>
             <!-- Comment Form -->
@@ -216,7 +216,7 @@
             <div aria-labelledby="participants-heading">
                 <!-- Header with Participant Counter -->
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
+                    <h2 id="participants-heading" class="text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                         Participants
                     </h2>
                     <!-- Participant Counter -->

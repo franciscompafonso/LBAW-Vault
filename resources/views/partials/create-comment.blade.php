@@ -21,7 +21,7 @@
                     class="w-full p-2 mt-2 border border-gray-300 rounded-lg" 
                     aria-describedby="photo-help"
                     onchange="validatePhotos()" />
-                <small class="text-gray-500">You can upload up to 15 photos.</small>
+                <small id="photo-help" class="text-gray-500">You can upload up to 15 photos.</small>
             </div>
         @endcan
         <div class="flex justify-end mt-4">
