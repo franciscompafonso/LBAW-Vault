@@ -8,17 +8,25 @@ use App\Models\Event;
 use App\Models\PollResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PollController extends Controller
 {
     public function store(Request $request, $eventId)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'options' => 'required|array', 
-            'start_time' => 'required|date',
-            'end_time' => 'required|date',
+            'options' => 'required|array|min:2',
+            'options.*' => 'required|string|max:255',
+            'start_time' => 'required|date|after_or_equal:now',
+            'end_time' => 'required|date|after:start_time',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                             ->withErrors($validator)
+                             ->withInput();
+        }
 
         $event = Event::findOrFail($eventId);
 
