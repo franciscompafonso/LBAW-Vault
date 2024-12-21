@@ -7,7 +7,7 @@
     window.startEvent = '{{ $event->start_date }}';
     window.endEvent = '{{ $event->end_date }}';
 </script>
-<script type="text/javascript" src="{{ url('js/pages/event-page.js') }}" defer></script>
+<script src="{{ url('js/pages/event-page.js') }}" defer></script>
 <div class="space-y-10"> 
    <!-- Main Content Wrapper -->
    <div class="flex flex-col gap-10 lg:flex-row">
@@ -140,29 +140,35 @@
 
 
     <!-- Comments and Details Section -->
-    <div class="flex flex-col gap-10 lg:flex-row">
+    <div class="flex flex-col gap-20 lg:flex-row">
         <!-- Comments Section -->
         <div class="flex-1">
+            <div>
+                @each('partials.poll', $event->polls, 'poll')
+            </div>
+            
             <h2 id="comments-heading" class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Comments
             </h2>
+
             <!-- Comment Form -->
             <div id="comment-form" class="mt-4">
                 @include('partials.create-comment')
             </div>
-            <!-- Comment List -->
-            <div id="comment-list" class="mt-6 space-y-6" aria-labelledby="comments-heading">
+
+            <!-- Scrollable Comment List -->
+            <div id="comment-list" 
+                class="mt-6 space-y-6 max-h-[400px] sm:max-h-[600px] lg:max-h-[800px] overflow-y-scroll rounded-md p-4" 
+                aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('date', 'desc')->get(), 'comment')
             </div>
-            
-            <!-- Polls -->
-            @each('partials.poll', $event->polls, 'poll')
+
         </div>
 
         <!-- Details and Participants Section -->
         <div class="flex flex-col gap-6 lg:w-1/4">
             <!-- Event Details -->
-            <div class="space-y-8">
+            <div class="space-y-8 mb-10">
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                     Details
                 </h2>
@@ -213,7 +219,7 @@
             </div>
 
             <!-- Participants -->
-            <div aria-labelledby="participants-heading">
+            <div aria-labelledby="participants-heading" class="mt-10">
                 <!-- Header with Participant Counter -->
                 <div class="flex items-center justify-between mb-6">
                     <h2 id="participants-heading" class="text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
@@ -225,10 +231,13 @@
                     </span>
                 </div>
 
-                <!-- Participant List or Empty State -->
-                <ul id="participant-list" class="space-y-4" aria-label="List of event participants">
+                <!-- Scrollable Participant List -->
+                <ul id="participant-list" 
+                    class="space-y-4 max-h-96 overflow-y-scroll rounded-md p-4" 
+                    aria-label="List of event participants">
                     <!-- Invite Form -->
                     @include('partials.invite-form')
+
                     @if ($event->participators()->count() > 0)
                         @foreach ($event->participators()->orderBy('id')->get() as $participator)
                             @include('partials.participator')

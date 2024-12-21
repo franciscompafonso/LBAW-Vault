@@ -4,7 +4,7 @@
 
 @section('content')
 
-<script type="text/javascript" src="{{ url('js/pages/faqs.js') }}" defer></script>
+<script src="{{ url('js/pages/faqs.js') }}" defer></script>
 <div class="container px-4 py-6 mx-auto">
     <div class="mb-6 text-center">
         <h1 class="mb-4 text-3xl font-bold lg:text-4xl font-montserrat text-ultraViolet">Frequently Asked Questions (FAQs)</h1>

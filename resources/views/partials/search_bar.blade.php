@@ -1,5 +1,5 @@
 @if (!Request::is('login') && !Request::is('register') && !Request::is('password/reset'))
-<script type="text/javascript" src="{{ url('js/partials/search-bar.js') }}" defer></script>
+<script src="{{ url('js/partials/search-bar.js') }}" defer></script>
     <!-- Search Bar -->
     <div id="searchBar" class="w-full lg:w-[30%] lg:order-none order-last mt-6 lg:mt-0">
         <div class="relative w-full mx-auto">

@@ -36,5 +36,5 @@
     </form>
 @endcan
 
-<script type="text/javascript" src="{{ url('js/admin/user-management.js') }}" defer></script>
-<script type="text/javascript" src="{{ url('js/partials/comment.js') }}" defer></script>
+<script src="{{ url('js/admin/user-management.js') }}" defer></script>
+<script src="{{ url('js/partials/comment.js') }}" defer></script>

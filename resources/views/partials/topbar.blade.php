@@ -1,4 +1,4 @@
-<script type="text/javascript" src="{{ url('js/partials/topbar.js') }}" defer></script>
+<script src="{{ url('js/partials/topbar.js') }}" defer></script>
 
 <!-- Skip to Content Link -->
 <a href="#main" 

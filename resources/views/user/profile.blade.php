@@ -2,7 +2,7 @@
 
 @section('Title', $user->name . "'s Profile")
 @section('content')
-<script type="text/javascript" src="{{ url('js/user/profile.js') }}" defer></script>
+<script src="{{ url('js/user/profile.js') }}" defer></script>
 @if ($user->isblocked)
     <div class="p-4 mb-6 text-white bg-red-500 rounded-md">
         <p class="text-lg font-semibold text-center">

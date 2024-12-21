@@ -3,7 +3,7 @@
 @section('Title', 'Reset Token Expired')
 
 @section('content')
-<script type="text/javascript" src="{{ url('js/auth/invalidtoken.js') }}" defer></script>
+<script src="{{ url('js/auth/invalidtoken.js') }}" defer></script>
     <div class="max-w-md p-8 mx-auto mt-10 bg-white rounded-lg shadow-md">
         <div class="text-center">
             <h1 class="text-3xl font-semibold text-red-500" role="alert">Password Reset Token Expired</h1>
