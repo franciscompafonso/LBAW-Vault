@@ -153,7 +153,7 @@
             </div>
             <!-- Comment List -->
             <div id="comment-list" class="mt-6 space-y-6" aria-labelledby="comments-heading">
-                @each('partials.comment', $event->comments()->orderBy('id')->get(), 'comment')
+                @each('partials.comment', $event->comments()->orderBy('date', 'desc')->get(), 'comment')
             </div>
             
             <!-- Polls -->

@@ -22,7 +22,7 @@
             </div>
 
             <div class="col-span-2 text-right">
-                <span class="text-sm text-gray-500 font-montserrat">{{ \Carbon\Carbon::parse($comment->date)->format('d/m/Y') }}</span>
+                <span class="text-sm text-gray-500 font-montserrat">{{ \Carbon\Carbon::parse($comment->date)->format('d/m/Y H:i') }}</span>
             </div>
         </div>
 
