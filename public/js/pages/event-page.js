@@ -304,12 +304,16 @@ function updateCountdown() {
         const distanceEnd = eventEndDate - now;
 
         // Handle event start and end scenarios
-        if (distanceStart < 0 && distanceEnd > 0) {
-            countdownElement.innerHTML = "Event has started!";
+        if (distanceStart <= 0 && distanceEnd > 0) {
+            countdownElement.innerHTML = `
+                Currently ongoing!
+            `;
             return;
         }
-        if (distanceEnd < 0) {
-            countdownElement.innerHTML = "Event has ended!";
+        if (distanceEnd <= 0) {
+            countdownElement.innerHTML = `
+                The event has concluded.
+            `;
             return;
         }
 
@@ -320,55 +324,33 @@ function updateCountdown() {
         const seconds = Math.floor((distanceStart % (1000 * 60)) / 1000);
 
         // Build the countdown HTML
-        let countdownHtml = '';
-        if (days > 2) {
-            countdownHtml = `
-                <div class="flex flex-col items-center">
-                    <span class="text-2xl">${days}</span>
-                    <span class="text-xs">Days</span>
-                </div>
-            `;
-        } else if (days >= 1) {
-            countdownHtml = `
-                <div class="flex flex-col items-center">
-                    <span class="text-2xl">${days}</span>
-                    <span class="text-xs">Days</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="text-2xl">${hours}</span>
-                    <span class="text-xs">Hours</span>
-                </div>
-            `;
-        } else if (hours >= 1) {
-            countdownHtml = `
-                <div class="flex flex-col items-center">
-                    <span class="text-2xl">${hours}</span>
-                    <span class="text-xs">Hours</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="text-2xl">${minutes}</span>
-                    <span class="text-xs">Minutes</span>
-                </div>
-            `;
-        } else {
-            countdownHtml = `
-                <div class="flex flex-col items-center">
-                    <span class="text-2xl">${minutes}</span>
-                    <span class="text-xs">Minutes</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="text-2xl">${seconds}</span>
-                    <span class="text-xs">Seconds</span>
-                </div>
-            `;
-        }
+        const countdownHtml = `
+            <div class="flex flex-col items-center">
+                <span class="text-xl">Days</span>
+                <span class="text-5xl font-bold">${days}</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-xl">Hours</span>
+                <span class="text-5xl font-bold">${hours}</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-xl">Minutes</span>
+                <span class="text-5xl font-bold">${minutes}</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span class="text-xl">Seconds</span>
+                <span class="text-5xl font-bold">${seconds}</span>
+            </div>
+        `;
 
         // Update countdown element
-        countdownElement.innerHTML = `<div class="flex space-x-1">${countdownHtml}</div>`;
+        countdownElement.innerHTML = countdownHtml;
     } catch (error) {
         console.error("Error in updateCountdown:", error);
     }
 }
+
+
 
 setInterval(updateCountdown, 1000);
 updateCountdown();

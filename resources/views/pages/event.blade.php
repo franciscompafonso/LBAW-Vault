@@ -17,12 +17,11 @@
             class="w-full lg:w-1/2 aspect-[16/9] object-cover rounded-lg shadow-lg transform transition-transform duration-300">
 
         <!-- Event Details -->
-        <div class="relative flex flex-col justify-between flex-1 px-4">
-            <!-- Event Title and Countdown Timer -->
+        <div class="relative flex flex-col justify-between flex-1">
+            <!-- Event Title -->
             <div class="flex items-center justify-between py-5">
                 <h1 class="text-6xl font-bold text-ultraViolet font-montserrat">{{ $event->name }}</h1>
                 <div class="flex items-center space-x-4">
-                    <div id="countdown" class="flex items-center justify-center p-1 text-lg font-semibold text-white bg-gray-300 rounded-md shadow-md font-montserrat"></div>
                     <!-- Options Icon -->
                     <div class="relative">
                         <button 
@@ -60,7 +59,7 @@
                                 @endif
 
                                 @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('cancel', $event)))
-                                    <form action="{{ route('events.cancel', $event->id) }}" method="POST" class="block">
+                                    <form action="{{ route('events.cancel', $event->id) }}" method="POST" class="block m-0">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="block w-full px-6 py-4 text-xl text-left text-red-500 border-0 font-montserrat hover:text-red-700 hover:bg-gray-100">
@@ -70,7 +69,7 @@
                                 @endif
 
                                 @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('delete', $event)))
-                                    <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block">
+                                    <form action="{{ route('events.delete', $event->id) }}" method="POST" class="block m-0">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="block w-full px-6 py-4 text-xl text-left text-red-500 border-0 font-montserrat hover:text-red-700 hover:bg-gray-100">Delete Event</button>
@@ -143,7 +142,7 @@
     <!-- Comments and Details Section -->
     <div class="flex flex-col gap-10 lg:flex-row">
         <!-- Comments Section -->
-        <div class="flex-1 p-6">
+        <div class="flex-1">
             <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Comments
             </h2>
@@ -161,12 +160,13 @@
         </div>
 
         <!-- Details and Participants Section -->
-        <div class="flex flex-col gap-6 lg:w-2/5">
+        <div class="flex flex-col gap-6 lg:w-1/4">
             <!-- Event Details -->
-            <div class="p-6 space-y-8">
+            <div class="space-y-8">
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                     Details
                 </h2>
+                <div id="countdown" class="flex items-center justify-evenly p-4 sm:text-5xl md:text-5xl lg:text-3xl xl:text-4xl font-semibold text-white bg-ultraViolet rounded-md shadow-md font-montserrat"></div>
                 @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
                     <p class="text-3xl text-darkSlateGrey font-montserrat">
                         <strong class="font-semibold">Visibility:</strong> 
@@ -213,7 +213,7 @@
             </div>
 
             <!-- Participants -->
-            <div class="p-6" aria-labelledby="participants-heading">
+            <div aria-labelledby="participants-heading">
                 <!-- Header with Participant Counter -->
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
