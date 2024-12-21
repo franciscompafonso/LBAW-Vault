@@ -15,7 +15,7 @@
 
             <i class="absolute right-4 top-1/2 transform -translate-y-1/2 text-4xl fa-solid fa-search {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} cursor-pointer" 
                onclick="performSearch()"
-               aria-label="Search button">
+               aria-label="Perform search">
             </i>
         </div>
 

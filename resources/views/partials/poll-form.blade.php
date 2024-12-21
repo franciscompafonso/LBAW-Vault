@@ -25,7 +25,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="poll_options" class="block mb-2 text-gray-700">Options <span class="text-red-600">*</span></label>
+                <label for="poll-options-container" class="block mb-2 text-gray-700">Options <span class="text-red-600">*</span></label>
                 <div id="poll-options-container" class="space-y-2">
                     @if(old('options'))
                         @foreach(old('options') as $option)
