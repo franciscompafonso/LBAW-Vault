@@ -36,21 +36,21 @@ Route::get('/photos/{id}', [FileController::class, 'show'])->name('photos.show')
 // Guest-only Routes
 Route::middleware('guest')->group(function () {
 
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'authenticate']);
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login'); //check
+    Route::post('/login', [LoginController::class, 'authenticate']); // check
 
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register'); //check
+    Route::post('/register', [RegisterController::class, 'register']); //check
 });
 
 // Logout Routes
 Route::controller(LoginController::class)->group(function () {
-    Route::get('/logout', 'logout')->name('logout');
-    Route::post('/admin/logout', 'logout')->name('admin.logout');
+    Route::get('/logout', 'logout')->name('logout'); //check
+    Route::post('/admin/logout', 'logout')->name('admin.logout'); //check
 });
 
 // Password Reset Routes
-Route::controller(ResetPasswordController::class)->group(function () {
+Route::controller(ResetPasswordController::class)->group(function () { // check?
     Route::get('password/reset', 'showLinkRequestForm')->name('password.request');
     Route::get('password/reset/{token}', 'showResetForm')->name('password.reset');
     Route::post('password/reset', 'resetPassword')->name('password.update');
@@ -89,7 +89,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Users
     Route::controller(UserController::class)->group(function () {
-        
         Route::delete('/user/{username}/delete', 'deleteAccount')->name('user.delete'); 
         Route::get('/user/{username}/invites', [InviteController::class, 'showUserInvites'])->name('user.invites'); 
         Route::delete('/invite/{id}', [InviteController::class, 'deleteInvite'])->name('invite.delete');
@@ -131,9 +130,9 @@ Route::middleware(['auth:web,admin'])->group(function () {
     Route::get('events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
     Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::get('/events/{event}/survey/stats', [EventController::class, 'showSurveyStats'])->name('events.surveyStats');
-    Route::get('/user/{username}', [UserController::class, 'show'])->name('user.profile');
-    Route::get('/user/{username}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
-    Route::post('/user/{username}/edit', [UserController::class, 'edit'])->name('user.edit.action');
+    Route::get('/user/{username}', [UserController::class, 'show'])->name('user.profile'); //check
+    Route::get('/user/{username}/edit', [UserController::class, 'editForm'])->name('user.edit.form'); //check
+    Route::post('/user/{username}/edit', [UserController::class, 'edit'])->name('user.edit.action'); //check
     Route::get('/events/{event}/comments', [EventController::class, 'getComments'])->name('comments.get');
 });
 
