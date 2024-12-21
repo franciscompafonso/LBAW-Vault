@@ -63,7 +63,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 let notificationContent = `
                     <div class="notification-card">
                         <div class="grid grid-cols-8 items-center  gap-4">   
-                            <p class="col-span-7 text-sm items-center font-semibold text-gray-600">${formattedDate}</p>
+                            <p class="col-span-7 text-xl items-center font-semibold text-gray-600">${formattedDate}</p>
                             <button 
                                 class="col-span-1 flex justify-end items-center h-6 hover:bg-transparent focus:bg-transparent border-transparent focus:border-transparent hover:border-transparent text-gray-500 focus:text-red-500 hover:text-red-500" 
                                 onclick="dismissNotification(${notification.id}, event)">
@@ -77,7 +77,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 if (notification.type === 'invite_notification') {
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">You have received an invite!</a>
-                        <p class="text-sm text-gray-600">
+                        <p class="text-xl text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.sender_username}">
                                 ${notification.data.sender_name ?? 'Someone'}
                             </a> 
@@ -117,7 +117,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 } else if (notification.type === 'accepted_invite_notification') {
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">Your invite was accepted!</a>
-                        <p class="text-sm text-gray-600">
+                        <p class="text-xl text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.receiver_username}">
                                 ${notification.data.receiver_name ?? 'Someone'}
                             </a>
@@ -130,7 +130,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 } else if (notification.type === 'join_request_notification') {
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">Join Request</a>
-                        <p class="text-sm text-gray-600">
+                        <p class="text-xl text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.join_request_by_username}">
                                 ${notification.data.join_request_by_name ?? ''}
                             </a> 
@@ -167,7 +167,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 } else if (notification.type === 'accepted_join_request_notification') {
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Join request was accepted!</p>
-                        <p class="text-sm text-gray-600">
+                        <p class="text-xl text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.event_creator_username}">
                                 ${notification.data.event_creator_name ?? 'The event creator'}
                             </a>
@@ -180,17 +180,17 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 } else if (notification.type === 'event_update_notification') {
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.id}"><p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event was updated</p></a>
-                        <p class="text-sm text-gray-600">
+                        <p class="text-xl text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.id}">
                                 ${notification.data.name ?? 'an event you\'re a part of'}
                             </a>
-                             has been updated.
+                            has been updated.
                         </p>
                     `;
                 } else if (notification.type === 'comment_notification') {
                     notificationContent += `
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.event_id}">New Comment!</a><br>
-                        <p class="text-sm text-gray-600">
+                        <p class="text-xl text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/user/${notification.data.commenter_username}">
                                 ${notification.data.commenter_name ?? 'Someone'}
                             </a>
@@ -215,50 +215,53 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">New Poll!</p>
-                        <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">
+                        <a class="text-xl text-gray-600" href="/events/${notification.data.event_id}">
                             You have up until ${formattedDate} ${formattedTime} to answer to the ${notification.data.event_name} new poll.
                         </a>
                     `;
                 } else if (notification.type === 'event_cancelation') {
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event was canceled </p>
-                        <p class="text-sm text-gray-600">
-                        <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
-                            ${notification.data.name ?? 'An event you\'re a part of'}
-                        </a>
-                         has been canceled.</p>
+                        <p class="text-xl text-gray-600">
+                            <a class="text-blue-600 text-xl hover:underline" href="/events/${notification.data.id}">
+                                ${notification.data.name ?? 'An event you\'re a part of'}
+                            </a>
+                            has been canceled.
+                        </p>
                     `;
                 } else if (notification.type === 'event_reminder') {
                     if (notification.data.about && (notification.data.about === '3 days' || notification.data.about === '1 day')) {
                         notificationContent += `
-                            <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event Reminder</p>
-                            <p class="text-sm text-gray-600">
-                            <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
+                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event Reminder</p>
+                        <p class="text-xl text-gray-600">
+                            <a class="text-blue-600 text-xl hover:underline" href="/events/${notification.data.id}">
                                 ${notification.data.name ?? 'An event you\'re a part of'}
                             </a>
-                            ${notification.data.about === '3 days' ? 'starts in 3 days!' : 'starts tomorrow!'}</p>`;
+                            ${notification.data.about === '3 days' ? 'starts in 3 days!' : 'starts tomorrow!'}
+                        </p>`;
                     } else {
                         notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Answer to the Survey!</p>
-                        <p class="text-sm text-gray-600"> You have a survey to answer for the event
-                        <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
-                            ${notification.data.name ?? '.'}
-                        </a> </p>`;
+                        <p class="text-xl text-gray-600"> You have a survey to answer for the event
+                            <a class="text-blue-600 text-xl hover:underline" href="/events/${notification.data.id}">
+                                ${notification.data.name ?? '.'}
+                            </a> 
+                        </p>`;
                     }
                 } else if (notification.type === 'admin_action') {
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Administrative Action</p>
-                        <p class="text-sm text-gray-600">${notification.data.action}</p>
+                        <p class="text-xl text-gray-600">${notification.data.action}</p>
                     `;
                 } else if (notification.type === 'unblock_notification') {
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">You\'re unblock request was answered</p>
-                        <p class="text-sm text-gray-600">You were unblock by the admin!</p>
+                        <p class="text-xl text-gray-600">You were unblocked by the admin!</p>
                     `;
                 } else {
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">${notification.type ? notification.type : 'No type available'}</p>
-                        <p class="text-sm text-gray-600">No specific details available for this notification type.</p>
+                        <p class="text-xl text-gray-600">No specific details available for this notification type.</p>
                     `;
                 }
 
