@@ -3,37 +3,43 @@
 @section('Title', 'Invites')
 @section('content')
     <!-- Profile Section Container -->
-    <div class="relative flex items-center justify-between p-16 rounded-lg shadow-lg bg-gradient-to-r from-whiteSmoke to-wisteria">
-        <!-- Left: Profile Picture and Info -->
-        <div class="flex items-center space-x-6">
-            <div class="w-32 h-32 overflow-hidden border-4 border-white rounded-full">
-                <img src="{{ asset('images/profile-pictures/' . ($user->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
-                    alt="{{ $user->name }}" 
-                    class="object-cover w-full h-full">
-            </div>
-
-            <div>
-                <h1 class="text-6xl font-bold text-eerieBlack font-montserrat">{{ $user->name }}</h1>
-                <p class="text-3xl text-eerieBlack">{{ "@" . $user->username }}</p>
-            </div>
+<div class="relative flex flex-col lg:flex-row items-center lg:justify-between p-6 lg:p-16 rounded-lg shadow-lg bg-gradient-to-r from-whiteSmoke to-wisteria">
+    <!-- Left: Profile Picture and Info -->
+    <div class="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-6">
+        <!-- Profile Picture -->
+        <div class="w-24 h-24 lg:w-32 lg:h-32 overflow-hidden border-4 border-white rounded-full">
+            <img src="{{ asset('images/profile-pictures/' . ($user->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
+                alt="{{ $user->username }}" 
+                class="object-cover w-full h-full">
         </div>
 
-        <div class="flex space-x-4">
-            @if((Auth::id() === $user->id && !$user->isdeleted && !$user->isblocked) || auth()->guard('admin')->check())
-                <a href="{{ route('user.edit.form', ['id' => $user->id]) }}" 
-                   aria-label="Edit profile of {{ $user->name }}"
-                   class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
-                    <i class="mr-2 text-xl fa-solid fa-user-edit"></i> Edit Profile
-                </a>
-
-                <a href="{{ route('user.profile', ['username' => $user->username]) }}" 
-                   aria-label="View {{ $user->name }} profile"
-                   class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet ">
-                    <i class="mr-2 text-xl fa-solid fa-calendar"></i> My Events
-                </a>
-            @endif
+        <!-- User Info -->
+        <div class="text-center lg:text-left">
+            <h1 class="text-3xl lg:text-6xl font-bold text-eerieBlack font-montserrat">{{ $user->name }}</h1>
+            <p class="text-xl lg:text-3xl text-eerieBlack">{{ "@" . $user->username }}</p>
         </div>
     </div>
+
+    <!-- Right: Action Buttons -->
+    <div class="flex flex-col lg:flex-row gap-4 mt-6 lg:mt-0 lg:justify-end">
+        @if((Auth::id() === $user->id && !$user->isdeleted && !$user->isblocked) || auth()->guard('admin')->check())
+            <!-- Edit Profile Button -->
+            <a href="{{ route('user.edit.form', ['id' => $user->id]) }}" 
+                aria-label="Edit profile of {{ $user->name }}"
+                class="flex items-center justify-center px-10 py-5 w-full lg:w-auto text-sm lg:text-base font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
+                <i class="mr-2 text-lg lg:text-xl fa-solid fa-user-edit"></i> Edit Profile
+            </a>
+            
+            <!-- Invitations Sent Button -->
+            <a href="{{ route('user.invites', ['id' => $user->id]) }}" 
+                aria-label="View invites sent by {{ $user->name }}"
+                class="flex items-center justify-center px-10 py-5 w-full lg:w-auto text-sm lg:text-base font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
+                <i class="mr-2 text-lg lg:text-xl fa-solid fa-envelope"></i> Invites
+            </a>
+        @endif
+    </div>
+</div>
+
 
     <div class="mt-10">
         <!-- Tab Buttons -->
