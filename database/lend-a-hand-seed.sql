@@ -253,9 +253,12 @@ CREATE TABLE event_cancelation (
     PRIMARY KEY (id, event_id)
 );
 
+CREATE TYPE EventReminderType AS ENUM ('3 days', '1 day', 'survey');
+
 CREATE TABLE event_reminder (
     id INT REFERENCES notification(id) ON DELETE CASCADE,
     event_id INT REFERENCES event(id) ON DELETE CASCADE,
+    about EventReminderType NOT NULL,
     PRIMARY KEY (id, event_id)
 );
 
@@ -560,12 +563,23 @@ $BODY$
 DECLARE
     notification_id INT;
     participant RECORD;
+    event_record RECORD;
 BEGIN
+    SELECT * INTO event_record
+    FROM event
+    WHERE id = NEW.event_id;
+
+    IF event_record IS NULL THEN
+        RAISE EXCEPTION 'Event not found for event_id: %', NEW.event_id;
+    END IF;
+
     FOR participant IN
-        SELECT participator_id FROM participator WHERE event_id = NEW.event_id
+        SELECT participator_id
+        FROM participator
+        WHERE event_id = NEW.event_id
     LOOP
         INSERT INTO notification (emitted_by, emitted_to, date)
-        VALUES (NEW.event_id, participant.participator_id, CURRENT_TIMESTAMP)
+        VALUES (event_record.creator_id, participant.participator_id, CURRENT_TIMESTAMP)
         RETURNING id INTO notification_id;
 
         INSERT INTO poll_reminder (id, poll_id)
@@ -610,8 +624,8 @@ BEGIN
     VALUES (event_creator_id, NEW.participator_id, reminder_date)
     RETURNING id INTO notification_id;
 
-    INSERT INTO event_reminder (id, event_id)
-    VALUES (notification_id, NEW.event_id);
+    INSERT INTO event_reminder (id, event_id, about)
+    VALUES (notification_id, NEW.event_id, '3 days');
 
     -- 1 day before the event
     reminder_date := event_start_date - INTERVAL '1 day';
@@ -620,8 +634,18 @@ BEGIN
     VALUES (event_creator_id, NEW.participator_id, reminder_date)
     RETURNING id INTO notification_id;
 
-    INSERT INTO event_reminder (id, event_id)
-    VALUES (notification_id, NEW.event_id);
+    INSERT INTO event_reminder (id, event_id, about)
+    VALUES (notification_id, NEW.event_id, '1 day');
+
+    -- survey reminder after the event ends
+    reminder_date := event_start_date + INTERVAL '1 day';
+
+    INSERT INTO notification (emitted_by, emitted_to, date)
+    VALUES (event_creator_id, NEW.participator_id, reminder_date)
+    RETURNING id INTO notification_id;
+
+    INSERT INTO event_reminder (id, event_id, about)
+    VALUES (notification_id, NEW.event_id, 'survey');
 
     RETURN NEW;
 END;
@@ -762,37 +786,6 @@ AFTER DELETE ON unblock_notification
 FOR EACH ROW
 EXECUTE FUNCTION delete_orphaned_notifications();
 
-
-/*
-CREATE FUNCTION create_block_notification(admin_id INT) RETURNS TRIGGER AS
-$BODY$
-DECLARE
-    notification_id INT;
-BEGIN
-    -- Check if the user was blocked in the update
-    IF NEW.isBlocked = TRUE AND OLD.isBlocked = FALSE THEN
-        -- Insert a new notification
-        INSERT INTO notification (emitted_by, emitted_to, date)
-        VALUES (NEW.id, NEW.id, CURRENT_TIMESTAMP)
-        RETURNING id INTO notification_id;
-
-        -- Log the action in the admin_action table
-        INSERT INTO admin_action (id, admin_id)
-        VALUES (notification_id, admin_id);
-    END IF;
-
-    RETURN NEW;
-END;
-$BODY$
-LANGUAGE plpgsql;
-
-
-CREATE TRIGGER trigger_block_notification
-    AFTER UPDATE OF isBlocked ON user_account
-    FOR EACH ROW
-    WHEN (OLD.isBlocked IS DISTINCT FROM NEW.isBlocked AND NEW.isBlocked = TRUE)
-    EXECUTE FUNCTION create_block_notification();
-*/
 
 -- INSERT ------------------------------------------------------------------------------------------------------------
 

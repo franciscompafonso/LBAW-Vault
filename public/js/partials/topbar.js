@@ -182,7 +182,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                         <a class="font-semibold text-ultraViolet hover:text-wisteria text-md" href="/events/${notification.data.id}"><p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event was updated</p></a>
                         <p class="text-sm text-gray-600">
                             <a class="text-blue-600 hover:underline" href="/events/${notification.data.id}">
-                                ${notification.data.name ?? 'an event youre a part of'}
+                                ${notification.data.name ?? 'an event you\'re a part of'}
                             </a>
                              has been updated.
                         </p>
@@ -221,21 +221,30 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                     `;
                 } else if (notification.type === 'event_cancelation') {
                     notificationContent += `
-                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event was canceled</p>
-                        <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
-                            ${notification.data.name ?? 'An event youre a part of'}
-                        </a>
-                        <p class="text-sm text-gray-600"> has been canceled.</p>
-                    `;
-                } else if (notification.type === 'event_reminder') {
-                    notificationContent += `
-                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event Reminder</p>
+                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event was canceled </p>
                         <p class="text-sm text-gray-600">
                         <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
-                            ${notification.data.name ?? 'An event youre a part of'}
+                            ${notification.data.name ?? 'An event you\'re a part of'}
                         </a>
-                        is coming soon!</p>
+                         has been canceled.</p>
                     `;
+                } else if (notification.type === 'event_reminder') {
+                    if (notification.data.about && (notification.data.about === '3 days' || notification.data.about === '1 day')) {
+                        notificationContent += `
+                            <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Event Reminder</p>
+                            <p class="text-sm text-gray-600">
+                            <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
+                                ${notification.data.name ?? 'An event you\'re a part of'}
+                            </a>
+                            ${notification.data.about === '3 days' ? 'starts in 3 days!' : 'starts tomorrow!'}</p>`;
+                    } else {
+                        notificationContent += `
+                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Answer to the Survey!</p>
+                        <p class="text-sm text-gray-600"> You have a survey to answer for the event
+                        <a class="text-blue-600 text-sm hover:underline" href="/events/${notification.data.id}">
+                            ${notification.data.name ?? '.'}
+                        </a> </p>`;
+                    }
                 } else if (notification.type === 'admin_action') {
                     notificationContent += `
                         <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">${notification.type ? notification.type : 'No type available'}</p>

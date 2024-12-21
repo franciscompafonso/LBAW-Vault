@@ -117,6 +117,7 @@ class NotificationController extends Controller
                         $event = Event::find($notification->event_id);
 
                         if ($event) {
+                            if ($type == 'event_reminder') $event['about'] = $notification->about;
                             return ['type' => $type, 'data' => $event];
                         } else {
                             return ['type' => $type, 'data' => 'Event not found'];
