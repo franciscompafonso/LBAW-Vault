@@ -35,7 +35,7 @@
                 <!-- Name -->
                 <div class="mb-4">
                     <label for="name" class="block text-lg font-semibold font-montserrat">Name</label>
-                    <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new name">
+                    <input type="text" maxlength="70" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new name">
                     @error('name')
                         <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                     @enderror
@@ -44,7 +44,7 @@
                 <!-- Username -->
                 <div class="mb-4">
                     <label for="username" class="block text-lg font-semibold font-montserrat">Username</label>
-                    <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new username">
+                    <input type="text" maxlength="25" id="username" name="username" value="{{ old('username', $user->username) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new username">
                     @error('username')
                         <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                     @enderror
@@ -53,7 +53,7 @@
                 <!-- Email -->
                 <div class="mb-4">
                     <label for="email" class="block text-lg font-semibold font-montserrat">Email</label>
-                    <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new email address">
+                    <input type="email" maxlength="255" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" required aria-label="Enter your new email address">
                     @error('email')
                         <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                     @enderror
@@ -68,6 +68,7 @@
                     <label for="current_password" class="block text-lg font-semibold font-montserrat">Current Password</label>
                     <input 
                         type="password" 
+                        maxlength="255" 
                         id="current_password" 
                         name="current_password" 
                         class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 
@@ -84,6 +85,7 @@
                     <label for="new_password" class="block text-lg font-semibold font-montserrat">New Password</label>
                     <input 
                         type="password" 
+                        maxlength="255" 
                         id="new_password" 
                         name="new_password" 
                         class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 
@@ -101,6 +103,7 @@
                     <label for="new_password_confirmation" class="block text-lg font-semibold font-montserrat">Confirm New Password</label>
                     <input 
                         type="password" 
+                        maxlength="255" 
                         id="new_password_confirmation" 
                         name="new_password_confirmation" 
                         class="w-full p-2 border border-gray-300 rounded-md font-montserrat" 

@@ -88,8 +88,8 @@ DROP FUNCTION IF EXISTS delete_orphaned_notifications();
 -- create tables
 CREATE TABLE user_account (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    username VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(70) NOT NULL,
+    username VARCHAR(25) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     isDeleted BOOLEAN DEFAULT FALSE,
@@ -101,21 +101,21 @@ CREATE TABLE user_account (
 
 CREATE TABLE district (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(19) NOT NULL
 );
 
 CREATE TABLE category (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL
+    name VARCHAR(32) UNIQUE NOT NULL
 );
 
 CREATE TYPE VisibilityTypes AS ENUM ('public', 'private', 'request_only', 'canceled');
 
 CREATE TABLE "event" (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    location TEXT,
+    name VARCHAR(70) NOT NULL,
+    description VARCHAR(450) NOT NULL,
+    location VARCHAR(100),
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
     visibility VisibilityTypes NOT NULL,
@@ -124,7 +124,8 @@ CREATE TABLE "event" (
     district_id INT REFERENCES district(id) NOT NULL,
     category_id INT REFERENCES category(id) NOT NULL,
     file_id INT,
-    CONSTRAINT ck_start_end CHECK (start_date < end_date)
+    CONSTRAINT ck_start_end CHECK (start_date < end_date),
+    CONSTRAINT ck_capacity_limit CHECK (capacity < 1000)
 );
 
 CREATE TABLE participator (
@@ -135,7 +136,7 @@ CREATE TABLE participator (
 
 CREATE TABLE question_review (
     id INT PRIMARY KEY,
-    question_text VARCHAR(255) NOT NULL
+    question_text VARCHAR(46) NOT NULL
 );
 
 CREATE TABLE answer_review (
@@ -152,7 +153,7 @@ CREATE TABLE comment (
     reply_to INT REFERENCES comment(id),
     comment_by_id INT REFERENCES user_account(id),
     event_id INT REFERENCES event(id) ON DELETE CASCADE,
-    text TEXT NOT NULL,
+    text VARCHAR(255) NOT NULL,
     is_pinned BOOLEAN,
     score INT DEFAULT 0,
     edited BOOLEAN DEFAULT FALSE NOT NULL,
@@ -162,7 +163,7 @@ CREATE TABLE comment (
 CREATE TABLE poll (
     id SERIAL PRIMARY KEY,
     event_id INT REFERENCES event(id),
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
     options TEXT NOT NULL
@@ -192,7 +193,7 @@ CREATE TABLE unblock_request (
     id SERIAL PRIMARY KEY,
     decision_by_id INT REFERENCES admin(id),
     requested_by_id INT REFERENCES user_account(id),
-    status VARCHAR(50) NOT NULL CHECK (status IN ('pending', 'approved', 'rejected')),
+    status VARCHAR(9) NOT NULL CHECK (status IN ('pending', 'approved', 'rejected')),
     requested_at TIMESTAMP NOT NULL CHECK (requested_at <= CURRENT_TIMESTAMP),
     processed_at TIMESTAMP DEFAULT NULL CHECK (processed_at >= requested_at),
     decision VARCHAR(255) NOT NULL
@@ -323,7 +324,7 @@ ALTER TABLE event ADD COLUMN ts_vector TSVECTOR;
 
 
 UPDATE event
-SET ts_vector = to_tsvector('english', name || ' ' || description || ' ' ||
+SET ts_vector = to_tsvector('english', name || ' ' || description || ' ' || location || ' ' ||
                 COALESCE((SELECT name FROM district WHERE district.id = event.district_id), '') || ' ' ||
                 COALESCE((SELECT name FROM category WHERE category.id = event.category_id), '')
 );
@@ -334,6 +335,7 @@ BEGIN
         NEW.ts_vector := (
             setweight(to_tsvector('english', NEW.name), 'A') ||
             setweight(to_tsvector('english', NEW.description), 'B') ||
+            setweight(to_tsvector('english', NEW.location), 'C') ||
             setweight(to_tsvector('english', COALESCE((SELECT name FROM district WHERE district.id = NEW.district_id), '')), 'C') ||
             setweight(to_tsvector('english', COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), '')), 'C')
         );
@@ -342,12 +344,14 @@ BEGIN
     IF TG_OP = 'UPDATE' THEN
         IF (NEW.name <> OLD.name OR 
             NEW.description <> OLD.description OR 
-            NEW.district_id <> OLD.district_id OR 
+            NEW.location <> OLD.location OR 
+            NEW.district_id <> OLD.district_id OR
             NEW.category_id <> OLD.category_id) THEN
 
             NEW.ts_vector := (
                 setweight(to_tsvector('english', NEW.name), 'A') ||
                 setweight(to_tsvector('english', NEW.description), 'B') ||
+                setweight(to_tsvector('english', NEW.location), 'C') ||
                 setweight(to_tsvector('english', COALESCE((SELECT name FROM district WHERE district.id = NEW.district_id), '')), 'C') ||
                 setweight(to_tsvector('english', COALESCE((SELECT name FROM category WHERE category.id = NEW.category_id), '')), 'C')
             );

@@ -7,6 +7,7 @@
                    class="w-full p-6 pl-6 pr-12 text-3xl text-black border-2 rounded-full border-ultraViolet font-montserrat search-input focus:ring-2 focus:ring-wisteria focus:border-wisteria focus:outline-none placeholder:text-3xl placeholder:text-black" 
                    placeholder="Search events..." 
                    autocomplete="off"
+                   maxlength="100" 
                    aria-label="Search events"
                    onkeyup="searchEvents(event)" 
                    onkeydown="searchEvents(event)"

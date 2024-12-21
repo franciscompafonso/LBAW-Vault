@@ -23,7 +23,7 @@
 
                     <div class="mb-4">
                         <label for="email" class="block mb-1 text-ultraViolet font-montserrat">Email <span class="text-red-600">*</span></label>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" required 
+                        <input type="email" maxlength="255" id="email" name="email" value="{{ old('email') }}" required 
                                class="w-full p-2 border border-gray-300 rounded-lg">
                         @error('email')
                             <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
@@ -32,7 +32,7 @@
 
                     <div class="mb-4">
                         <label for="password" class="block mb-1 text-ultraViolet font-montserrat">Password <span class="text-red-600">*</span></label>
-                        <input type="password" id="password" name="password" required 
+                        <input type="password" maxlength="255" id="password" name="password" required 
                                class="w-full p-2 border border-gray-300 rounded-lg">
                         @error('password')
                             <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
@@ -41,7 +41,7 @@
 
                     <div class="mb-4">
                         <label for="password_confirmation" class="block mb-1 text-ultraViolet font-montserrat">Confirm Password <span class="text-red-600">*</span></label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" required 
+                        <input type="password" maxlength="255" id="password_confirmation" name="password_confirmation" required 
                                class="w-full p-2 border border-gray-300 rounded-lg">
                     </div>
 

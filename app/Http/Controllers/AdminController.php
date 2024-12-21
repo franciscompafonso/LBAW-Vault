@@ -32,7 +32,7 @@ class AdminController extends Controller
         $this->authorize('create', Admin::class);
         // Validate the input
         $validated = $request->validate([
-            'email' => 'required|email|unique:admin,email',
+            'email' => 'required|email|unique:admin,email|max:255',
             'password' => 'required|min:8|confirmed',
         ]);
 
@@ -54,7 +54,7 @@ class AdminController extends Controller
         $this->authorize('manageUsers', Admin::class);
         // Validate the search input
         $request->validate([
-            'username' => 'nullable|string|max:255',  // Only validate username if it's provided
+            'username' => 'nullable|string|min:5|max:25',  // Only validate username if it's provided
         ]);
 
         // Store the search query

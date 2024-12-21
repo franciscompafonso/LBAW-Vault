@@ -34,7 +34,7 @@
                 <label for="reason" class="block text-lg font-medium text-gray-700 mb-2 font-montserrat">
                     Reason for Unblock
                 </label>
-                <textarea name="reason" id="reason" rows="4" 
+                <textarea name="reason" id="reason" maxlength="255" rows="4" 
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-ultraViolet focus:outline-none font-montserrat"
                     placeholder="Please provide a detailed reason why you should be unblocked."
                     required>{{ old('reason') }}</textarea>

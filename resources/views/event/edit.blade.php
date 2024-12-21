@@ -27,7 +27,7 @@
               <!-- Event Name -->
               <div class="mb-4">
                 <label for="name" class="block text-lg font-semibold font-montserrat">Event Name</label>
-                <input id="name" type="text" name="name" value="{{ old('name', $event->name) }}" required autofocus autocomplete="name" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="name-error">
+                <input id="name" type="text" maxlength="70" name="name" value="{{ old('name', $event->name) }}" required autofocus autocomplete="name" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="name-error">
                 @if ($errors->has('name'))
                   <span id="name-error" class="mt-1 text-sm text-red-600">{{ $errors->first('name') }}</span>
                 @endif
@@ -36,7 +36,7 @@
               <!-- Description -->
               <div class="mb-4">
                 <label for="description" class="block text-lg font-semibold font-montserrat" aria-describedby="description-error">Description</label>
-                <textarea id="description" name="description" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat">{{ old('description', $event->description) }}</textarea>
+                <textarea id="description" maxlength="450" name="description" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat">{{ old('description', $event->description) }}</textarea>
                 @if ($errors->has('description'))
                   <span id="description-error" class="mt-1 text-sm text-red-600">{{ $errors->first('description') }}</span>
                 @endif
@@ -93,7 +93,7 @@
             <!-- Location -->
             <div class="mb-4">
               <label for="location" class="block text-lg font-semibold font-montserrat">Location</label>
-              <textarea id="location" name="location" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="location_id-error">{{ old('location', $event->location) }}</textarea>
+              <textarea id="location" maxlength="100" name="location" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="location_id-error">{{ old('location', $event->location) }}</textarea>
               @if ($errors->has('location'))
                 <span id="location_id-error" class="mt-1 text-sm text-red-600">{{ $errors->first('location') }}</span>
               @endif
@@ -132,7 +132,7 @@
             <!-- Capacity -->
             <div class="mb-4">
               <label for="capacity" class="block text-lg font-semibold font-montserrat">Capacity</label>
-              <input id="capacity" type="number" name="capacity" value="{{ old('capacity', $event->capacity) }}" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="capacity-error">
+              <input id="capacity" type="number" max="1000" name="capacity" value="{{ old('capacity', $event->capacity) }}" required class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="capacity-error">
               @if ($errors->has('capacity'))
                 <span id="capacity-error" class="mt-1 text-sm text-red-600">{{ $errors->first('capacity') }}</span>
               @endif

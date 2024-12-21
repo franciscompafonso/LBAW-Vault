@@ -93,9 +93,9 @@ class EventController extends Controller
     {
         // dd($request->all(), Storage::disk("banner"));
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'location' => 'nullable|string',
+            'name' => 'required|string|max:70',
+            'description' => 'required|string|max:450',
+            'location' => 'nullable|string|max:100',
             'start_date' => 'required|date|after:now',
             'end_date' => 'required|date|after:start_date',
             'visibility' => 'required|in:public,private,request_only',
@@ -157,9 +157,9 @@ class EventController extends Controller
 
                 // Validate the request data
                 $request->validate([
-                    'name' => 'required|string|max:255',
-                    'description' => 'required|string',
-                    'location' => 'nullable|string',
+                    'name' => 'required|string|max:70',
+                    'description' => 'required|string|max:450',
+                    'location' => 'nullable|string|max:100',
                     'start_date' => 'required|date|after:now',
                     'end_date' => 'required|date|after:start_date',
                     'visibility' => 'required|in:public,private,request_only',

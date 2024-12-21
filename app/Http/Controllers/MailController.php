@@ -15,7 +15,7 @@ class MailController extends Controller
 {
     public function sendResetLink(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate(['email' => 'required|email|max:255']);
         $email = $request->input('email');
         $user = User::where('email', $email)->first();
         if (!$user) {

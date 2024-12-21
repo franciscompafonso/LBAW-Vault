@@ -4,6 +4,7 @@
         <textarea 
             name="content" 
             rows="4" 
+            maxlength="255" 
             class="w-full p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-burgundy"
             placeholder="Add your comment here..."
             aria-labelledby="comments-heading"

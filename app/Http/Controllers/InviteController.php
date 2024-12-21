@@ -53,7 +53,7 @@ class InviteController extends Controller
     public function sendInvite(Request $request, $eventId)
     {
         $request->validate([
-            'username' => 'required|string|max:255',
+            'username' => 'required|string|min:5|max:25',
             'description' => 'nullable|string|max:50'
         ]);
 

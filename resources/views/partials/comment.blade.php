@@ -141,7 +141,7 @@
             <form id="replyCommentForm" action="{{ route('comments.reply', $comment->id) }}" method="POST">
                 @csrf
                 <div class="flex items-center space-x-2">
-                    <textarea name="text" class="w-full p-2 text-black border border-gray-300 rounded-lg" placeholder="Write your reply..." required></textarea>
+                    <textarea name="text" maxlength="255" class="w-full p-2 text-black border border-gray-300 rounded-lg" placeholder="Write your reply..." required></textarea>
                 </div>
                 <div class="mt-2 text-right">
                     <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg">Submit Reply</button>

@@ -13,7 +13,8 @@
                 <label for="poll_name" class="block mb-2 text-gray-700">Poll Name <span class="text-red-600">*</span></label>
                 <input 
                     type="text" 
-                    name="name" 
+                    name="name"
+                    maxlength="100" 
                     id="poll_name" 
                     aria-label="Poll Name"
                     class="w-full p-2 border border-gray-300 rounded-lg @error('name') border-red-500 @enderror" 
@@ -30,13 +31,13 @@
                     @if(old('options'))
                         @foreach(old('options') as $option)
                             <div class="flex items-center">
-                                <input type="text" name="options[]" id="poll-options" class="w-full p-2 border border-gray-300 rounded-lg @error('options.*') border-red-500 @enderror" value="{{ $option }}" required>
+                                <input type="text" maxlength="40" name="options[]" id="poll-options" class="w-full p-2 border border-gray-300 rounded-lg @error('options.*') border-red-500 @enderror" value="{{ $option }}" required>
                                 <button type="button" class="ml-2 px-2 py-1 bg-red-500 text-white rounded-lg" onclick="removeOption(this)">X</button>
                             </div>
                         @endforeach
                     @else
                         <div class="flex items-center">
-                            <input type="text" name="options[]" id="poll-options" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                            <input type="text" maxlength="40" name="options[]" id="poll-options" class="w-full p-2 border border-gray-300 rounded-lg" required>
                             <button type="button" class="ml-2 px-2 py-1 bg-red-500 text-white rounded-lg" onclick="removeOption(this)">X</button>
                         </div>
                     @endif

@@ -41,7 +41,7 @@
             <div>
               <label for="email" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Email address</label>
               <div class="mt-1">
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" 
+                <input id="email" type="email" maxlength="255" name="email" value="{{ old('email') }}" required autofocus autocomplete="email" 
                   class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">
               </div>
               @if ($errors->has('email'))
@@ -56,7 +56,7 @@
                 <a href="{{ route('password.request') }}" class="block text-2xl font-medium text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Forgot your password?">Forgot password?</a>
               </div>
               <div class="mt-1">
-                <input id="password" type="password" name="password" required autocomplete="current-password" 
+                <input id="password" type="password" maxlength="255" name="password" required autocomplete="current-password" 
                   class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">
               </div>
               @if ($errors->has('password'))

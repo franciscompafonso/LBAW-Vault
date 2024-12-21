@@ -43,7 +43,7 @@
             <div>
               <label for="email" class="block text-2xl font-medium text-darkSlateGrey">Enter your email address to receive a password reset link.</label>
               <div class="mt-1">
-                <input id="email" type="email" name="email" required autofocus autocomplete="email" 
+                <input id="email" type="email" maxlength="255" name="email" required autofocus autocomplete="email" 
                   class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet"
                   aria-label="Email address">
               </div>

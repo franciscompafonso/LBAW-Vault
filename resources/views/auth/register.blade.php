@@ -40,7 +40,7 @@
           <div>
             <label for="name" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Name <span class="text-red-600">*</span></label>   
             <div class="mt-1">
-              <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="name-error">   
+              <input id="name" type="text" maxlength="70" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="name-error">   
               @if ($errors->has('name'))
                 <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('name') }}
@@ -53,7 +53,7 @@
           <div>
             <label for="username" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Username <span class="text-red-600">*</span></label>   
             <div class="mt-1">
-              <input id="username" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="username-error">   
+              <input id="username" type="text" maxlength="25" name="username" value="{{ old('username') }}" required autocomplete="username" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="username-error">   
               @if ($errors->has('username'))
                 <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('username') }}
@@ -66,7 +66,7 @@
           <div>
             <label for="email" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Email Address <span class="text-red-600">*</span></label>   
             <div class="mt-1">
-              <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="email-error">   
+              <input id="email" type="email" maxlength="255" name="email" value="{{ old('email') }}" required autocomplete="email" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="email-error">   
               @if ($errors->has('email'))
                 <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('email') }}
@@ -79,8 +79,7 @@
           <div>
             <label for="password" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Password <span class="text-red-600">*</span></label>   
             <div class="mt-1">
-              <input id="password" type="password" name="password" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="password-error">   
-              <span class="text-sm text-gray-500">Must be at least 8 characters</span>
+              <input id="password" type="password" maxlength="255" name="password" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="password-error">   
               @if ($errors->has('password'))
                 <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('password') }}
@@ -93,8 +92,7 @@
           <div>
             <label for="password-confirm" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Confirm Password <span class="text-red-600">*</span></label>   
             <div class="mt-1">
-              <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
-              <span class="text-sm text-gray-500">Must be at least 8 characters</span>
+              <input id="password-confirm" type="password" maxlength="255" name="password_confirmation" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
             </div>
           </div>
 
@@ -107,7 +105,7 @@
         @if(!auth()->guard('admin')->check())
 
           <div class="mt-6 text-center">
-          <a href="{{ route('google-auth') }}" class="inline-flex items-center justify-center w-full px-6 py-2 font-bold text-ultraViolet transition-all duration-200 border-2 border-ultraViolet rounded-md bg-white hover:bg-cambridgeBlue" aria-label="Sign up with Google">
+          <a href="{{ route('google-auth') }}" class="inline-flex items-center justify-center w-full px-6 py-2 font-bold text-ultraViolet transition-all duration-200 border-2 border-ultraViolet rounded-md bg-white hover:bg-cambridgeBlue font-montserrat" aria-label="Sign up with Google">
             Sign up with Google <i class="fab fa-google ml-2"></i>
           </a>
           </div>

@@ -84,7 +84,7 @@ class CommentController extends Controller
     {
         
         $data = $request->validate([
-            'content' => 'required|string|max:1000',
+            'content' => 'required|string|max:255',
             'photos' => 'nullable|array|max:15', // Allow up to 15 photos
             'photos.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
@@ -121,7 +121,7 @@ class CommentController extends Controller
     public function reply(Request $request, $commentId)
     {
         $request->validate([
-            'text' => 'required|string|max:1000',
+            'text' => 'required|string|max:255',
         ]);
 
         $comment = Comment::find($commentId);

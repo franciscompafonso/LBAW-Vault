@@ -17,6 +17,7 @@
                 <input 
                     id="password" 
                     type="password" 
+                    maxlength="255" 
                     name="password" 
                     required 
                     class="w-full p-3 mt-2 border border-gray-300 rounded-md font-montserrat focus:ring-ultraViolet focus:border-ultraViolet" 
@@ -35,6 +36,7 @@
                 <input 
                     id="password_confirmation" 
                     type="password" 
+                    maxlength="255" 
                     name="password_confirmation" 
                     required 
                     class="w-full p-3 mt-2 border border-gray-300 rounded-md font-montserrat focus:ring-ultraViolet focus:border-ultraViolet" 
