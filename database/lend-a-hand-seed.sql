@@ -53,17 +53,18 @@ DROP TRIGGER IF EXISTS trigger_event_reminder_notification ON event;
 DROP TRIGGER IF EXISTS trigger_update_event_reminders_start_date ON event;
 DROP TRIGGER IF EXISTS trigger_update_event_reminders_end_date ON event;
 DROP TRIGGER IF EXISTS trigger_unblock_notification ON unblock_request;
+DROP TRIGGER IF EXISTS trigger_delete_future_notifications ON participant;
 DROP TRIGGER IF EXISTS check_orphaned_notifications_comment ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_invite ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_accepted_invite ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_join_request ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_accepted_join_request ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_poll_reminder ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_event_cancelation ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_event_reminder ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_event_update ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_admin_action ON comment_notification;
-DROP TRIGGER IF EXISTS check_orphaned_notifications_unblock ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_invite ON invite_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_accepted_invite ON accepted_invite_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_join_request ON join_request_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_accepted_join_request ON accepted_join_request_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_poll_reminder ON poll_reminder;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_event_cancelation ON event_cancelation;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_event_reminder ON event_reminder;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_event_update ON event_update_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_admin_action ON admin_action;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_unblock ON unblock_notification;
 
 -- drop functions
 DROP FUNCTION IF EXISTS event_search_update();
@@ -79,6 +80,7 @@ DROP FUNCTION IF EXISTS create_event_reminder_notification();
 DROP FUNCTION IF EXISTS update_event_reminder_notifications_start_date();
 DROP FUNCTION IF EXISTS update_event_reminder_notifications_end_date();
 DROP FUNCTION IF EXISTS create_unblock_notification();
+DROP FUNCTION IF EXISTS delete_future_notifications();
 DROP FUNCTION IF EXISTS delete_orphaned_notifications();
 
 -- create tables
@@ -762,6 +764,33 @@ CREATE TRIGGER trigger_unblock_notification
     FOR EACH ROW
     WHEN (NEW.status IN ('approved', 'denied') AND OLD.status IS DISTINCT FROM NEW.status)
     EXECUTE FUNCTION create_unblock_notification();
+
+-- delete reminders notifications when user is removed from event
+CREATE OR REPLACE FUNCTION delete_future_notifications()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Delete future notifications associated with the participator and the event
+    DELETE FROM notification
+    WHERE id IN (
+        SELECT er.id
+        FROM event_reminder er
+        WHERE er.event_id = OLD.event_id
+          AND EXISTS (
+              SELECT 1
+              FROM notification n
+              WHERE n.id = er.id
+                AND n.emitted_to = OLD.participator_id
+                AND n.date > NOW() -- Only delete future notifications
+          )
+    );
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_future_notifications
+BEFORE DELETE ON participator
+FOR EACH ROW
+EXECUTE FUNCTION delete_future_notifications();
 
 
 -- delete from notification table
