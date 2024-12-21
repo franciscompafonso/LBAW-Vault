@@ -72,7 +72,7 @@
                                         <form action="{{ route('admin.unblock.user', $user->id) }}" method="POST" aria-label="Unblock user {{ $user->username }}">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md unblock-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-green-500 hover:text-darkSlateGrey hover:border-green-500" aria-label="Unblock User">
                                                 <span class="hidden loading-icon" id="unblock-loading-{{ $user->id }}">⏳</span>
                                                 Unblock
                                             </button>
@@ -82,7 +82,7 @@
                                     @can('manageUsers', App\Models\Admin::class)
                                         <form action="{{ route('admin.block.user', $user->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md block-btn font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue" aria-label="Block user {{ $user->username }}">
+                                            <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-700 hover:text-white hover:border-red-700" aria-label="Block User">
                                                 <span class="hidden loading-icon" id="block-loading-{{ $user->id }}">⏳</span>
                                                 Block
                                             </button>

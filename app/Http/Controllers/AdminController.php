@@ -117,11 +117,11 @@ class AdminController extends Controller
                 ->where('end_date', '>', Carbon::now())
                 ->delete();
 
-            return redirect()->route('admin.search.user', ['username' => $user->username])
-                ->with([
-                    'success' => true,
-                    'message' => 'User has been deleted successfully!'
-                ]);
+            return redirect()->route('admin.user-management')->with([
+                'success' => true,
+                'message' => 'User has been blocked, and future participations have been removed successfully.'
+            ]);
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with([
@@ -164,10 +164,11 @@ class AdminController extends Controller
 
             event(new AdminActionSent($user->id, "You were blocked by an admin..."));
 
-            return redirect()->route('admin.user-management')->with([
-                'success' => true,
-                'message' => 'User has been blocked, and future participations have been removed successfully.'
-            ]);
+            return redirect()->route('admin.search.user', ['username' => $user->username])
+                ->with([
+                    'success' => true,
+                    'message' => 'User has been blocked successfully!'
+                ]);
         } catch (\Exception $e) {
             return redirect()->back()->with([
                 'success' => false,
@@ -189,10 +190,11 @@ class AdminController extends Controller
 
             event(new Unblock($user->id, "You were unblocked by an admin!"));
 
-            return redirect()->route('admin.user-management')->with([
-                'success' => true,
-                'message' => 'User has been unblocked successfully.'
-            ]);
+            return redirect()->route('admin.search.user', ['username' => $user->username])
+                ->with([
+                    'success' => true,
+                    'message' => 'User has been unblocked successfully!'
+                ]);
         } catch (\Exception $e) {
             return redirect()->back()->with([
                 'success' => false,
