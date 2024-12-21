@@ -2,7 +2,7 @@
 <div id="poll-form" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-500 bg-opacity-75">
     <div class="w-1/2 p-6 bg-white rounded-lg shadow-lg">
         <h2 class="mb-4 text-2xl font-bold">Create Poll</h2>
-        <form action="{{ route('polls.store', $event->id) }}" method="POST">
+        <form id="pollForm" action="{{ route('polls.store', $event->id) }}" method="POST">
             @csrf
             <div class="mb-4">
                 <label for="poll_name" class="block mb-2 text-gray-700">Poll Name <span class="text-red-600">*</span></label>
@@ -16,14 +16,14 @@
             </div>
 
             <div class="mb-4">
-                <label for="poll_options" class="block mb-2 text-gray-700">Options (comma-separated) <span class="text-red-600">*</span></label>
-                <textarea 
-                    name="options" 
-                    id="poll_options" 
-                    rows="3" 
-                    aria-label="Poll Options"
-                    class="w-full p-2 border border-gray-300 rounded-lg" 
-                    required></textarea>
+                <label for="poll_options" class="block mb-2 text-gray-700">Options <span class="text-red-600">*</span></label>
+                <div id="poll-options-container" class="space-y-2">
+                    <div class="flex items-center">
+                        <input type="text" name="options[]" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                        <button type="button" class="ml-2 text-red-500" onclick="removeOption(this)">X</button>
+                    </div>
+                </div>
+                <button type="button" class="mt-2 text-blue-500" onclick="addOption()">Add Option</button>
             </div>
 
             <div class="mb-4">
