@@ -5,6 +5,7 @@
         <!-- Username Input -->
         <div class="w-full">
             <input 
+                maxlength="255"
                 id="invite_user" 
                 type="text" 
                 name="username" 
@@ -23,6 +24,7 @@
             <!-- Invite Description -->
             <div class="flex-1">
                 <input 
+                    maxlength="50"
                     id="invite_desc" 
                     type="text" 
                     name="description" 

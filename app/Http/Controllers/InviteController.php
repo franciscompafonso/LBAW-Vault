@@ -54,7 +54,7 @@ class InviteController extends Controller
     {
         $request->validate([
             'username' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255'
+            'description' => 'nullable|string|max:50'
         ]);
 
         $event = Event::findOrFail($eventId);
@@ -72,7 +72,6 @@ class InviteController extends Controller
         $isParticipator = $event->participators()->where('id', $receiver->id)->exists();
         $isAlreadyInvited = Invite::where('receiver_id', $receiver->id)
                                 ->where('sender_id', Auth::id())
-                                ->where('title', $event->name)
                                 ->exists();
 
         if ($isParticipator) {
@@ -93,7 +92,6 @@ class InviteController extends Controller
             'sender_id' => Auth::id(),
             'receiver_id' => $receiver->id,
             'event_id' => $eventId,
-            'title' => $event->name,
             'description' => $request->description ?? '',
             'date' => now(),
             'accepted' => false,

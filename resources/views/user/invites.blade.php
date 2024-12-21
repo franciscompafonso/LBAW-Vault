@@ -125,7 +125,7 @@
                     <div class="overflow-x-auto">
                         <!-- Received Invitations Table Content -->
                         <div class="gap-8">
-                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg text-darkSlateGrey font-montserrat">
                                 <div class="text-center">Event</div>
                                 <div class="text-center">Sender</div>
                                 <div class="text-center">Message</div>
@@ -171,7 +171,7 @@
                     <div class="overflow-x-auto">
                         <!-- Received Invitations Table Content -->
                         <div class="gap-8">
-                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg text-darkSlateGrey font-montserrat">
                                 <div class="text-center">Event</div>
                                 <div class="text-center">Sender</div>
                                 <div class="text-center"></div>

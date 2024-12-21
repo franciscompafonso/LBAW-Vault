@@ -203,9 +203,8 @@ CREATE TABLE invite (
     sender_id INT REFERENCES user_account(id),
     receiver_id INT REFERENCES user_account(id),
     event_id INT REFERENCES event(id),
-    title VARCHAR(255) NOT NULL,
 	accepted BOOLEAN,
-    description TEXT NOT NULL,
+    description VARCHAR(50) NOT NULL,
     date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP)
 );
 
