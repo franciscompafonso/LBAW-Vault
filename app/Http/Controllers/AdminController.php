@@ -61,7 +61,11 @@ class AdminController extends Controller
         $search = $request->username;
 
         // Search logic
-        $users = User::where('username', 'like', '%' . $search . '%')->paginate(5);
+        $users = User::where('isdeleted', false) // Exclude deleted users
+        ->when($search, function ($query, $search) {
+            return $query->where('username', 'like', '%' . $search . '%');
+        })
+        ->paginate(5);
 
         // Return the results to the same view
         return view('admin.user-management', compact('users', 'search'));
@@ -71,7 +75,9 @@ class AdminController extends Controller
     {
         $this->authorize('manageUsers', Admin::class);
         // Retrieve all users
-        $users = User::orderBy('id','asc')->paginate(5);
+        $users = User::where('isdeleted', false)
+        ->orderBy('id', 'asc')
+        ->paginate(5);
 
         // Return to a view with the users data
         return view('admin.user-management', compact('users'));

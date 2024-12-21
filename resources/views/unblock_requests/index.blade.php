@@ -3,7 +3,7 @@
 @section('Title', 'Unblock Requests')
 @section('content')
     <div class="container p-8 mx-auto">
-        <h1 class="mb-6 text-5xl font-bold font-montserrat">Unblock Requests</h1>
+        <h1 class="mb-6 text-5xl font-bold text-ultraViolet font-montserrat">Unblock Requests</h1>
         @if($requests->count())
             <table>
                 <thead>
@@ -68,7 +68,7 @@
                 {{ $requests->links() }}
             </div>
         @else
-            <p>No unblock requests found.</p>
+            <p>No pending unblock requests found.</p>
         @endif
     </div>
 @endsection

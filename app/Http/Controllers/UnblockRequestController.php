@@ -40,6 +40,7 @@ class UnblockRequestController extends Controller
     public function index()
     {
         $requests = UnblockRequest::with('requestedBy')->paginate(5);
+        $requests = UnblockRequest::where('status', 'pending')->paginate(5);
 
         return view('unblock_requests.index', compact('requests'));
     }
