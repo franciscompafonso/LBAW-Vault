@@ -1,50 +1,65 @@
-const pollData = {
-    id: "{{ $poll->id }}",
-    startTime: new Date("{{ $poll->start_time->format('Y-m-d\TH:i:sP') }}").getTime(),
-    endTime: new Date("{{ $poll->end_time->format('Y-m-d\TH:i:sP') }}").getTime()
-};
-
-console.log("Poll Data:", pollData);
-
 document.addEventListener('DOMContentLoaded', function () {
-    const countdownElement = document.getElementById('countdown-' + pollData.id);
-    if (!countdownElement) {
-        console.error("Countdown element not found for poll ID:", pollData.id);
+    // Collect all polls on the page
+    const polls = document.querySelectorAll('.poll');
+
+    if (polls.length === 0) {
+        console.error("No polls found on the page.");
         return;
     }
 
-    const now = new Date().getTime();
-    console.log("Current Time:", now);
-    console.log("Poll Start Time:", pollData.startTime);
-    console.log("Poll End Time:", pollData.endTime);
+    polls.forEach((pollElement) => {
+        const pollId = pollElement.dataset.pollId;
+        const startTime = new Date(pollElement.dataset.pollStart).getTime();
+        const endTime = new Date(pollElement.dataset.pollEnd).getTime();
 
-    const startCountdown = (endTime, message) => {
-        const countdownInterval = setInterval(function () {
-            const now = new Date().getTime();
-            const distance = endTime - now;
+        const countdownElement = pollElement.querySelector(`#countdown-${pollId}`);
+        const parentElement = countdownElement.parentElement;
 
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                countdownElement.innerHTML = message;
-                return;
-            }
+        if (!countdownElement) {
+            console.error(`Countdown element not found for poll ID: ${pollId}`);
+            return;
+        }
+
+        const updateCountdown = (distance) => {
+            if (distance < 0) return "";
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        }, 1000);
-    };
+            if (days > 0) {
+                return `${days}d ${hours}h`;
+            } else if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            } else {
+                return `${minutes}m ${seconds}s`;
+            }
+        };
 
-    if (now < pollData.startTime) {
-        console.log("Countdown to poll start");
-        startCountdown(pollData.startTime, "Poll has started");
-    } else if (now < pollData.endTime) {
-        console.log("Countdown to poll end");
-        startCountdown(pollData.endTime, "Poll has ended");
-    } else {
-        countdownElement.innerHTML = "Poll has ended";
-    }
+        const startCountdown = (endTime, updateMessage, prefixMessage) => {
+            const countdownInterval = setInterval(function () {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    parentElement.textContent = updateMessage;
+                    return;
+                }
+
+                parentElement.textContent = `${prefixMessage}: ${updateCountdown(distance)}`;
+            }, 1000);
+        };
+
+        const now = new Date().getTime();
+
+        if (now < startTime) {
+            startCountdown(startTime, "Poll has started", "Poll starts in");
+        } else if (now < endTime) {
+            startCountdown(endTime, "Poll has ended", "Poll ends in");
+        } else {
+            parentElement.textContent = "Poll has ended";
+        }
+    });
 });

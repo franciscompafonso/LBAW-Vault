@@ -94,7 +94,6 @@ class CommentController extends Controller
         $comment = $event->comments()->create([
             'comment_by_id' => Auth::id(),
             'text' => $data['content'],
-            'is_pinned' => false,
             'score' => 0,
             'edited' => false,
             'date' => now(),

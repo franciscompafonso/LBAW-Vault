@@ -38,7 +38,6 @@ class Comment extends Model
             'comment_by_id' => $this->comment_by_id,
             'event_id' => $this->event_id,
             'text' => $this->text,
-            'is_pinned' => $this->is_pinned,
             'score' => $this->score,
             'edited' => $this->edited,
             'date' => $this->date,

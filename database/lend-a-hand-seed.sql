@@ -1508,114 +1508,114 @@ INSERT INTO answer_review (answered_by_id, question_id, about_event_id, rating, 
 (1, 4, 3, 3, '2023-12-02'),
 (1, 5, 3, 3, '2023-12-02');
 
-INSERT INTO comment (comment_by_id, event_id, text, is_pinned, score, edited, date) VALUES
+INSERT INTO comment (comment_by_id, event_id, text, score, edited, date) VALUES
 -- Event 1 (8 comments)
-(12, 1, 'Count me in! The agenda looks fantastic', FALSE, 32, FALSE, '2023-11-15 09:45:00'),
-(23, 1, 'Will there be parking available?', FALSE, 8, FALSE, '2023-11-15 10:30:00'),
-(5, 1, 'Last year''s event was great, expecting even better this time!', TRUE, 67, FALSE, '2023-11-15 11:15:00'),
-(35, 1, 'Anyone want to carpool from downtown?', FALSE, 15, FALSE, '2023-11-15 13:20:00'),
-(42, 1, 'Just registered! Looking forward to meeting everyone', FALSE, 28, FALSE, '2023-11-15 14:45:00'),
-(15, 1, 'What''s the dress code?', FALSE, 12, TRUE, '2023-11-15 15:30:00'),
-(8, 1, 'Is there still space available?', FALSE, 5, FALSE, '2023-11-15 16:15:00'),
+(12, 1, 'Count me in! The agenda looks fantastic', 32, FALSE, '2023-11-15 09:45:00'),
+(23, 1, 'Will there be parking available?', 8, FALSE, '2023-11-15 10:30:00'),
+(5, 1, 'Last year''s event was great, expecting even better this time!', 67, FALSE, '2023-11-15 11:15:00'),
+(35, 1, 'Anyone want to carpool from downtown?', 15, FALSE, '2023-11-15 13:20:00'),
+(42, 1, 'Just registered! Looking forward to meeting everyone', 28, FALSE, '2023-11-15 14:45:00'),
+(15, 1, 'What''s the dress code?', 12, TRUE, '2023-11-15 15:30:00'),
+(8, 1, 'Is there still space available?', 5, FALSE, '2023-11-15 16:15:00'),
 
 -- Event 2 (5 comments)
-(7, 2, 'Perfect timing for this type of event!', TRUE, 55, FALSE, '2023-11-16 08:30:00'),
-(31, 2, 'Will presentations be recorded?', FALSE, 18, FALSE, '2023-11-16 09:45:00'),
-(44, 2, 'Looking forward to the keynote speaker', FALSE, 42, FALSE, '2023-11-16 10:30:00'),
-(3, 2, 'Is there a virtual attendance option?', FALSE, 25, TRUE, '2023-11-16 11:15:00'),
-(50, 2, 'Great initiative!', FALSE, 38, FALSE, '2023-11-16 12:00:00'),
+(7, 2, 'Perfect timing for this type of event!', 55, FALSE, '2023-11-16 08:30:00'),
+(31, 2, 'Will presentations be recorded?', 18, FALSE, '2023-11-16 09:45:00'),
+(44, 2, 'Looking forward to the keynote speaker', 42, FALSE, '2023-11-16 10:30:00'),
+(3, 2, 'Is there a virtual attendance option?', 25, TRUE, '2023-11-16 11:15:00'),
+(50, 2, 'Great initiative!', 38, FALSE, '2023-11-16 12:00:00'),
 
 -- Event 3 (3 comments)
-(1, 3, 'This event was amazing!', FALSE, 45, FALSE, '2023-11-15 09:00:00'),
-(17, 3, 'Can''t wait for this!', FALSE, 28, FALSE, '2023-11-17 09:00:00'),
-(28, 3, 'Will refreshments be provided?', FALSE, 15, FALSE, '2023-11-17 10:30:00'),
-(41, 3, 'The venue choice is perfect', TRUE, 48, FALSE, '2023-11-17 11:45:00'),
+(1, 3, 'This event was amazing!', 45, FALSE, '2023-11-15 09:00:00'),
+(17, 3, 'Can''t wait for this!', 28, FALSE, '2023-11-17 09:00:00'),
+(28, 3, 'Will refreshments be provided?', 15, FALSE, '2023-11-17 10:30:00'),
+(41, 3, 'The venue choice is perfect', 48, FALSE, '2023-11-17 11:45:00'),
 
 -- Event 4 (7 comments)
-(4, 4, 'This is exactly what our community needed', TRUE, 72, FALSE, '2023-11-18 08:15:00'),
-(19, 4, 'How long will the event last?', FALSE, 22, FALSE, '2023-11-18 09:30:00'),
-(36, 4, 'Already blocked my calendar!', FALSE, 35, FALSE, '2023-11-18 10:45:00'),
-(45, 4, 'Is there an agenda available?', FALSE, 28, TRUE, '2023-11-18 11:30:00'),
-(11, 4, 'Looking forward to networking', FALSE, 42, FALSE, '2023-11-18 12:45:00'),
-(27, 4, 'Will there be breakout sessions?', FALSE, 18, FALSE, '2023-11-18 13:15:00'),
-(51, 4, 'Great speaker lineup!', FALSE, 58, FALSE, '2023-11-18 14:30:00'),
+(4, 4, 'This is exactly what our community needed', 72, FALSE, '2023-11-18 08:15:00'),
+(19, 4, 'How long will the event last?', 22, FALSE, '2023-11-18 09:30:00'),
+(36, 4, 'Already blocked my calendar!', 35, FALSE, '2023-11-18 10:45:00'),
+(45, 4, 'Is there an agenda available?', 28, TRUE, '2023-11-18 11:30:00'),
+(11, 4, 'Looking forward to networking', 42, FALSE, '2023-11-18 12:45:00'),
+(27, 4, 'Will there be breakout sessions?', 18, FALSE, '2023-11-18 13:15:00'),
+(51, 4, 'Great speaker lineup!', 58, FALSE, '2023-11-18 14:30:00'),
 
 -- Event 5 (4 comments)
-(13, 5, 'Excited to participate!', FALSE, 32, FALSE, '2023-11-19 09:00:00'),
-(29, 5, 'Is this suitable for beginners?', FALSE, 25, FALSE, '2023-11-19 10:15:00'),
-(46, 5, 'Looking forward to learning new things', TRUE, 45, FALSE, '2023-11-19 11:30:00'),
-(6, 5, 'Will slides be shared afterward?', FALSE, 20, FALSE, '2023-11-19 12:45:00'),
+(13, 5, 'Excited to participate!', 32, FALSE, '2023-11-19 09:00:00'),
+(29, 5, 'Is this suitable for beginners?', 25, FALSE, '2023-11-19 10:15:00'),
+(46, 5, 'Looking forward to learning new things', 45, FALSE, '2023-11-19 11:30:00'),
+(6, 5, 'Will slides be shared afterward?', 20, FALSE, '2023-11-19 12:45:00'),
 
 -- Continue pattern for remaining events...
 -- Event 6 (6 comments)
-(24, 6, 'This topic is so relevant right now', TRUE, 65, FALSE, '2023-11-20 08:30:00'),
-(39, 6, 'Can''t wait to contribute to the discussion', FALSE, 38, FALSE, '2023-11-20 09:45:00'),
-(47, 6, 'Will there be Q&A sessions?', FALSE, 22, FALSE, '2023-11-20 10:30:00'),
-(9, 6, 'Excellent initiative!', FALSE, 48, FALSE, '2023-11-20 11:15:00'),
-(32, 6, 'Is there a hashtag for social media?', FALSE, 15, TRUE, '2023-11-20 12:30:00'),
-(52, 6, 'Looking forward to meeting everyone', FALSE, 28, FALSE, '2023-11-20 13:45:00'),
+(24, 6, 'This topic is so relevant right now', 65, FALSE, '2023-11-20 08:30:00'),
+(39, 6, 'Can''t wait to contribute to the discussion', 38, FALSE, '2023-11-20 09:45:00'),
+(47, 6, 'Will there be Q&A sessions?', 22, FALSE, '2023-11-20 10:30:00'),
+(9, 6, 'Excellent initiative!', 48, FALSE, '2023-11-20 11:15:00'),
+(32, 6, 'Is there a hashtag for social media?', 15, TRUE, '2023-11-20 12:30:00'),
+(52, 6, 'Looking forward to meeting everyone', 28, FALSE, '2023-11-20 13:45:00'),
 
 -- Event 7 (2 comments)
-(10, 7, 'Just what I was looking for!', TRUE, 42, FALSE, '2023-11-21 09:00:00'),
-(38, 7, 'Will this be recorded?', FALSE, 18, FALSE, '2023-11-21 10:15:00'),
+(10, 7, 'Just what I was looking for!', 42, FALSE, '2023-11-21 09:00:00'),
+(38, 7, 'Will this be recorded?', 18, FALSE, '2023-11-21 10:15:00'),
 
 -- Event 8 (5 comments)
-(14, 8, 'Great timing for this event', FALSE, 35, FALSE, '2023-11-22 08:45:00'),
-(30, 8, 'Looking forward to the workshops', TRUE, 52, FALSE, '2023-11-22 09:30:00'),
-(40, 8, 'Is there a detailed schedule?', FALSE, 25, FALSE, '2023-11-22 10:45:00'),
-(48, 8, 'Will certificates be provided?', FALSE, 28, FALSE, '2023-11-22 11:30:00'),
-(5, 8, 'Can''t wait to participate!', FALSE, 42, FALSE, '2023-11-22 12:15:00'),
+(14, 8, 'Great timing for this event', 35, FALSE, '2023-11-22 08:45:00'),
+(30, 8, 'Looking forward to the workshops', 52, FALSE, '2023-11-22 09:30:00'),
+(40, 8, 'Is there a detailed schedule?', 25, FALSE, '2023-11-22 10:45:00'),
+(48, 8, 'Will certificates be provided?', 28, FALSE, '2023-11-22 11:30:00'),
+(5, 8, 'Can''t wait to participate!', 42, FALSE, '2023-11-22 12:15:00'),
 
 -- Event 9 (9 comments)
-(12, 9, 'This looks promising!', TRUE, 58, FALSE, '2023-11-23 08:00:00'),
-(34, 9, 'Are materials provided?', FALSE, 22, FALSE, '2023-11-23 09:15:00'),
-(50, 9, 'Perfect for team building', FALSE, 45, FALSE, '2023-11-23 10:30:00'),
-(3, 9, 'Will there be networking breaks?', FALSE, 32, FALSE, '2023-11-23 11:45:00'),
-(23, 9, 'Already registered my team', FALSE, 38, FALSE, '2023-11-23 12:30:00'),
-(42, 9, 'Is there a dress code?', FALSE, 15, TRUE, '2023-11-23 13:15:00'),
-(53, 9, 'Looking forward to learning', FALSE, 28, FALSE, '2023-11-23 14:00:00'),
-(15, 9, 'Will there be group activities?', FALSE, 20, FALSE, '2023-11-23 14:45:00'),
-(7, 9, 'Can''t wait!', FALSE, 25, FALSE, '2023-11-23 15:30:00'),
+(12, 9, 'This looks promising!', 58, FALSE, '2023-11-23 08:00:00'),
+(34, 9, 'Are materials provided?', 22, FALSE, '2023-11-23 09:15:00'),
+(50, 9, 'Perfect for team building', 45, FALSE, '2023-11-23 10:30:00'),
+(3, 9, 'Will there be networking breaks?', 32, FALSE, '2023-11-23 11:45:00'),
+(23, 9, 'Already registered my team', 38, FALSE, '2023-11-23 12:30:00'),
+(42, 9, 'Is there a dress code?', 15, TRUE, '2023-11-23 13:15:00'),
+(53, 9, 'Looking forward to learning', 28, FALSE, '2023-11-23 14:00:00'),
+(15, 9, 'Will there be group activities?', 20, FALSE, '2023-11-23 14:45:00'),
+(7, 9, 'Can''t wait!', 25, FALSE, '2023-11-23 15:30:00'),
 
 -- Event 10 (3 comments)
-(25, 10, 'Perfect opportunity!', TRUE, 48, FALSE, '2023-11-24 09:00:00'),
-(44, 10, 'Is there a virtual option?', FALSE, 22, FALSE, '2023-11-24 10:15:00'),
-(35, 10, 'Looking forward to it', FALSE, 35, FALSE, '2023-11-24 11:30:00'),
+(25, 10, 'Perfect opportunity!', 48, FALSE, '2023-11-24 09:00:00'),
+(44, 10, 'Is there a virtual option?', 22, FALSE, '2023-11-24 10:15:00'),
+(35, 10, 'Looking forward to it', 35, FALSE, '2023-11-24 11:30:00'),
 
 -- Events 11-15 
-(18, 11, 'This is exactly what I needed!', TRUE, 62, FALSE, '2023-11-25 08:30:00'),
-(33, 11, 'Will there be hands-on sessions?', FALSE, 28, FALSE, '2023-11-25 09:45:00'),
-(41, 11, 'Great initiative!', FALSE, 45, FALSE, '2023-11-25 10:30:00'),
-(49, 11, 'Looking forward to networking', FALSE, 32, FALSE, '2023-11-25 11:15:00'),
+(18, 11, 'This is exactly what I needed!', 62, FALSE, '2023-11-25 08:30:00'),
+(33, 11, 'Will there be hands-on sessions?', 28, FALSE, '2023-11-25 09:45:00'),
+(41, 11, 'Great initiative!', 45, FALSE, '2023-11-25 10:30:00'),
+(49, 11, 'Looking forward to networking', 32, FALSE, '2023-11-25 11:15:00'),
 
-(2, 12, 'Perfect timing', TRUE, 52, FALSE, '2023-11-26 09:00:00'),
-(24, 12, 'Will there be follow-up sessions?', FALSE, 25, FALSE, '2023-11-26 10:15:00'),
-(45, 12, 'Can''t wait to learn more', FALSE, 38, FALSE, '2023-11-26 11:30:00'),
-(52, 12, 'Is there a preparation guide?', FALSE, 18, TRUE, '2023-11-26 12:45:00'),
-(13, 12, 'This looks interesting', FALSE, 28, FALSE, '2023-11-26 13:30:00'),
-(36, 12, 'Already registered!', FALSE, 42, FALSE, '2023-11-26 14:15:00'),
+(2, 12, 'Perfect timing', 52, FALSE, '2023-11-26 09:00:00'),
+(24, 12, 'Will there be follow-up sessions?', 25, FALSE, '2023-11-26 10:15:00'),
+(45, 12, 'Can''t wait to learn more', 38, FALSE, '2023-11-26 11:30:00'),
+(52, 12, 'Is there a preparation guide?', 18, TRUE, '2023-11-26 12:45:00'),
+(13, 12, 'This looks interesting', 28, FALSE, '2023-11-26 13:30:00'),
+(36, 12, 'Already registered!', 42, FALSE, '2023-11-26 14:15:00'),
 
-(16, 13, 'Great opportunity!', TRUE, 55, FALSE, '2023-11-27 08:45:00'),
-(37, 13, 'Will there be group discussions?', FALSE, 28, FALSE, '2023-11-27 09:30:00'),
-(46, 13, 'Looking forward to it', FALSE, 35, FALSE, '2023-11-27 10:45:00'),
+(16, 13, 'Great opportunity!', 55, FALSE, '2023-11-27 08:45:00'),
+(37, 13, 'Will there be group discussions?', 28, FALSE, '2023-11-27 09:30:00'),
+(46, 13, 'Looking forward to it', 35, FALSE, '2023-11-27 10:45:00'),
 
-(8, 14, 'This is exactly what we need', TRUE, 68, FALSE, '2023-11-28 09:00:00'),
-(28, 14, 'Is there a maximum capacity?', FALSE, 22, FALSE, '2023-11-28 10:15:00'),
-(47, 14, 'Will certificates be provided?', FALSE, 32, FALSE, '2023-11-28 11:30:00'),
-(17, 14, 'Looking forward to participating', FALSE, 45, FALSE, '2023-11-28 12:45:00'),
-(38, 14, 'Great initiative!', FALSE, 28, FALSE, '2023-11-28 13:30:00'),
+(8, 14, 'This is exactly what we need', 68, FALSE, '2023-11-28 09:00:00'),
+(28, 14, 'Is there a maximum capacity?', 22, FALSE, '2023-11-28 10:15:00'),
+(47, 14, 'Will certificates be provided?', 32, FALSE, '2023-11-28 11:30:00'),
+(17, 14, 'Looking forward to participating', 45, FALSE, '2023-11-28 12:45:00'),
+(38, 14, 'Great initiative!', 28, FALSE, '2023-11-28 13:30:00'),
 
-(1, 15, 'Can''t wait!', TRUE, 58, FALSE, '2023-11-29 08:30:00'),
-(27, 15, 'Will there be breaks?', FALSE, 25, FALSE, '2023-11-29 09:45:00'),
-(48, 15, 'Perfect timing', FALSE, 42, FALSE, '2023-11-29 10:30:00'),
-(19, 15, 'Looking forward to it', FALSE, 35, FALSE, '2023-11-29 11:15:00'),
-(39, 15, 'Is there a detailed agenda?', FALSE, 28, TRUE, '2023-11-29 12:00:00'),
-(53, 15, 'Just registered!', FALSE, 32, FALSE, '2023-11-29 12:45:00');
+(1, 15, 'Can''t wait!', 58, FALSE, '2023-11-29 08:30:00'),
+(27, 15, 'Will there be breaks?', 25, FALSE, '2023-11-29 09:45:00'),
+(48, 15, 'Perfect timing', 42, FALSE, '2023-11-29 10:30:00'),
+(19, 15, 'Looking forward to it', 35, FALSE, '2023-11-29 11:15:00'),
+(39, 15, 'Is there a detailed agenda?', 28, TRUE, '2023-11-29 12:00:00'),
+(53, 15, 'Just registered!', 32, FALSE, '2023-11-29 12:45:00');
 
 INSERT INTO file (comment_id, path) VALUES
 (1, 'comment_pic_1.JPG'),
 (1, 'comment_pic_2.JPG');
 
-INSERT INTO comment (reply_to, comment_by_id, event_id, text, is_pinned, score, edited, date) VALUES
-(3, 22, 1, 'Yes!', FALSE, 8, FALSE, '2023-11-15 10:32:00');
+INSERT INTO comment (reply_to, comment_by_id, event_id, text, score, edited, date) VALUES
+(3, 22, 1, 'Yes!', 8, FALSE, '2023-11-15 10:32:00');
 

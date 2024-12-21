@@ -236,12 +236,14 @@
                     </span>
                 </div>
 
+                <!-- Invite Form -->
+                    @include('partials.invite-form')
+
                 <!-- Scrollable Participant List -->
                 <ul id="participant-list" 
                     class="space-y-4 max-h-[20em] overflow-y-scroll rounded-md p-4" 
                     aria-label="List of event participants">
-                    <!-- Invite Form -->
-                    @include('partials.invite-form')
+                    
 
                     @if ($event->participators()->count() > 0)
                         @foreach ($event->participators()->orderBy('id')->get() as $participator)

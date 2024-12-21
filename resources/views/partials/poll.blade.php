@@ -1,20 +1,16 @@
 <script src="{{ url('js/partials/poll.js') }}" defer></script>
-
-<div class="poll bg-white p-6 rounded-lg shadow-lg mb-6">
+<div class="p-6 mb-6 bg-white rounded-lg shadow-lg poll" 
+     data-poll-id="{{ $poll->id }}" 
+     data-poll-start="{{ $poll->start_time->format('Y-m-d\TH:i:sP') }}" 
+     data-poll-end="{{ $poll->end_time->format('Y-m-d\TH:i:sP') }}">
     <!-- Poll Question -->
-    <h3 class="text-3xl font-bold text-ultraViolet font-montserrat mb-4" id="poll-question-{{ $poll->id }}">{{ $poll->name }}</h3>
-    <p class="text-xl text-darkSlateGrey font-montserrat mb-4">
-        @if(now()->isBefore($poll->start_time))
-            Poll starts in: <span id="countdown-{{ $poll->id }}"></span>
-        @elseif(now()->isBefore($poll->end_time))
-            Poll ends in: <span id="countdown-{{ $poll->id }}"></span>
-        @else
-            Poll has ended.
-        @endif
+    <h3 class="mb-4 text-3xl font-bold text-ultraViolet font-montserrat" id="poll-question-{{ $poll->id }}">{{ $poll->name }}</h3>
+    <p class="mb-4 text-xl text-darkSlateGrey font-montserrat">
+        <span id="countdown-{{ $poll->id }}"></span>
     </p>
 
     @if(session('error') && session('poll_id') === $poll->id)
-        <div class="alert alert-danger text-red-500 mb-4 p-2 rounded-md" role="alert" aria-live="assertive">
+        <div class="p-2 mb-4 text-red-500 rounded-md alert alert-danger" role="alert" aria-live="assertive">
             {{ session('error') }}
         </div>
     @endif
@@ -41,7 +37,7 @@
                         $percentage = $totalVotes > 0 ? ($votes / $totalVotes) * 100 : 0;
                     @endphp
                     <div class="poll-option">
-                        <div class="flex justify-between items-center" role="group" aria-labelledby="option-{{ $poll->id }}-{{ $index }}">
+                        <div class="flex items-center justify-between" role="group" aria-labelledby="option-{{ $poll->id }}-{{ $index }}">
                             <label for="option_{{ $poll->id }}_{{ $index }}" class="text-2xl text-darkSlateGrey font-montserrat">
                                 {{ $option }}
                             </label>
@@ -49,8 +45,8 @@
                                 {{ round($percentage) }}%
                             </span>
                         </div>
-                        <div class="relative h-4 bg-gray-200 rounded-md mt-1">
-                            <div class="absolute h-4 bg-ultraViolet rounded-md transition-all duration-300" style="width: {{ $percentage }}%;"></div>
+                        <div class="relative h-4 mt-1 bg-gray-200 rounded-md">
+                            <div class="absolute h-4 transition-all duration-300 rounded-md bg-ultraViolet" style="width: {{ $percentage }}%;"></div>
                         </div>
                         <input type="radio" name="option" value="{{ $index }}" id="option_{{ $poll->id }}_{{ $index }}" aria-labelledby="option_{{ $poll->id }}_{{ $index }}_label" @if($userResponse && (string) $userResponse->option === (string) $index) checked @endif @if($userResponse) disabled @endif class="hidden">
                     </div>
@@ -64,7 +60,7 @@
         @else
             @can('vote', $poll)
                 <div class="mt-4">
-                    <button type="submit" aria-label="Submit your vote for the poll" class="px-6 py-2 font-bold text-white bg-ultraViolet hover:bg-cambridgeBlue border-ultraViolet hover:border-cambridgeBlue rounded-md transition-all duration-200">
+                    <button type="submit" aria-label="Submit your vote for the poll" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet hover:bg-cambridgeBlue border-ultraViolet hover:border-cambridgeBlue">
                         Vote
                     </button>
                 </div>
