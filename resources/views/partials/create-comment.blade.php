@@ -29,8 +29,12 @@
                 type="submit" 
                 class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue"
                 aria-label="Submit your comment">
+                <span class="hidden loading-icon" id="loading-comment">⏳</span>
                 Comment
             </button>
         </div>
     </form>
 @endcan
+
+<script type="text/javascript" src="{{ url('js/admin/user-management.js') }}" defer></script>
+<script type="text/javascript" src="{{ url('js/partials/comment.js') }}" defer></script>
