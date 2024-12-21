@@ -617,12 +617,10 @@ DECLARE
     event_start_date TIMESTAMP;
     event_creator_id INT;
 BEGIN
-    -- Get the start_date and creator_id from the event table using event_id from participator
     SELECT start_date, creator_id INTO event_start_date, event_creator_id
     FROM event
     WHERE event.id = NEW.event_id;
 
-    -- If the event does not exist or there's no start_date/creator_id, raise an exception or handle gracefully
     IF event_start_date IS NULL OR event_creator_id IS NULL THEN
         RAISE EXCEPTION 'Event data (start_date or creator_id) not found for event ID %', NEW.event_id;
     END IF;
@@ -677,9 +675,9 @@ CREATE OR REPLACE FUNCTION update_event_reminder_notifications_start_date()
 RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    -- Check if the start date of the event has changed
+    -- check if the start date of the event has changed
     IF NEW.start_date <> OLD.start_date THEN
-        -- Update '3 days' reminders
+        -- '3 days' reminders
         UPDATE notification
         SET date = NEW.start_date - INTERVAL '3 days'
         WHERE id IN (
@@ -688,7 +686,7 @@ BEGIN
             WHERE event_id = NEW.id AND about = '3 days'
         );
 
-        -- Update '1 day' reminders
+        -- '1 day' reminders
         UPDATE notification
         SET date = NEW.start_date - INTERVAL '1 day'
         WHERE id IN (
@@ -715,9 +713,9 @@ CREATE OR REPLACE FUNCTION update_event_reminder_notifications_end_date()
 RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    -- Check if the end date of the event has changed
+    -- check if the end date of the event has changed
     IF NEW.end_date <> OLD.end_date THEN
-        -- Update surveys reminders
+        -- surveys reminders
         UPDATE notification
         SET date = NEW.end_date + INTERVAL '1 hour'
         WHERE id IN (
@@ -769,7 +767,7 @@ CREATE TRIGGER trigger_unblock_notification
 CREATE OR REPLACE FUNCTION delete_future_notifications()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Delete future notifications associated with the participator and the event
+    -- delete future notifications associated with the participator and the event
     DELETE FROM notification
     WHERE id IN (
         SELECT er.id
@@ -780,7 +778,7 @@ BEGIN
               FROM notification n
               WHERE n.id = er.id
                 AND n.emitted_to = OLD.participator_id
-                AND n.date > NOW() -- Only delete future notifications
+                AND n.date > NOW()
           )
     );
     RETURN OLD;
@@ -792,6 +790,49 @@ BEFORE DELETE ON participator
 FOR EACH ROW
 EXECUTE FUNCTION delete_future_notifications();
 
+
+-- delete future notifications when event is canceled
+CREATE OR REPLACE FUNCTION delete_future_notifications_on_canceled() 
+RETURNS TRIGGER AS $BODY$
+BEGIN
+    -- delete invites
+    DELETE FROM notification
+    WHERE id IN (
+        SELECT id 
+        FROM invite_notification 
+        WHERE invite_id IN (
+            SELECT id FROM invite WHERE event_id = NEW.id
+        )
+    );
+
+    -- delete join requests
+    DELETE FROM notification
+    WHERE id IN (
+        SELECT id 
+        FROM join_request_notification 
+        WHERE join_request_id IN (
+            SELECT id FROM join_request WHERE event_id = NEW.id
+        )
+    );
+
+    -- delete futures reminders for the event
+    DELETE FROM notification
+    WHERE id IN (
+        SELECT id 
+        FROM event_reminder 
+        WHERE event_id = NEW.id
+    )
+    AND date > CURRENT_TIMESTAMP;
+
+    RETURN NEW;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_future_notifications
+AFTER UPDATE OF visibility ON event
+FOR EACH ROW
+WHEN (NEW.visibility = 'canceled' AND OLD.visibility <> 'canceled')
+EXECUTE FUNCTION delete_future_notifications_on_canceled();
 
 -- delete from notification table
 CREATE OR REPLACE FUNCTION delete_orphaned_notifications() RETURNS TRIGGER AS
