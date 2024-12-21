@@ -374,7 +374,7 @@ DECLARE
     notification_id INT;
 BEGIN
     INSERT INTO notification (emitted_by, emitted_to, date)
-    VALUES (NEW.sender_id, NEW.receiver_id, CURRENT_TIMESTAMP, FALSE)
+    VALUES (NEW.sender_id, NEW.receiver_id, CURRENT_TIMESTAMP)
     RETURNING id INTO notification_id;
 
     INSERT INTO invite_notification (id, invite_id)

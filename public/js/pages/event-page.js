@@ -117,15 +117,25 @@ document.addEventListener('submit', function (event) {
             method: 'POST',
             body: formData,
         })
-        .then(response => response.json())
+        .then(async (response) => {
+            // Ensure the response is JSON, otherwise log its raw content for debugging
+            if (!response.ok) {
+                const text = await response.text();
+                console.error('Raw response:', text); // Log the raw content
+                throw new Error('Server returned a non-JSON response or error page.');
+            }
+        
+            return response.json();
+        })
         .then(data => {
             showPopup(data.success, data.message);
             document.getElementById('inviteForm').reset();
         })
         .catch(error => {
             showPopup(false, 'Something went wrong. Please try again later.');
-            console.error(error);
+            console.error('Error in invite submission:', error);
         });
+        
     }
 });
 
