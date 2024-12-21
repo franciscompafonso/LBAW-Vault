@@ -156,7 +156,6 @@ class NotificationController extends Controller
 
                         if ($poll) {
                             $poll['event_name'] = Event::find($poll->event_id)->name;
-                            $poll['user_name'] = User::find($poll->comment_by_id)->name;
 
                             return ['type' => $type, 'data' => $poll];
                         } else {

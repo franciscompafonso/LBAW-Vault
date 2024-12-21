@@ -14,6 +14,7 @@ use App\Models\QuestionReview;
 use App\Models\User;
 use App\Events\JoinEvent;
 use App\Events\JoinRequestSent;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

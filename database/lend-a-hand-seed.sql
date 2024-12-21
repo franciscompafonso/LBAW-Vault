@@ -5,34 +5,32 @@ CREATE SCHEMA lbaw2414;
 SET search_path TO lbaw2414;
 
 -- drop tables
-DROP TABLE IF EXISTS unblock_notification CASCADE;
-DROP TABLE IF EXISTS admin_action CASCADE;
-DROP TABLE IF EXISTS event_reminder CASCADE;
-DROP TABLE IF EXISTS event_cancelation CASCADE;
-DROP TABLE IF EXISTS poll_result_notification CASCADE;
-DROP TABLE IF EXISTS poll_reminder CASCADE;
-DROP TABLE IF EXISTS comment_notification CASCADE;
-DROP TABLE IF EXISTS event_update_notification CASCADE;
-DROP TABLE IF EXISTS accepted_invite_notification CASCADE;
-DROP TABLE IF EXISTS invite_notification CASCADE;
-DROP TABLE IF EXISTS invite CASCADE;
-DROP TABLE IF EXISTS accepted_join_request_notification CASCADE;
-DROP TABLE IF EXISTS join_request_notification CASCADE;
-DROP TABLE IF EXISTS join_request CASCADE;
-DROP TABLE IF EXISTS unblock_request CASCADE;
-DROP TABLE IF EXISTS admin CASCADE;
+DROP TABLE IF EXISTS user_account CASCADE;
 DROP TABLE IF EXISTS district CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
-DROP TABLE IF EXISTS notification CASCADE;
-DROP TABLE IF EXISTS poll_response CASCADE;
-DROP TABLE IF EXISTS poll CASCADE;
-DROP TABLE IF EXISTS comment CASCADE;
-DROP TABLE IF EXISTS answer_review CASCADE;
-DROP TABLE IF EXISTS question_review CASCADE;
-DROP TABLE IF EXISTS participator CASCADE;
 DROP TABLE IF EXISTS event CASCADE;
-DROP TABLE IF EXISTS user_account CASCADE;
-DROP TABLE IF EXISTS photo CASCADE;
+DROP TABLE IF EXISTS participator CASCADE;
+DROP TABLE IF EXISTS question_review CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+DROP TABLE IF EXISTS poll CASCADE;
+DROP TABLE IF EXISTS poll_response CASCADE;
+DROP TABLE IF EXISTS notification CASCADE;
+DROP TABLE IF EXISTS admin CASCADE;
+DROP TABLE IF EXISTS unblock_request CASCADE;
+DROP TABLE IF EXISTS invite CASCADE;
+DROP TABLE IF EXISTS invite_notification CASCADE;
+DROP TABLE IF EXISTS accepted_invite_notification CASCADE;
+DROP TABLE IF EXISTS join_request CASCADE;
+DROP TABLE IF EXISTS join_request_notification CASCADE;
+DROP TABLE IF EXISTS accepted_join_request_notification CASCADE;
+DROP TABLE IF EXISTS event_update_notification CASCADE;
+DROP TABLE IF EXISTS comment_notification CASCADE;
+DROP TABLE IF EXISTS poll_reminder CASCADE;
+DROP TABLE IF EXISTS event_cancelation CASCADE;
+DROP TABLE IF EXISTS event_reminder CASCADE;
+DROP TABLE IF EXISTS admin_action CASCADE;
+DROP TABLE IF EXISTS unblock_notification CASCADE;
+DROP TABLE IF EXISTS file CASCADE;
 DROP TABLE IF EXISTS comment_feedback CASCADE;
 
 -- drop indexes
@@ -43,34 +41,44 @@ DROP INDEX IF EXISTS idx_event_full_text_search;
 
 -- drop triggers
 DROP TRIGGER IF EXISTS event_search_update ON event;
-DROP TRIGGER IF EXISTS trigger_prevent_duplicate_poll_response ON poll_response;
 DROP TRIGGER IF EXISTS trigger_create_invite_notification ON invite;
 DROP TRIGGER IF EXISTS trigger_accepted_invite_notification ON invite;
 DROP TRIGGER IF EXISTS trigger_create_join_request_notification ON join_request;
 DROP TRIGGER IF EXISTS trigger_accepted_join_request_notification ON join_request;
-DROP TRIGGER IF EXISTS trigger_event_update_notification ON event;
 DROP TRIGGER IF EXISTS trigger_comment_notification ON comment;
 DROP TRIGGER IF EXISTS trigger_event_cancellation ON event;
+DROP TRIGGER IF EXISTS trigger_event_update_notification ON event;
 DROP TRIGGER IF EXISTS trigger_poll_reminder ON poll;
 DROP TRIGGER IF EXISTS trigger_event_reminder_notification ON event;
+DROP TRIGGER IF EXISTS trigger_update_event_reminders_start_date ON event;
+DROP TRIGGER IF EXISTS trigger_update_event_reminders_end_date ON event;
 DROP TRIGGER IF EXISTS trigger_unblock_notification ON unblock_request;
-DROP TRIGGER IF EXISTS trigger_block_notification ON user_account;
-DROP TRIGGER IF EXISTS check_orphaned_notifications ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_comment ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_invite ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_accepted_invite ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_join_request ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_accepted_join_request ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_poll_reminder ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_event_cancelation ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_event_reminder ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_event_update ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_admin_action ON comment_notification;
+DROP TRIGGER IF EXISTS check_orphaned_notifications_unblock ON comment_notification;
 
 -- drop functions
 DROP FUNCTION IF EXISTS event_search_update();
-DROP FUNCTION IF EXISTS prevent_duplicate_poll_response();
 DROP FUNCTION IF EXISTS create_invite_notification();
 DROP FUNCTION IF EXISTS create_accepted_invite_notification();
 DROP FUNCTION IF EXISTS create_join_request_notification();
 DROP FUNCTION IF EXISTS create_accepted_join_request_notification();
-DROP FUNCTION IF EXISTS create_event_update_notification();
 DROP FUNCTION IF EXISTS create_comment_notification();
 DROP FUNCTION IF EXISTS notify_event_cancellation();
+DROP FUNCTION IF EXISTS create_event_update_notification();
 DROP FUNCTION IF EXISTS create_poll_reminder();
 DROP FUNCTION IF EXISTS create_event_reminder_notification();
+DROP FUNCTION IF EXISTS update_event_reminder_notifications_start_date();
+DROP FUNCTION IF EXISTS update_event_reminder_notifications_end_date();
 DROP FUNCTION IF EXISTS create_unblock_notification();
-DROP FUNCTION IF EXISTS create_block_notification();
 DROP FUNCTION IF EXISTS delete_orphaned_notifications();
 
 -- create tables
@@ -618,24 +626,28 @@ BEGIN
     END IF;
 
     -- 3 days before the event
-    reminder_date := event_start_date - INTERVAL '3 days';
+    IF event_start_date - INTERVAL '3 days' >= CURRENT_TIMESTAMP THEN
+        reminder_date := event_start_date - INTERVAL '3 days';
 
-    INSERT INTO notification (emitted_by, emitted_to, date)
-    VALUES (event_creator_id, NEW.participator_id, reminder_date)
-    RETURNING id INTO notification_id;
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (event_creator_id, NEW.participator_id, reminder_date)
+        RETURNING id INTO notification_id;
 
-    INSERT INTO event_reminder (id, event_id, about)
-    VALUES (notification_id, NEW.event_id, '3 days');
+        INSERT INTO event_reminder (id, event_id, about)
+        VALUES (notification_id, NEW.event_id, '3 days');
+    END IF;
 
     -- 1 day before the event
-    reminder_date := event_start_date - INTERVAL '1 day';
+    IF event_start_date - INTERVAL '1 day' >= CURRENT_TIMESTAMP THEN
+        reminder_date := event_start_date - INTERVAL '1 day';
 
-    INSERT INTO notification (emitted_by, emitted_to, date)
-    VALUES (event_creator_id, NEW.participator_id, reminder_date)
-    RETURNING id INTO notification_id;
+        INSERT INTO notification (emitted_by, emitted_to, date)
+        VALUES (event_creator_id, NEW.participator_id, reminder_date)
+        RETURNING id INTO notification_id;
 
-    INSERT INTO event_reminder (id, event_id, about)
-    VALUES (notification_id, NEW.event_id, '1 day');
+        INSERT INTO event_reminder (id, event_id, about)
+        VALUES (notification_id, NEW.event_id, '1 day');
+    END IF;
 
     -- survey reminder after the event ends
     reminder_date := event_start_date + INTERVAL '1 day';
@@ -656,6 +668,73 @@ CREATE TRIGGER trigger_event_reminder_notification
 AFTER INSERT ON participator
 FOR EACH ROW
 EXECUTE FUNCTION create_event_reminder_notification();
+
+
+-- update event reminder notification after change on start_date
+CREATE OR REPLACE FUNCTION update_event_reminder_notifications_start_date()
+RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    -- Check if the start date of the event has changed
+    IF NEW.start_date <> OLD.start_date THEN
+        -- Update '3 days' reminders
+        UPDATE notification
+        SET date = NEW.start_date - INTERVAL '3 days'
+        WHERE id IN (
+            SELECT id
+            FROM event_reminder
+            WHERE event_id = NEW.id AND about = '3 days'
+        );
+
+        -- Update '1 day' reminders
+        UPDATE notification
+        SET date = NEW.start_date - INTERVAL '1 day'
+        WHERE id IN (
+            SELECT id
+            FROM event_reminder
+            WHERE event_id = NEW.id AND about = '1 day'
+        );
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_event_reminders_start_date
+BEFORE UPDATE ON event
+FOR EACH ROW
+WHEN (OLD.start_date IS DISTINCT FROM NEW.start_date)
+EXECUTE FUNCTION update_event_reminder_notifications_start_date();
+
+
+-- update event reminder notification after change on end_date
+CREATE OR REPLACE FUNCTION update_event_reminder_notifications_end_date()
+RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    -- Check if the end date of the event has changed
+    IF NEW.end_date <> OLD.end_date THEN
+        -- Update surveys reminders
+        UPDATE notification
+        SET date = NEW.end_date + INTERVAL '1 hour'
+        WHERE id IN (
+            SELECT id
+            FROM event_reminder
+            WHERE event_id = NEW.id AND about = 'survey'
+        );
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_event_reminders_end_date
+BEFORE UPDATE ON event
+FOR EACH ROW
+WHEN (OLD.end_date IS DISTINCT FROM NEW.end_date)
+EXECUTE FUNCTION update_event_reminder_notifications_end_date();
 
 
 -- create unblock notification

@@ -214,9 +214,9 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                     });
 
                     notificationContent += `
-                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">${notification.type ? notification.type : 'No type available'}</p>
+                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">New Poll!</p>
                         <a class="text-sm text-gray-600" href="/events/${notification.data.event_id}">
-                            You have up until ${formattedDate} ${formattedTime} to answer to the ${notification.data.name} poll.
+                            You have up until ${formattedDate} ${formattedTime} to answer to the ${notification.data.event_name} new poll.
                         </a>
                     `;
                 } else if (notification.type === 'event_cancelation') {
