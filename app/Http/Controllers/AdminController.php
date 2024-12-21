@@ -83,11 +83,11 @@ class AdminController extends Controller
         return view('admin.user-management', compact('users'));
     }
 
-    public function deleteUser($id)
+    public function deleteUser($username)
     {
         $this->authorize('manageUsers', Admin::class);
         try {
-            $user = User::findOrFail($id);
+            $user = User::where('username', $username)->firstOrFail();
 
             $upcomingEventIds = $user->notYetParticipatedEvents()
                 ->where('end_date', '>', Carbon::now())
@@ -113,7 +113,7 @@ class AdminController extends Controller
                 }
             }
 
-            Event::where('creator_id', $id)
+            Event::where('creator_id', $user->id)
                 ->where('end_date', '>', Carbon::now())
                 ->delete();
 
@@ -131,12 +131,12 @@ class AdminController extends Controller
         }
     }
 
-    public function blockUser($userId)
+    public function blockUser($username)
     {
         $this->authorize('manageUsers', Admin::class);
         try {
             // Find the user
-            $user = User::findOrFail($userId);
+            $user = User::where('username', $username)->firstOrFail();
 
             // Get IDs of upcoming events
             $upcomingEventIds = $user->notYetParticipatedEvents()->pluck('event_id')->toArray();
@@ -177,12 +177,12 @@ class AdminController extends Controller
         }
     }
 
-    public function unblockUser($id)
+    public function unblockUser($username)
     {
         $this->authorize('manageUsers', Admin::class);
         try {
             // Find the user
-            $user = User::findOrFail($id);
+            $user = User::where('username', $username)->firstOrFail();
 
             // Mark the user as deleted
             $user->isblocked = false;

@@ -39,7 +39,7 @@
             </a>
             
             <!-- Invitations Sent Button -->
-            <a href="{{ route('user.invites', ['id' => $user->id]) }}" 
+            <a href="{{ route('user.invites', ['username' => $user->username]) }}" 
                 aria-label="View invites sent by {{ $user->name }}"
                 class="flex items-center justify-center px-8 py-4 w-full lg:w-auto text-2xl font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
                 <i class="mr-2 text-lg lg:text-xl fa-solid fa-envelope"></i> Invites and Requests

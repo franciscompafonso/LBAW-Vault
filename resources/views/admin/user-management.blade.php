@@ -56,7 +56,7 @@
                                 @else
                                     @can('manageUsers', App\Models\Admin::class)
                                     <!-- Delete Button -->
-                                        <form action="{{ route('admin.delete.user', $user->id) }}" method="POST" aria-label="Delete user {{ $user->username }}">
+                                        <form action="{{ route('admin.delete.user', $user->username) }}" method="POST" aria-label="Delete user {{ $user->username }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md delete-btn font-montserrat bg-ultraViolet hover:bg-red-600 hover:text-white border-ultraViolet hover:border-red-600">
@@ -70,7 +70,7 @@
                             <td>
                                 @if($user->isblocked)
                                     @can('manageUsers', App\Models\Admin::class)
-                                        <form action="{{ route('admin.unblock.user', $user->id) }}" method="POST" aria-label="Unblock user {{ $user->username }}">
+                                        <form action="{{ route('admin.unblock.user', $user->username) }}" method="POST" aria-label="Unblock user {{ $user->username }}">
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-green-500 hover:text-darkSlateGrey hover:border-green-500" aria-label="Unblock User">
@@ -81,7 +81,7 @@
                                     @endcan
                                 @else
                                     @can('manageUsers', App\Models\Admin::class)
-                                        <form action="{{ route('admin.block.user', $user->id) }}" method="POST">
+                                        <form action="{{ route('admin.block.user', $user->username) }}" method="POST">
                                             @csrf
                                             <button type="submit" class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-700 hover:text-white hover:border-red-700" aria-label="Block User">
                                                 <span class="hidden loading-icon" id="block-loading-{{ $user->id }}">⏳</span>

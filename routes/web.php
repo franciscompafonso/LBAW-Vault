@@ -90,12 +90,8 @@ Route::middleware(['auth'])->group(function () {
     // Users
     Route::controller(UserController::class)->group(function () {
         
-        Route::delete('/user/{username}/delete', 'deleteAccount')->name('user.delete');
-        Route::get('/user/{id}/change_password', 'changePasswordForm')->where('id', '[0-9]+')->name('user.change_password.form');
-        Route::post('/user/{id}/change_password', 'changePassword')->name('user.change_password.action');
-        Route::post('/user/{id}/block_user', 'block')->where('id', '[0-9]+')->name('user.block');
-        Route::post('/user/{id}/unblock_user', 'unblock')->where('id', '[0-9]+')->name('user.unblock');
-        Route::get('/user/{id}/invites', [InviteController::class, 'showUserInvites'])->name('user.invites');
+        Route::delete('/user/{username}/delete', 'deleteAccount')->name('user.delete'); 
+        Route::get('/user/{username}/invites', [InviteController::class, 'showUserInvites'])->name('user.invites'); 
         Route::delete('/invite/{id}', [InviteController::class, 'deleteInvite'])->name('invite.delete');
     });
 
@@ -113,9 +109,9 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/user-management', [AdminController::class, 'listUsers'])->name('admin.user-management');
     Route::get('/admin/user-management/search-user', [AdminController::class, 'search'])->name('admin.search.user');
-    Route::delete('/admin/user-management/delete-user/{user}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
-    Route::post('/admin/user-management/block-user/{user}', [AdminController::class, 'blockUser'])->name('admin.block.user');
-    Route::patch('/admin/user-management/unblock-user/{user}', [AdminController::class, 'unblockUser'])->name('admin.unblock.user');
+    Route::delete('/admin/user-management/delete-user/{username}', [AdminController::class, 'deleteUser'])->name('admin.delete.user'); 
+    Route::post('/admin/user-management/block-user/{username}', [AdminController::class, 'blockUser'])->name('admin.block.user'); 
+    Route::patch('/admin/user-management/unblock-user/{username}', [AdminController::class, 'unblockUser'])->name('admin.unblock.user'); 
     Route::get('/admin/create', [AdminController::class, 'showCreateAdminForm'])->name('admin.admins.create');
     Route::post('/admin/store', [AdminController::class, 'storeAdmin'])->name('admin.admins.store');
     Route::get('/admin/unblock-requests', [UnblockRequestController::class, 'index'])->name('admin.unblock.requests');
@@ -128,7 +124,7 @@ Route::middleware(['auth:admin'])->group(function () {
 });
 
 Route::middleware(['auth:web,admin'])->group(function () {
-    Route::post('/events/{event}/participators/{user}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
+    Route::post('/events/{event}/participators/{username}/kick', [EventController::class, 'kickParticipator'])->name('events.participators.kick');
     Route::delete('/comments/{id}', [CommentController::class, 'delete'])->name('comments.delete');
     Route::delete('/events/{id}', [EventController::class, 'deleteEvent'])->name('events.delete');
     Route::put('/events/{id}/cancel', [EventController::class, 'cancelEvent'])->name('events.cancel');
