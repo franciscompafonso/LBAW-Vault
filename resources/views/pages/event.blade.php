@@ -143,6 +143,10 @@
     <div class="flex flex-col gap-20 lg:flex-row">
         <!-- Comments Section -->
         <div class="flex-1">
+            <div>
+                @each('partials.poll', $event->polls, 'poll')
+            </div>
+            
             <h2 id="comments-heading" class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                 Comments
             </h2>
@@ -154,13 +158,11 @@
 
             <!-- Scrollable Comment List -->
             <div id="comment-list" 
-            class="mt-6 space-y-6 max-h-[400px] sm:max-h-[600px] lg:max-h-[800px] overflow-y-scroll border border-gray-300 rounded-md p-4" 
-            aria-labelledby="comments-heading">
-
+                class="mt-6 space-y-6 max-h-[400px] sm:max-h-[600px] lg:max-h-[800px] overflow-y-scroll rounded-md p-4" 
+                aria-labelledby="comments-heading">
                 @each('partials.comment', $event->comments()->orderBy('date', 'desc')->get(), 'comment')
             </div>
 
-            
         </div>
 
         <!-- Details and Participants Section -->
