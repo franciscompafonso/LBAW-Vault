@@ -219,7 +219,7 @@
             </div>
 
             <!-- Participants -->
-            <div aria-labelledby="participants-heading" class="mt-10">
+            <div aria-labelledby="participants-heading" class="mt-10 h-full">
                 <!-- Header with Participant Counter -->
                 <div class="flex items-center justify-between mb-6">
                     <h2 id="participants-heading" class="text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
@@ -233,7 +233,7 @@
 
                 <!-- Scrollable Participant List -->
                 <ul id="participant-list" 
-                    class="space-y-4 max-h-96 overflow-y-scroll rounded-md p-4" 
+                    class="space-y-4 max-h-[20em] overflow-y-scroll rounded-md p-4" 
                     aria-label="List of event participants">
                     <!-- Invite Form -->
                     @include('partials.invite-form')
