@@ -4,7 +4,7 @@
 @section('content')
     <script type="text/javascript" src="{{ url('js/admin/user-management.js') }}" defer></script>
     <div class="container p-8 mx-auto">
-        <h1 class="mb-6 text-5xl font-bold text-ultraViolet font-montserrat">User Management</h1>
+        <a href="/admin/user-management"><h1 class="mb-6 text-5xl font-bold text-ultraViolet font-montserrat">User Management</h1></a>
 
         <!-- Search Form -->
         <form action="{{ route('admin.search.user') }}" method="GET" class="mb-6">

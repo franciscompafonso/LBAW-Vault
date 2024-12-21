@@ -9,6 +9,8 @@ use App\Models\Admin;
 use App\Models\File;
 use App\Models\Comment;
 use App\Models\Event;
+use App\Models\Notification;
+use App\Models\NotificationSubtypes\AdminAction;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Exception;
@@ -138,7 +140,24 @@ class AdminController extends Controller
             $user->isblocked = true;
             $user->save();
 
-            return redirect()->route('admin.user-management')->with('status', 'User has been blocked, and future participations have been removed successfully.');
+            // Add notification admin_action emitted to the user
+            $notification = Notification::create([
+                'emitted_by' => null,
+                'emitted_to' => $user->id,
+                'date' => now()
+            ]);
+    
+            // Add admin action
+            AdminAction::create([
+                'id' => $notification->id,
+                'admin_id' => auth()->user()->id,
+                'action' => 'You were blocked by an admin...',
+            ]);
+
+            return redirect()->route('admin.user-management')->with([
+                'success' => true,
+                'message' => 'User has been blocked, and future participations have been removed successfully.'
+            ]);
         } catch (\Exception $e) {
             return redirect()->back()->with([
                 'success' => false,
@@ -158,7 +177,7 @@ class AdminController extends Controller
             $user->isblocked = false;
             $user->save();
 
-            return redirect()->route('admin.users')->with([
+            return redirect()->route('admin.user-management')->with([
                 'success' => true,
                 'message' => 'User has been unblocked successfully.'
             ]);
@@ -171,3 +190,4 @@ class AdminController extends Controller
     }
 
 }
+// Error unblocking user: Route [admin.users] not defined.

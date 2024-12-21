@@ -247,13 +247,13 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                     }
                 } else if (notification.type === 'admin_action') {
                     notificationContent += `
-                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">${notification.type ? notification.type : 'No type available'}</p>
-                        <p class="text-sm text-gray-600">An administrative action has been performed.</p>
+                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">Administrative Action</p>
+                        <p class="text-sm text-gray-600">${notification.data.action}</p>
                     `;
                 } else if (notification.type === 'unblock_notification') {
                     notificationContent += `
-                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">${notification.type ? notification.type : 'No type available'}</p>
-                        <p class="text-sm text-gray-600">You have been unblocked.</p>
+                        <p class="font-semibold text-ultraViolet hover:text-wisteria text-md">You\'re unblock request was answered</p>
+                        <p class="text-sm text-gray-600">You were unblock by the admin!</p>
                     `;
                 } else {
                     notificationContent += `

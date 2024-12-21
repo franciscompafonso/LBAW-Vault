@@ -277,6 +277,7 @@ CREATE TABLE event_reminder (
 CREATE TABLE admin_action (
     id INT REFERENCES notification(id) ON DELETE CASCADE,
     admin_id INT REFERENCES admin(id),
+    action VARCHAR(255) NOT NULL,
     PRIMARY KEY (id, admin_id)
 );
 

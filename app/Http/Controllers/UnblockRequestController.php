@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Log;
 class UnblockRequestController extends Controller
 {
     public function create()
-{
-    $this->authorize('sendUnblockRequest', auth()->user());
+    {
+        $this->authorize('sendUnblockRequest', auth()->user());
 
-    return view('unblock_requests.create');
-}
+        return view('unblock_requests.create');
+    }
 
     public function store(Request $request)
     {
@@ -30,7 +30,10 @@ class UnblockRequestController extends Controller
             'requested_at' => now(),
         ]);
 
-        return redirect()->route('pages.home')->with('success', 'Your unblock request has been submitted.');
+        return redirect()->route('pages.home')->with([
+            'success' => true,
+            'message' => 'Your unblock request has been submitted.'
+        ]);
     }
 
 
@@ -42,30 +45,33 @@ class UnblockRequestController extends Controller
     }
 
 
-public function approve($id)
-{
-    $request = UnblockRequest::findOrFail($id);
+    public function approve($id)
+    {
+        $request = UnblockRequest::findOrFail($id);
 
-    if ($request->status !== 'pending') {
-        return redirect()->back()->withErrors('This request has already been processed.');
+        if ($request->status !== 'pending') {
+            return redirect()->back()->withErrors('This request has already been processed.');
+        }
+
+        $request->update([
+            'status' => 'approved',
+            'decision_by_id' => auth()->id(),
+            'processed_at' => now(),
+        ]);
+
+        Log::info("Updated decision_by_id: {$request->decision_by_id}");
+
+        $user = $request->requestedBy; 
+        if ($user) {
+            $user->isblocked = false;
+            $user->save();
+        } 
+
+        return redirect()->route('admin.unblock.requests')->with([
+            'success' => true,
+            'message' => 'Request approved, and user has been unblocked.'
+        ]);
     }
-
-    $request->update([
-        'status' => 'approved',
-        'decision_by_id' => auth()->id(),
-        'processed_at' => now(),
-    ]);
-
-    Log::info("Updated decision_by_id: {$request->decision_by_id}");
-
-    $user = $request->requestedBy; 
-    if ($user) {
-        $user->isblocked = false;
-        $user->save();
-    } 
-
-    return redirect()->route('admin.unblock.requests')->with('success', 'Request approved, and user has been unblocked.');
-}
 
 
 
@@ -74,6 +80,9 @@ public function approve($id)
         $request = UnblockRequest::findOrFail($id);
         $request->reject(auth()->id());
 
-        return redirect()->back()->with('success', 'Unblock request rejected.');
+        return redirect()->back()->with([
+            'success' => true,
+            'message' => 'Unblock request rejected.'
+        ]);
     }
 }
