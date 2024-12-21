@@ -157,9 +157,9 @@ class UserController extends Controller
             }
     }
 
-    public function deleteAccount($id)
+    public function deleteAccount($username)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('username', $username)->firstOrFail();
         $this->authorize('editProfile', $user);
 
         try {
@@ -180,7 +180,7 @@ class UserController extends Controller
 
             $this->deletePicture($pictureId);
 
-            Event::where('creator_id', $id)
+            Event::where('creator_id', $user->id)
                 ->where('end_date', '>', Carbon::now())
                 ->delete();
 

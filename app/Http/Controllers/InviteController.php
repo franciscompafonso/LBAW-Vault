@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Auth;
 
 class InviteController extends Controller
 {
-    public function showUserInvites($id)
+    public function showUserInvites($username)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('username', $username)->firstOrFail();
         $this->authorize('viewInvites', $user);
-
+        $id = $user->id;
         // Fetch sent invitations
         $sentInvites = Invite::where('sender_id', $id)
                             ->with(['receiver', 'event'])

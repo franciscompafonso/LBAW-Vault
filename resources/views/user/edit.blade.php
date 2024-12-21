@@ -139,7 +139,7 @@
         @if(auth()->guard('admin')->check())
             <div class="mt-6 text-center">
                 @if ($user->isblocked)
-                    <form action="{{ route('admin.unblock.user', ['user' => $user->id]) }}" method="POST" class="inline-block">
+                    <form action="{{ route('admin.unblock.user', ['username' => $user->username]) }}" method="POST" class="inline-block">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-green-500 hover:text-darkSlateGrey hover:border-green-500" aria-label="Unblock User">
@@ -147,7 +147,7 @@
                         </button>
                     </form>
                 @else
-                    <form action="{{ route('admin.block.user', ['user' => $user->id]) }}" method="POST" class="inline-block">
+                    <form action="{{ route('admin.block.user', ['username' => $user->username]) }}" method="POST" class="inline-block">
                         @csrf
                         <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-700 hover:text-white hover:border-red-700" aria-label="Block User">
                             Block User

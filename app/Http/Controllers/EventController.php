@@ -429,18 +429,19 @@ class EventController extends Controller
     /**
      * Kick a participator from the event.
      */
-    public function kickParticipator($eventId, $userId)
+    public function kickParticipator($eventId, $username)
 {
     $event = Event::findOrFail($eventId);
-    $user = User::findOrFail($userId);
+    $user = User::where('username', $username)->firstOrFail();
+
 
     if (auth()->guard('admin')->check() || ( auth()->check() && auth()->user()->can('kickParticipator', [$event, $user]))) {
 
-        if (! $event->participators()->where('id', $userId)->exists()) {
+        if (! $event->participators()->where('id', $user->id)->exists()) {
             return back()->with('message', 'The user is not participating in this event.');
         }
 
-        $event->participators()->detach($userId);
+        $event->participators()->detach($user->id);
         return back()->with([
             'message' => 'You have removed the participator.',
             'success' => true
