@@ -104,21 +104,20 @@
           </div>
         </form>
         
-         <!-- Continue with Google Button -->
-         <div class="mt-6 text-center">
+        @if(!auth()->guard('admin')->check())
+
+          <div class="mt-6 text-center">
           <a href="{{ route('google-auth') }}" class="inline-flex items-center justify-center w-full px-6 py-2 font-bold text-ultraViolet transition-all duration-200 border-2 border-ultraViolet rounded-md bg-white hover:bg-cambridgeBlue" aria-label="Sign up with Google">
             Sign up with Google <i class="fab fa-google ml-2"></i>
           </a>
-        </div>
+          </div>
 
-        @if(!auth()->guard('admin')->check())
           <!-- Registration Link -->
           <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">   
             Have an account?
             <a href="{{ route('login') }}" class="font-medium font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Sign in to your account">Sign in</a>   
           </p>
-        
-        
+
           <!-- No account -->
           <p class="mt-6 text-2xl text-center text-gray-600 font-montserrat">
               <a href="{{ url(path: '/home') }}" class="font-montserrat text-darkSlateGrey hover:text-cambrigdeBlue" aria-label="Continue without an account">Continue without an account</a>
