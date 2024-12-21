@@ -98,7 +98,7 @@ class EventController extends Controller
             'location' => 'nullable|string',
             'start_date' => 'required|date|after:now',
             'end_date' => 'required|date|after:start_date',
-            'visibility' => 'required|in:public,private',
+            'visibility' => 'required|in:public,private,request_only',
             'capacity' => 'required|integer|min:1',
             'district_id' => 'required|integer',
             'category_id' => 'required|integer',

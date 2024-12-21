@@ -13,31 +13,34 @@ use Illuminate\Support\Facades\Auth;
 
 class JoinRequestController extends Controller
 {
-    
-
     public function acceptRequest(Request $request, $requestId)
     {
         // Find the join request or fail
         $joinRequest = JoinRequest::findOrFail($requestId);
 
-        // Mark the request as accepted
-        $joinRequest->accepted = true;
-        $joinRequest->save();
-
-        // Add the user to the event participators
+        // Add the user to the event participants
         $event = Event::findOrFail($joinRequest->event_id);
         $event->participators()->attach($joinRequest->join_request_by_id);
 
-        // Dismiss the notification
-        $notificationController = app(NotificationController::class);
-        $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
+        // Dismiss the notification if it exists
+        if ($request->notification_id) {
+            $notificationController = app(NotificationController::class);
+            $notificationController->dismissNotification(new Request(['notification_id' => $request->notification_id]));
+        }
 
-        event(new AnswerJoinRequest($joinRequest->join_request_by_id, $event->id, User::find(Auth::id())->name . " accepted your join request to " . $event->name));
+        event(new AnswerJoinRequest(
+            $joinRequest->join_request_by_id,
+            $event->id,
+            User::find(Auth::id())->name . " accepted your join request to " . $event->name
+        ));
+
+        // Delete the join request
+        $joinRequest->delete();
 
         // Return success response
         return back()->with([
             'message' => 'Join request accepted! The user is now a participant of the event.',
-            'success' => true
+            'success' => true,
         ]);
     }
 
@@ -50,16 +53,21 @@ class JoinRequestController extends Controller
         // Delete the join request entry from the database
         $joinRequest->delete();
 
-        // Dismiss the notification
-        $notificationId = $request->notification_id;
-        Notification::find($notificationId)->delete();
+        // Dismiss the notification if it exists
+        if ($request->notification_id) {
+            Notification::find($request->notification_id)->delete();
+        }
 
-        event(new AnswerJoinRequest($joinRequest->join_request_by_id, $event->id, User::find(Auth::id())->name . " rejected your join request to " . $event->name));
+        event(new AnswerJoinRequest(
+            $joinRequest->join_request_by_id,
+            $event->id,
+            User::find(Auth::id())->name . " rejected your join request to " . $event->name
+        ));
 
         // Redirect back with a success message
         return back()->with([
-            'message' => 'You have successfully declined the request and dismissed the notification.',
-            'success' => true
+            'message' => 'You have successfully declined the request.',
+            'success' => true,
         ]);
     }
 }

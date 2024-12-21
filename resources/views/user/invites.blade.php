@@ -29,7 +29,7 @@
                 <a href="{{ route('user.profile', ['username' => $user->username]) }}" 
                    aria-label="View {{ $user->name }} profile"
                    class="flex items-center justify-center px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet ">
-                    <i class="mr-2 text-xl fa-solid fa-user"></i> Profile
+                    <i class="mr-2 text-xl fa-solid fa-calendar"></i> My Events
                 </a>
             @endif
         </div>
@@ -39,9 +39,9 @@
         <!-- Tab Buttons -->
         <div class="flex gap-8 relative">
             <p 
-                id="tab-sent" 
+                id="tab-invite-sent" 
                 class="tab text-4xl font-semibold font-montserrat text-eerieBlack focus:outline-none cursor-pointer pb-2"
-                onclick="showTab('sent')"
+                onclick="showTab('invite-sent')"
                 tabindex="0"
                 role="button"
             >
@@ -49,13 +49,33 @@
             </p>
 
             <p 
-                id="tab-received" 
+                id="tab-invite-received" 
                 class="tab text-4xl font-semibold font-montserrat text-eerieBlack focus:outline-none cursor-pointer pb-2"
-                onclick="showTab('received')"
+                onclick="showTab('invite-received')"
                 tabindex="0"
                 role="button"
             >
                 Invites Received
+            </p>
+
+            <p 
+                id="tab-request-sent" 
+                class="tab text-4xl font-semibold font-montserrat text-eerieBlack focus:outline-none cursor-pointer pb-2"
+                onclick="showTab('request-sent')"
+                tabindex="0"
+                role="button"
+            >
+                Requests Sent
+            </p>
+
+            <p 
+                id="tab-request-received" 
+                class="tab text-4xl font-semibold font-montserrat text-eerieBlack focus:outline-none cursor-pointer pb-2"
+                onclick="showTab('request-received')"
+                tabindex="0"
+                role="button"
+            >
+                Requests Received
             </p>
 
             <!-- Animated border -->
@@ -69,52 +89,22 @@
         <!-- Tab Contents -->
         <div class="mt-6">
             <!-- Sent Invitations Content -->
-            <div id="content-sent" class="hidden">
+            <div id="content-invite-sent" class="hidden">
                 @if($sentInvites->isEmpty())
-                    <p class="text-xl text-center text-gray-500">No invitations sent yet.</p>
+                    <p class="text-3xl text-center text-gray-500">No invitations sent yet.</p>
                 @else
                     <div class="overflow-x-auto">
                         <!-- Sent Invitations Table Content -->
                         <div class="space-y-4">
-                            <div class="grid grid-cols-6 gap-4 p-4 mb-4 text-sm font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
-                                <div class="text-center">Recipient</div>
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg text-darkSlateGrey font-montserrat">
                                 <div class="text-center">Event</div>
+                                <div class="text-center">Receiver</div>
                                 <div class="text-center">Message</div>
                                 <div class="text-center">Date</div>
-                                <div class="text-center">Status</div>
-                                <div class="text-center">Delete</div>
+                                <div class="text-center">Decision</div>
                             </div>
                             @foreach($sentInvites as $invite)
-                                <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="text-center font-montserrat">
-                                        <a href="{{ route('user.profile', ['username' => $invite->receiver->username]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
-                                            {{ $invite->receiver->username }}
-                                        </a>
-                                    </div>
-                                    <div class="text-center font-montserrat">
-                                        <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
-                                            {{ $invite->event->name }}
-                                        </a>
-                                    </div>
-                                    <div class="text-center font-montserrat">{{ $invite->description ?? 'N/A' }}</div>
-                                    <div class="text-center font-montserrat">{{ $invite->date->format('F j, Y') }}</div>
-                                    <div class="text-center font-montserrat">
-                                        @if($invite->accepted)
-                                            <span class="font-semibold text-wisteria">Accepted</span>
-                                        @else
-                                            <span class="font-semibold text-yellow-500">Pending</span>
-                                        @endif
-                                    </div>
-                                    <div class="flex items-center justify-center">
-                                        <form action="{{ route('invite.delete', ['id' => $invite->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this invite?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="flex items-center px-4 py-2 space-x-2 border-white rounded-lg hover:border-white focus:border-white hover:bg-white focus:bg-white text-darkSlateGrey hover:text-red-600 focus:text-darkSlateGrey">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+                                @include('partials.invite_sent', ['invite' => $invite])
                             @endforeach
                         </div>
                     </div>
@@ -122,55 +112,68 @@
             </div>
 
             <!-- Received Invitations Content -->
-            <div id="content-received" class="hidden">
+            <div id="content-invite-received" class="hidden">
                 @if($receivedInvites->isEmpty())
-                    <p class="text-xl text-center text-gray-500">No invitations received yet.</p>
+                    <p class="text-3xl text-center text-gray-500">No invitations received yet.</p>
                 @else
                     <div class="overflow-x-auto">
                         <!-- Received Invitations Table Content -->
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-6 gap-4 p-4 mb-4 text-sm font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
-                                <div class="text-center">Sender</div>
+                        <div class="gap-8">
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
                                 <div class="text-center">Event</div>
+                                <div class="text-center">Sender</div>
                                 <div class="text-center">Message</div>
                                 <div class="text-center">Date</div>
-                                <div class="text-center">Actions</div>
+                                <div class="text-center">Decision</div>
                             </div>
                             @foreach($receivedInvites as $invite)
-                                <div class="grid grid-cols-6 gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                                    <div class="text-center font-montserrat">
-                                        <a href="{{ route('user.profile', ['username' => $invite->sender->username]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
-                                            {{ $invite->sender->username }}
-                                        </a>
-                                    </div>
-                                    <div class="text-center font-montserrat">
-                                        <a href="{{ route('events.show', ['id' => $invite->event->id]) }}" class="text-ultraViolet hover:text-darkSlateGrey">
-                                            {{ $invite->event->name }}
-                                        </a>
-                                    </div>
-                                    <div class="text-center font-montserrat">{{ $invite->description ?? 'N/A' }}</div>
-                                    <div class="text-center font-montserrat">{{ $invite->date->format('F j, Y') }}</div>
-                                    <div class="flex space-x-4">
-                                        <form action="{{ route('invites.accept', ['invitesId' => $invite->id]) }}" method="POST">
-                                            @csrf
-                                            <button 
-                                                type="submit" 
-                                                class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-[#8D9D8D] hover:text-gray-100 border-[#A3C1AD] hover:border-[#8D9D8D]"
-                                            >
-                                                Accept
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('invites.decline', ['invitesId' => $invite->id]) }}" method="POST">
-                                            @csrf
-                                            <button 
-                                                type="submit" 
-                                                class="px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-burgundy hover:bg-[#6B0010] hover:text-gray-100 border-[#800020] hover:border-[#6B0010]"
-                                            >
-                                                Decline
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+                                @include('partials.invite_received', ['invite' => $invite])
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Sent Requests Content -->
+            <div id="content-request-sent" class="hidden">
+                @if($sentRequests->isEmpty())
+                    <p class="text-3xl text-center text-gray-500">No invitations sent yet.</p>
+                @else
+                    <div class="overflow-x-auto">
+                        <!-- Sent Invitations Table Content -->
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg text-darkSlateGrey font-montserrat">
+                                <div class="text-center">Event</div>
+                                <div class="text-center"></div>
+                                <div class="text-center">Status</div>
+                                <div class="text-center">Date</div>
+                                <div class="text-center">Decision</div>
+                            </div>
+                            @foreach($sentRequests as $request)
+                                @include('partials.request_sent', ['request' => $request])
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Received Requests Content -->
+            <div id="content-request-received" class="hidden">
+                @if($receivedRequests->isEmpty())
+                    <p class="text-3xl text-center text-gray-500">No invitations received yet.</p>
+                @else
+                    <div class="overflow-x-auto">
+                        <!-- Received Invitations Table Content -->
+                        <div class="gap-8">
+                            <div class="grid grid-cols-5 gap-4 p-4 mb-4 text-3xl font-semibold bg-gray-100 rounded-lg shadow-md text-darkSlateGrey font-montserrat">
+                                <div class="text-center">Event</div>
+                                <div class="text-center">Sender</div>
+                                <div class="text-center"></div>
+                                <div class="text-center">Date</div>
+                                <div class="text-center">Decision</div>
+                            </div>
+                            @foreach($receivedRequests as $request)
+                                @include('partials.request_received', ['request' => $request])
                             @endforeach
                         </div>
                     </div>
@@ -181,25 +184,27 @@
 
     <script>
         function showTab(tab) {
-    // Hide both contents
-    document.getElementById('content-sent').classList.add('hidden');
-    document.getElementById('content-received').classList.add('hidden');
+            // Hide both contents
+            document.getElementById('content-invite-sent').classList.add('hidden');
+            document.getElementById('content-invite-received').classList.add('hidden');
+            document.getElementById('content-request-sent').classList.add('hidden');
+            document.getElementById('content-request-received').classList.add('hidden');
 
-    // Show the selected content
-    document.getElementById(`content-${tab}`).classList.remove('hidden');
+            // Show the selected content
+            document.getElementById(`content-${tab}`).classList.remove('hidden');
 
-    // Update tab indicator position and width
-    const activeTab = document.getElementById(`tab-${tab}`);
-    const tabIndicator = document.getElementById('tab-indicator');
+            // Update tab indicator position and width
+            const activeTab = document.getElementById(`tab-${tab}`);
+            const tabIndicator = document.getElementById('tab-indicator');
 
-    const tabWidth = activeTab.offsetWidth;
-    const tabOffset = activeTab.offsetLeft;
+            const tabWidth = activeTab.offsetWidth;
+            const tabOffset = activeTab.offsetLeft;
 
-    tabIndicator.style.width = `${tabWidth}px`;
-    tabIndicator.style.transform = `translateX(${tabOffset}px)`;
-}
+            tabIndicator.style.width = `${tabWidth}px`;
+            tabIndicator.style.transform = `translateX(${tabOffset}px)`;
+        }
 
         // Initialize to show "Sent Invites" tab
-        showTab('sent');
+        showTab('invite-sent');
     </script>
 @endsection
