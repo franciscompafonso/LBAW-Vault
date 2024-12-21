@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AdminActionSent;
+use App\Events\Unblock;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -154,6 +156,8 @@ class AdminController extends Controller
                 'action' => 'You were blocked by an admin...',
             ]);
 
+            event(new AdminActionSent($user->id, "You were blocked by an admin..."));
+
             return redirect()->route('admin.user-management')->with([
                 'success' => true,
                 'message' => 'User has been blocked, and future participations have been removed successfully.'
@@ -176,6 +180,8 @@ class AdminController extends Controller
             // Mark the user as deleted
             $user->isblocked = false;
             $user->save();
+
+            event(new Unblock($user->id, "You were unblocked by an admin!"));
 
             return redirect()->route('admin.user-management')->with([
                 'success' => true,

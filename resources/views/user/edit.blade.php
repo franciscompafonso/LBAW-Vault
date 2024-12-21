@@ -90,6 +90,7 @@
                         placeholder="Enter new password"
                         aria-label="Enter new password"
                     >
+                    <span class="text-sm text-gray-500">Must be at least 8 characters</span>
                     @error('new_password')
                         <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                     @enderror
@@ -106,6 +107,7 @@
                         placeholder="Confirm new password"
                         aria-label="Confirm new password"
                     >
+                    <span class="text-sm text-gray-500">Must be at least 8 characters</span>
                     @error('new_password_confirmation')
                         <div class="mt-2 text-sm text-red-600">{{ $message }}</div>
                     @enderror

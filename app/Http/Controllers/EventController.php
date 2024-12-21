@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AdminActionSent;
 use App\Events\EventCanceled;
 use App\Events\EventUpdate;
 use App\Models\AnswerReview;
@@ -237,6 +238,8 @@ class EventController extends Controller
                     'admin_id' => auth()->user()->id,
                     'action' => 'Your event, ' . $event->name . ' has been deleted by an admin...',
                 ]);
+
+                event(new AdminActionSent($event->creator_id, "You're event was deleted by an admin..."));
             }
 
             // Delete the event
