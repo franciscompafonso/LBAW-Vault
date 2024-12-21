@@ -71,9 +71,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function editForm(int $id)
+    public function editForm(string $username)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('username', $username)->firstOrFail();
         if (!auth()->guard('admin')->check() && !(auth()->check() && auth()->user()->can('editProfile', $user))) {
             abort(403, 'You do not have permission to edit this profile.');
         }
@@ -81,9 +81,9 @@ class UserController extends Controller
         return view('user.edit', compact('user'));
     }
 
-    public function edit(int $id, Request $request)
+    public function edit(string $username, Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('username', $username)->firstOrFail();
         if (!auth()->guard('admin')->check() && !(auth()->check() && auth()->user()->can('editProfile', $user))) {
             abort(403, 'You do not have permission to edit this profile.');
         }

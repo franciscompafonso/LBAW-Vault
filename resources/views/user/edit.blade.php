@@ -9,7 +9,7 @@
         </div>
 
         <!-- Edit Profile Form -->
-        <form action="{{route('user.edit.action', ['id' => $user->id]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('user.edit.action', ['username' => $user->username]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('POST')
 
@@ -127,7 +127,7 @@
 
         <!-- Delete Account Form -->
         <div class="mt-6 text-center">
-            <form action="{{ auth()->guard('admin')->check()  ? route('admin.delete.user', ['user' => $user->id]) : route('user.delete', ['id' => $user->id]) }}" method="POST">
+            <form action="{{ auth()->guard('admin')->check()  ? route('admin.delete.user', ['username' => $user->username]) : route('user.delete', ['username' => $user->username]) }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="px-8 py-2 font-bold text-white transition-all duration-200 rounded-md bg-ultraViolet border-ultraViolet font-montserrat hover:bg-red-500 hover:text-darkSlateGrey hover:border-red-500" aria-label="Delete account">

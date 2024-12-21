@@ -90,7 +90,7 @@ Route::middleware(['auth'])->group(function () {
     // Users
     Route::controller(UserController::class)->group(function () {
         
-        Route::delete('/user/{id}/delete', 'deleteAccount')->name('user.delete');
+        Route::delete('/user/{username}/delete', 'deleteAccount')->name('user.delete');
         Route::get('/user/{id}/change_password', 'changePasswordForm')->where('id', '[0-9]+')->name('user.change_password.form');
         Route::post('/user/{id}/change_password', 'changePassword')->name('user.change_password.action');
         Route::post('/user/{id}/block_user', 'block')->where('id', '[0-9]+')->name('user.block');
@@ -136,8 +136,8 @@ Route::middleware(['auth:web,admin'])->group(function () {
     Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::get('/events/{event}/survey/stats', [EventController::class, 'showSurveyStats'])->name('events.surveyStats');
     Route::get('/user/{username}', [UserController::class, 'show'])->name('user.profile');
-    Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
-    Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
+    Route::get('/user/{username}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
+    Route::post('/user/{username}/edit', [UserController::class, 'edit'])->name('user.edit.action');
     Route::get('/events/{event}/comments', [EventController::class, 'getComments'])->name('comments.get');
 });
 
