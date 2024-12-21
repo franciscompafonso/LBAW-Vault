@@ -80,6 +80,7 @@
             <label for="password" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Password <span class="text-red-600">*</span></label>   
             <div class="mt-1">
               <input id="password" type="password" name="password" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="password-error">   
+              <span class="text-sm text-gray-500">Must be at least 8 characters</span>
               @if ($errors->has('password'))
                 <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('password') }}
@@ -93,6 +94,7 @@
             <label for="password-confirm" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Confirm Password <span class="text-red-600">*</span></label>   
             <div class="mt-1">
               <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet">   
+              <span class="text-sm text-gray-500">Must be at least 8 characters</span>
             </div>
           </div>
 
