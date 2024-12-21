@@ -53,7 +53,8 @@ DROP TRIGGER IF EXISTS trigger_event_reminder_notification ON event;
 DROP TRIGGER IF EXISTS trigger_update_event_reminders_start_date ON event;
 DROP TRIGGER IF EXISTS trigger_update_event_reminders_end_date ON event;
 DROP TRIGGER IF EXISTS trigger_unblock_notification ON unblock_request;
-DROP TRIGGER IF EXISTS trigger_delete_future_notifications ON participant;
+DROP TRIGGER IF EXISTS trigger_delete_future_notifications_user_left ON participant;
+DROP TRIGGER IF EXISTS trigger_delete_future_notifications_event_updated ON event;
 DROP TRIGGER IF EXISTS check_orphaned_notifications_comment ON comment_notification;
 DROP TRIGGER IF EXISTS check_orphaned_notifications_invite ON invite_notification;
 DROP TRIGGER IF EXISTS check_orphaned_notifications_accepted_invite ON accepted_invite_notification;
@@ -81,6 +82,7 @@ DROP FUNCTION IF EXISTS update_event_reminder_notifications_start_date();
 DROP FUNCTION IF EXISTS update_event_reminder_notifications_end_date();
 DROP FUNCTION IF EXISTS create_unblock_notification();
 DROP FUNCTION IF EXISTS delete_future_notifications();
+DROP FUNCTION IF EXISTS delete_future_notifications_on_canceled();
 DROP FUNCTION IF EXISTS delete_orphaned_notifications();
 
 -- create tables
@@ -785,7 +787,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_delete_future_notifications
+CREATE TRIGGER trigger_delete_future_notifications_user_left
 BEFORE DELETE ON participator
 FOR EACH ROW
 EXECUTE FUNCTION delete_future_notifications();
@@ -828,7 +830,7 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_delete_future_notifications
+CREATE TRIGGER trigger_delete_future_notifications_event_updated
 AFTER UPDATE OF visibility ON event
 FOR EACH ROW
 WHEN (NEW.visibility = 'canceled' AND OLD.visibility <> 'canceled')
