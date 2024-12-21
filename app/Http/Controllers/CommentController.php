@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AdminActionSent;
 use App\Events\NewComment;
 use App\Models\Comment;
 use App\Models\Event;
@@ -54,6 +55,8 @@ class CommentController extends Controller
                     'admin_id' => auth()->user()->id,
                     'action' => 'Your comment, \'' . $comment->text . '\' in the ' . Event::find($comment->event_id)->name . ' event has been deleted by an admin...',
                 ]);
+
+                event(new AdminActionSent($comment->comment_by_id, "You're comment was deleted by an admin..."));
             }
 
             // Delete the comment

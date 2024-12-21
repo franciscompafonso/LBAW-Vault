@@ -102,7 +102,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/{id}/dismiss', [NotificationController::class, 'dismissNotification']);
     Route::post('/notifications/dismiss-all', [NotificationController::class, 'dismissAllNotifications']);
     Route::post('/events/{event}/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::get('/events/{event}/comments', [EventController::class, 'getComments'])->name('comments.get');
 
     // API
     Route::get('/api/notifications', [NotificationController::class, 'index']);
@@ -139,6 +138,7 @@ Route::middleware(['auth:web,admin'])->group(function () {
     Route::get('/user/{username}', [UserController::class, 'show'])->name('user.profile');
     Route::get('/user/{id}/edit', [UserController::class, 'editForm'])->name('user.edit.form');
     Route::post('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit.action');
+    Route::get('/events/{event}/comments', [EventController::class, 'getComments'])->name('comments.get');
 });
 
 Route::controller(MailController::class)->group(function () {

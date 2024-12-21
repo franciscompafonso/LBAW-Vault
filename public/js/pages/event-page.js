@@ -95,7 +95,8 @@ function updateCommentInfo() {
         .then(response => response.json())
         .then(data => {
             document.getElementById('comment-list').innerHTML = data.commentsHtml;
-            updateCommentForm();
+            
+            if (userId) updateCommentForm();
             console.log(data.message);
         })
         .catch(error => console.error('Error updating comments:', error));

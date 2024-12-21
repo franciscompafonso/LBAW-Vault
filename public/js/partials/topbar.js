@@ -271,6 +271,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         }
     }
 
+if(userId) {
     document.addEventListener('click', (event) => {
         const notificationsDropdown = document.getElementById('notifications-dropdown');
 
@@ -278,6 +279,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             notificationsDropdown.classList.add('hidden');
         }
     });
+}
 
 
     function toggleProfileDropdown() {
@@ -330,9 +332,11 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     }
     
 
+if (userId) {
     // Reload notifications every 5 seconds
     setInterval(fetchNotifications, 5000);
     
     document.addEventListener('DOMContentLoaded', () => {
         fetchNotifications();
     });
+}
