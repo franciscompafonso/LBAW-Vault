@@ -29,20 +29,20 @@
     </div>
 
     <!-- Right: Action Buttons -->
-    <div class="flex flex-col lg:flex-row gap-4 mt-6 lg:mt-0 lg:justify-end">
+    <div class="flex flex-col gap-4 mt-6 lg:mt-0 lg:justify-end">
         @if((Auth::id() === $user->id && !$user->isdeleted && !$user->isblocked) || auth()->guard('admin')->check())
             <!-- Edit Profile Button -->
             <a href="{{ route('user.edit.form', ['id' => $user->id]) }}" 
                 aria-label="Edit profile of {{ $user->name }}"
-                class="flex items-center justify-center px-10 py-3 w-full lg:w-auto text-sm lg:text-base font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
+                class="flex items-center justify-center px-8 py-4 w-full lg:w-auto text-2xl font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
                 <i class="mr-2 text-lg lg:text-xl fa-solid fa-user-edit"></i> Edit Profile
             </a>
             
             <!-- Invitations Sent Button -->
             <a href="{{ route('user.invites', ['id' => $user->id]) }}" 
                 aria-label="View invites sent by {{ $user->name }}"
-                class="flex items-center justify-center px-10 py-3 w-full lg:w-auto text-sm lg:text-base font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
-                <i class="mr-2 text-lg lg:text-xl fa-solid fa-envelope"></i> Invites
+                class="flex items-center justify-center px-8 py-4 w-full lg:w-auto text-2xl font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-ultraViolet">
+                <i class="mr-2 text-lg lg:text-xl fa-solid fa-envelope"></i> Invites and Requests
             </a>
         @endif
     </div>
