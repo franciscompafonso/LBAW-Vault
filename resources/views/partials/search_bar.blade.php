@@ -1,5 +1,5 @@
 @if (!Request::is('login') && !Request::is('register') && !Request::is('password/reset'))
-<script type="text/javascript" src="{{ url('js/partials/search-bar.js') }}" defer></script>
+<script src="{{ url('js/partials/search-bar.js') }}" defer></script>
     <!-- Search Bar -->
     <div id="searchBar" class="w-full lg:w-[30%] lg:order-none order-last mt-6 lg:mt-0">
         <div class="relative w-full mx-auto">
@@ -15,7 +15,7 @@
 
             <i class="absolute right-4 top-1/2 transform -translate-y-1/2 text-4xl fa-solid fa-search {{ Auth::guard('admin')->check() ? 'text-ultraViolet' : 'text-wisteria' }} cursor-pointer" 
                onclick="performSearch()"
-               aria-label="Perform search">
+               aria-label="Click to perform search">
             </i>
         </div>
 

@@ -2,7 +2,7 @@
 
 @section('Title', 'Edit Profile')
 @section('content')
-<script type="text/javascript" src="{{ url('js/user/edit.js') }}" defer></script>
+<script src="{{ url('js/user/edit.js') }}" defer></script>
     <div class="max-w-2xl p-6 mx-auto mt-6 bg-white rounded-lg shadow-md">
         <div class="mb-6 text-center">
             <h2 class="text-3xl font-bold text-ultraViolet font-montserrat">Edit Profile</h2>

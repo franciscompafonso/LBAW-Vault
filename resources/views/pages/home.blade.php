@@ -2,7 +2,7 @@
 
 @section('Title', 'Lend-A-Hand')
 @section('content')
-<script type="text/javascript" src="{{ url('js/pages/home.js') }}" defer></script>
+<script src="{{ url('js/pages/home.js') }}" defer></script>
 <!-- Wrapper to ensure sections stack vertically -->
 <div class="w-full">
     <!-- Banner Section -->

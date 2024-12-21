@@ -2,7 +2,6 @@
 <html lang="{{ app()->getLocale() }}" class="h-full">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
@@ -26,7 +25,7 @@
         </script>
         <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
         
-        <script type="text/javascript" src="{{ url('js/app.js') }}" defer></script>
+        <script src="{{ url('js/app.js') }}" defer></script>
         
         @vite('resources/css/app.css')
     </head>
@@ -53,7 +52,7 @@
                                 <i id="warning-icon" class="hidden text-3xl text-red-500 fas fa-exclamation-circle"></i>
                             </div>
                             <div class="col-span-7">
-                                <h3 id="popup-title" class="text-2xl font-semibold font-montserrat"></h3>
+                                <h3 id="popup-title" class="text-2xl font-semibold font-montserrat">&nbsp;</h3>
                             </div>
                         </div>
                         <p id="popup-message" class="mt-1 text-md"></p>

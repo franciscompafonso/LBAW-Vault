@@ -1,4 +1,4 @@
-<script type="text/javascript" src="{{ url('js/partials/poll-form.js') }}" defer></script>
+<script src="{{ url('js/partials/poll-form.js') }}" defer></script>
 <div id="poll-form" class="fixed inset-0 z-50 flex items-center justify-center {{ $errors->any() ? '' : 'hidden' }} bg-gray-500 bg-opacity-75">
     <div class="w-1/2 p-6 bg-white rounded-lg shadow-lg">
         <h2 class="mb-4 text-2xl font-bold">Create Poll</h2>
@@ -25,18 +25,18 @@
             </div>
 
             <div class="mb-4">
-                <label for="poll-options-container" class="block mb-2 text-gray-700">Options <span class="text-red-600">*</span></label>
+                <label for="poll-options" class="block mb-2 text-gray-700">Options <span class="text-red-600">*</span></label>
                 <div id="poll-options-container" class="space-y-2">
                     @if(old('options'))
                         @foreach(old('options') as $option)
                             <div class="flex items-center">
-                                <input type="text" name="options[]" class="w-full p-2 border border-gray-300 rounded-lg @error('options.*') border-red-500 @enderror" value="{{ $option }}" required>
+                                <input type="text" name="options[]" id="poll-options" class="w-full p-2 border border-gray-300 rounded-lg @error('options.*') border-red-500 @enderror" value="{{ $option }}" required>
                                 <button type="button" class="ml-2 px-2 py-1 bg-red-500 text-white rounded-lg" onclick="removeOption(this)">X</button>
                             </div>
                         @endforeach
                     @else
                         <div class="flex items-center">
-                            <input type="text" name="options[]" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                            <input type="text" name="options[]" id="poll-options" class="w-full p-2 border border-gray-300 rounded-lg" required>
                             <button type="button" class="ml-2 px-2 py-1 bg-red-500 text-white rounded-lg" onclick="removeOption(this)">X</button>
                         </div>
                     @endif

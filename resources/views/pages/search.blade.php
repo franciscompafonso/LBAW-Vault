@@ -14,7 +14,7 @@
 
 
 @section('content')
-<script type="text/javascript" src="{{ url('js/pages/search.js') }}" defer></script>
+<script src="{{ url('js/pages/search.js') }}" defer></script>
 <!-- Events by Category Section -->
 <section class="w-full" role="region" aria-label="Events search and filters section">
 

@@ -2,7 +2,7 @@
 
 @section('Title', 'User Management')
 @section('content')
-    <script type="text/javascript" src="{{ url('js/admin/user-management.js') }}" defer></script>
+    <script src="{{ url('js/admin/user-management.js') }}" defer></script>
     <div class="container p-8 mx-auto">
         <a href="/admin/user-management"><h1 class="mb-6 text-5xl font-bold text-ultraViolet font-montserrat">User Management</h1></a>
 

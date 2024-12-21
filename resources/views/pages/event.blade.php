@@ -7,7 +7,7 @@
     window.startEvent = '{{ $event->start_date }}';
     window.endEvent = '{{ $event->end_date }}';
 </script>
-<script type="text/javascript" src="{{ url('js/pages/event-page.js') }}" defer></script>
+<script src="{{ url('js/pages/event-page.js') }}" defer></script>
 <div class="space-y-10"> 
    <!-- Main Content Wrapper -->
    <div class="flex flex-col gap-10 lg:flex-row">

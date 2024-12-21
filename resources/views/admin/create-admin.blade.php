@@ -2,7 +2,7 @@
 
 @section('Title', 'Create Admin')
 @section('content')
-    <script type="text/javascript" src="{{ url('js/admin/create.js') }}" defer></script>
+    <script src="{{ url('js/admin/create.js') }}" defer></script>
     <div class="container mx-auto mt-8">
         
         @if (session('message'))

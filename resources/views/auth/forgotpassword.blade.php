@@ -3,7 +3,7 @@
 @section('Title', 'Recover Password')
 
 @section('content')
-<script type="text/javascript" src="{{ url('js/auth/forgotpassword.js') }}" defer></script>
+<script src="{{ url('js/auth/forgotpassword.js') }}" defer></script>
 <div class="flex items-center justify-center">
   <!-- Card Wrapper -->
   <div class="grid w-[70%] grid-cols-1 rounded-lg shadow-lg lg:grid-cols-2 bg-babyPowder overflow-hidden">
