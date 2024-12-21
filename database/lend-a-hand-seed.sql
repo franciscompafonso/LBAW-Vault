@@ -154,7 +154,6 @@ CREATE TABLE comment (
     comment_by_id INT REFERENCES user_account(id),
     event_id INT REFERENCES event(id) ON DELETE CASCADE,
     text VARCHAR(255) NOT NULL,
-    is_pinned BOOLEAN,
     score INT DEFAULT 0,
     edited BOOLEAN DEFAULT FALSE NOT NULL,
     date TIMESTAMP NOT NULL CHECK (date <= CURRENT_TIMESTAMP)
