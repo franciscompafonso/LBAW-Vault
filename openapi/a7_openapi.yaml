@@ -19,6 +19,7 @@ tags:
   - name: 'M03: Notifications'
   - name: 'M04: Event'
   - name: 'M05: Comments'
+  - name: 'M05: Comments'
   - name: 'M06: User Administration'
   - name: 'M07: Static pages'
   - name: 'M08: Search'
@@ -79,7 +80,6 @@ paths:
           description: 'Internal Server Error. An unexpected issue occurred.'
 
   /logout:
-
     post:
       operationId: R103
       summary: 'R103: Logout Action'
@@ -151,7 +151,7 @@ paths:
               examples:
                 302Success:
                   description: 'Registration was successful. Redirect to user profile.'
-                  value: '/user/{id}'
+                  value: '/user/{username}'
                 302Failure:
                   description: 'Registration failed. Redirect back to the registration form.'
                   value: '/register'
@@ -162,9 +162,9 @@ paths:
 
   /password/reset:
     post:
-      operationId: R107
-      summary: 'R107: Reset User Password'
-      description: 'Resets the user password after receiving a valid token.'
+      operationId: R106
+      summary: 'R106: Reset User Password'
+      description: 'Resets the user password after receiving a valid token. Access: USR' 
       tags:
         - 'M01: Authentication'
       requestBody:
@@ -203,7 +203,7 @@ paths:
     get:
       operationId: R201
       summary: 'R201: View Profile'
-      description: 'Show the individual user profile. Access: USR, VST, ADM'
+      description: 'Show the individual user profile. Access: USR, ADM'
       tags:
         - 'M02: Individual Profile'
 
@@ -360,37 +360,278 @@ paths:
 
   /unblock-request:
     get:
-      operationId: 'R205'
-      summary: 'R207: Get Unblock Request Form.'
-      description: 'Fetches the form for submitting an unblock request.'
+      operationId: R205
+      summary: 'R205: Get Unblock Request Form.'
+      description: 'Fetches the form for submitting an unblock request. Access: USR'
       tags:
         - 'M02: Individual Profile'
-        - 'M04: Event'
       responses:
         '200':
           description: 'Unblock request form fetched successfully.'
         '500':
           description: 'Internal server error.'
-
-  /admin/unblock-requests:
-    get:
-      operationId: 'R207'
-      summary: 'R207: Get Admin Unblock Requests.'
-      description: 'Allows admin to view all unblock requests.'
+    post:
+      operationId: 'R206'
+      summary: 'R206: Submit Unblock Request'
+      description: 'Allows a user to submit an unblock request. Access: USR'
       tags:
-        - 'M06: User Administration'
+        - 'M02: Individual Profile'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: 'The reason for requesting the unblock.'
+                  minLength: 1
+                  maxLength: 500
+        description: 'The data for the unblock request.'
       responses:
         '200':
-          description: 'Successfully retrieved unblock requests.'
+          description: 'Unblock request submitted successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unblock request submitted successfully.'
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: 'Invalid unblock request data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Reason is required and must be valid.'
+                  success:
+                    type: boolean
+                    example: false
         '500':
           description: 'Internal server error.'
-    
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while processing the unblock request.'
+                  success:
+                    type: boolean
+                    example: false
+
+  /user/{username}/invites:
+    get:
+      operationId: R207
+      summary: 'R207: Get User Invites'
+      description: 'Retrieve a list of invites for a specific user by their username. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'The username of the user whose invites are being fetched.'
+      responses:
+        '200':
+          description: 'List of invites retrieved successfully.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    sender:
+                      type: string
+                      description: 'The username of the sender.'
+                    event_name:
+                      type: string
+                      description: 'The name of the event for which the invite was sent.'
+                    description:
+                      type: string
+                      description: 'Optional description provided with the invite.'
+                    date:
+                      type: string
+                      format: date-time
+                      description: 'The date the invite was sent.'
+        '404':
+          description: 'User not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found.'
+                  success:
+                    type: boolean
+                    example: false
+
+  /invites/{invitesId}/decline:
+    post:
+      operationId: R208
+      summary: 'R208: Decline Invite'
+      description: 'Declines an invite for a specific user. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - name: invitesId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the invite'
+      responses:
+        '200':
+          description: 'Invite declined successfully.'
+        '400':
+          description: 'Invalid invite data.'
+        '404':
+          description: 'Invite not found.'
+
+  /invites/{invitesId}/accept:
+    post:
+      operationId: R209
+      summary: 'R209: Accept Invite'
+      description: 'Accepts an invite for a specific user. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - name: invitesId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the invite'
+      responses:
+        '200':
+          description: 'Invite accepted successfully.'
+        '400':
+          description: 'Invalid invite data.'
+        '404':
+          description: 'Invite not found.'
+  
+  /invite/{id}:
+    delete:
+      operationId: R210
+      summary: 'R210: Delete Invite'
+      description: 'Delete a specific invite by its ID. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the invite to delete.'
+      responses:
+        '200':
+          description: 'Invite deleted successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invite deleted successfully.'
+                  success:
+                    type: boolean
+                    example: true
+        '403':
+          description: 'Forbidden. User does not have permission to delete this invite.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have permission to delete this invite.'
+                  success:
+                    type: boolean
+                    example: false
+        '404':
+          description: 'Invite not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invite not found.'
+                  success:
+                    type: boolean
+                    example: false
+
+  /requests/{requestId}/accept:
+    post:
+      operationId: R211
+      summary: 'R211: Accept Join Request'
+      description: 'Accepts a join request for an event. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the join request'
+      responses:
+        '200':
+          description: 'Join request accepted successfully.'
+        '400':
+          description: 'Invalid request data.'
+        '404':
+          description: 'Join request not found.'\
+
+  /requests/{requestId}/decline:
+    post:
+      operationId: R212
+      summary: 'R212: Decline Join Request'
+      description: 'Declines a join request for an event. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the join request'
+      responses:
+        '200':
+          description: 'Join request declined successfully.'
+        '400':
+          description: 'Invalid request data.'
+        '404':
+          description: 'Join request not found.'
+
 ### M03: Notifications
 
-  /notifications:
+  /api/notifications:
     get:
       operationId: R301
-      summary: 'R301: Get Notifications'
+      summary: 'R301: Get Notifications via API'
       description: 'Retrieve a list of all notifications for the user. Access: USR'
       tags:
         - 'M03: Notifications'
@@ -418,7 +659,7 @@ paths:
         '500':
           description: 'Internal Server Error. An unexpected issue occurred.'
 
-  /notifications/dismiss:
+  /notifications/{id}/dismiss:
     post:
       operationId: R302
       summary: 'R302: Dismiss Notification'
@@ -466,35 +707,13 @@ paths:
         '500':
           description: 'Internal Server Error. An unexpected issue occurred.'
 
-  /notifications/count:
-    get:
-      operationId: R304
-      summary: 'R304: Count Unread Notifications'
-      description: 'Retrieve the count of unread notifications for the user. Access: USR'
-      tags:
-        - 'M03: Notifications'
-      responses:
-        '200':
-          description: 'Unread notifications count retrieved successfully.'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  unread_count:
-                    type: integer
-        '403':
-          description: 'Forbidden. User not authorized.'
-        '500':
-          description: 'Internal Server Error. An unexpected issue occurred.'
-    
 ### M04: Event
 
   /events:
     get:
-      operationId: 'R401'
+      operationId: R401
       summary: 'R401: List events created.'
-      description: 'List all events created by the user. Access: VST, USR, ADM'
+      description: 'List all events created by the user. Access: USR'
       tags:
         - 'M04: Event'
       responses:
@@ -515,7 +734,7 @@ paths:
                       type: string
                       format: date-time
     post:
-      operationId: 'R402'
+      operationId: R402
       summary: 'R402: Create Event.'
       description: 'Create Event. Access: USR'
       tags:
@@ -541,27 +760,9 @@ paths:
           description: Invalid input
 
   /events/{id}:
-    delete:
-      operationId: 'R403'
-      summary: 'R403: Delete Event.'
-      description: 'Delete Event. Access: CRT, ADM'
-      tags:
-        - 'M04: Event'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: The ID of the event to delete
-      responses:
-        '204':
-          description: Event deleted successfully
-        '404':
-          description: Event not found
     get:
-      operationId: 'R404'
-      summary: 'R404: Details of Event.'
+      operationId: R403
+      summary: 'R403: Details of Event.'
       description: 'Displays the page of the event with its details. Access: VST, USR'
       tags:
         - 'M04: Event'
@@ -591,12 +792,98 @@ paths:
                     format: date-time
         '404':
           description: Event not found
-  
+    delete:
+      operationId: R404
+      summary: 'R404: Delete Event.'
+      description: 'Delete Event. Access: CRT, ADM'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the event to delete
+      responses:
+        '204':
+          description: Event deleted successfully
+        '404':
+          description: Event not found
+    
+  /events/{id}/cancel:
+    put:
+      operationId: R405
+      summary: 'R405: Cancel an Event'
+      description: 'Allows an authorized user to cancel a specific event. Access: CRT'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the event to cancel.'
+      responses:
+        '200':
+          description: 'Event cancelled successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Event cancelled successfully.'
+                  success:
+                    type: boolean
+                    example: true
+        '403':
+          description: 'Forbidden. User does not have access to cancel this event.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have permission to cancel this event.'
+                  success:
+                    type: boolean
+                    example: false
+        '404':
+          description: 'Event not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Event not found.'
+                  success:
+                    type: boolean
+                    example: false
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while cancelling the event.'
+                  success:
+                    type: boolean
+                    example: false
+
   /events/{event}:
     put:
-      operationId: 'R405'
-      summary: 'R405: Update Event.'
-      description: 'Update Event. Access: CRT'
+      operationId: R406
+      summary: 'R406: Update Event.'
+      description: 'Update Event. Access: CRT, ADM'
       tags:
         - 'M04: Event'
       parameters:
@@ -630,9 +917,9 @@ paths:
 
   /events/{event}/polls:
     post:
-      operationId: 'R406'
-      summary: 'R406: Create Poll for Event.'
-      description: 'Create Poll for Event. Access: PCT'
+      operationId: R407
+      summary: 'R407: Create Poll for Event.'
+      description: 'Create Poll for Event. Access: CRT'
       tags:
         - 'M04: Event'
       parameters:
@@ -650,8 +937,8 @@ paths:
 
   /events/{event}/request:
     post:
-      operationId: 'R407'
-      summary: 'R407: Request to Join an Event.'
+      operationId: R408
+      summary: 'R408: Request to Join an Event.'
       description: 'Request to Join an Event. Access: USR'
       tags:
         - 'M04: Event'
@@ -670,8 +957,8 @@ paths:
 
   /events/{event}/join:
     post:
-      operationId: 'R408'
-      summary: 'R408: Join an Event.'
+      operationId: R409
+      summary: 'R409: Join an Event.'
       description: 'Join an Event. Access: USR'
       tags:
         - 'M04: Event'
@@ -690,8 +977,8 @@ paths:
 
   /events/{event}/leave:
     post:
-      operationId: 'R409'
-      summary: 'R409: Leave an event.'
+      operationId: R410
+      summary: 'R410: Leave an event.'
       description: 'Leave an event. Access: PCT'
       tags:
         - 'M04: Event'
@@ -708,10 +995,10 @@ paths:
         '400':
           description: Invalid input
 
-  /events/{event}/participators/{user}/kick:
+  /events/{event}/participants/{username}/kick:
     post:
-      operationId: 'R410'
-      summary: 'R410: Kick a Participant from Event.'
+      operationId: R411
+      summary: 'R411: Kick a Participant from Event.'
       description: 'Kick a Participant from Event. Access: CRT, ADM'
       tags:
         - 'M04: Event'
@@ -722,12 +1009,12 @@ paths:
           schema:
             type: integer
           description: The ID of the event
-        - name: user
+        - name: username
           in: path
           required: true
           schema:
-            type: integer
-          description: The ID of the user to be kicked
+            type: string
+          description: The string of the user to be kicked
       responses:
         '200':
           description: Successfully kicked the participant
@@ -736,8 +1023,8 @@ paths:
 
   /events/category={id}:
     get:
-      operationId: 'R411'
-      summary: 'R411: Events by Category.'
+      operationId: R412
+      summary: 'R412: Events by Category.'
       description: 'Events by Category. Access: VST, USR, ADM'
       tags:
         - 'M04: Event'
@@ -768,8 +1055,8 @@ paths:
 
   /event/create:
     get:
-      operationId: 'R412'
-      summary: 'R412: Event Create Form.'
+      operationId: R413
+      summary: 'R413: Event Create Form.'
       description: 'Event Create Form. Access: USR'
       tags:
         - 'M04: Event'
@@ -781,9 +1068,9 @@ paths:
 
   /events/{event}/edit:
     get:
-      operationId: 'R413'
-      summary: 'R413: Event Edit Form.'
-      description: 'Event Edit Form. Access: CRT'
+      operationId: R414
+      summary: 'R414: Event Edit Form.'
+      description: 'Event Edit Form. Access: CRT, ADM'
       tags:
         - 'M04: Event'
       parameters:
@@ -801,9 +1088,9 @@ paths:
 
   /events/{event}/survey:
     get:
-      operationId: 'R414'
-      summary: 'R414: Get survey details for the event.'
-      description: 'Get survey details for the event. Access: CRT'
+      operationId: R415
+      summary: 'R415: Get survey details for the event.'
+      description: 'Get survey details for the event. Access: PTC'
       tags:
         - 'M04: Event'
       parameters:
@@ -819,8 +1106,8 @@ paths:
         '404':
           description: Event not found
     post:
-      operationId: 'R415'
-      summary: 'R415: Submit a survey response for an event.'
+      operationId: R416
+      summary: 'R416: Submit a survey response for an event.'
       description: 'Submit a survey response for an event. Access: PTC'
       tags:
         - 'M04: Event'
@@ -850,8 +1137,8 @@ paths:
 
   /events/{event}/survey/stats:
     get:
-      operationId: 'R416'
-      summary: 'R416: Get survey statistics for the event.'
+      operationId: R417
+      summary: 'R417: Get survey statistics for the event.'
       description: 'Get survey statistics for the event. Access: CRT'
       tags:
         - 'M04: Event'
@@ -870,9 +1157,9 @@ paths:
   
   /events/{event}/update-comment-form:
     get:
-      operationId: 'R417'
-      summary: 'R417: Get Update Comment Form.'
-      description: 'Fetches the update comment form for a specific event.'
+      operationId: R418
+      summary: 'R418: Get Update Comment Form.'
+      description: 'Fetches the update comment form for a specific event. Access: USR'
       tags:
         - 'M04: Event'
       parameters:
@@ -887,12 +1174,97 @@ paths:
           description: 'Successfully fetched the update comment form.'
         '404':
           description: 'Event not found.'
+  
+  /events/{event}/invite:
+    post:
+      operationId: R419
+      summary: 'R419: Send Event Invite'
+      description: 'Allows a user to send an invitation to another user for an event. Access: PTC'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the event.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: 'The username of the user to invite.'
+                  minLength: 5
+                  maxLength: 25
+                description:
+                  type: string
+                  description: 'Optional description for the invite.'
+                  maxLength: 50
+      responses:
+        '200':
+          description: 'Invitation sent successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invitation sent successfully!'
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: 'Validation error in the invite data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'The user with the specified username does not exist.'
+                  success:
+                    type: boolean
+                    example: false
+        '403':
+          description: 'Authorization failed. The user is not allowed to send an invite for this event.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not authorized to invite users to this event.'
+                  success:
+                    type: boolean
+                    example: false
+        '404':
+          description: 'The event or user was not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User is already a participator in this event.'
+                  success:
+                    type: boolean
+                    example: false
+
 
   /polls/{poll}/vote:
     post:
-      operationId: 'R418'
-      summary: 'R418: Submit Vote for a Poll.'
-      description: 'Allows users to submit a vote for a specific poll.'
+      operationId: R420
+      summary: 'R420: Submit Vote for a Poll.'
+      description: 'Allows users to submit a vote for a specific poll. Access: PTC'
       tags:
         - 'M04: Event'
       parameters:
@@ -917,65 +1289,12 @@ paths:
           description: 'Vote submitted successfully.'
         '400':
           description: 'Invalid vote submission.'
-
-  /admin/unblock-requests/{id}/approve:
-    post:
-      operationId: 'R421'
-      summary: 'R421: Approve Unblock Request.'
-      description: 'Admin approves an unblock request.'
-      tags:
-        - 'M06: User Administration'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: 'The ID of the unblock request.'
-      responses:
-        '200':
-          description: 'Unblock request approved.'
-        '404':
-          description: 'Unblock request not found.'
-
-  /admin/unblock-requests/{id}/reject:
-    post:
-      operationId: 'R422'
-      summary: 'R422: Reject Unblock Request.'
-      description: 'Admin rejects an unblock request.'
-      tags:
-        - 'M06: User Administration'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: 'The ID of the unblock request.'
-      responses:
-        '200':
-          description: 'Unblock request rejected.'
-        '404':
-          description: 'Unblock request not found.'
-
-  /events/search:
-    get:
-      operationId: 'R423'
-      summary: 'R423: Search for Events.'
-      description: 'Allows users to search for events based on criteria.'
-      tags:
-        - 'M08: Search'
-      responses:
-        '200':
-          description: 'Search results retrieved successfully.'
-        '400':
-          description: 'Invalid search query.'
   
   /events/{event}/event-actions:
     get:
-      operationId: 'R424'
-      summary: 'R424: Get Event Actions.'
-      description: 'Fetches available actions for a specific event.'
+      operationId: R421
+      summary: 'R421: Get Event Actions.'
+      description: 'Fetches available actions for a specific event. Access: CRT'
       tags:
         - 'M04: Event'
       parameters:
@@ -993,9 +1312,9 @@ paths:
 
   /events/{event}/participants:
     get:
-      operationId: 'R425'
-      summary: 'R425: Get Event Participants.'
-      description: 'Fetches participants of a specific event.'
+      operationId: R422
+      summary: 'R422: Get Event Participants.'
+      description: 'Fetches participants of a specific event. Access: GST, USR, ADM'
       tags:
         - 'M04: Event'
       parameters:
@@ -1010,102 +1329,14 @@ paths:
           description: 'Successfully retrieved participants.'
         '404':
           description: 'Event not found.'
-
-### M05: Comments
-
-  /comments/{comment}/delete:
-    post:
-      operationId: R501
-      summary: 'R501: Delete a comment'
-      description: 'Deletes a specific comment from the system. Access: VST, USR, ADM'
-      tags:
-        - 'M05: Comments'
-      parameters:
-        - name: comment
-          in: path
-          description: 'ID of the comment to delete'
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-              required: [id]
-      responses:
-        '302':
-          description: 'Redirect after deleting comment.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Comment was successfully deleted. Redirect to Home page.'
-                  value: '/'
-        '403':
-          description: 'Forbidden. User does not have access.'
-        '404':
-          description: 'Not Found. Comment not found.'
-        '500':
-          description: 'Internal Server Error. Unexpected issue occurred.'
-
-  /comments/{commentId}/photos:
-    get:
-      operationId: R502
-      summary: 'R502: Get photos for a comment'
-      description: 'Fetches all photos associated with a specific comment.'
-      tags:
-        - 'M05: Comments'
-      parameters:
-        - name: commentId
-          in: path
-          description: 'ID of the comment to retrieve photos for'
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 'Successfully retrieved photos for the comment.'
-        '404':
-          description: 'Comment not found.'
-        '500':
-          description: 'Internal server error. Unable to fetch photos.'
-
-  /comments/{comment}/photos:
-    post:
-      operationId: R503
-      summary: 'R503: Add photos to a comment'
-      description: 'Stores photos associated with a specific comment.'
-      tags:
-        - 'M05: Comments'
-      parameters:
-        - name: comment
-          in: path
-          description: 'ID of the comment to associate photos with'
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 'Photos successfully added to the comment.'
-        '400':
-          description: 'Bad request. Invalid data submitted.'
-        '500':
-          description: 'Internal server error. Unable to add photos.'
-
+          
   /photos/{id}:
     get:
-      operationId: R504
-      summary: 'R504: Get a photo'
-      description: 'Fetches a specific photo by its ID.'
+      operationId: R423
+      summary: 'R423: Get a photo'
+      description: 'Fetches a specific photo by its ID. Access: GST, USR, ADM'
       tags:
-        - 'M05: Comments'
+        - 'M04: Event'
       parameters:
         - name: id
           in: path
@@ -1121,61 +1352,348 @@ paths:
         '500':
           description: 'Internal server error. Unable to fetch the photo.'
 
-  /comment/like:
+### M05: Comments
+
+  /events/{event}/comments:
+    get:
+      operationId: R501
+      summary: 'R501: Get Comments for Event'
+      description: 'Fetches all comments for a specific event. Access: GST, USR, ADM'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the event to fetch comments for.'
+      responses:
+        '200':
+          description: 'Comments retrieved successfully.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: 'The ID of the comment.'
+                    user:
+                      type: string
+                      description: 'The username of the user who made the comment.'
+                    content:
+                      type: string
+                      description: 'The content of the comment.'
+                    date:
+                      type: string
+                      format: date-time
+                      description: 'The date and time when the comment was made.'
+        '403':
+          description: 'Forbidden. User does not have access to view comments for this event.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have permission to view comments for this event.'
+                  success:
+                    type: boolean
+                    example: false
+        '404':
+          description: 'Event not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Event not found.'
+                  success:
+                    type: boolean
+                    example: false
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while fetching comments for the event.'
+                  success:
+                    type: boolean
+                    example: false
+    post:
+      operationId: R502
+      summary: 'R502: Add Comment to Event'
+      description: 'Allows a user to add a comment to a specific event. Access: USR'
+      tags:
+        - 'M04: Event'
+      parameters:
+        - name: event
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the event to which the comment is being added.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'The content of the comment.'
+                  minLength: 1
+                  maxLength: 500
+        description: 'The data for the comment to be added.'
+      responses:
+        '201':
+          description: 'Comment added successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Comment added successfully.'
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: 'Invalid comment data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Comment content is required and must be valid.'
+                  success:
+                    type: boolean
+                    example: false
+        '403':
+          description: 'Forbidden. User does not have permission to comment on this event.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have permission to comment on this event.'
+                  success:
+                    type: boolean
+                    example: false
+        '404':
+          description: 'Event not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Event not found.'
+                  success:
+                    type: boolean
+                  example: false
+
+  /comments/{id}:
+    delete:
+      operationId: R503
+      summary: 'R503: Delete a Comment'
+      description: 'Deletes a specific comment from the system by its ID. Access: CRT, ADM'
+      tags:
+        - 'M05: Comments'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the comment to delete.'
+      responses:
+        '200':
+          description: 'Comment deleted successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Comment deleted successfully.'
+                  success:
+                    type: boolean
+                    example: true
+        '403':
+          description: 'Forbidden. User does not have access to delete this comment.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have permission to delete this comment.'
+                  success:
+                    type: boolean
+                    example: false
+        '404':
+          description: 'Comment not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Comment not found.'
+                  success:
+                    type: boolean
+                    example: false
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while deleting the comment.'
+                  success:
+                    type: boolean
+                    example: false
+
+  /comment/{commentId}/like:
+    post:
+      operationId: R504
+      summary: 'R504: Like a comment'
+      description: 'Allows a user to like a specific comment by its ID. Access: USR'
+      tags:
+        - 'M05: Comments'
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the comment to like.'
+      responses:
+        '200':
+          description: 'Comment liked successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Comment liked successfully.'
+                  success:
+                    type: boolean
+                    example: true
+        '403':
+          description: 'Forbidden. User does not have access.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User is not authorized to like this comment. '
+                  success:
+                    type: boolean
+                    example: false
+        '404':
+          description: 'Comment not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Comment not found.'
+                  success:
+                    type: boolean
+                    example: false
+
+
+  /comment/{commentId}/dislike:
     post:
       operationId: R505
-      summary: 'R505: Like a comment'
-      description: 'Allows a user to like a specific comment.'
+      summary: 'R505: Dislike a comment'
+      description: 'Allows a user to dislike a specific comment by its ID. Access: USR'
       tags:
         - 'M05: Comments'
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-              required: [id]
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: 'The ID of the comment to dislike.'
       responses:
-        '302':
-          description: 'Successful like.'
+        '200':
+          description: 'Comment disliked successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Comment disliked successfully.'
+                  success:
+                    type: boolean
+                    example: true
         '403':
           description: 'Forbidden. User does not have access.'
-        '500':
-          description: 'Internal Server Error. Unexpected issue occurred.'
-
-  /comment/dislike:
-    post:
-      operationId: R506
-      summary: 'R506: Dislike a comment'
-      description: 'Allows a user to dislike a specific comment. Access: CTR, PTC, ADM'
-      tags:
-        - 'M05: Comments'
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-              required: [id]
-      responses:
-        '302':
-          description: 'Successful like.'
-        '403':
-          description: 'Forbidden. User does not have access.'
-        '500':
-          description: 'Internal Server Error. Unexpected issue occurred.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User is not authorized to dislike this comment.'
+                  success:
+                    type: boolean
+                    example: false
+        '404':
+          description: 'Comment not found.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Comment not found.'
+                  success:
+                    type: boolean
+                    example: false
 
   /comments/{comment}/reply:
     post:
-      operationId: R507
-      summary: 'R507: Reply to a comment'
-      description: 'Replies to a specific comment.'
+      operationId: R506
+      summary: 'R506: Reply to a comment'
+      description: 'Replies to a specific comment. Access: USR'
       tags:
         - 'M05: Comments'
       parameters:
@@ -1193,28 +1711,12 @@ paths:
         '500':
           description: 'Internal server error. Unable to reply to the comment.'
 
-
 ### M06: User Administration 
   
-  /admin/logout:
-    post:
-      operationId: R601
-      summary: 'R601: Admin logout'
-      description: 'Logs out the admin from the system. Access: ADM'
-      tags:
-        - 'M06: User Administration'
-      responses:
-        '200':
-          description: 'Successfully logged out.'
-        '401':
-          description: 'Unauthorized. Admin not logged in.'
-        '500':
-          description: 'Internal server error. Unable to log out.'
-
   /admin/user-management:
     get:
-      operationId: R602
-      summary: 'R602: List all users'
+      operationId: R601
+      summary: 'R601: List all users'
       description: 'Fetches a list of all users for management. Access: ADM'
       tags:
         - 'M06: User Administration'
@@ -1226,8 +1728,8 @@ paths:
 
   /admin/user-management/search-user:
     get:
-      operationId: R603
-      summary: 'R603: Search users'
+      operationId: R602
+      summary: 'R602: Search users'
       description: 'Allows searching for users by criteria. Access: ADM'
       tags:
         - 'M06: User Administration'
@@ -1239,8 +1741,8 @@ paths:
 
   /admin/user-management/delete-user/{username}:
     delete:
-      operationId: R604
-      summary: 'R604: Delete a user'
+      operationId: R603
+      summary: 'R603: Delete a user'
       description: 'Deletes a user from the system. Access: ADM'
       tags:
         - 'M06: User Administration'
@@ -1261,15 +1763,15 @@ paths:
 
   /admin/user-management/block-user/{username}:
     post:
-      operationId: R605
-      summary: 'R605: Block a user'
+      operationId: R604
+      summary: 'R604: Block a user'
       description: 'Blocks a user from the platform. Access: ADM'
       tags:
         - 'M06: User Administration'
       parameters:
-        - name: user
+        - name: username
           in: path
-          description: 'ID of the user to block'
+          description: 'Username of the user to block'
           required: true
           schema:
             type: string
@@ -1283,15 +1785,15 @@ paths:
 
   /admin/user-management/unblock-user/{username}:
     patch:
-      operationId: R606
-      summary: 'R606: Unblock a user'
+      operationId: R605
+      summary: 'R605: Unblock a user'
       description: 'Unblocks a previously blocked user. Access: ADM'
       tags:
         - 'M06: User Administration'
       parameters:
-        - name: user
+        - name: username
           in: path
-          description: 'ID of the user to unblock'
+          description: 'Username of the user to unblock'
           required: true
           schema:
             type: string
@@ -1305,8 +1807,8 @@ paths:
 
   /admin/create:
     get:
-      operationId: R607
-      summary: 'R607: Show create admin form'
+      operationId: R606
+      summary: 'R606: Show create admin form'
       description: 'Displays the form to create a new admin. Access: ADM'
       tags:
         - 'M06: User Administration'
@@ -1338,8 +1840,8 @@ paths:
 
   /admin/store:
     post:
-      operationId: R608
-      summary: 'R608: Store a new admin'
+      operationId: R607
+      summary: 'R607: Store a new admin'
       description: 'Stores the details of a new admin in the system. Access: ADM'
       tags:
         - 'M06: User Administration'
@@ -1350,25 +1852,148 @@ paths:
           description: 'Bad request. Validation failed.'
         '500':
           description: 'Internal server error. Unable to create admin.'
+  
+  /admin/users/create:
+    get:
+      operationId: R608
+      summary: 'R608: Get User Creation Form'
+      description: 'Fetches the form to create a new user. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      responses:
+        '200':
+          description: 'Admin creation form fetched successfully.'
+        '403':
+          description: 'Forbidden. Only admins can access this form.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not authorized to access this resource.'
+                  success:
+                    type: boolean
+                    example: false
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while fetching the user creation form.'
+                  success:
+                    type: boolean
+                    example: false
+
+  /admin/users/store:
+    post:
+      operationId: R609
+      summary: 'R609: Store New User'
+      description: 'Creates and stores a new user in the system. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Full name of the user.'
+                  minLength: 1
+                  maxLength: 100
+                username:
+                  type: string
+                  description: 'Username for the user.'
+                  minLength: 5
+                  maxLength: 50
+                email:
+                  type: string
+                  description: 'Email address for the user.'
+                  format: email
+                password:
+                  type: string
+                  description: 'Password for the user.'
+                  minLength: 8
+      responses:
+        '201':
+          description: 'User created successfully.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User created successfully.'
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: 'Invalid input data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Validation error in user data.'
+                  success:
+                    type: boolean
+                    example: false
+        '403':
+          description: 'Forbidden. Only admins can create users using this method.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not authorized to perform this action.'
+                  success:
+                    type: boolean
+                    example: false
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while storing the user.'
+                  success:
+                    type: boolean
+                    example: false
 
   /admin/unblock-requests:
-  get:
-    operationId: 'R609'
-    summary: 'R609: Get Admin Unblock Requests.'
-    description: 'Allows admin to view all unblock requests.'
-    tags:
-      - 'M06: User Administration'
-    responses:
-      '200':
-        description: 'Successfully retrieved unblock requests.'
-      '500':
-        description: 'Internal server error.'
+    get:
+      operationId: R610
+      summary: 'R610: Get Admin Unblock Requests.'
+      description: 'Allows admin to view all unblock requests. Access: ADM'
+      tags:
+        - 'M06: User Administration'
+      responses:
+        '200':
+          description: 'Successfully retrieved unblock requests.'
+        '500':
+          description: 'Internal server error.'
 
   /admin/unblock-requests/{id}/approve:
     post:
-      operationId: 'R610'
-      summary: 'R610: Approve Unblock Request.'
-      description: 'Admin approves an unblock request.'
+      operationId: R611
+      summary: 'R611: Approve Unblock Request.'
+      description: 'Admin approves an unblock request.  Access: ADM'
       tags:
         - 'M06: User Administration'
       parameters:
@@ -1383,12 +2008,12 @@ paths:
           description: 'Unblock request approved.'
         '404':
           description: 'Unblock request not found.'
-
+  
   /admin/unblock-requests/{id}/reject:
     post:
-      operationId: 'R611'
-      summary: 'R611: Reject Unblock Request.'
-      description: 'Admin rejects an unblock request.'
+      operationId: R612
+      summary: 'R612: Reject Unblock Request.'
+      description: 'Admin rejects an unblock request.  Access: ADM'
       tags:
         - 'M06: User Administration'
       parameters:
@@ -1449,7 +2074,7 @@ paths:
 
   /events/search:
     get:
-      operationId: 'R801'
+      operationId: R801
       summary: 'R801: Search for Events.'
       description: 'Allows users to search for events based on criteria.'
       tags:
