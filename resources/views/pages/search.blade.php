@@ -38,7 +38,7 @@
             @forelse ($events as $event)
                 @include('partials.event', ['event' => $event])
             @empty
-                <p class="text-eerieBlack font-montserrat col-span-full" aria-live="polite">No events available in this category.</p>
+                <p class="text-eerieBlack font-montserrat col-span-full" aria-live="polite">No events match the criteria.</p>
             @endforelse
 
             <!-- Pagination Links -->
