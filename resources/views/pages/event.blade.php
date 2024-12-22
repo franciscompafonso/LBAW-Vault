@@ -165,7 +165,9 @@
             <div id="comment-list" 
                 class="mt-6 space-y-6 max-h-[400px] sm:max-h-[600px] lg:max-h-[800px] overflow-y-scroll rounded-md p-4" 
                 aria-labelledby="comments-heading">
-                @each('partials.comment', $event->comments()->orderBy('date', 'desc')->get(), 'comment')
+                <ul class="space-y-4 list-none">
+                    @each('partials.comment', $event->comments()->orderBy('date', 'desc')->get(), 'comment')
+                </ul>
             </div>
 
         </div>
@@ -173,11 +175,11 @@
         <!-- Details and Participants Section -->
         <div class="flex flex-col gap-6 lg:w-1/4">
             <!-- Event Details -->
-            <div class="space-y-8 mb-10">
+            <div class="mb-10 space-y-8">
                 <h2 class="mb-6 text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">
                     Details
                 </h2>
-                <div id="countdown" class="flex items-center justify-evenly p-4 sm:text-5xl md:text-5xl lg:text-3xl xl:text-4xl font-semibold text-white bg-ultraViolet rounded-md shadow-md font-montserrat"></div>
+                <div id="countdown" class="flex items-center p-4 font-semibold text-white rounded-md shadow-md justify-evenly sm:text-5xl md:text-5xl lg:text-3xl xl:text-4xl bg-ultraViolet font-montserrat"></div>
                 @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
                     <p class="text-3xl text-darkSlateGrey font-montserrat">
                         <strong class="font-semibold">Visibility:</strong> 
@@ -224,7 +226,7 @@
             </div>
 
             <!-- Participants -->
-            <div aria-labelledby="participants-heading" class="mt-10 h-full">
+            <div aria-labelledby="participants-heading" class="h-full mt-10">
                 <!-- Header with Participant Counter -->
                 <div class="flex items-center justify-between mb-6">
                     <h2 id="participants-heading" class="text-4xl font-bold text-ultraViolet font-montserrat border-babyPowder">

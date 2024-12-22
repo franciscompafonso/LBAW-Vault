@@ -350,7 +350,7 @@ class EventController extends Controller
         $commentsHtml = '';
         
         // Generate HTML content for each comment (avoid HTML injection risks)
-        foreach ($event->comments()->orderBy('id')->get() as $comment) {
+        foreach ($event->comments()->orderBy('date', 'desc')->get() as $comment) {
             $commentsHtml .= view('partials.comment', ['comment' => $comment])->render();
         }
         

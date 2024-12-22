@@ -306,7 +306,7 @@ ALTER TABLE "user_account"
 	ADD CONSTRAINT "FK_user_account_file" FOREIGN KEY ("file_id") REFERENCES "file" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
 
 ALTER TABLE "file"
-	ADD CONSTRAINT "FK_file_comment" FOREIGN KEY ("comment_id") REFERENCES "comment" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION;
+	ADD CONSTRAINT "FK_file_comment" FOREIGN KEY ("comment_id") REFERENCES "comment" ("id") ON UPDATE NO ACTION ON DELETE CASCADE;
 
 
 -- Indexes
