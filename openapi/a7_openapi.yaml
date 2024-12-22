@@ -1,7 +1,7 @@
 openapi: 3.0.0
 
 info:
-  version: '1.0'
+  version: '1.1'
   title: 'LBAW Lend-A-Hand Web API'
   description: 'Web Resources Specification (A7) for Lend-A-Hand'
 
@@ -1450,7 +1450,7 @@ paths:
     get:
       operationId: R422
       summary: 'R422: Get Event Participants.'
-      description: 'Fetches participants of a specific event. Access: GST, USR, ADM'
+      description: 'Fetches participants of a specific event. Access: VST, USR, ADM'
       tags:
         - 'M04: Event'
       parameters:
@@ -1470,7 +1470,7 @@ paths:
     get:
       operationId: R423
       summary: 'R423: Get a photo'
-      description: 'Fetches a specific photo by its ID. Access: GST, USR, ADM'
+      description: 'Fetches a specific photo by its ID. Access: VST, USR, ADM'
       tags:
         - 'M04: Event'
       parameters:
@@ -1494,7 +1494,7 @@ paths:
     get:
       operationId: R501
       summary: 'R501: Get Comments for Event'
-      description: 'Fetches all comments for a specific event. Access: GST, USR, ADM'
+      description: 'Fetches all comments for a specific event. Access: VST, USR, ADM'
       tags:
         - 'M04: Event'
       parameters:
