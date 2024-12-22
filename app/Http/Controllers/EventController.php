@@ -327,7 +327,7 @@ class EventController extends Controller
 
         $participantHtml = view('partials.invite-form', [
             'event' => $event
-        ])->render();;
+        ])->render();
 
         foreach ($participators as $participator) {
             $participantHtml .= view('partials.participator', [
