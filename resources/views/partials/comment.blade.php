@@ -1,6 +1,6 @@
 <script src="{{ url('js/partials/comment.js') }}" defer></script>
 
-    <li class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-md">
+    <li class="p-4 space-y-4 list-none bg-white border border-gray-200 rounded-lg shadow-md">
         <!-- Profile Image, Username, and Date -->
         <div class="grid items-center grid-cols-4 gap-4">
             <div class="flex items-center col-span-2 space-x-2">
