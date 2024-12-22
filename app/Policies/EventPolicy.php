@@ -131,13 +131,13 @@ class EventPolicy
 
     public function uploadPhotos(User $user, Event $event)
     {
-        return $event->end_date > now()->addDays(7)
+        return $event->end_date > now()->subDays(7)
         && $event->participators->contains($user);
     }
 
     public function comment(User $user, Event $event)
     {
-        return !$user->isblocked && $event->end_date > now()->addDays(7);
+        return !$user->isblocked && $event->end_date > now()->subDays(7);
     }
 
     public function survey(User $user, Event $event)
