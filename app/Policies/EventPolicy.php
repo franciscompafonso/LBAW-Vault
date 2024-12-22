@@ -64,8 +64,8 @@ class EventPolicy
 
     public function update($user, Event $event): bool
     {
-        if (auth()->guard('admin')->check() && $event->visibility !== 'canceled') { return true;}
-        return $user->id === $event->creator_id && $event->visibility !== 'canceled';
+        if (auth()->guard('admin')->check() && $event->visibility !== 'canceled' && $event->start_date > now()) { return true;}
+        return $user->id === $event->creator_id && $event->visibility !== 'canceled' && $event->start_date > now();
     }
 
 

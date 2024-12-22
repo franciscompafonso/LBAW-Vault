@@ -54,11 +54,11 @@
 
                                 <a target="_blank" href="{{ $outlookCalendarUrl }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Add to Outlook Calendar</a>
                                 
-                                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event)))
+                                @if ((auth()->guard('admin')->check() && $event->visibility !== 'canceled' && $event->start_date > now()) || (auth()->check() && auth()->user()->can('update', $event)))
                                     <a href="{{ route('events.edit', $event->id) }}" class="block px-6 py-4 text-xl font-montserrat hover:text-darkSlateGrey text-darkSlateGrey hover:bg-gray-100">Edit Event</a>
                                 @endif
 
-                                @if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('cancel', $event)))
+                                @if ((auth()->guard('admin')->check() && $event->visibility !== 'canceled' && $event->start_date > now())|| (auth()->check() && auth()->user()->can('cancel', $event)))
                                     <form action="{{ route('events.cancel', $event->id) }}" method="POST" class="block m-0">
                                         @csrf
                                         @method('PUT')

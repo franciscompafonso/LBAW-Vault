@@ -135,7 +135,7 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         // Check if the current user is an admin or authorized by policy
-        if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('update', $event))) {
+        if ((auth()->guard('admin')->check() && $event->visibility !== 'canceled' && $event->start_date > now())|| (auth()->check() && auth()->user()->can('update', $event))) {
             $districts = District::all();
             $categories = Category::all();
 
@@ -265,7 +265,7 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
 
-        if (auth()->guard('admin')->check() || (auth()->check() && auth()->user()->can('cancel', $event))) {
+        if ((auth()->guard('admin')->check() && $event->visibility !== 'canceled' && $event->start_date > now())|| (auth()->check() && auth()->user()->can('cancel', $event))) {
             $event->update(['visibility' => 'canceled']);
 
             foreach ($event->participators as $participant) {
