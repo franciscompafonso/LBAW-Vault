@@ -40,7 +40,7 @@
           <div>
             <label for="name" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Name <span class="text-red-600">*</span></label>   
             <div class="mt-1">
-              <input id="name" type="text" maxlength="70" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="name-error">   
+              <input id="name" type="text" maxlength="75" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="name-error">   
               @if ($errors->has('name'))
                 <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('name') }}
@@ -53,7 +53,7 @@
           <div>
             <label for="username" class="block text-3xl font-medium font-montserrat text-darkSlateGrey">Username <span class="text-red-600">*</span></label>   
             <div class="mt-1">
-              <input id="username" type="text" maxlength="25" name="username" value="{{ old('username') }}" required autocomplete="username" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="username-error">   
+              <input id="username" type="text" maxlength="35" name="username" value="{{ old('username') }}" required autocomplete="username" class="block w-full rounded-md shadow-sm font-montserrat border-darkSlateGrey focus:ring-ultraViolet focus:border-ultraViolet" aria-describedby="username-error">   
               @if ($errors->has('username'))
                 <span class="mt-1 text-red-600 text-md">
                   {{ $errors->first('username') }}

@@ -54,7 +54,7 @@ class AdminController extends Controller
         $this->authorize('manageUsers', Admin::class);
         // Validate the search input
         $request->validate([
-            'username' => 'nullable|string|min:5|max:25',  // Only validate username if it's provided
+            'username' => 'nullable|string|min:5|max:35',  // Only validate username if it's provided
         ]);
 
         // Store the search query

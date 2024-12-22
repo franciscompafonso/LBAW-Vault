@@ -27,7 +27,7 @@
                     <!-- Event Name -->
                     <div class="mb-4">
                         <label for="name" class="block text-lg font-semibold font-montserrat">Event Name <span class="text-red-600">*</span></label>
-                        <input id="name" type="text" maxlength="70" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="name-error">
+                        <input id="name" type="text" maxlength="75" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" class="w-full p-2 border border-gray-300 rounded-md font-montserrat" aria-describedby="name-error">
                             @if ($errors->has('name'))
                             <span id="name-error" class="mt-1 text-sm text-red-600" aria-live="polite">{{ $errors->first('name') }}</span>
                             @endif

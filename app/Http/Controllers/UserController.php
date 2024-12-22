@@ -92,8 +92,8 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $validatedData = $request->validate([
-                'name' => 'required|string|max:70',
-                'username' => 'required|string|min:5|max:25|unique:user_account,username,'.$user->id,
+                'name' => 'required|string|max:75',
+                'username' => 'required|string|min:5|max:35|unique:user_account,username,'.$user->id,
                 'email' => 'required|email|max:255|unique:user_account,email,'.$user->id,
                 'password' => 'nullable|string|min:8|confirmed',
                 'file' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',

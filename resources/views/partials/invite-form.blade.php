@@ -5,7 +5,7 @@
         <!-- Username Input -->
         <div class="w-full">
             <input 
-                maxlength="25"
+                maxlength="35"
                 id="invite_user" 
                 type="text" 
                 name="username" 

@@ -12,7 +12,7 @@
                 <input 
                     type="text" 
                     name="username" 
-                    maxlength="25"
+                    maxlength="35"
                     class="w-full p-3 border rounded-l-lg font-montserrat focus:outline-none"
                     placeholder="Search by the exact username" 
                     value="{{ old('username', $search ?? '') }}"

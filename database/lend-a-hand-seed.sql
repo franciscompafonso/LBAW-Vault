@@ -88,8 +88,8 @@ DROP FUNCTION IF EXISTS delete_orphaned_notifications();
 -- create tables
 CREATE TABLE user_account (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(70) NOT NULL,
-    username VARCHAR(25) UNIQUE NOT NULL,
+    name VARCHAR(75) NOT NULL,
+    username VARCHAR(35) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     isDeleted BOOLEAN DEFAULT FALSE,
