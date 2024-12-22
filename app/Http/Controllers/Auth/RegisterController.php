@@ -31,7 +31,7 @@ class RegisterController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('auth.register'); // Assuming you're reusing the same form.
+        return view('auth.register'); 
     }
 
 

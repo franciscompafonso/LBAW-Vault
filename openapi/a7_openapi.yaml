@@ -161,9 +161,31 @@ paths:
           description: 'Internal Server Error. An unexpected issue occurred.'
 
   /password/reset:
-    post:
+     get:
       operationId: R106
-      summary: 'R106: Reset User Password'
+      summary: 'R106: Get Password Reset Form'
+      description: 'Fetches the form for requesting a password reset link. Access: USR'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Password reset form fetched successfully.'
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while fetching the password reset form.'
+                  success:
+                    type: boolean
+                    example: false
+    post:
+      operationId: R107
+      summary: 'R107: Reset User Password'
       description: 'Resets the user password after receiving a valid token. Access: USR' 
       tags:
         - 'M01: Authentication'
@@ -195,7 +217,121 @@ paths:
           description: 'Invalid or expired reset token.'
         '500':
           description: 'Internal Server Error. An unexpected error occurred.'
-
+  
+  /password/reset/{token}:
+    get:
+      operationId: R108
+      summary: 'R108: Get Password Reset Token Form'
+      description: 'Fetches the form to reset the password using a token. Access: USR'
+      tags:
+        - 'M01: Authentication'
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 'The password reset token.'
+      responses:
+        '200':
+          description: 'Password reset token form fetched successfully.'
+        '404':
+          description: 'Invalid or expired token.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'The password reset token is invalid or has expired.'
+                  success:
+                    type: boolean
+                    example: false
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while fetching the password reset token form.'
+                  success:
+                    type: boolean
+                    example: false
+  /auth/google:
+    get:
+      operationId: R109
+      summary: 'R109: Google Authentication Redirect'
+      description: 'Redirects the user to the Google authentication page. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '302':
+          description: 'Redirected to Google authentication.'
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred while redirecting to Google authentication.'
+                  success:
+                    type: boolean
+                    example: false
+  
+  /auth/google/call-back:
+    get:
+      operationId: R110
+      summary: 'R110: Google Authentication Callback'
+      description: 'Handles the callback after Google authentication. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Authentication successful.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Authentication successful.'
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: 'Authentication failed due to invalid callback data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid callback data.'
+                  success:
+                    type: boolean
+                    example: false
+        '500':
+          description: 'Internal server error.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'An unexpected error occurred during the authentication callback.'
+                  success:
+                    type: boolean
+                    example: false
 
 ### M02: Individual Profile
 

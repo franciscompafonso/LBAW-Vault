@@ -39,8 +39,8 @@ class SearchController extends Controller
         $endDate = $request->input('endDate');
 
         // Fetch categories and districts for the filters
-        $categories = Category::all(); // Assuming you have a Category model
-        $districts = District::all(); // Assuming you have a District model
+        $categories = Category::all(); 
+        $districts = District::all();
 
         $query = Event::visible()
             ->search($searchQuery)
@@ -57,7 +57,6 @@ class SearchController extends Controller
             $query->whereIn('visibility', $request->input('visibility'));
         }
 
-        // Status filter refactored logic (can include the refactored code here)
         $this->applyStatusFilters($query, $request);
 
         // Get results with pagination

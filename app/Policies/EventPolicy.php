@@ -10,14 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class EventPolicy
 {
     /**
-     * Create a new policy instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Determine if a given event can be shown to a user.
      */
     public function show(?User $user, Event $event): bool

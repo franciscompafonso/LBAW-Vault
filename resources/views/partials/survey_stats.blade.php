@@ -58,12 +58,12 @@
                                 responsive: true,
                                 plugins: {
                                     legend: {
-                                        display: true,  // Optionally, display the legend (showing rating labels)
+                                        display: true,  
                                     },
                                     tooltip: {
                                         callbacks: {
                                             label: function(tooltipItem) {
-                                                // Customizing the tooltip to show percentage and count of responses
+                                                
                                                 var rating = tooltipItem.label;
                                                 var count = tooltipItem.raw;
                                                 var total = tooltipItem.dataset.data.reduce((a, b) => a + b, 0);

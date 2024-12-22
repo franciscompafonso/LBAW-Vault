@@ -5,8 +5,6 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\UnblockRequest;
 
-use Illuminate\Auth\Access\Response;
-
 class UserPolicy
 {
     public function show(User $currentUser, User $user)
