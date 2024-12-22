@@ -63,11 +63,15 @@
         </p>
     </a>
 
-    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-        @foreach ($myEvents->take(4) as $event)
+    @if ($myEvents->isEmpty())
+        <p class="text-3xl font-semibold font-montserrat text-darkSlateGrey">No events yet.</p>
+    @else
+        <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            @foreach ($myEvents->take(4) as $event)
                 @include('partials.event', ['event' => $event])
-        @endforeach
-    </div>
+            @endforeach
+        </div>
+    @endif
 </div>
 
 <!-- ongoingEvents Section -->
@@ -85,11 +89,15 @@
         </p>
     </a>
 
-    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-        @foreach ($ongoingEvents->take(4) as $event)
-                @include('partials.event', ['event' => $event])
-        @endforeach
-    </div>
+    @if ($ongoingEvents->isEmpty())
+        <p class="text-3xl font-semibold font-montserrat text-darkSlateGrey">No events yet.</p>
+    @else
+        <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            @foreach ($ongoingEvents->take(4) as $event)
+                    @include('partials.event', ['event' => $event])
+            @endforeach
+        </div>
+    @endif
 </div>
 
 <!-- participatedEvents Section -->
@@ -107,11 +115,16 @@
         </p>
     </a>
 
-    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-        @foreach ($participatedEvents->take(4) as $event)
-                @include('partials.event', ['event' => $event])
-        @endforeach
-    </div>
+
+    @if ($participatedEvents->isEmpty())
+        <p class="text-3xl font-semibold font-montserrat text-darkSlateGrey">No events yet.</p>
+    @else
+        <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            @foreach ($participatedEvents->take(4) as $event)
+                    @include('partials.event', ['event' => $event])
+            @endforeach
+        </div>
+    @endif
 </div>
 
 <!-- Not Yet Participated Events Section -->
@@ -129,11 +142,15 @@
             </p>
     </a>
 
-    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-        @foreach ($notYetParticipatedEvents->take(4) as $event)
-                @include('partials.event', ['event' => $event])
-        @endforeach
-    </div>
+    @if ($notYetParticipatedEvents->isEmpty())
+        <p class="text-3xl font-semibold font-montserrat text-darkSlateGrey">No events yet.</p>
+    @else
+        <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            @foreach ($notYetParticipatedEvents->take(4) as $event)
+                    @include('partials.event', ['event' => $event])
+            @endforeach
+        </div>
+    @endif
 </div>
 
 @endsection
