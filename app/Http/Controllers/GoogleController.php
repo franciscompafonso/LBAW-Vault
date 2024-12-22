@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Storage;
 
 class GoogleController extends Controller
 {
-    public function redirect() 
+    public function redirect()
     {
-        return Socialite::driver('google')->redirect();
+        $redirectUri = 'http://localhost:8001/auth/google/call-back';
+        $provider = Socialite::driver('google');
+        $provider->redirectUrl($redirectUri);
+        return $provider->redirect();
     }
 
     public function callbackGoogle()
