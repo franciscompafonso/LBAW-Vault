@@ -1883,9 +1883,9 @@ paths:
       tags:
         - 'M06: User Administration'
       parameters:
-        - name: user
+        - name: username
           in: path
-          description: 'ID of the user to delete'
+          description: 'Username of the user to delete'
           required: true
           schema:
             type: string
