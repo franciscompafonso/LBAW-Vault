@@ -16,22 +16,10 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         .then(response => response.json())
         .then(data => {
             if (display) displayNotificationResults(data);
-            updateNotificationIndicator(data);
         })
         .catch(error => console.error('Error fetching notifications:', error));
     }
-
-    function updateNotificationIndicator(notifications) {
-        const notiIndicator = document.getElementById('noti-indicator');
-
-        if (notifications && notifications.length > 0) {
-            notiIndicator.textContent = notifications.length;
-            notiIndicator.classList.remove('hidden');
-        } else {
-            notiIndicator.classList.add('hidden');
-        }
-    }
-
+    
     function displayNotificationResults(notifications) {
         const notificationsList = document.getElementById('notifications-list');
         const noNotificationsText = document.getElementById('no-notifications');
@@ -303,7 +291,8 @@ if(userId) {
             if (data.success) {
                 showPopup(data.success, data.message);
 
-                fetchNotifications();
+                const notificationsDropdown = document.getElementById('notifications-dropdown');
+                notificationsDropdown.classList.toggle('hidden');
             }
         })
         .catch(error => {
@@ -333,13 +322,3 @@ if(userId) {
             console.error(error);
         });
     }
-    
-
-if (userId) {
-    // Reload notifications every 5 seconds
-    setInterval(fetchNotifications, 5000);
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchNotifications();
-    });
-}
