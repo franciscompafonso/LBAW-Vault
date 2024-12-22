@@ -48,43 +48,92 @@
     </div>
 </div>
 
-
 <!-- My Events -->
 <div class="mt-8" id="my_events-container">
-    <h3 class="py-6 mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">My Events</h3>
-    @include('partials.event_section', [
-        'events' => $myEvents,
-        'sectionId' => 'my_events',
-    ])
-</div>
+    <a href="{{ route('events.search', array_merge(request()->query(), ['created_by' => $user->username, 'source' => 'profile'])) }}"
+        class="flex items-center space-x-4 group">
+        <!-- Category Name with Link -->
+        <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+            My Events
+        </h2>
 
+        <!-- "Explore all >" Link -->
+        <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
+            <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
+        </p>
+    </a>
+
+    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+        @foreach ($myEvents->take(4) as $event)
+                @include('partials.event', ['event' => $event])
+        @endforeach
+    </div>
+</div>
 
 <!-- ongoingEvents Section -->
 <div class="mt-8" id="ongoing_events-container">
-    <h3 class="py-6 mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Ongoing Events</h3>
-    @include('partials.event_section', [
-        'events' => $ongoingEvents,
-        'sectionId' => 'ongoing_events',
-    ])
-</div>
+    <a href="{{ route('events.search', array_merge(request()->query(), ['joined_by' => $user->username, 'status_ongoing' => '1', 'source' => 'profile'])) }}"
+    class="flex items-center space-x-4 group">
+        <!-- Category Name with Link -->
+        <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+            Ongoing Events
+        </h2>
 
+        <!-- "Explore all >" Link -->
+        <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
+            <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
+        </p>
+    </a>
+
+    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+        @foreach ($ongoingEvents->take(4) as $event)
+                @include('partials.event', ['event' => $event])
+        @endforeach
+    </div>
+</div>
 
 <!-- participatedEvents Section -->
 <div class="mt-8" id="participated_events-container">
-    <h3 class="py-6 mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Past Events</h3>
-    @include('partials.event_section', [
-        'events' => $participatedEvents,
-        'sectionId' => 'participated_events',
-    ])
+    <a href="{{ route('events.search', array_merge(request()->query(), ['joined_by' => $user->username, 'status_finished' => '1', 'source' => 'profile'])) }}"
+    class="flex items-center space-x-4 group">
+        <!-- Category Name with Link -->
+        <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+            Finished Events
+        </h2>
+
+        <!-- "Explore all >" Link -->
+        <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
+            <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
+        </p>
+    </a>
+
+    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+        @foreach ($participatedEvents->take(4) as $event)
+                @include('partials.event', ['event' => $event])
+        @endforeach
+    </div>
 </div>
 
 <!-- Not Yet Participated Events Section -->
 <div class="mt-8" id="not_yet_participated_events-container">
-    <h3 class="py-6 mb-4 text-4xl font-semibold font-montserrat text-eerieBlack">Future Events</h3>
-    @include('partials.event_section', [
-        'events' => $notYetParticipatedEvents,
-        'sectionId' => 'not_yet_participated_events',
-    ])
+    <a href="{{ route('events.search', array_merge(request()->query(), ['joined_by' => $user->username, 'status_upcoming' => '1', 'source' => 'profile'])) }}"
+        class="flex items-center space-x-4 group">
+            <!-- Category Name with Link -->
+            <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+                Upcoming Events
+            </h2>
+
+            <!-- "Explore all >" Link -->
+            <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
+                <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
+            </p>
+    </a>
+
+    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+        @foreach ($notYetParticipatedEvents->take(4) as $event)
+                @include('partials.event', ['event' => $event])
+        @endforeach
+    </div>
 </div>
 
 @endsection

@@ -172,6 +172,11 @@
                     <i id="status-arrow" class="transition-transform duration-200 transform rotate-90 fa-solid fa-angle-right"></i>
                 </label>
                 <div class="hidden mt-2" id="status">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="status_ongoing" value="1" 
+                            {{ request('status_ongoing') ? 'checked' : '' }} />
+                        <span>Ongoing</span>
+                    </label>
                     <label class="flex items-center mt-1 space-x-2">
                         <input type="checkbox" name="status_finished" value="1" 
                             {{ request('status_finished') ? 'checked' : '' }} />
@@ -183,11 +188,6 @@
                         <span>Upcoming</span>
                     </label>
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" name="status_ongoing" value="1" 
-                            {{ request('status_ongoing') ? 'checked' : '' }} />
-                        <span>Ongoing</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
                         <input type="checkbox" name="status_full_capacity" value="1" 
                             {{ request('status_full_capacity') ? 'checked' : '' }} />
                         <span>At full capacity</span>
@@ -197,13 +197,18 @@
                             {{ request('status_canceled') ? 'checked' : '' }} />
                         <span>Not canceled</span>
                     </label>
-                    @auth
+                    @if(auth()->guard('web')->check())
                         <label class="flex items-center mt-1 space-x-2">
-                            <input type="checkbox" name="status_joined" value="1" 
-                                {{ request('status_joined') ? 'checked' : '' }} />
+                            <input type="checkbox" name="status_joined" value="{{ auth()->user()->username }}" 
+                                {{ request('status_joined') === auth()->user()->username ? 'checked' : '' }} />
                             <span>Joined</span>
                         </label>
-                    @endauth
+                        <label class="flex items-center mt-1 space-x-2">
+                            <input type="checkbox" name="status_created" value="{{ auth()->user()->username }}" 
+                                {{ request('status_created') === auth()->user()->username ? 'checked' : '' }} />
+                            <span>Created</span>
+                        </label>
+                    @endif
                 </div>
             </div>
 
@@ -213,6 +218,12 @@
                 @if(request('source'))
                     <input type="hidden" name="source" value="{{ request('source') }}">
                 @endif
+                @if(request('created_by'))
+                    <input type="hidden" name="created_by" value="{{ request('created_by') }}">
+                @endif
+                @if(request('joined_by'))
+                    <input type="hidden" name="joined_by" value="{{ request('joined_by') }}">
+                @endif
                 <!-- Submit Button -->
                 <button type="submit" aria-label="Apply filters" 
                         class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
@@ -221,30 +232,39 @@
                 
                 <!-- Reset Button -->
                 <button type="button" aria-label="Reset filters"
-                        onclick="
-                            let params = new URLSearchParams();
-                            
-                            @if(request('source') === 'bar')
-                                params.set('q', '{{ request('q') }}'); // Preserve search query
-                                params.set('source', 'bar');
-                            @elseif(request('source') === 'district')
-                                @foreach(request('district', []) as $district)
-                                    params.append('district[]', '{{ $district }}'); // Preserve districts
-                                @endforeach
-                                params.set('source', 'district');
-                            @elseif(request('source') === 'category')
-                                @foreach(request('category', []) as $category)
-                                    params.append('category[]', '{{ $category }}'); // Preserve categories
-                                @endforeach
-                                params.set('source', 'category');
-                            @endif
+                    onclick="
+                        let params = new URLSearchParams();
 
-                            // Redirect with preserved parameters
-                            window.location.href = '{{ url()->current() }}?' + params.toString();
-                        "
-                        class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
-                    Reset
-                </button>
+                        @if(request('source') === 'bar')
+                            params.set('q', '{{ request('q') }}'); // Preserve search query
+                            params.set('source', 'bar');
+                        @elseif(request('source') === 'district')
+                            @foreach(request('district', []) as $district)
+                                params.append('district[]', '{{ $district }}'); // Preserve districts
+                            @endforeach
+                            params.set('source', 'district');
+                        @elseif(request('source') === 'category')
+                            @foreach(request('category', []) as $category)
+                                params.append('category[]', '{{ $category }}'); // Preserve categories
+                            @endforeach
+                            params.set('source', 'category');
+                        @endif
+
+                        // Preserve created_by and joined_by filters if present
+                        @if(request('created_by'))
+                            params.set('created_by', '{{ request('created_by') }}');
+                        @endif
+                        @if(request('joined_by'))
+                            params.set('joined_by', '{{ request('joined_by') }}');
+                        @endif
+
+                        // Redirect with preserved parameters
+                        window.location.href = '{{ url()->current() }}?' + params.toString();
+                    "
+                    class="flex-1 px-6 py-2 font-bold text-white transition-all duration-200 rounded-md font-montserrat bg-ultraViolet hover:bg-cambridgeBlue hover:text-darkSlateGrey border-ultraViolet hover:border-cambridgeBlue">
+                Reset
+            </button>
+
             </div>
         </form>
     </div>

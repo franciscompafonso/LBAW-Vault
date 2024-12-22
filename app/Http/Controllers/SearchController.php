@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Event;
+use App\Models\User;
 use App\Models\District;
 use App\Models\Category;
 
@@ -82,7 +83,10 @@ class SearchController extends Controller
             $request->filled('status_ongoing') ||
             $request->filled('status_full_capacity') ||
             $request->filled('status_canceled') ||
-            $request->filled('status_joined')
+            $request->filled('status_joined') ||
+            $request->filled('status_created') ||
+            $request->filled('joined_by') ||
+            $request->filled('created_by')
         ) {
             $query->where(function ($q) use ($request) {
                 if ($request->filled('status_finished')) {
@@ -105,8 +109,9 @@ class SearchController extends Controller
                 if ($request->filled('status_canceled')) {
                     $q->where('visibility', '!=', 'canceled');
                 }
-                if ($request->filled('status_joined') && auth()->check()) {
+                if ($request->filled('status_joined') && auth()->guard('web')->check()) {
                     $userId = auth()->id();
+                    
                     $q->whereExists(function ($subQuery) use ($userId) {
                         $subQuery->select('participator.participator_id')
                             ->from('participator')
@@ -114,6 +119,42 @@ class SearchController extends Controller
                             ->where('participator.participator_id', $userId);
                     });
                 }
+                if ($request->filled('status_created') && auth()->guard('web')->check()) {
+                    $userId = auth()->id();
+                    $q->where('event.creator_id', $userId);
+                }
+                if ($request->filled('joined_by')) {
+                    $username = $request->joined_by; // Get the username from the request
+                
+                    // Ensure the user exists by checking the username
+                    $user = User::where('username', $username)->first();
+                
+                    if ($user) {
+                        $userId = $user->id;
+                        
+                        $q->whereExists(function ($subQuery) use ($userId) {
+                            $subQuery->select('participator.participator_id')
+                                ->from('participator')
+                                ->whereColumn('participator.event_id', 'event.id')
+                                ->where('participator.participator_id', $userId);
+                        });
+                    }
+                }
+                if ($request->filled('created_by')) {
+                    
+                    $username = $request->created_by;
+                    \Log::info('Filtering by creator username: ' . $username);
+                
+                    $user = User::where('username', $username)->first();
+                    if ($user) {
+                        $userId = $user->id;
+                        \Log::info('User ID for username ' . $username . ': ' . $userId);
+                        $q->where('event.creator_id', $userId);
+                    } else {
+                        \Log::warning('User not found for username: ' . $username);
+                    }
+                }
+                                
             });
         }
     }
