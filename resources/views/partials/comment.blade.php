@@ -5,7 +5,7 @@
         <div class="grid items-center grid-cols-4 gap-4">
             <div class="flex items-center col-span-2 space-x-2">
                 <img 
-                    src="{{ asset('images/profile-pictures/' . ($comment->user->profilepicture?? App\Models\User::DEFAULT_PIC)) }}" 
+                    src="{{ asset('images/profile-pictures/' . ($comment->user->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
                     alt="{{ $comment->user->username }}" 
                     class="object-cover w-12 h-12 rounded-full"
                 >
