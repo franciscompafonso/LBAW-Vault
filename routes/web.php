@@ -132,7 +132,6 @@ Route::get('/api/search', [SearchController::class, 'search'])->name('search');
 
 // Google
 
-Route::get('/api/search', [SearchController::class, 'search'])->name('search');
 Route::controller(GoogleController::class)->group(function () {
     Route::get('auth/google', 'redirect')->name('google-auth');
     Route::get('auth/google/call-back', 'callbackGoogle')->name('google-call-back');
