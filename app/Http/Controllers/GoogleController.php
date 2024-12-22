@@ -16,9 +16,10 @@ class GoogleController extends Controller
 {
     public function redirect()
     {
-        $redirectUri = 'http://localhost:8001/auth/google/call-back';
+        $redirectUri = $_ENV['GOOGLE_CALL_BACK_ROUTE'];
         $provider = Socialite::driver('google');
         $provider->redirectUrl($redirectUri);
+
         return $provider->redirect();
     }
 
