@@ -43,32 +43,30 @@
     <section class="py-8" aria-label="Categories section">
         <div class="flex flex-col space-y-6">
             @foreach ($categories as $category)
-                @if ($category->events->count() >= 4)
-                    <a href="{{ route('events.search', ['category[]' => $category->id, 'source' => 'category']) }}" 
-                        class="flex items-center space-x-4 group" 
-                        aria-label="Explore events in {{ $category->name }}">
-                        <!-- Category Name with Link -->
-                        <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
-                            {{ $category->name }}
-                        </h2>
+                <a href="{{ route('events.search', ['category[]' => $category->id, 'source' => 'category']) }}" 
+                    class="flex items-center space-x-4 group" 
+                    aria-label="Explore events in {{ $category->name }}">
+                    <!-- Category Name with Link -->
+                    <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
+                        {{ $category->name }}
+                    </h2>
 
-                        <!-- "Explore all >" Link -->
-                        <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
-                            <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
-                        </p>
-                    </a>
+                    <!-- "Explore all >" Link -->
+                    <p class="text-xl font-bold text-cambridgeBlue opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all duration-300 ease-in-out font-montserrat">
+                        <i class="ml-2 text-3xl fa-solid fa-angle-right mt-[5px]"></i>
+                    </p>
+                </a>
 
-                    <!-- Events Grid with max-width possible for 4 items -->
-                    <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4" aria-label="Events list for {{ $category->name }}">
-                        @foreach ($category->events->take(4) as $event)
-                                @include('partials.event', ['event' => $event])
-                        @endforeach
-                    </div>
-                @endif
+                <!-- Events Grid with max-width possible for 4 items -->
+                <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4" aria-label="Events list for {{ $category->name }}">
+                    @foreach ($category->events4 as $event)
+                        @include('partials.event', ['event' => $event])
+                    @endforeach
+                </div>
             @endforeach
 
             <!-- "All Categories" Section -->
-            @if ($categories->pluck('events')->flatten()->count() >= 4)
+            @if ($all_events->count() >= 4)
                 <a href="{{ route('events.search') }}" class="flex items-center space-x-4 group" aria-label="Explore all categories of events">
                     <!-- Category Name with Link -->
                     <h2 class="py-6 text-4xl font-semibold transition-transform duration-300 font-montserrat text-eerieBlack group-hover:scale-105">
@@ -82,7 +80,7 @@
                 </a>
 
                 <div class="grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4" aria-label="Events list for all categories">
-                    @foreach ($categories->pluck('events')->flatten()->take(4) as $event)
+                    @foreach ($all_events as $event)
                         @include('partials.event', ['event' => $event])
                     @endforeach
                 </div>
