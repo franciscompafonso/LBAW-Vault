@@ -157,7 +157,7 @@
                     <div class="grid items-center grid-cols-4 gap-4">
                         <div class="flex items-center space-x-2">
                             <img 
-                                src="{{ asset('images/profile-pictures/' . ($reply->user->profilepicture ?? App\Models\User::DEFAULT_PIC)) }}" 
+                                src="{{ asset('images/profile-pictures/' . ($reply->user->picture->path ?? App\Models\User::DEFAULT_PIC)) }}" 
                                 alt="{{ $reply->user->username }}" 
                                 class="object-cover w-12 h-12 rounded-full"
                             >
